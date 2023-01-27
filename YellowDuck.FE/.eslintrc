@@ -1,0 +1,23 @@
+{
+  "root": true,
+  "env": {
+    "node": true
+  },
+  "plugins": ["eslint-plugin-local-rules"],
+  "extends": ["plugin:vue/essential", "@vue/standard", "eslint:recommended", "eslint-config-prettier"],
+  "rules": {
+    "local-rules/format-graphql-block": 1
+  },
+  "parserOptions": {
+    "parser": "babel-eslint"
+  },
+  "overrides": [
+    {
+      "files": ["*.graphql"],
+      "plugins": ["@graphql-eslint"],
+      "parserOptions": {
+        "parser": "@graphql-eslint/eslint-plugin"
+      }
+    }
+  ]
+}

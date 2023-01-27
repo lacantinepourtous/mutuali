@@ -1,0 +1,44 @@
+﻿@model YellowDuck.Api.EmailTemplates.Models.DailyConversationNotificationSummaryEmail
+@using YellowDuck.Api.Constants;
+@{ Layout = "_EmailLayout.cshtml"; }
+
+<p style="font-style:italic;">--- English will follow ---</p>
+<br>
+
+<p>Bonjour @Model.FirstName @(Model.LastName.First()).,</p>
+<p>Voici les nouveaux messages reçus sur MutuAli:</p>
+
+@foreach (var conversation in Model.Conversations)
+{
+    <div>
+        <p>Message de @conversation.UserFrom, pour l'annonce <a href="@Model.GetAdUrl(conversation.Ad)">@conversation.Ad.Title</a></p>
+        @foreach (var body in conversation.Bodies)
+        {
+            <blockquote>@body</blockquote>
+        }
+        <a href="@Model.GetConversationUrl(conversation, Locales.FR)">Voir la conversation</a>
+    </div>
+}
+
+<p>À demain s’il y a du nouveau</p>
+
+<br>
+<br>
+<p style="font-style:italic;">--- English version ---</p>
+
+<p>Hello @Model.FirstName @(Model.LastName.First()).,</p>
+<p>Here are the new messages received on MutuAli:</p>
+
+@foreach (var conversation in Model.Conversations)
+{
+    <div>
+        <p>Message from @conversation.UserFrom, for the <a href="@Model.GetAdUrl(conversation.Ad)">@conversation.Ad.Title</a> ad</p>
+        @foreach (var body in conversation.Bodies)
+        {
+            <blockquote>@body</blockquote>
+        }
+        <a href="@Model.GetConversationUrl(conversation, Locales.EN)">See the conversation</a>
+    </div>
+}
+
+<p>See you tomorrow if there's anything new</p>

@@ -1,0 +1,29 @@
+{
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": true
+  },
+
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "editor.formatOnSave": true,
+  "editor.formatOnSaveMode": "file",
+  "editor.tabSize": 2,
+
+  "eslint.validate": ["vue", "html", "javascript", "graphql"],
+
+  "vetur.format.defaultFormatter.html": "prettier",
+  "vetur.format.defaultFormatter.js": "prettier",
+  "vetur.format.defaultFormatter.scss": "prettier",
+  "vetur.grammar.customBlocks": {
+    "docs": "md",
+    "i18n": "json",
+    "graphql": "graphql",
+    "fragments": "graphql"
+  },
+
+  "[vue]": {
+    "editor.defaultFormatter": "octref.vetur"
+  },
+  "i18n-ally.localesPaths": ["src/locales"],
+  "i18n-ally.keystyle": "nested",
+  "i18n-ally.sourceLanguage": "fr"
+}

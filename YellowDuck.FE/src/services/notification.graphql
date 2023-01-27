@@ -1,0 +1,11 @@
+mutation CreateLocalNotification($notification: Notification!) {
+  addNotification(notification: $notification) @client
+}
+
+mutation RemoveLocalNotificationById($id: ID!) {
+  removeNotificationById(id: $id) @client
+}
+
+mutation RemoveLocalNotificationByType($type: NotificationType!) {
+  removeNotificationByType(type: $type) @client
+}

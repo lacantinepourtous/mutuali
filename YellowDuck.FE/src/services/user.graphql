@@ -1,0 +1,104 @@
+query LocalUserIsConnected {
+  user @client {
+    isConnected
+  }
+}
+
+query LocalUserToken {
+  user @client {
+    accessToken
+    refreshToken
+  }
+}
+
+query LocalUser {
+  user @client {
+    isConnected
+    accessToken
+    refreshToken
+  }
+}
+
+query VerifyToken($email: String, $token: String, $type: TokenType!) {
+  verifyToken(email: $email, token: $token, type: $type) {
+    status
+    user {
+      id
+      email
+      type
+      profile {
+        id
+        firstName
+        lastName
+      }
+    }
+  }
+}
+
+mutation UpdateLocalUser($user: User!) {
+  updateLocalUser(user: $user) @client
+}
+
+mutation CreateUserAccount($input: CreateUserAccountInput!) {
+  createUserAccount(input: $input) {
+    user {
+      id
+    }
+  }
+}
+
+mutation CreateAdminAccount($input: CreateAdminAccountInput!) {
+  createAdminAccount(input: $input) {
+    user {
+      id
+    }
+  }
+}
+
+mutation ResendConfirmationEmail($input: ResendConfirmationEmailInput!) {
+  resendConfirmationEmail(input: $input)
+}
+
+mutation ConfirmEmail($input: ConfirmEmailInput!) {
+  confirmEmail(input: $input)
+}
+
+mutation VerifyEmail($input: VerifyEmailInput!) {
+  verifyEmail(input: $input)
+}
+
+mutation SendPasswordReset($input: SendPasswordResetInput!) {
+  sendPasswordReset(input: $input)
+}
+
+mutation ResetPassword($input: ResetPasswordInput!) {
+  resetPassword(input: $input) {
+    user {
+      id
+    }
+  }
+}
+
+mutation ChangePassword($input: ChangePasswordInput!) {
+  changePassword(input: $input) {
+    user {
+      id
+    }
+  }
+}
+
+mutation UpdateUserProfile($input: UpdateUserProfileInput!) {
+  updateUserProfile(input: $input) {
+    user {
+      id
+    }
+  }
+}
+
+mutation CompleteAdminRegistration($input: CompleteAdminRegistrationInput!) {
+  completeAdminRegistration(input: $input) {
+    user {
+      id
+    }
+  }
+}

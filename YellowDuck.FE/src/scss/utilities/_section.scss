@@ -1,0 +1,47 @@
+.section {
+  $margin-x: #{"max(#{$spacer}, calc((100% - var(--section-content-width, 100%)) / 2))"};
+
+  box-sizing: content-box;
+  margin: 0 $margin-x;
+  width: calc(100% - (#{$margin-x} * 2));
+
+  &--border-top {
+    border-top: 1px solid $gray-200;
+  }
+
+  &--border-bottom {
+    border-bottom: 1px solid $gray-200;
+  }
+
+  &--padding-x,
+  &--border-top {
+    margin: 0;
+    padding: 0 $margin-x;
+  }
+
+  &--sm {
+    --section-content-width: 540px;
+  }
+
+  &--md {
+    --section-content-width: 720px;
+  }
+
+  &--lg {
+    --section-content-width: 960px;
+  }
+
+  &--xl {
+    --section-content-width: 1140px;
+  }
+
+  &--full-width-mobile {
+    margin: 0;
+    width: 100%;
+
+    @include media-breakpoint-up(md) {
+      margin: 0 $margin-x;
+      width: calc(100% - (#{$margin-x} * 2));
+    }
+  }
+}

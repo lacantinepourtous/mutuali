@@ -1,0 +1,7 @@
+query LocalUser {
+  user @client {
+    isConnected
+    accessToken
+    refreshToken
+  }
+}

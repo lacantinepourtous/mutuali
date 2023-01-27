@@ -1,0 +1,12 @@
+$no-content-img-width: 140px;
+
+.no-content {
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+
+  &__img {
+    width: $no-content-img-width;
+  }
+}

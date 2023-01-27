@@ -1,0 +1,14 @@
+﻿@using YellowDuck.Api.Helpers
+
+@model YellowDuck.Api.EmailTemplates.Models.ContactEmail
+@{ Layout = "_EmailLayout.cshtml"; }
+
+<p>Bonjour,</p>
+<p>
+    Une demande de contact a été envoyé à partir de la section @Model.Origin
+</p>
+<p>
+    <strong>Nom:</strong> @Model.FullName<br>
+    <strong>Organisation:</strong> @Model.OrganizationName<br>
+    <strong>Courriel ou n° de téléphone:</strong> @Model.EmailOrPhone
+</p>

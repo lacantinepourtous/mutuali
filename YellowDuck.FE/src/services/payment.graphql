@@ -1,0 +1,45 @@
+query GetStripeOnboardingLink($redirectUrl: String!) {
+  me {
+    id
+    stripeAccount {
+      id
+      accountOnboardingLink(redirectUrl: $redirectUrl)
+    }
+  }
+}
+
+query GetCheckoutSessionIsComplete($id: ID!) {
+  contract(id: $id) {
+    id
+    checkoutSession {
+      id
+      checkoutSessionComplete
+    }
+  }
+}
+
+mutation CreateStripeAccount($input: CreateStripeAccountInput!) {
+  createStripeAccount(input: $input) {
+    account {
+      id
+    }
+  }
+}
+
+mutation CreateCheckoutSession($input: CreateCheckoutSessionInput!) {
+  createCheckoutSession(input: $input) {
+    checkoutSession {
+      id
+      checkoutLink
+    }
+  }
+}
+
+mutation CancelCheckoutSession($input: CancelCheckoutSessionInput!) {
+  cancelCheckoutSession(input: $input) {
+    checkoutSession {
+      id
+      checkoutSessionCancel
+    }
+  }
+}

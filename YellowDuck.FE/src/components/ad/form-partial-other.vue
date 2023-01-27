@@ -1,0 +1,47 @@
+<template>
+  <div>
+    <s-form-rich-text-editor
+      v-model="form.description"
+      @input="$emit('input', value)"
+      name="description"
+      rules="emptyHtml"
+      :label="$t('label.ad-description')"
+      :description="$t('placeholder.ad-description')"
+      required
+    />
+    <s-form-rich-text-editor
+      v-model="form.conditions"
+      @input="$emit('input', value)"
+      name="conditions"
+      :label="$t('label.ad-conditions')"
+      :description="$t('placeholder.ad-conditions')"
+      :headingOn="false"
+    />
+  </div>
+</template>
+
+<script>
+import SFormRichTextEditor from "@/components/form/s-form-rich-text-editor";
+
+export default {
+  props: {
+    value: {
+      type: Object,
+      default() {
+        return {
+          description: "",
+          conditions: ""
+        };
+      }
+    }
+  },
+  computed: {
+    form() {
+      return this.value;
+    }
+  },
+  components: {
+    SFormRichTextEditor
+  }
+};
+</script>

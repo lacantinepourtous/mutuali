@@ -1,0 +1,33 @@
+﻿@using YellowDuck.Api.Helpers
+@using YellowDuck.Api.Constants
+@model YellowDuck.Api.EmailTemplates.Models.ConfirmEmailEmail
+@{
+    Layout = "_EmailLayout.cshtml";
+}
+
+<p style="font-style:italic;">--- English will follow ---</p>
+<br>
+<p><strong>SVP ne pas répondre à ce courriel</strong>, si vous rencontrez un problème, écrivez-nous à <a href="mailto:info@mutuali.ca">info@mutuali.ca</a></p>
+<p>---</p>
+<p>Bonjour,</p>
+<p>Veuillez confirmer votre adresse courriel en cliquant sur le lien suivant.</p>
+<p>
+    <a href="@Model.BaseUrl/@UrlHelper.ConfirmEmail(Model.To, Model.Token, Locales.FR)@((Model.ReturnPath != "" && Model.ReturnPath != null) ? "&returnPath=" + Model.ReturnPath : "")">
+        Ceci est le lien sur lequel vous devez cliquer pour activer votre compte.
+    </a>
+</p>
+<p>Merci</p>
+
+<br>
+<br>
+<p style="font-style:italic;">--- English version ---</p>
+<p><strong>Please do not reply to this email</strong>, if you encounter a problem, write to us at <a href="mailto:info@mutuali.ca">info@mutuali.ca</a></p>
+<p>---</p>
+<p>Hello,</p>
+<p>Please confirm your email address by clicking on the following link.</p>
+<p>
+    <a href="@Model.BaseUrl/@UrlHelper.ConfirmEmail(Model.To, Model.Token, Locales.EN)@((Model.ReturnPath != "" && Model.ReturnPath != null) ? "&returnPath=" + Model.ReturnPath : "")">
+        This is the link you need to click to activate your account.
+    </a>
+</p>
+<p>Thanks</p>

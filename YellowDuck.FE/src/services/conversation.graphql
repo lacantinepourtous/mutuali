@@ -1,0 +1,32 @@
+mutation CreateConversation($input: CreateConversationInput!) {
+  createConversation(input: $input) {
+    conversation {
+      id
+      sid
+      ad {
+        id
+        category
+        translationOrDefault(language: FRENCH) {
+          id
+          language
+          title
+          description
+        }
+      }
+      participants {
+        id
+        sid
+        user {
+          id
+          email
+        }
+      }
+    }
+  }
+}
+
+mutation RemoveConversationNotification($input: RemoveConversationNotificationInput!) {
+  removeConversationNotification(input: $input) {
+    count
+  }
+}

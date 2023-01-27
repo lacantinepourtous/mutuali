@@ -1,0 +1,112 @@
+// This file include all configuration for SASS.
+// (ex. Functions, Variables, Mixins)
+//
+// Since this files is imported on each SCSS compilation
+// it's important to create no output from this file.
+
+$gray-100: #f5f6ea;
+$gray-200: #e8ebdf;
+$gray-300: #d5dcd0;
+$gray-400: #b5c6ba;
+$gray-500: #a7b5aa;
+$gray-600: #8fa196;
+$gray-700: #798e83;
+$gray-800: #667e74;
+$gray-900: #597369;
+
+$green: #597369;
+$green-lighter: #6a8d75;
+$green-medium: #466564;
+$green-dark: #425e5e;
+$green-darker: #303e3e;
+
+$yellow: #fbce0a;
+
+$cyan: #8daecc;
+$cyan-darker: #6a8693;
+
+$blue: #0a79b2;
+
+$dark: #303e3e;
+
+$red: #dc3545;
+$red-darker: #b21e2d;
+
+$primary: $green;
+$secondary: $gray-400;
+$success: #6a8d75;
+$text-muted: #6c757d;
+$info: $blue;
+
+$font-family-brand: Moderat, sans-serif;
+
+$headings-font-family: $font-family-brand;
+$headings-font-weight: 700;
+$headings-line-height: 1.1;
+$headings-color: $dark;
+
+$card-border-color: $secondary;
+
+// Font weight
+
+$badge-font-weight: 400;
+$font-weight-bold: 500;
+$font-weight-bolder: 700;
+
+// Grid columns
+
+$grid-gutter-width: 0;
+
+// Font size
+
+$enable-responsive-font-sizes: true;
+$display3-size: 3.1rem;
+$display4-size: 2.8rem;
+
+// Border-radius
+
+$border-radius-md: 9px;
+
+// Input
+
+$input-color: $green-darker;
+$input-placeholder-color: $text-muted;
+
+// List group
+
+$list-group-action-color: $green;
+
+// Static heights
+
+$nav-return-height: 56px;
+
+// Spacers
+
+$spacer: 1rem;
+$spacers: ();
+$spacers: map-merge(
+  (
+    0: 0,
+    1: (
+      $spacer * 0.25
+    ),
+    2: (
+      $spacer * 0.5
+    ),
+    3: $spacer,
+    4: (
+      $spacer * 1.5
+    ),
+    5: (
+      $spacer * 3
+    ),
+    6: (
+      $spacer * 2
+    )
+  ),
+  $spacers
+);
+
+@import "node_modules/bootstrap/scss/_functions";
+@import "node_modules/bootstrap/scss/_variables";
+@import "node_modules/bootstrap/scss/_mixins";

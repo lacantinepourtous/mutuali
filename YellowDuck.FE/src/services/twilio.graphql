@@ -1,0 +1,7 @@
+query MyTwilioToken {
+  myTwilioToken
+}
+
+mutation UpdateTwilioToken($token: String!) {
+  updateTwilioToken(token: $token) @client
+}

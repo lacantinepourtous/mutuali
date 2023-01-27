@@ -1,0 +1,17 @@
+type LocalApp {
+  showMenu: Boolean!
+}
+
+type LocalUser {
+  isConnected: Boolean!
+  accessToken: String!
+  refreshToken: String!
+}
+
+type Twilio {
+  token: String!
+}
+
+type Mutation {
+  updateLocalUser(user: User!): User
+}

@@ -1,0 +1,12 @@
+﻿@using YellowDuck.Api.Helpers
+
+@model YellowDuck.Api.EmailTemplates.Models.AdminInviteEmail
+@{ Layout = "_EmailLayout.cshtml"; }
+
+<p>Bonjour @Model.FirstName</p>
+<p>
+    Vous avez été invité comme administrateur.
+</p>
+<p>
+    <a href="@Model.BaseUrl/@UrlHelper.RegistrationAdmin(Model.To, Model.InviteToken)">Créez votre compte</a>.
+</p>

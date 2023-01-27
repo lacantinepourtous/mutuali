@@ -1,0 +1,191 @@
+﻿@model YellowDuck.Api.EmailTemplates.Models.WeeklyKPIsEmail
+@{ Layout = "_EmailLayout.cshtml"; }
+
+<p>Bonjour,</p>
+<p>Voici les KPIs à jour</p>
+
+<p><b>Nombre total d'utilisateur</b> : @Model.UserCount</p>
+<p>
+    <b>Nombre d'utilisateur par organisation</b>
+    @{
+        foreach (var group in Model.UserByOranizationType)
+        {
+            var organizationType = "";
+            switch (group.Key)
+            {
+                case YellowDuck.Api.DbModel.Enums.OrganizationType.NonProfitOrganizations:
+                {
+                    organizationType = "Entreprises d'économie sociale, organismes communautaires, organismes bénévoles et autres organismes à but non lucratif";
+                    break;
+                }
+                case YellowDuck.Api.DbModel.Enums.OrganizationType.Other:
+                {
+                    organizationType = "Autre";
+                    break;
+                }
+                case YellowDuck.Api.DbModel.Enums.OrganizationType.PrivateCompany:
+                {
+                    organizationType = "Entreprises privées à but lucratif";
+                    break;
+                }
+                case YellowDuck.Api.DbModel.Enums.OrganizationType.PublicSector:
+                {
+                    organizationType = "Organisations du secteur public";
+                    break;
+                }
+            }
+            <p>@organizationType : @group.Count()</p>
+        }
+    }
+</p>
+
+<p>
+    <b>Nombre d'utilisateur par secteur d'activité</b>
+    @{
+        foreach (var group in Model.UserByIndustry)
+        {
+            var industryType = "";
+            switch (group.Key)
+            {
+                case YellowDuck.Api.DbModel.Enums.Industry.Catering:
+                {
+                    industryType = "Restauration";
+                    break;
+                }
+                case YellowDuck.Api.DbModel.Enums.Industry.EducationAndTeaching:
+                {
+                    industryType = "Éducation et enseignement";
+                    break;
+                }
+                case YellowDuck.Api.DbModel.Enums.Industry.FoodProcessingAndDistribution:
+                {
+                    industryType = "Transformation et distribution alimentaires";
+                    break;
+                }
+                case YellowDuck.Api.DbModel.Enums.Industry.HealthAndSocialServices:
+                {
+                    industryType = "Santé et services sociaux";
+                    break;
+                }
+                case YellowDuck.Api.DbModel.Enums.Industry.Other:
+                {
+                    industryType = "Autre";
+                    break;
+                }
+                case YellowDuck.Api.DbModel.Enums.Industry.Retail:
+                {
+                    industryType = "Vente au détail";
+                    break;
+                }
+                case YellowDuck.Api.DbModel.Enums.Industry.Transport:
+                {
+                    industryType = "Transport";
+                    break;
+                }
+            }
+            <p>@industryType : @group.Count()</p>
+        }
+    }
+</p>
+
+<p><b>Nombre total d'annonce</b> : @Model.AdCount</p>
+<p>
+    <b>Nombre d'annonce par type d'organisation</b>
+    @{
+        foreach (var group in Model.AdByOrganizationType)
+        {
+            var organizationType = "";
+            switch (group.Key)
+            {
+                case YellowDuck.Api.DbModel.Enums.OrganizationType.NonProfitOrganizations:
+                {
+                    organizationType = "Entreprises d'économie sociale, organismes communautaires, organismes bénévoles et autres organismes à but non lucratif";
+                    break;
+                }
+                case YellowDuck.Api.DbModel.Enums.OrganizationType.Other:
+                {
+                    organizationType = "Autre";
+                    break;
+                }
+                case YellowDuck.Api.DbModel.Enums.OrganizationType.PrivateCompany:
+                {
+                    organizationType = "Entreprises privées à but lucratif";
+                    break;
+                }
+                case YellowDuck.Api.DbModel.Enums.OrganizationType.PublicSector:
+                {
+                    organizationType = "Organisations du secteur public";
+                    break;
+                }
+            }
+            <p>@organizationType : @group.Count()</p>
+        }
+    }
+</p>
+<p>
+    <b>Nombre d'annonce par type d'équipement</b>
+    @{
+        foreach (var group in Model.AdByCategory)
+        {
+            var category = "";
+            switch (group.Key)
+            {
+                case YellowDuck.Api.DbModel.Enums.AdCategory.DeliveryTruck:
+                {
+                    category = "Camions de livraison";
+                    break;
+                }
+                case YellowDuck.Api.DbModel.Enums.AdCategory.ProfessionalKitchen:
+                {
+                    category = "Cuisines professionnelles";
+                    break;
+                }
+                case YellowDuck.Api.DbModel.Enums.AdCategory.StorageSpace:
+                {
+                    category = "Espaces d'entreposage";
+                    break;
+                }
+                case YellowDuck.Api.DbModel.Enums.AdCategory.Other:
+                {
+                    category = "Autre";
+                    break;
+                }
+            }
+            <p>@category : @group.Count()</p>
+        }
+    }
+</p>
+
+<p>
+    <b>Nombre d'annonce par ville</b>
+    @{
+        foreach (var group in Model.AdByRegion)
+        {
+            <p>@group.Key : @group.Count()</p>
+        }
+    }
+</p>
+
+<p>
+    <b>Liste des codes postaux associés à un compte utilisateur</b>
+    <br />
+    @{
+        foreach (var group in Model.UserByPostalCode)
+        {
+        <span>@(group.Key);@(group.Count())<br /></span>
+        }
+    }
+</p>
+
+<p>
+    <b>Liste des codes postaux associés à une annonce</b>
+    <br />
+    @{
+        foreach (var group in Model.AdByPostalCode)
+        {
+            <span>@(group.Key);@(group.Count())<br /></span>
+        }
+    }
+</p>
+
+<p>À dimanche prochain</p>

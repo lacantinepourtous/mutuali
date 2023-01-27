@@ -1,0 +1,13 @@
+.fab-container {
+  position: relative;
+  width: 100%;
+  z-index: 0;
+
+  &__fab {
+    bottom: 0;
+    margin-bottom: $spacer * -1;
+    padding-bottom: $spacer;
+    position: sticky;
+    z-index: 20;
+  }
+}

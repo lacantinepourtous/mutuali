@@ -1,0 +1,45 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+      "secret-seed": {
+        "reference": {
+          "keyVault": {
+            "id": "/subscriptions/____/resourceGroups/mutuali-group/providers/Microsoft.KeyVault/vaults/mutuali-vault"
+          },
+          "secretName": "mutuali-secret-seed"
+        }
+      },
+      "sql-server-name": {
+        "value": "mutuali-sql"
+      },
+      "sql-admin-username": {
+        "value": "mutuali-sql-admin"
+      },
+      "sql-admin-password": {
+        "reference": {
+          "keyVault": {
+            "id": "/subscriptions/____/resourceGroups/mutuali-group/providers/Microsoft.KeyVault/vaults/mutuali-vault"
+          },
+          "secretName": "mutuali-sql-admin-password"
+        }
+      },
+      "sql-pool-name": {
+        "value": "mutuali-pool"
+      },
+      "sql-db-name-prefix": {
+        "value": "mutuali-db"
+      },
+
+      "storage-account-name-prefix": {
+        "value": "mutualisa"
+      },
+
+      "plan-name": {
+          "value": "mutuali-plan"
+      },
+      "app-name-prefix": {
+        "value": "mutuali-app"
+      }
+    }
+  }

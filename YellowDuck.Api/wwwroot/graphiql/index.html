@@ -1,0 +1,250 @@
+﻿<!doctype html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <title>GraphiQL</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <style>
+        body {
+            height: 100%;
+            margin: 0;
+            width: 100%;
+            overflow: hidden;
+        }
+
+        #app {
+            height: 100vh;
+        }
+    </style>
+
+    <script src="//cdn.jsdelivr.net/es6-promise/4.0.5/es6-promise.auto.min.js"></script>
+    <script src="//cdn.jsdelivr.net/fetch/0.9.0/fetch.min.js"></script>
+    <script src="https://unpkg.com/react@16/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"></script>
+
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/graphiql/0.12.0/graphiql.min.css" />
+    <script src="//cdnjs.cloudflare.com/ajax/libs/graphiql/0.12.0/graphiql.min.js"></script>
+</head>
+
+<body>
+
+    <div id="app"></div>
+
+    <script>
+        const h = React.createElement;
+
+        let authToken = localStorage.getItem("graphiql:authToken");
+        let refreshToken = localStorage.getItem("graphiql:refreshToken");
+        let deviceId = localStorage.getItem("graphiql:deviceId");
+
+        let username = getUserName(authToken);
+
+        if (!deviceId) {
+            deviceId = "graphiql-" + new Date().getTime();
+            localStorage.setItem("graphiql:deviceId", deviceId);
+        }
+
+        function graphQLFetcher(params) {
+            return doFetch()
+                .then(function (response) {
+                    if (response.headers.has("Token-Expired")) {
+                        return renewToken().then(doFetch);
+                    }
+
+                    return response;
+                })
+                .then(function (response) {
+                    return response.text();
+                })
+                .then(function (responseBody) {
+                    try {
+                        return JSON.parse(responseBody);
+                    } catch (error) {
+                        return responseBody;
+                    }
+                });
+
+            function doFetch() {
+                return fetch("/graphql", {
+                    method: "post",
+                    headers: {
+                        "Accept": "application/json",
+                        "Content-Type": "application/json",
+                        "Authorization": "Bearer " + authToken
+                    },
+                    body: JSON.stringify(params)
+                });
+            }
+        }
+
+        function renewToken() {
+            return fetch("/token/refresh", {
+                method: "post",
+                headers: {
+                    "Accept": "application/json",
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    token: authToken,
+                    refreshToken: refreshToken,
+                    deviceId: deviceId
+                })
+            }).then(function(response) {
+                if (response.status === 200) {
+                    return response.json().then(result => {
+                        setAuthToken(result.token);
+                        setRefreshToken(result.refreshToken);
+                    });
+                } else {
+                    setAuthToken(null);
+                    setRefreshToken(null);
+                    throw "expired refresh token";
+                }
+            });
+        }
+
+        function setAuthToken(token) {
+            authToken = token;
+            username = getUserName(token);
+            localStorage.setItem("graphiql:authToken", token);
+        }
+
+        function setRefreshToken(token) {
+            refreshToken = token;
+            localStorage.setItem("graphiql:refreshToken", token);
+        }
+
+        function getUserName(token) {
+            if (!token) return null;
+
+            try {
+                const b64 = token.split('.')[1];
+                const json = atob(b64);
+                const payload = JSON.parse(json);
+                return payload.unique_name;
+            } catch (e) {
+                console.log(e);
+                return null;
+            }
+        }
+
+        class App extends React.Component {
+            constructor() {
+                super();
+
+                this.state = {
+                    loggedIn: !!authToken,
+                    showLogin: false
+                }
+            }
+
+            render() {
+                if (!this.state.showLogin) {
+                    var footer = h(GraphiQL.Footer,
+                        null,
+                        this.state.loggedIn
+                        ? h(React.Fragment,
+                            null,
+                            h(GraphiQL.Button,
+                                {
+                                    onClick: () => {
+                                        setAuthToken(null);
+                                        setRefreshToken(null);
+                                        this.setState({ loggedIn: false });
+                                    },
+                                    label: "Logout"
+                                }),
+                            h("span", null, `Logged in as ${username}.`)
+                        )
+                        : h(GraphiQL.Button,
+                            {
+                                onClick: () => this.setState({ showLogin: true }),
+                                label: "Login"
+                            })
+                    );
+
+                    return h(GraphiQL, 
+                        {
+                            fetcher: params => {
+                                return graphQLFetcher(params)
+                                    .catch(error => {
+                                        if (error === "expired refresh token") {
+                                            this.setState({ loggedIn: false });
+                                        }
+
+                                        throw error;
+                                    });
+                            }
+                        }, 
+                        footer);
+                }
+                else {
+                    return h(Login,
+                        {
+                            loginSubmit: (username, password) => {
+                                fetch("/token/login",
+                                    {
+                                        method: "post",
+                                        headers: {
+                                            "Accept": "application/json",
+                                            "Content-Type": "application/json"
+                                        },
+                                        body: JSON.stringify({
+                                            username: username,
+                                            password: password,
+                                            deviceId: deviceId
+                                        })
+                                    }).then(response => {
+                                    console.log(response);
+                                    if (response.status === 200) {
+                                        response.json().then(result => {
+                                            setAuthToken(result.token);
+                                            setRefreshToken(result.refreshToken);
+                                            this.setState({ loggedIn: true, showLogin: false });
+                                        });
+                                    } else {
+                                        console.log(response);
+                                        alert("login failed");
+                                    }
+                                });
+                            },
+                            cancelLogin: () => this.setState({ showLogin: false })
+                        });
+                }
+            }
+        }
+
+        function Login({ loginSubmit, cancelLogin }) {
+            const usernameRef = React.createRef();
+            const passwordRef = React.createRef();
+
+            return h("form",
+                {
+                    onSubmit: (ev) => {
+                        ev.preventDefault();
+                        loginSubmit(usernameRef.current.value, passwordRef.current.value);
+                    }
+                },
+                h("label", { htmlFor: "username" }, "User name"),
+                h("input", { type: "email", id: "username", ref: usernameRef }),
+                h("br"),
+                h("label", { htmlFor: "password" }, "Password"),
+                h("input", { type: "password", id: "password", ref: passwordRef }),
+                h("br"),
+                h("button", { type: "submit" }, "Login"),
+                h("button", { type: "button", onClick: cancelLogin }, "Cancel")
+            );
+        }
+
+        ReactDOM.render(
+            h(App),
+            document.getElementById("app")
+        );
+
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,3 @@
+mutation UpdateShowMenu($showMenu: Boolean!) {
+  updateShowMenu(showMenu: $showMenu) @client
+}

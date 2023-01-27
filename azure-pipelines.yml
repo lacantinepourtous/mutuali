@@ -1,0 +1,109 @@
+trigger:
+  batch: true
+  branches:
+    include:
+      - main
+      - releases/*
+      - preprod
+
+variables:
+  BuildConfiguration: Release
+  NUGET_PACKAGES: $(Build.SourcesDirectory)/packages
+
+jobs:
+  - job: frontend
+    pool:
+      vmImage: "windows-2019"
+    displayName: Build Frontend
+    steps:
+      - task: NodeTool@0
+        inputs:
+          versionSpec: "10.x"
+        displayName: "Install Node.js"
+
+      - script: |
+          npm install
+        displayName: "install"
+        workingDirectory: "YellowDuck.FE/"
+
+      - script: |
+          npm run build
+        displayName: "build"
+        workingDirectory: "YellowDuck.FE/"
+
+      # TODO: Dé-commenter les lignes appropriées lorsque tests il y aura
+
+      # - script: "npm run test:unit"
+      #   displayName: "Run unit tests"
+      #   workingDirectory: "YellowDuck.FE/"
+
+      # - script: "npm run test:e2e"
+      #   displayName: "Run e2e tests"
+      #   workingDirectory: "YellowDuck.FE/"
+
+      # - task: PublishTestResults@2
+      #   inputs:
+      #     testResultsFormat: VSTest
+      #     testResultsFiles: "YellowDuck.FE/*.trx"
+
+      - task: PublishBuildArtifacts@1
+        inputs:
+          pathtoPublish: "YellowDuck.FE/dist"
+          artifactName: frontend
+
+  - job: api
+    pool:
+      vmImage: "windows-2019"
+    displayName: Build API
+    dependsOn: frontend
+    steps:
+      - task: UseDotNet@2
+        displayName: Install .net core tools
+        inputs:
+          packageType: sdk
+          version: 5.0.202
+
+      - task: DotNetCoreCLI@2
+        displayName: Restore
+        inputs:
+          command: restore
+          projects: "**/*.csproj"
+
+      - task: DownloadBuildArtifacts@0
+        displayName: Download frontend build
+        inputs:
+          buildType: current
+          downloadType: single
+          artifactName: frontend
+          downloadPath: "./artifacts"
+
+      - task: CopyFiles@2
+        displayName: Copy frontend build to proper folder
+        inputs:
+          sourceFolder: "./artifacts/frontend"
+          targetFolder: "./YellowDuck.Api/ClientApp"
+
+      - task: DotNetCoreCLI@2
+        displayName: Build
+        inputs:
+          projects: "**/*.csproj"
+          arguments: "--configuration $(BuildConfiguration)"
+
+      - task: DotNetCoreCLI@2
+        displayName: Test
+        inputs:
+          command: test
+          projects: "YellowDuck.ApiTests/*.csproj"
+          arguments: "--configuration $(BuildConfiguration)"
+
+      - task: DotNetCoreCLI@2
+        displayName: Publish
+        inputs:
+          command: publish
+          arguments: "--configuration $(BuildConfiguration) --output $(build.artifactstagingdirectory)"
+          zipAfterPublish: True
+
+      - task: PublishBuildArtifacts@1
+        inputs:
+          pathtoPublish: "$(build.artifactstagingdirectory)"
+          artifactName: api

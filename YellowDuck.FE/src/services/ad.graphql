@@ -1,0 +1,41 @@
+mutation CreateAd($input: CreateAdInput!) {
+  createAd(input: $input) {
+    ad {
+      id
+    }
+  }
+}
+
+mutation UpdateAd($input: UpdateAdInput!) {
+  updateAd(input: $input) {
+    ad {
+      id
+    }
+  }
+}
+
+mutation UpdateAdTranslation($input: UpdateAdTranslationInput!) {
+  updateAdTranslation(input: $input) {
+    adTranslation {
+      id
+    }
+  }
+}
+
+mutation PublishAd($input: PublishAdInput!) {
+  publishAd(input: $input) {
+    ad {
+      id
+      isPublish
+    }
+  }
+}
+
+mutation UnpublishAd($input: UnpublishAdInput!) {
+  unpublishAd(input: $input) {
+    ad {
+      id
+      isPublish
+    }
+  }
+}

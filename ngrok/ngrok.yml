@@ -1,0 +1,7 @@
+authtoken: 1uLp6dEqGOBa7ktDT6dQdmRvu3v_354KQMeJV8UKPA4rv5PAd
+tunnels:
+  mutuali:
+    proto: http
+    addr: 62543
+    host_header: localhost
+    subdomain: mutuali

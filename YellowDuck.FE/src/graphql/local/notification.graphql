@@ -1,0 +1,9 @@
+query LocalNotifications {
+  notifications @client {
+    id
+    type
+    text
+    duration
+    dismissible
+  }
+}

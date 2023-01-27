@@ -1,0 +1,17 @@
+# Ignore generated files by Doc Plugin
+src/webpack/doc/tmp/**/*.vue
+src/webpack/doc/tmp/**/*.js
+
+# Public static
+public
+
+# Generated file
+package-lock.json
+dist
+
+# Other project
+YellowDuck.Api/
+YellowDuck.ApiTests/
+YellowDuck.ResourceGroup/
+
+*.md

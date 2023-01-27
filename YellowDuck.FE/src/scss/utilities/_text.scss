@@ -1,0 +1,32 @@
+.font-family-base {
+  font-family: $font-family-base !important;
+}
+
+.font-family-brand {
+  font-family: $font-family-brand !important;
+}
+
+.text-decoration-underline {
+  text-decoration: underline !important;
+  text-underline-offset: 2px;
+}
+
+.line-height-none {
+  line-height: 1;
+}
+
+.text-green {
+  color: $green !important;
+}
+
+.text-green-darker {
+  color: $green-darker !important;
+}
+
+.letter-spacing-wide {
+  letter-spacing: 1px;
+}
+
+.smaller {
+  font-size: 70%;
+}

@@ -1,0 +1,20 @@
+/* Used in landing page for resizing paragraph size only. 
+Titles are managed with the use of $enable-responsive-font-sizes 
+in the _config.scss file. */
+
+.responsive-text {
+  font-size: 1em;
+
+  @include media-breakpoint-up(sm) {
+    font-size: 1.1em;
+  }
+  
+  @include media-breakpoint-up(md) {
+    font-size: 1.2em;
+  }
+  
+  @include media-breakpoint-up(lg) {
+    font-size: 1.3em;
+  }
+}
+

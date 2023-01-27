@@ -1,0 +1,254 @@
+// _config.scss is prepended from vue.condig.js sass-loader
+
+@import "./webfont/_moderat.scss";
+
+@import "node_modules/bootstrap/scss/bootstrap.scss";
+@import "node_modules/bootstrap-vue/src/index.scss";
+
+@import "./utilities/_animations.scss";
+@import "./utilities/_fab-container.scss";
+@import "./utilities/_no-content.scss";
+@import "./utilities/_responsive-text.scss";
+@import "./utilities/_rm-child-margin.scss";
+@import "./utilities/_section.scss";
+@import "./utilities/_sr-only.scss";
+@import "./utilities/_text.scss";
+
+:root {
+  --offset-outline-color: white;
+  --outline-color: #{$cyan-darker};
+
+  .gray-lighter {
+    --offset-outline-color: #{$gray-100};
+  }
+
+  .green-lighter {
+    --offset-outline-color: #{$green-lighter};
+    --outline-color: #{$gray-100};
+  }
+
+  .green {
+    --offset-outline-color: #{$green};
+    --outline-color: #{$gray-100};
+  }
+
+  .green-darker {
+    --offset-outline-color: #{$green-darker};
+    --outline-color: #{$gray-100};
+  }
+
+  .cyan-darker {
+    --offset-outline-color: #{$cyan-darker};
+    --outline-color: #{$gray-100};
+  }
+}
+
+// Unify focus-visible look for keyboard navigation
+a,
+button,
+.btn,
+.btn-primary,
+.btn-secondary,
+.btn-outline-primary,
+.btn-outline-secondary,
+.form-control,
+.custom-select,
+.navbar-text[tabindex="0"],
+.vue-map div[role="button"] {
+  &:focus-visible {
+    box-sizing: border-box;
+    outline: none;
+    border-radius: 0.25rem;
+    box-shadow: 0 0 0 2px var(--offset-outline-color), 0 0 0 4px var(--outline-color);
+  }
+}
+
+.focus-overflow {
+  position: relative;
+  z-index: 2;
+}
+
+.rich-text-editor .form-control > div:focus-visible,
+.custom-control-input:focus:not(:checked) ~ .custom-control-label::before,
+.custom-file-input:focus ~ .custom-file-label {
+  box-sizing: border-box;
+  outline: none;
+  border-radius: 0.25rem;
+  box-shadow: 0 0 0 2px var(--offset-outline-color), 0 0 0 4px var(--outline-color);
+}
+
+// Hover state
+.btn-primary,
+.btn-secondary,
+.btn-outline-primary,
+.btn-danger {
+  transition: background-color 0.2s ease-in-out, transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+  &:hover {
+    transform: translate(0, -3px);
+
+    @media (prefers-reduced-motion: reduce) {
+      transform: translate(0, 0);
+      box-shadow: none;
+    }
+  }
+}
+
+.btn-primary {
+  &:hover {
+    box-shadow: 0px 3px 0px $green;
+    background-color: $green-darker;
+  }
+}
+
+.green,
+.green-lighter {
+  .btn-primary {
+    background-color: $green-darker;
+    border-color: $green-darker;
+
+    &:hover {
+      background-color: $green;
+      border-color: $green;
+      box-shadow: 0px 3px 0px $green-darker;
+    }
+  }
+}
+
+.btn-secondary {
+  &:hover {
+    box-shadow: 0px 3px 0px $green;
+  }
+}
+
+.btn-danger {
+  &:hover {
+    box-shadow: 0px 3px 0px $red-darker;
+  }
+}
+
+.btn-outline-primary {
+  &:hover {
+    background-color: transparent;
+    color: $green-darker;
+    box-shadow: 0px 3px 0px $gray-400;
+  }
+}
+
+.btn-outline-secondary {
+  transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out;
+  border-color: $green;
+  color: $green;
+
+  &:hover {
+    background-color: $green-darker;
+    border-color: $green-darker;
+    color: $gray-100;
+  }
+}
+
+a:not([class]),
+a[class=""],
+.btn-link {
+  transition: color 0.1s ease-in-out, text-decoration 0.2s ease-in-out;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  text-decoration-thickness: 1px;
+
+  &:hover {
+    text-decoration-thickness: 2px;
+  }
+}
+
+a[href^="tel:"] {
+  cursor: default;
+  text-decoration: none;
+}
+
+.link-title {
+  color: $gray-100;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  text-decoration-thickness: 2px;
+  transition: color 0.2s ease-in-out;
+
+  &:hover,
+  &:focus,
+  &:active {
+    color: $yellow;
+    text-decoration-thickness: 4px;
+  }
+}
+
+.link-scale {
+  transition: transform 0.2s ease-in-out;
+  &:hover {
+    transform: scale(1.05);
+
+    @media (prefers-reduced-motion: reduce) {
+      transform: scale(1);
+    }
+  }
+}
+
+.dropdown-item,
+.list-group-item-action {
+  transition: color 0.2s ease-in-out, background-color 0.2s ease-in-out;
+
+  &:hover {
+    color: $gray-100;
+    background-color: $green-darker;
+  }
+}
+
+// Bouton pour ouvrir le side-panel
+.navbar-text[tabindex="0"] {
+  transition: color 0.2s ease-in-out, background-color 0.2s ease-in-out;
+  border-radius: 50%;
+
+  &:hover {
+    background-color: $green-darker;
+    color: $gray-100;
+  }
+}
+
+.router-link-exact-active {
+  cursor: default;
+}
+
+.text-light {
+  a:not([class]),
+  a[class=""] {
+    color: $white;
+
+    &:hover,
+    &:focus,
+    &:active {
+      color: $yellow;
+    }
+  }
+}
+
+.text-white {
+  a:not([class]),
+  a[class=""] {
+    color: $white;
+
+    &:hover,
+    &:focus,
+    &:active {
+      color: $yellow;
+    }
+  }
+}
+
+ol,
+ul,
+dl {
+  // HOTFIX
+  // Align list item to the left. Will cause
+  // problem if number greater than 9 (overflow left).
+  // IF THERE ARE PROBLEM, DELETE THIS HOTFIX.
+  &:not([class]) {
+    padding-inline-start: 18px;
+  }
+}
