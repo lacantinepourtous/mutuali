@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using YellowDuck.Api.DbModel.Entities.Ratings;
 using YellowDuck.Api.DbModel.Enums;
 
@@ -39,5 +40,6 @@ namespace YellowDuck.Api.DbModel.Entities.Ads
         public bool CanHaveDriver { get; set; }
 
         public bool IsPublish { get; set; }
+        public DateTime? CreatedAtUTC { get; set; }
     }
 }

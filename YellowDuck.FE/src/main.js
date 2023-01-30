@@ -40,14 +40,16 @@ Vue.use(Date);
 Vue.use(GmapVue, {
   load: {
     key: VUE_APP_GOOGLE_PLACES_API_KEY,
-    libraries: "places",
+    libraries: "places,geometry",
     language: i18nHelpers.locale() === "fr" ? "fr-CA" : "en-ca"
   },
   installComponents: true
 });
 
 if (VUE_APP_GA_MEASUREMENT_ID !== "") {
-  Vue.use(VueGtag, {
+  Vue.use(
+    VueGtag,
+    {
       config: {
         id: VUE_APP_GA_MEASUREMENT_ID,
         params: {

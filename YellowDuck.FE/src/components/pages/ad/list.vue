@@ -1,11 +1,18 @@
 <template>
-  <div class="equipment-list" v-if="ads !== undefined">
-    <div class="section">
-      <b-container fluid>
-        <b-row class="my-2">
-          <b-col>
+  <div class="equipment-list" :class="{ 'equipment-list--view-list': view === LIST_VIEW }">
+    <div ref="adViewStatus" role="status" class="sr-only" aria-live="polite"></div>
+    <div v-if="displayAdvancedFilters" class="equipment-list__modal-body">
+      <portal :to="$consts.enums.PORTAL_HEADER">
+        <nav-close ref="filterNavbar" @close="hideAdvancedFilters"></nav-close>
+      </portal>
+      <ad-filters v-model="filters" @input="onFiltersUpdated()" />
+    </div>
+    <template v-else-if="ads !== undefined">
+      <div class="equipment-list__header">
+        <div class="section py-3">
+          <div class="equipment-list__header-top">
             <s-form-google-autocomplete
-              v-if="false"
+              class="equipment-list__google-address"
               :show-search-button="true"
               v-model="address"
               @input="addPositionMarker"
@@ -16,44 +23,111 @@
               :label="$t('label.address')"
               label-sr-only
             />
-          </b-col>
-          <b-col class="equipment-list__dropdown">
             <dropdown
-              v-model="category"
+              class="equipment-list__filters-dropdown"
+              v-model="filters.category"
+              @input="onFiltersUpdated()"
               id="adCategory"
-              :label="categoryLabel(category)"
+              :label="categoryLabel(filters.category)"
               :options="categoryOptions"
               right
               variant="outline-secondary"
             />
-          </b-col>
-        </b-row>
-      </b-container>
-    </div>
-    <hr class="my-0" />
-    <google-map
-      ref="map"
-      :markers="adMarkers"
-      marker-clickable
-      @mapClicked="mapClicked"
-      @markerClicked="markerClicked"
-      @mapMoved="mapMoved"
-      @zoomChanged="zoomChanged"
-      :latitude="initialLatitude"
-      :longitude="initialLongitude"
-      :zoom="initialZoomLevel"
-    />
-    <div class="equipment-list__bottom section section--md">
-      <ad-card v-if="displayAdSnippet" :id="snippetAdId" />
-      <b-button
-        v-else-if="isConnected && !isAdmin"
-        variant="primary"
-        size="lg"
-        block
-        :to="{ name: $consts.urls.URL_CREATE_AD }"
-        >{{ $t("nav.create-ad") }}</b-button
-      >
-    </div>
+            <b-button class="equipment-list__filters-btn" variant="outline-secondary" @click="showAdvancedFilters">
+              <span class="sr-only">{{ $t("sr.open-advanced-search") }}</span>
+              <b-icon-sliders aria-hidden="true"></b-icon-sliders>
+              <span v-if="filtersCount != 0" class="equipment-list__filters-btn-badge">
+                {{ filtersCount }}
+                <span class="sr-only">{{ $t("sr.active-filters") }}</span>
+              </span>
+            </b-button>
+          </div>
+        </div>
+
+        <div class="equipment-list__header-bottom">
+          <div class="section">
+            <div class="equipment-list__header-bottom-btns">
+              <b-button
+                :aria-label="$t('btn.show-ad-card')"
+                class="equipment-list__toggle-view"
+                :class="{ 'equipment-list__toggle-view--active': view === CARD_VIEW }"
+                variant="primary"
+                @click="setView(CARD_VIEW)"
+                >{{ $t("label.card") }}</b-button
+              >
+              <b-button
+                :aria-label="$t('btn.show-ad-list')"
+                class="equipment-list__toggle-view"
+                :class="{ 'equipment-list__toggle-view--active': view === LIST_VIEW }"
+                variant="primary"
+                @click="setView(LIST_VIEW)"
+                >{{ $t("label.list") }}</b-button
+              >
+              <b-button
+                v-if="filtersCount != 0"
+                @click="reinitFilters()"
+                class="equipment-list__reset-filters-btn"
+                variant="link"
+                >{{ $t("label-reinit-filters") }}</b-button
+              >
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <google-map
+        ref="map"
+        v-show="view === CARD_VIEW"
+        :markers="adMarkers"
+        marker-clickable
+        @mapClicked="mapClicked"
+        @markerClicked="markerClicked"
+        @mapMoved="mapMoved"
+        @zoomChanged="zoomChanged"
+        :latitude="initialLatitude"
+        :longitude="initialLongitude"
+        :zoom="initialZoomLevel"
+      />
+
+      <div v-show="view === LIST_VIEW" class="equipment-list__scroll">
+        <div class="section mt-3 mb-6">
+          <div class="equipment-list__list-header mb-4">
+            <div class="equipment-list__list-header-section mr-2">
+              <ad-category-badge v-if="filters.category" :category="filters.category" closable @close="filters.category = null" />
+            </div>
+
+            <div class="equipment-list__list-header-section ml-2">
+              <dropdown
+                v-model="sort"
+                @input="applySorting()"
+                id="sort"
+                class="w-100"
+                :label="sortLabel(sort)"
+                :options="sortOptionsAvailable"
+                right
+                variant="outline-secondary"
+              />
+            </div>
+          </div>
+
+          <div class="equipment-list__list-view-row">
+            <div class="equipment-list__list-view-col" v-for="adMarker in adMarkers" :key="adMarker.id">
+              <ad-card class="equipment-list__list-view-card" :ad="adMarker.ad" :distance="adMarker.distance" />
+            </div>
+          </div>
+
+          <p v-if="adMarkers.length === 0">{{ $t("text.no-result") }}</p>
+        </div>
+      </div>
+      <div class="equipment-list__bottom section section--md">
+        <ad-card v-if="displayAdSnippet && view === CARD_VIEW" :ad="snippetAd" />
+        <div v-else-if="isConnected && !isAdmin" class="mx-4">
+          <b-button variant="primary" size="lg" block :to="{ name: $consts.urls.URL_CREATE_AD }">{{
+            $t("nav.create-ad")
+          }}</b-button>
+        </div>
+      </div>
+    </template>
   </div>
 </template>
 
@@ -71,17 +145,53 @@ query LocalUser {
   }
 }
 
-query Ads($category: AdCategory = null) {
-  ads(category: $category) {
+query Ads(
+  $category: AdCategory = null
+  $dayAvailability: [DayOfWeek!] = null
+  $eveningAvailability: [DayOfWeek!] = null
+  $professionalKitchenEquipment: [ProfessionalKitchenEquipment!] = null
+  $deliveryTruckType: DeliveryTruckType = null
+  $refrigerated: Boolean = null
+  $canSharedRoad: Boolean = null
+  $canHaveDriver: Boolean = null
+  $language: ContentLanguage!
+) {
+  ads(
+    category: $category
+    dayAvailability: $dayAvailability
+    eveningAvailability: $eveningAvailability
+    professionalKitchenEquipment: $professionalKitchenEquipment
+    deliveryTruckType: $deliveryTruckType
+    refrigerated: $refrigerated
+    canSharedRoad: $canSharedRoad
+    canHaveDriver: $canHaveDriver
+  ) {
     id
     isPublish
+    createdAtUTC
     address {
       id
       latitude
       longitude
     }
+    translationOrDefault(language: $language) {
+      id
+      language
+      title
+      priceDescription
+    }
+    category
+    gallery {
+      id
+      src
+      alt
+    }
+    price
+    priceToBeDetermined
+    organization
   }
 }
+
 </graphql>
 
 <script>
@@ -95,17 +205,40 @@ import {
   CATEGORY_STORAGE_SPACE,
   CATEGORY_OTHER
 } from "@/consts/categories";
+import { CONTENT_LANG_FR } from "@/consts/langs";
 
 import AdCard from "@/components/ad/card";
+import AdFilters from "@/components/ad/filters";
 import Dropdown from "@/components/generic/dropdown";
 import SFormGoogleAutocomplete from "@/components/form/s-form-google-autocomplete";
 import GoogleMap from "@/components/generic/google-map";
+import NavClose from "@/components/nav/close";
+import AdCategoryBadge from "@/components/ad/category-badge";
 
+import { gmapApi } from "gmap-vue";
 import { AdCategory } from "@/mixins/ad-category";
+
+const CARD_VIEW = "CARD";
+const LIST_VIEW = "LIST";
+const SORT_DISTANCE_ASC = "DISTANCE-ASC";
+const SORT_DISTANCE_DESC = "DISTANCE-DESC";
+const SORT_DATE_ASC = "DATE-ASC";
+const SORT_DATE_DESC = "DATE-DESC";
+
+const defaultFilters = {
+  category: null,
+  professionalKitchenEquipment: [],
+  deliveryTruckType: null,
+  dayAvailability: [],
+  eveningAvailability: [],
+  refrigerated: null,
+  canHaveDriver: null,
+  canSharedRoad: null
+};
 
 export default {
   mixins: [AdCategory],
-  components: { AdCard, Dropdown, SFormGoogleAutocomplete, GoogleMap },
+  components: { AdCard, AdFilters, Dropdown, SFormGoogleAutocomplete, GoogleMap, NavClose, AdCategoryBadge },
   computed: {
     isConnected: function() {
       return this.user && this.user.isConnected;
@@ -114,8 +247,17 @@ export default {
       return !this.me || this.me.type === this.$consts.enums.USER_TYPE_ADMIN;
     },
     displayAdSnippet: function() {
-      return this.snippetAdId !== "";
-    }
+      return this.snippetAd !== null;
+    },
+    sortOptionsAvailable: function() {
+      return this.sortOptions.filter((x) => {
+        if (this.userLatLng === null && [SORT_DISTANCE_ASC, SORT_DISTANCE_DESC].includes(x.value)) {
+          return false;
+        }
+        return true;
+      });
+    },
+    google: gmapApi
   },
   methods: {
     mapMoved(latLng) {
@@ -125,19 +267,19 @@ export default {
       localStorage.setItem(LOCAL_STORAGE_MAP_ZOOMLEVEL, zoomLevel);
     },
     resetMarkerIcon() {
-      let marker = this.adMarkers.find((x) => x.id === this.snippetAdId);
+      let marker = this.adMarkers.find((x) => this.snippetAd !== null && x.id === this.snippetAd.id);
       if (marker) {
         marker.icon = require("@/assets/icons/marker-green.svg");
       }
     },
     mapClicked() {
       this.resetMarkerIcon();
-      this.snippetAdId = "";
+      this.snippetAd = null;
     },
     markerClicked(marker) {
       this.resetMarkerIcon();
       marker.icon = require("@/assets/icons/marker-yellow.svg");
-      this.snippetAdId = marker.id;
+      this.snippetAd = marker.ad;
     },
     validateCategory(category) {
       if (
@@ -157,6 +299,11 @@ export default {
       if (!selectedOption) return this.$t("select.filter");
       return selectedOption.text;
     },
+    sortLabel(sort) {
+      const selectedOption = this.sortOptions.find((s) => s.value === sort);
+      if (!selectedOption) return this.$t("select.sort");
+      return selectedOption.text;
+    },
     addPositionMarker(address) {
       if (address === null) {
         this.$refs.map.setPositionMarker(null);
@@ -168,6 +315,149 @@ export default {
           longitude: address.longitude
         }
       });
+    },
+    updateAdViewStatus(toggleSearch) {
+      // For accessibility purposes
+      if (toggleSearch && this.displayAdvancedFilters) {
+        this.$refs.adViewStatus.innerHTML = this.$t("sr.advanced-search-visible");
+      } else if (this.view === LIST_VIEW) {
+        if (toggleSearch) {
+          this.$refs.adViewStatus.innerHTML = this.$t("sr.advanced-search-hidden") + this.$t("sr.ad-list-view");
+        } else {
+          this.$refs.adViewStatus.innerHTML = this.$t("sr.ad-list-view");
+        }
+      } else if (this.view === CARD_VIEW) {
+        if (toggleSearch) {
+          this.$refs.adViewStatus.innerHTML = this.$t("sr.advanced-search-hidden") + this.$t("sr.ad-card-view");
+        } else {
+          this.$refs.adViewStatus.innerHTML = this.$t("sr.ad-card-view");
+        }
+      }
+    },
+    showAdvancedFilters() {
+      this.displayAdvancedFilters = true;
+
+      this.$nextTick(() => {
+        let navbarCloseBtn = this.$refs.filterNavbar.$el;
+        navbarCloseBtn.querySelector(".nav-close").focus();
+        this.updateAdViewStatus(true);
+      });
+    },
+    hideAdvancedFilters() {
+      this.displayAdvancedFilters = false;
+      this.$refs.adViewStatus.innerHTML = this.$t("sr.advanced-search-visible");
+      this.updateAdViewStatus(true);
+    },
+    reinitFilters() {
+      this.filters = {
+        ...defaultFilters
+      };
+    },
+    async onFiltersUpdated() {
+      this.hideAdvancedFilters();
+    },
+    applySorting() {
+      let direction = 1;
+      let sortingProp = null;
+      switch (this.sort) {
+        case SORT_DISTANCE_DESC:
+          direction = -1;
+          sortingProp = "distance";
+          break;
+        case SORT_DISTANCE_ASC:
+          sortingProp = "distance";
+          break;
+        case SORT_DATE_DESC:
+          direction = -1;
+          sortingProp = "createdTimestamp";
+          break;
+        case SORT_DATE_ASC:
+          sortingProp = "createdTimestamp";
+          break;
+      }
+      if (sortingProp === null) return;
+      this.adMarkers.sort((a, b) => {
+        if (a[sortingProp] > b[sortingProp]) {
+          return 1 * direction;
+        } else if (a[sortingProp] < b[sortingProp]) {
+          return -1 * direction;
+        }
+        return 0;
+      });
+      this.setQuery();
+    },
+    calculateUserDistance() {
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition((position) => {
+          this.userLatLng = new this.google.maps.LatLng(position.coords.latitude, position.coords.longitude);
+          for (const marker of this.adMarkers) {
+            const markerLatLng = new this.google.maps.LatLng(marker.lat, marker.lng);
+            marker.distance = this.google.maps.geometry.spherical.computeDistanceBetween(markerLatLng, this.userLatLng);
+          }
+        });
+      }
+    },
+    setView(view) {
+      this.view = view;
+      this.setQuery();
+      this.updateAdViewStatus();
+    },
+    setQuery() {
+      let query = {};
+      if (this.filters.category !== null) {
+        query.category = this.filters.category;
+        this.filtersCount++;
+      }
+
+      if (this.filters.professionalKitchenEquipment.length > 0) {
+        query.professionalKitchenEquipment = this.filters.professionalKitchenEquipment;
+        this.filtersCount++;
+      }
+
+      if (this.filters.deliveryTruckType !== null) {
+        query.deliveryTruckType = this.filters.deliveryTruckType;
+        this.filtersCount++;
+      }
+
+      if (this.filters.dayAvailability.length > 0) {
+        query.dayAvailability = this.filters.dayAvailability;
+        this.filtersCount++;
+      }
+
+      if (this.filters.eveningAvailability.length > 0) {
+        query.eveningAvailability = this.filters.eveningAvailability;
+        this.filtersCount++;
+      }
+
+      if (this.filters.refrigerated === true) {
+        query.refrigerated = true;
+        this.filtersCount++;
+      }
+
+      if (this.filters.canHaveDriver === true) {
+        query.canHaveDriver = true;
+        this.filtersCount++;
+      }
+
+      if (this.filters.canSharedRoad === true) {
+        query.canSharedRoad = true;
+        this.filtersCount++;
+      }
+
+      if (this.sort) {
+        query.sort = this.sort;
+      }
+
+      if (this.view !== CARD_VIEW) {
+        query.view = this.view;
+      }
+
+      this.$router
+        .replace({
+          name: URL_LIST_AD,
+          query
+        })
+        .catch(() => {});
     }
   },
   data() {
@@ -178,29 +468,58 @@ export default {
       latLng = { lat: null, lng: null };
     }
 
-    let category = this.$router.currentRoute.query.category;
-    if (category === undefined) {
-      category = "";
-    } else {
-      category = this.validateCategory(category);
+    let filters = {
+      ...defaultFilters
+    };
+
+    for (var filter of Object.keys(filters)) {
+      if (this.$router.currentRoute.query.hasOwnProperty(filter)) {
+        filters[filter] = this.$router.currentRoute.query[filter];
+      }
     }
 
     return {
-      snippetAdId: "",
+      displayAdvancedFilters: false,
+      snippetAd: null,
       adMarkers: [],
       initialLatitude: latLng.lat,
       initialLongitude: latLng.lng,
       initialZoomLevel: zoomLevel,
       address: null,
-      category: category,
+      userLatLng: null,
+      filters,
+      filtersCount: 0,
+      sort: this.$router.currentRoute.query.sort || null,
+      sortOptions: [
+        { value: SORT_DISTANCE_ASC, text: this.$t("select.distance-asc") },
+        { value: SORT_DISTANCE_DESC, text: this.$t("select.distance-desc") },
+        { value: SORT_DATE_ASC, text: this.$t("select.date-asc") },
+        { value: SORT_DATE_DESC, text: this.$t("select.date-desc") }
+      ],
+      view: this.$router.currentRoute.query.view == LIST_VIEW ? LIST_VIEW : CARD_VIEW,
       categoryOptions: [
-        { value: "", text: this.$t("select.all-equipment") },
+        { value: null, text: this.$t("select.all-equipment") },
         { value: CATEGORY_PROFESSIONAL_KITCHEN, text: this.$t("select.category-professional-kitchen") },
         { value: CATEGORY_DELIVERY_TRUCK, text: this.$t("select.category-delivery-truck") },
         { value: CATEGORY_STORAGE_SPACE, text: this.$t("select.category-storage-space") },
         { value: CATEGORY_OTHER, text: this.$t("select.category-other") }
-      ]
+      ],
+      CARD_VIEW,
+      LIST_VIEW
     };
+  },
+  watch: {
+    "filters.category"(value) {
+      if (value !== CATEGORY_PROFESSIONAL_KITCHEN) {
+        this.filters.professionalKitchenEquipment = [];
+      }
+      if (value !== CATEGORY_DELIVERY_TRUCK) {
+        this.filters.deliveryTruckType = null;
+        this.filters.refrigerated = false;
+        this.filters.canHaveDriver = false;
+        this.filters.canSharedRoad = false;
+      }
+    }
   },
   apollo: {
     me: {
@@ -221,15 +540,20 @@ export default {
         return this.$options.query.Ads;
       },
       variables() {
-        if (this.category === "") {
-          return {};
-        } else {
-          return {
-            category: this.category
-          };
-        }
+        return {
+          category: this.filters.category,
+          professionalKitchenEquipment: this.filters.professionalKitchenEquipment,
+          deliveryTruckType: this.filters.deliveryTruckType,
+          dayAvailability: this.filters.dayAvailability,
+          eveningAvailability: this.filters.eveningAvailability,
+          refrigerated: this.filters.refrigerated,
+          canHaveDriver: this.filters.canHaveDriver,
+          canSharedRoad: this.filters.canSharedRoad,
+          language: CONTENT_LANG_FR
+        };
       },
       result({ data }) {
+        this.filtersCount = 0;
         if (data) {
           this.adMarkers = data.ads
             .filter((x) => x.isPublish)
@@ -237,25 +561,21 @@ export default {
               let pos = randomPosition(x.address.latitude, x.address.longitude);
               return {
                 id: x.id,
+                ad: x,
                 key: x.address.id,
                 lat: pos.lat,
                 lng: pos.lng,
+                distance: null,
+                createdTimestamp: new Date(x.createdAtUTC).getTime(),
                 icon: require("@/assets/icons/marker-green.svg")
               };
             });
+          this.$gmapApiPromiseLazy().then(() => {
+            this.calculateUserDistance();
+            this.applySorting();
+          });
 
-          let query = {};
-
-          if (this.category !== "") {
-            query.category = this.category;
-          }
-
-          this.$router
-            .replace({
-              name: URL_LIST_AD,
-              query
-            })
-            .catch(() => {});
+          this.setQuery();
         }
       }
     }
@@ -265,19 +585,207 @@ export default {
 
 <style lang="scss">
 .equipment-list {
+  background-color: $red-50;
   position: relative;
   width: 100%;
   z-index: 0;
 
-  &__dropdown {
+  &--view-list {
+    &:after {
+      content: "";
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      width: 100%;
+      background: rgb(255, 255, 255);
+      background: linear-gradient(0deg, rgba(255, 255, 255, 1) 0%, rgba(255, 255, 255, 0) 100%);
+      height: 100px;
+    }
+  }
+
+  &__header {
+    background-color: $white;
+
+    @include media-breakpoint-up(lg) {
+      display: flex;
+      flex-direction: row-reverse;
+      justify-content: space-between;
+    }
+  }
+
+  &__header-top {
     display: flex;
-    justify-content: flex-end;
+    justify-content: space-between;
+    align-items: center;
+
+    @include media-breakpoint-up(md) {
+      justify-content: flex-end;
+    }
+  }
+
+  &__header-bottom {
+    display: flex;
+    align-items: center;
+    background-color: $green;
+    padding: $spacer / 4 0;
+
+    @include media-breakpoint-up(lg) {
+      background-color: transparent;
+    }
+  }
+
+  &__header-bottom-btns {
+    display: flex;
+    align-items: center;
+  }
+
+  &__toggle-view {
+    background-color: $green-dark;
+    margin-right: 4px;
+
+    @include media-breakpoint-up(lg) {
+      background-color: $gray-200;
+      border-color: $gray-200;
+      color: $green-dark;
+    }
+
+    &--active {
+      background-color: $green;
+      color: $white;
+    }
+  }
+
+  &__reset-filters-btn {
+    color: $white;
+    font-size: $small-font-size;
+    margin-left: auto;
+    position: relative;
+    left: 12px;
+
+    @include media-breakpoint-up(lg) {
+      color: $green-darker;
+      white-space: nowrap;
+      font-size: $font-size-base;
+      left: 0;
+    }
+  }
+
+  &__google-address {
+    @include media-breakpoint-up(sm) {
+      min-width: 300px;
+    }
+
+    @include media-breakpoint-up(md) {
+      margin-right: auto;
+    }
+
+    @include media-breakpoint-up(lg) {
+      margin-right: 0;
+    }
+  }
+
+  &__filters-dropdown {
+    display: none;
+
+    @include media-breakpoint-up(md) {
+      display: block;
+      padding-left: 12px;
+
+      & > .dropdown-toggle {
+        min-height: 38px;
+      }
+    }
+  }
+
+  &__filters-btn {
+    display: flex;
+    align-items: center;
+    min-height: 38px;
+    margin-left: 12px;
+  }
+
+  &__filters-btn-badge {
+    background-color: $blue;
+    border-radius: 50%;
+    width: 18px;
+    height: 18px;
+    color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: $small-font-size;
+    margin-left: 8px;
+  }
+
+  &__list-header {
+    display: flex;
+    align-items: center;
+
+    @include media-breakpoint-up(sm) {
+      justify-content: flex-end;
+    }
+  }
+
+  &__list-header-section {
+    width: calc(50% - 8px);
+
+    @include media-breakpoint-up(sm) {
+      width: auto;
+    }
+  }
+
+  &__list-view-row {
+    margin-bottom: 100px;
+
+    @include media-breakpoint-up(md) {
+      display: flex;
+      flex-wrap: wrap;
+      margin: 0 -12px;
+    }
+  }
+
+  &__list-view-col {
+    margin: 0 0 24px;
+
+    @include media-breakpoint-up(md) {
+      width: calc(50% - 24px);
+      margin: 0 12px 24px;
+    }
+
+    @include media-breakpoint-up(xl) {
+      width: calc(33.33% - 24px);
+    }
+  }
+
+  &__list-view-card {
+    height: 100%;
+  }
+
+  &__scroll {
+    height: calc(100vh - #{$nav-height} - #{$footer-height} - #{$header-top-height} - #{$header-bottom-height});
+    overflow-y: scroll;
+
+    @include media-breakpoint-up(lg) {
+      height: calc(100vh - #{$nav-height} - #{$footer-height} - #{$header-top-height});
+    }
   }
 
   &__bottom {
     position: absolute;
     bottom: $spacer;
     z-index: 1;
+  }
+
+  &__modal {
+    &-body {
+      display: flex;
+      align-self: stretch;
+      flex: 1 1 auto;
+      flex-direction: column;
+      background-color: $white;
+      height: calc(100vh - #{$nav-height});
+    }
   }
 }
 </style>

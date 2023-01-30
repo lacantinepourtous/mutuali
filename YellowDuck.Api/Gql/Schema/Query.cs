@@ -26,6 +26,7 @@ using YellowDuck.Api.DbModel.Enums;
 using YellowDuck.Api.Utilities;
 using MediatR;
 using YellowDuck.Api.Requests.Queries.Users;
+using YellowDuck.Api.Requests.Queries.Ads;
 
 namespace YellowDuck.Api.Gql.Schema
 {
@@ -101,23 +102,33 @@ namespace YellowDuck.Api.Gql.Schema
         }
 
         [Description("Details about all the active ads")]
-        public async Task<IEnumerable<AdGraphType>> Ads([Inject] AppDbContext db, [Inject] IAppCache cache, AdCategory? category = null)
+        public async Task<IEnumerable<AdGraphType>> Ads(
+            [Inject] IAppCache cache, 
+            [Inject] IMediator mediator,
+            AdCategory? category = null, 
+            IList<DayOfWeek> dayAvailability = null,
+            IList<DayOfWeek> eveningAvailability = null, 
+            IList<ProfessionalKitchenEquipment> professionalKitchenEquipment = null,
+            DeliveryTruckType? deliveryTruckType = null, 
+            bool? refrigerated = null, 
+            bool? canSharedRoad = null, 
+            bool? canHaveDriver = null)
         {
-            return await cache.GetOrAddAsync($"Ads:{category}", async entry => {
+            return await cache.GetOrAddAsync($"Ads:{category}-{string.Join(",", dayAvailability.OrderBy(x => x))}-{string.Join(",", eveningAvailability.OrderBy(x => x))}-{string.Join(",", professionalKitchenEquipment.OrderBy(x => x))}-{deliveryTruckType}-{refrigerated}-{canHaveDriver}-{canSharedRoad}", async entry =>
+            {
                 entry.SetAbsoluteExpiration(DateTimeOffset.UtcNow.AddMinutes(5));
                 entry.Priority = CacheItemPriority.Low;
 
-                List<Ad> ads = null;
-
-                if (category != null)
-                {
-                    ads = await db.Ads.Where(x => x.Category == category).ToListAsync();
-                }
-                else
-                {
-                    ads = await db.Ads.ToListAsync();
-                }
-
+                var ads = await mediator.Send(new SearchAds.Query { 
+                    Category = category,
+                    DayAvailability = dayAvailability,
+                    EveningAvailability = eveningAvailability,
+                    ProfessionalKitchenEquipment = professionalKitchenEquipment,
+                    DeliveryTruckType = deliveryTruckType,
+                    Refrigerated = refrigerated,
+                    CanHaveDriver = canHaveDriver,
+                    CanSharedRoad = canSharedRoad
+                });
                 return ads.Select(x => new AdGraphType(x));
             });
         }

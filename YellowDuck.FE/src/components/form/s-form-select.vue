@@ -1,5 +1,14 @@
 <template>
-  <s-field :id="id" :label="label" :name="name" :inputId="inputId" :rules="rules" :description="description" v-slot="{ sState }">
+  <s-field
+    :id="id"
+    :label="label"
+    labelClass="label"
+    :name="name"
+    :inputId="inputId"
+    :rules="rules"
+    :description="description"
+    v-slot="{ sState }"
+  >
     <b-form-select
       :id="inputId"
       v-model="computedValue"

@@ -58,12 +58,12 @@
       rules="required|image"
       required
     />
-    <form-partial-delivery-truck v-if="false" v-model="form" />
-    <form-partial-professional-kitchen v-if="false" v-model="form" />
-    <form-partial-storage-space v-if="false" v-model="form" />
-    <form-partial-other v-if="true" v-model="form" />
+    <form-partial-delivery-truck v-if="form.category === CATEGORY_DELIVERY_TRUCK" v-model="form" />
+    <form-partial-professional-kitchen v-if="form.category === CATEGORY_PROFESSIONAL_KITCHEN" v-model="form" />
+    <form-partial-storage-space v-if="form.category === CATEGORY_STORAGE_SPACE" v-model="form" />
+    <form-partial-other v-if="form.category === CATEGORY_OTHER" v-model="form" />
+    <label>{{ $t("label.availability") }}</label>
     <s-form-availability
-      v-if="false"
       v-model="form.dayAvailability"
       id="dayAvailability"
       :label="$t('label.ad-dayAvailability')"
@@ -72,7 +72,6 @@
       :options="availabilityWeekdayOptions"
     />
     <s-form-availability
-      v-if="false"
       v-model="form.eveningAvailability"
       id="eveningAvailability"
       :label="$t('label.ad-eveningAvailability')"
@@ -98,13 +97,7 @@
       :placeholder="$t('placeholder.ad-address')"
       required
     />
-    <s-form-checkbox
-      v-if="false"
-      v-model="form.showAddress"
-      id="showAddress"
-      :label="$t('label.ad-showAddress')"
-      name="showAddress"
-    />
+    <s-form-checkbox v-model="form.showAddress" id="showAddress" :label="$t('label.ad-showAddress')" name="showAddress" />
     <div class="fab-container__fab">
       <b-button :disabled="disabledBtn" type="submit" variant="primary" size="lg" block :aria-label="$t('sr.edit')">
         <b-icon icon="pencil" class="mr-2" aria-hidden="true"></b-icon>{{ btnLabel }}

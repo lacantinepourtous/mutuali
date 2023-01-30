@@ -1,8 +1,8 @@
 <template>
-  <s-field :id="id" :name="name" :rules="rules" v-slot="{ sState }">
-    <span v-html="label" />
+  <s-field class="checkbox-group" :id="id" :name="name" :rules="rules" :label="label" labelClass="label" v-slot="{ sState }">
     <b-form-checkbox-group
       :id="`input-${name}`"
+      class="mt-2"
       v-model="computedValue"
       :required="required"
       :options="options"
@@ -50,3 +50,10 @@ export default {
   }
 };
 </script>
+<style lang="scss">
+.checkbox-group {
+  .custom-checkbox {
+    margin-bottom: 10px;
+  }
+}
+</style>

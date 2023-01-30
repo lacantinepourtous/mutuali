@@ -1,5 +1,9 @@
 <template>
-  <router-link v-if="ad" class="mutuali-ad-card card" :to="{ name: $consts.urls.URL_AD_DETAIL, params: { id: this.id } }">
+  <router-link v-if="ad" class="mutuali-ad-card card" :to="{ name: $consts.urls.URL_AD_DETAIL, params: { id: ad.id } }">
+    <div class="mutuali-ad-card__badge">
+      <ad-category-badge :category="adCategory" />
+    </div>
+
     <div class="mutuali-ad-card__pic">
       <img
         v-if="adGallery && adGallery[0]"
@@ -9,53 +13,45 @@
       />
     </div>
     <div class="mutuali-ad-card__text">
-      <ad-category-badge :category="adCategory" />
-      <p class="mt-2 mb-0 text-uppercase font-weight-bold letter-spacing-wide smaller">{{ adOrganization }}</p>
-      <p class="mutuali-ad-card__title m-0 font-weight-bolder">{{ adTitle }}</p>
-      <p v-if="showPrice" class="m-0 small text-decoration-none">
-        <strong>{{ adPrice }}</strong>
+      <p class="mutuali-ad-card__organization mb-2 letter-spacing-wide small">
+        <span class="font-weight-bolder text-uppercase ">{{ adOrganization }}</span>
+        <template v-if="typeof distance === 'number'">
+          <svg
+            class="mutuali-ad-card__circle green mx-2"
+            viewBox="0 0 4 4"
+            height="4px"
+            width="4px"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <circle cx="2" cy="2" r="2" fill="currentColor" />
+          </svg>
+          <span>{{ adDistance }}km</span>
+        </template>
+      </p>
+      <p class="mutuali-ad-card__title font-weight-bold">{{ adTitle }}</p>
+      <p v-if="showPrice" class="mutuali-ad-card__footer mb-0 small text-decoration-none">
+        <span class="font-weight-bolder">{{ adPrice }}</span>
         {{ adPriceDescription }}
       </p>
     </div>
   </router-link>
 </template>
 
-<graphql>
-query AdById($id: ID!, $language: ContentLanguage!) {
-  ad(id: $id) {
-    id
-    translationOrDefault(language: $language) {
-      id
-      language
-      title
-      priceDescription
-    }
-    category
-    gallery {
-      id
-      src
-      alt
-    }
-    price
-    priceToBeDetermined
-    organization
-  }
-}
-</graphql>
-
 <script>
 import AdCategoryBadge from "@/components/ad/category-badge";
-
-import { CONTENT_LANG_FR } from "@/consts/langs";
 
 export default {
   components: {
     AdCategoryBadge
   },
   props: {
-    id: {
-      type: String,
+    ad: {
+      type: Object,
       required: true
+    },
+    distance: {
+      type: Number,
+      required: false
     },
     showPrice: {
       type: Boolean,
@@ -64,36 +60,26 @@ export default {
     }
   },
   computed: {
-    adTitle: function () {
+    adTitle: function() {
       return this.ad.translationOrDefault.title;
     },
-    adCategory: function () {
+    adCategory: function() {
       return this.ad.category;
     },
-    adGallery: function () {
+    adGallery: function() {
       return this.ad.gallery;
     },
-    adPrice: function () {
+    adPrice: function() {
       return this.ad.priceToBeDetermined ? this.$t("price.toBeDetermined") : this.$format.formatMoney(this.ad.price);
     },
-    adPriceDescription: function () {
+    adPriceDescription: function() {
       return this.ad.priceToBeDetermined ? "" : this.ad.translationOrDefault.priceDescription;
     },
-    adOrganization: function () {
+    adOrganization: function() {
       return this.ad.organization;
-    }
-  },
-  apollo: {
-    ad: {
-      query() {
-        return this.$options.query.AdById;
-      },
-      variables() {
-        return {
-          id: this.id,
-          language: CONTENT_LANG_FR
-        };
-      }
+    },
+    adDistance: function() {
+      return Math.round(this.distance / 100) / 10; // m to km, rounded to first decimal.
     }
   }
 };
@@ -103,6 +89,8 @@ export default {
 .mutuali-ad-card {
   align-items: flex-start;
   flex-direction: row;
+  position: relative;
+  border: 0;
 
   &:hover {
     text-decoration: none;
@@ -113,12 +101,21 @@ export default {
     }
   }
 
+  &__badge {
+    position: absolute;
+    top: -14px;
+    right: $spacer;
+  }
+
   &__title {
     transition: color 0.1s ease-in-out, text-decoration 0.2s ease-in-out;
     text-decoration: underline;
     text-underline-offset: 2px;
     text-decoration-thickness: 2px;
     text-decoration-color: transparent;
+    font-size: 20px;
+    line-height: 1.2;
+    margin-bottom: auto;
   }
 
   &__pic {
@@ -131,6 +128,8 @@ export default {
     min-height: 100px;
     overflow: hidden;
     width: #{"min(100px, 30%)"};
+    border-top-left-radius: 6px;
+    border-bottom-left-radius: 6px;
   }
 
   &__img {
@@ -142,9 +141,28 @@ export default {
   }
 
   &__text {
-    display: block;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
     flex: 1 1 auto;
-    padding: $spacer * 0.75;
+    padding: $spacer $spacer * 0.75 $spacer * 0.75;
+    border-top-right-radius: 6px;
+    border-bottom-right-radius: 6px;
+  }
+
+  &__organization {
+    display: flex;
+    align-items: center;
+  }
+
+  &__footer {
+    margin-top: auto;
+    padding-top: 24px;
+  }
+
+  &__circle {
+    position: relative;
+    top: 1px;
   }
 }
 </style>

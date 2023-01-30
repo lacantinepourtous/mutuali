@@ -48,7 +48,7 @@ export default {
     },
     geolocationControl: {
       type: Boolean,
-      default: false
+      default: true
     },
     mapTypeControl: {
       type: Boolean,

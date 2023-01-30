@@ -17,7 +17,7 @@
         <b-nav-item-dropdown right no-caret>
           <template #button-content>
             <span class="text-dark">
-              <b-icon-person-circle aria-hidden="true"></b-icon-person-circle>
+              <span class="nav-header__profile-icon" aria-hidden="true"><b-icon-person-circle></b-icon-person-circle></span>
               {{ $t("nav.profile") }}
             </span>
           </template>
@@ -35,7 +35,10 @@
       <template v-else>
         <b-nav-item link-classes="text-dark" :to="{ name: $consts.urls.URL_LOGIN }">{{ $t("btn.login") }}</b-nav-item>
       </template>
-      <b-nav-item @click="changeLang">{{ $t("btn.change-lang") }}</b-nav-item>
+      <b-nav-item link-classes="text-dark" @click="changeLang">
+        <span class="sr-only">{{ $t("btn.change-lang") }}</span>
+        <span aria-hidden>{{ $t("btn.change-lang-shortcut") }}</span>
+      </b-nav-item>
     </b-navbar-nav>
   </nav-base>
 </template>
@@ -191,6 +194,13 @@ export default {
       &::before {
         background-color: $yellow;
       }
+    }
+  }
+
+  &__profile-icon {
+    display: none;
+    @include media-breakpoint-up(sm) {
+      display: inline;
     }
   }
 

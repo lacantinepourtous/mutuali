@@ -118,5 +118,7 @@ namespace YellowDuck.Api.Gql.Schema.GraphTypes
         public Task<string> Organization => WithData(x => x.Organization);
 
         public Task<bool> IsPublish => WithData(x => x.IsPublish);
+
+        public Task<DateTime?> CreatedAtUTC => WithData(x => x.CreatedAtUTC);
     }
 }
