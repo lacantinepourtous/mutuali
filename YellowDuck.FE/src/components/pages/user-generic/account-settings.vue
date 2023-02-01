@@ -1,7 +1,7 @@
 <template>
   <div class="w-100">
     <div class="section section--sm">
-      <h1 class="h2 my-4">{{ $t("page-title.account-settings") }}</h1>
+      <h1 class="my-4">{{ $t("page-title.account-settings") }}</h1>
       <h2 class="h4 my-4">{{ $t("page-subtitle.account-settings.change-password") }}</h2>
       <s-form class="my-4" @submit="saveAccountSettings">
         <s-form-input
@@ -74,7 +74,7 @@ export default {
     };
   },
   methods: {
-    saveAccountSettings: async function() {
+    saveAccountSettings: async function () {
       let input = {
         userId: this.me.id,
         currentPassword: this.currentPassword,
@@ -86,7 +86,7 @@ export default {
     }
   },
   computed: {
-    email: function() {
+    email: function () {
       return this.me !== undefined ? this.me.email : "";
     }
   }

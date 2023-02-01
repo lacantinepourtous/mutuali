@@ -4,7 +4,7 @@
       <nav-close :to="{ name: $consts.urls.URL_LOGIN }"></nav-close>
     </portal>
     <div v-if="!userCreated" class="section section--sm">
-      <h1 class="h2 my-4">{{ $t("page-title.create-user") }}</h1>
+      <h1 class="my-4">{{ $t("page-title.create-user") }}</h1>
       <subscribe-user-form class="my-4" @submitForm="subscribeUser" />
     </div>
     <form-complete
@@ -44,7 +44,7 @@ export default {
     };
   },
   methods: {
-    subscribeUser: async function(input) {
+    subscribeUser: async function (input) {
       this.isSubmitting = true;
       await UserService.createUserAccount(input, this.$router.currentRoute.query.returnPath);
       this.userCreated = true;

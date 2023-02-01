@@ -5,7 +5,7 @@
         <nav-close :to="{ name: $consts.urls.URL_AD_DETAIL, params: { id: this.adId } }"></nav-close>
       </portal>
       <div class="section section--md my-4">
-        <h1 class="h2 my-4">{{ $t("page-title.edit-ad") }}</h1>
+        <h1 class="my-4">{{ $t("page-title.edit-ad") }}</h1>
         <ad-form
           v-if="ad"
           :title="adTitle"
@@ -110,81 +110,81 @@ export default {
     };
   },
   computed: {
-    adId: function() {
+    adId: function () {
       return this.$route.params.id.split("-").last();
     },
-    adTitle: function() {
+    adTitle: function () {
       return this.ad.translationOrDefault.title;
     },
-    adDescription: function() {
+    adDescription: function () {
       return this.ad.translationOrDefault.description;
     },
-    adCategory: function() {
+    adCategory: function () {
       return this.ad.category;
     },
-    adAddress: function() {
+    adAddress: function () {
       return this.ad.address;
     },
-    adShowAddress: function() {
+    adShowAddress: function () {
       return this.ad.showAddress;
     },
-    adImages: function() {
+    adImages: function () {
       return this.ad.gallery;
     },
-    adPrice: function() {
+    adPrice: function () {
       return this.ad.price;
     },
-    adPriceToBeDetermined: function() {
+    adPriceToBeDetermined: function () {
       return this.ad.priceToBeDetermined;
     },
-    adPriceDescription: function() {
+    adPriceDescription: function () {
       return this.ad.translationOrDefault.priceDescription;
     },
-    adConditions: function() {
+    adConditions: function () {
       return this.ad.translationOrDefault.conditions;
     },
-    adOrganization: function() {
+    adOrganization: function () {
       return this.ad.organization;
     },
-    adSurfaceSize: function() {
+    adSurfaceSize: function () {
       return this.ad.translationOrDefault.surfaceSize;
     },
-    adEquipment: function() {
+    adEquipment: function () {
       return this.ad.translationOrDefault.equipment;
     },
-    adSurfaceDescription: function() {
+    adSurfaceDescription: function () {
       return this.ad.translationOrDefault.surfaceDescription;
     },
-    adProfessionalKitchenEquipmentOther: function() {
+    adProfessionalKitchenEquipmentOther: function () {
       return this.ad.translationOrDefault.professionalKitchenEquipmentOther;
     },
-    adDeliveryTruckTypeOther: function() {
+    adDeliveryTruckTypeOther: function () {
       return this.ad.translationOrDefault.deliveryTruckTypeOther;
     },
-    adProfessionalKitchenEquipment: function() {
+    adProfessionalKitchenEquipment: function () {
       return this.ad.professionalKitchenEquipment;
     },
-    adDeliveryTruckType: function() {
+    adDeliveryTruckType: function () {
       return this.ad.deliveryTruckType;
     },
-    adDayAvailability: function() {
+    adDayAvailability: function () {
       return this.ad.dayAvailability;
     },
-    adEveningAvailability: function() {
+    adEveningAvailability: function () {
       return this.ad.eveningAvailability;
     },
-    adRefrigerated: function() {
+    adRefrigerated: function () {
       return this.ad.refrigerated;
     },
-    adCanHaveDriver: function() {
+    adCanHaveDriver: function () {
       return this.ad.canHaveDriver;
     },
-    adCanSharedRoad: function() {
+    adCanSharedRoad: function () {
       return this.ad.canSharedRoad;
     }
   },
   methods: {
-    editAd: async function(input) {
+    editAd: async function (input) {
       if (input && Object.keys(input).length === 0 && input.constructor === Object) {
         NotificationService.showInfo(this.$t("notification.edit-ad-empty"));
       } else {

@@ -23,17 +23,18 @@
           <b-col>
             <b-card class="border-0 rounded-0" body-class="py-0 px-0">
               <b-card-text>
-                <p class="display-4 mb-1 font-weight-bolder text-green-darker">{{ registeredSince }}</p>
+                <p class="display-4 mb-1 font-weight-bolder text-green-dark">{{ registeredSince }}</p>
                 <small class="text-muted responsive-text">{{ $t("profile-detail.registered-since") }}</small>
               </b-card-text>
               <b-card-text v-if="!isCurrentUser">
                 <a
                   class="user__report"
-                  :href="
-                    `mailto:${contactUsEmail}?subject=${$t('email.report-user-subject')}&body=${$t('email.report-user-body', {
+                  :href="`mailto:${contactUsEmail}?subject=${$t('email.report-user-subject')}&body=${$t(
+                    'email.report-user-body',
+                    {
                       url: urlForReport
-                    })}`
-                  "
+                    }
+                  )}`"
                   >{{ $t("btn.report-user-ad") }}</a
                 >
               </b-card-text>
@@ -128,32 +129,32 @@ export default {
     AdSnippet
   },
   computed: {
-    contactUsEmail: function() {
+    contactUsEmail: function () {
       return VUE_APP_MUTUALI_CONTACT_MAIL;
     },
-    profileId: function() {
+    profileId: function () {
       return this.$route.params.id.split("-").last();
     },
-    averageRating: function() {
+    averageRating: function () {
       return this.userProfile.user ? String(this.userProfile.user.averageRating) : "-";
     },
-    publishedAds: function() {
+    publishedAds: function () {
       return this.userProfile.user ? this.userProfile.user.ads.filter((x) => x.isPublish) : [];
     },
-    ratings: function() {
+    ratings: function () {
       const ratings = this.userProfile.user ? this.userProfile.user.userRatings : [];
       return this.getRatingsWithCriterias(ratings, ["respect", "fiability", "communication"]);
     },
-    registeredSince: function() {
+    registeredSince: function () {
       return this.userProfile.user ? this.fromNow(this.userProfile.user.registrationDate) : this.fromNow(new Date().toString());
     },
-    transactionsCount: function() {
+    transactionsCount: function () {
       return this.userProfile.user ? String(this.userProfile.user.transactionsCount) : "-";
     },
-    isCurrentUser: function() {
+    isCurrentUser: function () {
       return this.me ? this.profileId === this.me.profile.id : false;
     },
-    urlForReport: function() {
+    urlForReport: function () {
       return encodeURI(
         `${window.location.protocol}//${window.location.hostname}${
           this.$router.resolve({
@@ -171,10 +172,10 @@ export default {
       if (diff < 12) return this.$tc("from-now.month", diff);
       return this.$tc("from-now.year", Math.floor(diff / 12));
     },
-    adPrice: function(ad) {
+    adPrice: function (ad) {
       return ad.priceToBeDetermined ? this.$t("price.toBeDetermined") : this.$format.formatMoney(ad.price);
     },
-    adPriceDescription: function(ad) {
+    adPriceDescription: function (ad) {
       return ad.priceToBeDetermined ? "" : ad.translationOrDefault.priceDescription;
     }
   },

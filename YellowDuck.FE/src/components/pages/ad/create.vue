@@ -4,7 +4,7 @@
       <nav-close :to="{ name: $consts.urls.URL_LIST_AD }"></nav-close>
     </portal>
     <div v-if="!adCreated" class="section section--md my-4">
-      <h1 class="h2 my-4">{{ $t("page-title.create-ad") }}</h1>
+      <h1 class="my-4">{{ $t("page-title.create-ad") }}</h1>
       <ad-form @submitForm="createAd" :disabledBtn="isSubmitted" :btnLabel="$t('btn.create-ad')" />
     </div>
     <form-complete
