@@ -238,17 +238,19 @@ export default {
       }
     },
     adAddressReadable() {
+      // eslint-disable-next-line no-console
+      console.log(this.ad);
       const addressElements = [];
-      if (this.adAddress.route) addressElements.push(`${this.adAddress.streetNumber} ${this.adAddress.route}`.trim());
-      addressElements.push(this.adCity);
-      if (this.adAddress.postalCode) addressElements.push(this.adAddress.postalCode);
+      if (this.ad.address.route) addressElements.push(`${this.ad.address.streetNumber} ${this.ad.address.route}`.trim());
+      addressElements.push(this.ad.city);
+      if (this.ad.address.postalCode) addressElements.push(this.ad.address.postalCode);
       return addressElements.join(", ");
     },
     adMarkers() {
       const markerIcon = this.ad.showAddress
         ? require("@/assets/icons/marker-green.svg")
         : require("@/assets/icons/marker-radius.svg");
-      return [{ lat: this.adLatitude, lng: this.adLongitude, icon: markerIcon }];
+      return [{ lat: this.ad.address.latitude, lng: this.ad.address.longitude, icon: markerIcon }];
     },
     adPrice() {
       return this.ad.priceToBeDetermined ? this.$t("price.toBeDetermined") : this.$format.formatMoney(this.ad.price);
