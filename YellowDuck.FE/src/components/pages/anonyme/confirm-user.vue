@@ -1,6 +1,6 @@
 <template>
   <div class="section section--sm my-4 w-100">
-    <h1 class="h2 my-4">{{ $t("page-title.confirm-email") }}</h1>
+    <h1 class="my-4">{{ $t("page-title.confirm-email") }}</h1>
     <template v-if="showError">
       <p class="lead">{{ $t("confirm-email.error-text") }}</p>
       <b-button variant="primary" block @click="resendEmail">{{ $t("btn.resend-confirm-email") }}</b-button>

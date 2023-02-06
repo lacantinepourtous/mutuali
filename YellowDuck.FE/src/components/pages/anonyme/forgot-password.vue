@@ -4,7 +4,7 @@
       <nav-close :to="{ name: $consts.urls.URL_LOGIN }"></nav-close>
     </portal>
     <div v-if="!emailSent" class="section section--sm">
-      <h1 class="h2 my-4">{{ $t("page-title.forgot-password") }}</h1>
+      <h1 class="my-4">{{ $t("page-title.forgot-password") }}</h1>
       <s-form class="my-4" @submit="sendPasswordReset">
         <s-form-input
           id="email"

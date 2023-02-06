@@ -19,7 +19,7 @@
       />
     </template>
     <div v-else-if="!emailSent" class="section section--sm">
-      <h1 class="h2 my-4">{{ $t("page-title.reset-password") }}</h1>
+      <h1 class="my-4">{{ $t("page-title.reset-password") }}</h1>
       <s-form class="my-4" @submit="resetPassword">
         <s-form-input
           id="password"
