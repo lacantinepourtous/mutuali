@@ -1,7 +1,7 @@
 <template>
   <div class="w-100">
     <div class="section section--sm">
-      <h1 class="h2 my-4">{{ $t("page-title.edit-profile") }}</h1>
+      <h1 class="my-4">{{ $t("page-title.edit-profile") }}</h1>
       <edit-profile
         v-if="this.me"
         :user-id="this.me.id"

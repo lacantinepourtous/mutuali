@@ -4,7 +4,7 @@
       <nav-close :to="{ name: $consts.urls.URL_CONVERSATION_DETAIL, params: { id: this.conversationId } }"></nav-close>
     </portal>
     <div v-if="!contractCreated" class="section section--md my-4">
-      <h1 class="h2 my-4">{{ $t("page-title.create-contract") }}</h1>
+      <h1 class="my-4">{{ $t("page-title.create-contract") }}</h1>
       <contract-form
         :disabledBtn="isSubmitted"
         @submitForm="createContract"

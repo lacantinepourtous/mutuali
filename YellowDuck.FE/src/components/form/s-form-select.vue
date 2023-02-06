@@ -41,7 +41,7 @@ export default {
     SField
   },
   computed: {
-    computedOptions: function() {
+    computedOptions: function () {
       let options = [...this.options];
       if (this.addDisableOptions || this.placeholder) {
         options.unshift({
@@ -71,7 +71,7 @@ export default {
 <style lang="scss">
 .custom-select {
   &:invalid {
-    color: $gray-400;
+    color: $text-muted;
   }
 
   option {

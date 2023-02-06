@@ -4,7 +4,7 @@
       <nav-close :to="{ name: $consts.urls.URL_LIST_USERS }"></nav-close>
     </portal>
     <div class="section section--sm">
-      <h1 class="h2 my-4">{{ $t("page-title.edit-profile") }}</h1>
+      <h1 class="my-4">{{ $t("page-title.edit-profile") }}</h1>
       <edit-profile
         v-if="this.user"
         :user-id="this.user.id"
