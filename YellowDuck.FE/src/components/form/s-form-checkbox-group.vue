@@ -1,5 +1,13 @@
 <template>
-  <s-field class="checkbox-group" :id="id" :name="name" :rules="rules" :label="label" labelClass="label" v-slot="{ sState }">
+  <s-field
+    class="checkbox-group"
+    :id="id"
+    :name="name"
+    :rules="rules"
+    :label="label"
+    :labelClass="labelClass"
+    v-slot="{ sState }"
+  >
     <b-form-checkbox-group
       :id="`input-${name}`"
       class="mt-2"
@@ -21,6 +29,7 @@ export default {
     id: String,
     label: String,
     name: String,
+    labelClass: String,
     options: {
       type: Array,
       default() {

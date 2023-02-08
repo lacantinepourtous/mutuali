@@ -25,6 +25,7 @@
             @input="(value) => updateFilters('professionalKitchenEquipment', value)"
             id="professionalKitchenEquipment"
             :label="$t('label.ad-professionalKitchenEquipment')"
+            label-class="label"
             name="professionalKitchenEquipment"
             :options="professionalKitchenEquipmentOptions"
           />

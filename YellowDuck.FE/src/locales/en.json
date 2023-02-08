@@ -539,5 +539,8 @@
   "alt.contact-heading": "Hands arrange quiche wedges on a plate",
   "alt.message-sent-at": "Message sent at ",
   "label.ad-equipments-inclusions": "Equipment / Inclusions",
-  "label.ad-availability": "Availability"
+  "label.ad-availability": "Availability",
+  "section-title.general-info": "General informations",
+  "section-title.description": "Description",
+  "section-title.contact-details": "Contact details"
 }
