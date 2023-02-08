@@ -240,16 +240,16 @@ export default {
   mixins: [AdCategory],
   components: { AdCard, AdFilters, Dropdown, SFormGoogleAutocomplete, GoogleMap, NavClose, AdCategoryBadge },
   computed: {
-    isConnected: function() {
+    isConnected: function () {
       return this.user && this.user.isConnected;
     },
-    isAdmin: function() {
+    isAdmin: function () {
       return !this.me || this.me.type === this.$consts.enums.USER_TYPE_ADMIN;
     },
-    displayAdSnippet: function() {
+    displayAdSnippet: function () {
       return this.snippetAd !== null;
     },
-    sortOptionsAvailable: function() {
+    sortOptionsAvailable: function () {
       return this.sortOptions.filter((x) => {
         if (this.userLatLng === null && [SORT_DISTANCE_ASC, SORT_DISTANCE_DESC].includes(x.value)) {
           return false;
@@ -641,8 +641,17 @@ export default {
   }
 
   &__toggle-view {
-    background-color: $green-dark;
+    background-color: $green;
     margin-right: 4px;
+
+    @include media-breakpoint-down(lg) {
+      &:hover {
+        transform: translate(0, 0);
+        border-color: white;
+        box-shadow: none;
+        background-color: $green;
+      }
+    }
 
     @include media-breakpoint-up(lg) {
       background-color: $gray-200;
@@ -651,8 +660,27 @@ export default {
     }
 
     &--active {
-      background-color: $green;
+      background-color: $green-dark;
+      border-color: $green-dark;
       color: $white;
+
+      &:hover {
+        transform: translate(0, 0);
+        box-shadow: none;
+        border: 1px solid $green-dark;
+        background-color: $green-dark;
+        cursor: default !important;
+      }
+
+      @include media-breakpoint-up(lg) {
+        background-color: $green;
+        border-color: $gray-200;
+
+        &:hover {
+          background-color: $green;
+          border-color: $gray-200;
+        }
+      }
     }
   }
 
