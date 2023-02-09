@@ -61,8 +61,8 @@ export default {
 </script>
 <style lang="scss">
 .checkbox-group {
-  .custom-checkbox {
-    margin-bottom: 10px;
+  .custom-checkbox:not(:last-child) {
+    margin-bottom: $spacer * 0.5;
   }
 }
 </style>

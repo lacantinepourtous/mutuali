@@ -97,7 +97,7 @@ export default {
     border-left: 3px solid $yellow;
     padding-left: $spacer;
     .custom-checkbox:not(:last-child) {
-      margin-bottom: $spacer * 0.75;
+      margin-bottom: $spacer * 0.5;
     }
   }
 }
