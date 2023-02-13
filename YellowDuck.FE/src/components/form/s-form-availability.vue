@@ -1,5 +1,5 @@
 <template>
-  <div class="form-availability">
+  <div class="form-availability mt-2 rm-child-margin">
     <s-field labelClass="label" :id="id" :inputId="`input-show-${name}`" :name="name" :rules="rules" margin="none" class="mt-2">
       <b-form-checkbox :id="`input-show-${name}`" v-model="computedShown" :required="required">
         <span v-html="label" />
@@ -11,6 +11,7 @@
       :id="`${id}-items`"
       :name="`${name}-items`"
       :label="specifyLabel"
+      :labelClass="{ 'sr-only': specifyLabelSrOnly }"
       v-slot="{ sState }"
       v-if="computedShown"
       :rules="{ required: required }"
@@ -92,11 +93,11 @@ export default {
 <style lang="scss">
 .form-availability {
   .items {
-    margin-top: $spacer / 2;
+    margin-top: $spacer / 1.5;
     border-left: 3px solid $yellow;
     padding-left: $spacer;
     .custom-checkbox:not(:last-child) {
-      margin-bottom: $spacer * 0.75;
+      margin-bottom: $spacer * 0.5;
     }
   }
 }

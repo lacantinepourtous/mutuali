@@ -539,5 +539,8 @@
   "alt.contact-us": "Des mains disposent des pointes de quiche sur une plaque",
   "alt.message-sent-at": "Message envoyé à ",
   "label.ad-equipments-inclusions": "Équipements / Inclusions",
-  "label.ad-availability": "Disponibilités"
+  "label.ad-availability": "Disponibilités",
+  "section-title.general-info": "Informations générales",
+  "section-title.description": "Description",
+  "section-title.contact-details": "Coordonnées"
 }
