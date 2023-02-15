@@ -102,12 +102,12 @@ export default {
     };
   },
   methods: {
-    inputChange: function (e) {
+    inputChange(e) {
       // "inputChange" is always triggered before "placeChanged"
       this.computedValue = null;
       e.target.value = "";
     },
-    placeChanged: function (place) {
+    placeChanged(place) {
       if (!place || !place.geometry) {
         this.computedValue = null;
         return;
@@ -119,21 +119,21 @@ export default {
 
       this.computedValue = this.formatResult(place);
     },
-    inputBlur: function (e) {
+    inputBlur(e) {
       this.displayPlaceholder = true;
     },
-    inputFocus: function (e) {
+    inputFocus(e) {
       this.biasAutocompleteLocation();
     },
-    editAddress: function () {
+    editAddress() {
       this.computedValue = null;
       this.displayPlaceholder = false;
       setTimeout(() => this.$refs.address.$refs.input.focus(), 16);
     },
     // Bias autocomplete location from VueGoogleAutocomplete
-    biasAutocompleteLocation: function () {
+    biasAutocompleteLocation() {
       const _this = this;
-      this.$gmapApiPromiseLazy().then(function () {
+      this.$gmapApiPromiseLazy().then(function() {
         navigator.geolocation.getCurrentPosition((position) => {
           // eslint-disable-next-line
           let circle = new google.maps.Circle({
@@ -148,7 +148,7 @@ export default {
       });
     },
     // Format result from VueGoogleAutocomplete
-    formatResult: function (place) {
+    formatResult(place) {
       const ADDRESS_COMPONENTS = {
         subpremise: "short_name",
         street_number: "short_name",
@@ -174,6 +174,23 @@ export default {
       returnData["longitude"] = place.geometry.location.lng();
 
       return returnData;
+    },
+    formatAddress(value) {
+      if (!value) return "";
+      var firstSection = [];
+      var lastSection = [];
+      if (value.streetNumber || value.street_number) firstSection.push(value.streetNumber || value.street_number);
+      if (value.route) firstSection.push(value.route);
+      if (value.locality || value.administrative_area_level_2)
+        lastSection.push(value.locality || value.administrative_area_level_2);
+      if (lastSection.length === 0 && value.administrative_area_level_2) lastSection.push(value.administrative_area_level_2);
+      if (lastSection.length === 0 && value.administrative_area_level_1) lastSection.push(value.administrative_area_level_1);
+
+      var address = firstSection.join(" ");
+      if (address.trim() !== "" && lastSection.length > 0) address += ", ";
+      address += lastSection.join(" ");
+
+      return address.trim();
     }
   },
   computed: {
@@ -182,32 +199,20 @@ export default {
         return this.value;
       },
       set(val) {
-        this.$emit("input", val);
+        if (val) {
+          this.$emit("input", { ...val, formatedAddress: this.formatAddress(val) });
+        } else {
+          this.$emit("input", null);
+        }
       }
     },
-    computedPlaceholder: function () {
+    computedPlaceholder() {
       return this.displayPlaceholder ? this.placeholder : "";
     },
-    address: function () {
-      var firstSection = [];
-      var lastSection = [];
-      if (this.value.streetNumber || this.value.street_number)
-        firstSection.push(this.value.streetNumber || this.value.street_number);
-      if (this.value.route) firstSection.push(this.value.route);
-      if (this.value.locality || this.value.administrative_area_level_2)
-        lastSection.push(this.value.locality || this.value.administrative_area_level_2);
-      if (lastSection.length === 0 && this.value.administrative_area_level_2)
-        lastSection.push(this.value.administrative_area_level_2);
-      if (lastSection.length === 0 && this.value.administrative_area_level_1)
-        lastSection.push(this.value.administrative_area_level_1);
-
-      var address = firstSection.join(" ");
-      if (address.trim() !== "" && lastSection.length > 0) address += ", ";
-      address += lastSection.join(" ");
-
-      return address.trim();
+    address() {
+      return this.value ? this.value.formatedAddress : "";
     },
-    edit: function () {
+    edit() {
       return this.value === null;
     },
     inputId() {

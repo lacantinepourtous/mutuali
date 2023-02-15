@@ -240,22 +240,29 @@ export default {
   mixins: [AdCategory],
   components: { AdCard, AdFilters, Dropdown, SFormGoogleAutocomplete, GoogleMap, NavClose, AdCategoryBadge },
   computed: {
-    isConnected: function () {
+    isConnected() {
       return this.user && this.user.isConnected;
     },
-    isAdmin: function () {
+    isAdmin() {
       return !this.me || this.me.type === this.$consts.enums.USER_TYPE_ADMIN;
     },
-    displayAdSnippet: function () {
+    displayAdSnippet() {
       return this.snippetAd !== null;
     },
-    sortOptionsAvailable: function () {
+    sortOptionsAvailable() {
       return this.sortOptions.filter((x) => {
-        if (this.userLatLng === null && [SORT_DISTANCE_ASC, SORT_DISTANCE_DESC].includes(x.value)) {
+        if (this.userPosition === null && [SORT_DISTANCE_ASC, SORT_DISTANCE_DESC].includes(x.value)) {
           return false;
         }
         return true;
       });
+    },
+    researchPosition() {
+      return this.address || this.userPosition;
+    },
+    researchPositionLatLng() {
+      if (!this.researchPosition) return;
+      return new this.google.maps.LatLng(this.researchPosition.latitude, this.researchPosition.longitude);
     },
     google: gmapApi
   },
@@ -305,6 +312,8 @@ export default {
       return selectedOption.text;
     },
     addPositionMarker(address) {
+      this.calculateMarkerDistance();
+      this.setQuery();
       if (address === null) {
         this.$refs.map.setPositionMarker(null);
         return;
@@ -386,16 +395,19 @@ export default {
       });
       this.setQuery();
     },
-    calculateUserDistance() {
-      if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition((position) => {
-          this.userLatLng = new this.google.maps.LatLng(position.coords.latitude, position.coords.longitude);
-          for (const marker of this.adMarkers) {
-            const markerLatLng = new this.google.maps.LatLng(marker.lat, marker.lng);
-            marker.distance = this.google.maps.geometry.spherical.computeDistanceBetween(markerLatLng, this.userLatLng);
-          }
-        });
+    getUserPosition() {
+      navigator.geolocation.getCurrentPosition((position) => {
+        this.userPosition = position.coords;
+        if (!this.address) this.calculateMarkerDistance();
+      });
+    },
+    calculateMarkerDistance() {
+      if (!this.researchPosition) return;
+      for (const marker of this.adMarkers) {
+        const markerLatLng = new this.google.maps.LatLng(marker.lat, marker.lng);
+        marker.distance = this.google.maps.geometry.spherical.computeDistanceBetween(markerLatLng, this.researchPositionLatLng);
       }
+      this.applySorting();
     },
     setView(view) {
       this.view = view;
@@ -452,6 +464,12 @@ export default {
         query.view = this.view;
       }
 
+      if (this.address) {
+        query.address = this.address.formatedAddress;
+        query.lat = this.address.latitude;
+        query.lon = this.address.longitude;
+      }
+
       this.$router
         .replace({
           name: URL_LIST_AD,
@@ -486,7 +504,7 @@ export default {
       initialLongitude: latLng.lng,
       initialZoomLevel: zoomLevel,
       address: null,
-      userLatLng: null,
+      userPosition: null,
       filters,
       filtersCount: 0,
       sort: this.$router.currentRoute.query.sort || null,
@@ -507,6 +525,20 @@ export default {
       CARD_VIEW,
       LIST_VIEW
     };
+  },
+  mounted() {
+    this.getUserPosition();
+    if (
+      this.$router.currentRoute.query.address &&
+      this.$router.currentRoute.query.lat > 0 &&
+      this.$router.currentRoute.query.lon < 0
+    ) {
+      this.address = {
+        formatedAddress: this.$router.currentRoute.query.address,
+        latitude: this.$router.currentRoute.query.lat,
+        longitude: this.$router.currentRoute.query.lon
+      };
+    }
   },
   watch: {
     "filters.category"(value) {
@@ -571,8 +603,7 @@ export default {
               };
             });
           this.$gmapApiPromiseLazy().then(() => {
-            this.calculateUserDistance();
-            this.applySorting();
+            this.calculateMarkerDistance();
           });
 
           this.setQuery();
