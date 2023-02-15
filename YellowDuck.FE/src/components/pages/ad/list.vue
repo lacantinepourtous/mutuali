@@ -416,6 +416,7 @@ export default {
     },
     setQuery() {
       let query = {};
+      this.filtersCount = 0;
       if (this.filters.category !== null) {
         query.category = this.filters.category;
         this.filtersCount++;
