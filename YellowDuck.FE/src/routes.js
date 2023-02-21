@@ -216,6 +216,22 @@ export default [
       usertype: USER_TYPE_USER
     }
   },
+  {
+    name: urls.URL_AD_ALERT_LIST,
+    path: "/alertes",
+    component: () => import("@/components/pages/alert/list.vue"),
+    meta: {
+      usertype: USER_TYPE_USER
+    }
+  },
+  {
+    name: urls.URL_AD_ALERT_ADD,
+    path: "/alertes/creer",
+    component: () => import("@/components/pages/alert/add.vue"),
+    meta: {
+      anonymous
+    }
+  },
 
   {
     name: urls.URL_LIST_CONVERSATION,

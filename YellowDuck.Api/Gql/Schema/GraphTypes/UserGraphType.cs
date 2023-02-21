@@ -94,5 +94,6 @@ namespace YellowDuck.Api.Gql.Schema.GraphTypes
         }
 
         public Task<DateTime> RegistrationDate() => WithData(x => x.CreatedAtUtc.ToLocalTime());
+        public Task<bool> FirstLoginModalClosed => WithData(x => x.FirstLoginModalClosed);
     }
 }

@@ -106,6 +106,15 @@ namespace YellowDuck.Api.Gql.Schema
             return mediator.Send(input.Value);
         }
 
+        [ApplyPolicy(AuthorizationPolicies.LoggedIn)]
+        [AnnotateErrorCodes(typeof(UpdateFirstLoginModalClosed))]
+        public Task<UpdateFirstLoginModalClosed.Payload> UpdateFirstLoginModalClosed(
+            [Inject] IMediator mediator,
+            NonNull<UpdateFirstLoginModalClosed.Input> input)
+        {
+            return mediator.Send(input.Value);
+        }
+
         [ApplyPolicy(AuthorizationPolicies.IsUser)]
         [AnnotateErrorCodes(typeof(CreateAd))]
         public Task<CreateAd.Payload> CreateAd(
