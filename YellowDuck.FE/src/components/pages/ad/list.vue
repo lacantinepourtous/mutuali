@@ -174,7 +174,7 @@
       </alert-modal>
       <div class="equipment-list__bottom section section--md">
         <ad-card v-if="displayAdSnippet && view === CARD_VIEW" :ad="snippetAd" />
-        <div v-else-if="isConnected && !isAdmin && createAlertModalHidden" class="mx-4">
+        <div v-else-if="isConnected && !isAdmin && createAlertModalHidden && adMarkers.length != 0" class="mx-4">
           <b-button variant="primary" size="lg" block :to="{ name: $consts.urls.URL_CREATE_AD }">{{
             $t("nav.create-ad")
           }}</b-button>
