@@ -13,6 +13,7 @@ using YellowDuck.Api.DbModel.Entities.Notifications;
 using YellowDuck.Api.DbModel.Entities.Contracts;
 using YellowDuck.Api.DbModel.Entities.Ratings;
 using YellowDuck.Api.DbModel.Entities.Payment;
+using YellowDuck.Api.DbModel.Entities.Alerts;
 
 namespace YellowDuck.Api.DbModel
 {
@@ -43,6 +44,8 @@ namespace YellowDuck.Api.DbModel
         public DbSet<AdDayAvailability> AdDayAvailabilityWeekdays { get; set; }
         public DbSet<AdEveningAvailability> AdEveningAvailabilityWeekdays { get; set; }
         public DbSet<UserRating> UserRatings { get; set; }
+        public DbSet<Alert> Alerts { get; set; }
+        public DbSet<AlertAddress> AlertAddress { get; set; }
         public DbSet<Conversation> Conversations { get; set; }
         public DbSet<ConversationParticipant> ConversationParticipants { get; set; }
         public DbSet<ConversationNotification> ConversationNotifications { get; set; }
@@ -66,6 +69,8 @@ namespace YellowDuck.Api.DbModel
                 _.HasMany(x => x.UserRatings).WithOne().HasForeignKey(x => x.UserId);
 
                 _.HasMany(x => x.Ads).WithOne().HasForeignKey(x => x.UserId);
+
+                _.HasMany(x => x.Alerts).WithOne().HasForeignKey(x => x.UserId);
 
                 _.HasMany(x => x.OwnerContracts).WithOne().HasForeignKey(x => x.OwnerId);
 
@@ -145,6 +150,14 @@ namespace YellowDuck.Api.DbModel
 
             Configure<AdEveningAvailability>(_ => {
                 _.HasOne(x => x.Ad).WithMany(x => x.EveningAvailability).HasForeignKey(x => x.AdId);
+            });
+
+            Configure<Alert>(_ => {
+                _.HasOne(x => x.User).WithMany(x => x.Alerts).HasForeignKey(x => x.UserId);
+            });
+
+            Configure<AlertAddress>(_ => {
+                _.HasIndex(x => new { x.Id, x.Latitude, x.Longitude }).IsUnique();
             });
 
             Configure<Conversation>(_ => {

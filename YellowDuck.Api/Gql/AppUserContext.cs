@@ -19,6 +19,8 @@ using YellowDuck.Api.DbModel.Entities.Ratings;
 using YellowDuck.Api.DbModel.Entities.Payment;
 using YellowDuck.Api.Requests.Queries.Payments;
 using YellowDuck.Api.Requests.Queries.Rating;
+using YellowDuck.Api.Requests.Queries.Alerts;
+using YellowDuck.Api.DbModel.Entities.Alerts;
 
 namespace YellowDuck.Api.Gql
 {
@@ -81,6 +83,15 @@ namespace YellowDuck.Api.Gql
 
         public Task<IEnumerable<AdProfessionalKitchenEquipment>> LoadProfessionalKitchenEquipmentsByAdId(long id) =>
           loader.LoadCollection<GetAdProfessionalKitchenEquipmentsByAdId.Query, AdProfessionalKitchenEquipment, long>(id);
+
+        public Task<Alert> LoadAlert(long id) =>
+            loader.LoadOne<GetAlertsByIds.Query, Alert, long>(id);
+
+        public Task<IEnumerable<Alert>> LoadAlertsByUserId(string id) =>
+            loader.LoadCollection<GetAlertsByUserId.Query, Alert, string>(id);
+
+        public Task<AlertAddress> LoadAlertAddress(long id) =>
+            loader.LoadOne<GetAlertAddressByIds.Query, AlertAddress, long>(id);
 
         public Task<Conversation> LoadConversation(long id) =>
             loader.LoadOne<GetConversationByIds.Query, Conversation, long>(id);
