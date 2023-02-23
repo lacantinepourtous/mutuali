@@ -2,7 +2,7 @@
   <s-field
     :id="id"
     :label="label"
-    labelClass="label"
+    :labelClass="labelClass"
     :name="name"
     :inputId="inputId"
     :rules="rules"
@@ -26,6 +26,10 @@ export default {
   props: {
     id: String,
     label: String,
+    labelClass: {
+      type: String,
+      default: "label"
+    },
     name: String,
     rules: {
       type: [String, Object]
@@ -41,7 +45,7 @@ export default {
     SField
   },
   computed: {
-    computedOptions: function () {
+    computedOptions: function() {
       let options = [...this.options];
       if (this.addDisableOptions || this.placeholder) {
         options.unshift({

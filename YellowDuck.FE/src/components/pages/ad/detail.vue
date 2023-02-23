@@ -238,8 +238,6 @@ export default {
       }
     },
     adAddressReadable() {
-      // eslint-disable-next-line no-console
-      console.log(this.ad);
       const addressElements = [];
       if (this.ad.address.route) addressElements.push(`${this.ad.address.streetNumber} ${this.ad.address.route}`.trim());
       addressElements.push(this.ad.city);

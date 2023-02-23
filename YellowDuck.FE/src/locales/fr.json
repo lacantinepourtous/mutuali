@@ -550,5 +550,15 @@
   "btn.login-alt": "Me connecter",
   "title.modal-first-login": "Bienvenue sur Mutuali",
   "text.modal-first-login": "Pour ne rien manquer des offres à venir, créez des alertes courriel.",
-  "btn.later": "Plus tard"
+  "btn.later": "Plus tard",
+  "page-title.add-alert": "Création d’une alerte courriel",
+  "btn.save-alert": "Enregistrer l’alerte",
+  "label.radius": "Rayon",
+  "label.radius-of": "Dans un rayon de",
+  "placeholder.radius-of": "10",
+  "label.near-of": "Autour de",
+  "label.send-to": "Et on envoie ça où?",
+  "label.your-email": "Votre email",
+  "form-complete.create-alert.title": "Alerte créée",
+  "form-complete.create-alert.description": "Votre alerte est maintenant créée. Vous receverez donc à partir de maintenant les nouvelles offres qui répondent à vos critères une fois par semaine."  
 }

@@ -11,6 +11,7 @@ using YellowDuck.Api.Requests.Commands.Mutations.Conversations;
 using YellowDuck.Api.Requests.Commands.Mutations.Notifications;
 using YellowDuck.Api.Requests.Commands.Mutations.Contracts;
 using YellowDuck.Api.Requests.Commands.Mutations.Payment;
+using YellowDuck.Api.Requests.Commands.Mutations.Alerts;
 
 namespace YellowDuck.Api.Gql.Schema
 {
@@ -138,6 +139,14 @@ namespace YellowDuck.Api.Gql.Schema
         public Task<UpdateAdTranslation.Payload> UpdateAdTranslation(
             [Inject] IMediator mediator,
             NonNull<UpdateAdTranslation.Input> input)
+        {
+            return mediator.Send(input.Value);
+        }
+
+        [AnnotateErrorCodes(typeof(CreateAlert))]
+        public Task<CreateAlert.Payload> CreateAlert(
+            [Inject] IMediator mediator,
+            NonNull<CreateAlert.Input> input)
         {
             return mediator.Send(input.Value);
         }
