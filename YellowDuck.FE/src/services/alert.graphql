@@ -5,3 +5,17 @@ mutation CreateAlert($input: CreateAlertInput!) {
     }
   }
 }
+
+mutation UpdateAlert($input: UpdateAlertInput!) {
+  updateAlert(input: $input) {
+    alert {
+      id
+    }
+  }
+}
+
+mutation DeleteAlert($input: DeleteAlertInput!) {
+  deleteAlert(input: $input) {
+    success
+  }
+}

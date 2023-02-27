@@ -41,7 +41,7 @@ namespace YellowDuck.Api.Gql.Schema.GraphTypes
 
         public async Task<IEnumerable<ProfessionalKitchenEquipment>> ProfessionalKitchenEquipment(IAppUserContext ctx)
         {
-            var professionalKitchenEquipments = await ctx.LoadProfessionalKitchenEquipmentsByAdId(id);
+            var professionalKitchenEquipments = await ctx.LoadProfessionalKitchenEquipmentsByAlertId(id);
             return professionalKitchenEquipments.Select(x => x.ProfessionalKitchenEquipment).ToList();
         }
         public Task<DeliveryTruckType> DeliveryTruckType => WithData(x => x.DeliveryTruckType);

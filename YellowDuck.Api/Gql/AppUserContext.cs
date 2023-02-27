@@ -84,6 +84,9 @@ namespace YellowDuck.Api.Gql
         public Task<IEnumerable<AdProfessionalKitchenEquipment>> LoadProfessionalKitchenEquipmentsByAdId(long id) =>
           loader.LoadCollection<GetAdProfessionalKitchenEquipmentsByAdId.Query, AdProfessionalKitchenEquipment, long>(id);
 
+        public Task<IEnumerable<AlertProfessionalKitchenEquipment>> LoadProfessionalKitchenEquipmentsByAlertId(long id) =>
+          loader.LoadCollection<GetAlertProfessionalKitchenEquipmentsByAlertId.Query, AlertProfessionalKitchenEquipment, long>(id);
+
         public Task<Alert> LoadAlert(long id) =>
             loader.LoadOne<GetAlertsByIds.Query, Alert, long>(id);
 

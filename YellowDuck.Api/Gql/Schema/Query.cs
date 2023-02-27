@@ -27,6 +27,7 @@ using YellowDuck.Api.Utilities;
 using MediatR;
 using YellowDuck.Api.Requests.Queries.Users;
 using YellowDuck.Api.Requests.Queries.Ads;
+using YellowDuck.Api.DbModel.Entities.Alerts;
 
 namespace YellowDuck.Api.Gql.Schema
 {
@@ -131,6 +132,13 @@ namespace YellowDuck.Api.Gql.Schema
                 });
                 return ads.Select(x => new AdGraphType(x));
             });
+        }
+
+        [Description("Details about a specific alert, identified by it's ID.")]
+        public async Task<AlertGraphType> Alert(IAppUserContext ctx, Id id)
+        {
+            var alert = await ctx.LoadAlert(id.LongIdentifierForType<Alert>());
+            return new AlertGraphType(alert);
         }
 
         [Description("Details about a specific conversation, identified by it's ID.")]

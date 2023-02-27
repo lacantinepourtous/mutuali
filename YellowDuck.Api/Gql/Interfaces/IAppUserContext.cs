@@ -31,7 +31,9 @@ namespace YellowDuck.Api.Gql.Interfaces
         Task<IEnumerable<AdDayAvailability>> LoadDayAvailabilityByAdId(long id);
         Task<IEnumerable<AdEveningAvailability>> LoadEveningAvailabilityByAdId(long id);
         Task<IEnumerable<AdProfessionalKitchenEquipment>> LoadProfessionalKitchenEquipmentsByAdId(long id);
+        Task<IEnumerable<AlertProfessionalKitchenEquipment>> LoadProfessionalKitchenEquipmentsByAlertId(long id);
         Task<Alert> LoadAlert(long id);
+        Task<IEnumerable<Alert>> LoadAlertsByUserId(string id);
         Task<AlertAddress> LoadAlertAddress(long id);
         Task<Conversation> LoadConversation(long id);
         Task<Conversation> LoadConversationWithAd(long id);

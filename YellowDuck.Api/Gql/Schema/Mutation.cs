@@ -151,6 +151,24 @@ namespace YellowDuck.Api.Gql.Schema
             return mediator.Send(input.Value);
         }
 
+        [ApplyPolicy(AuthorizationPolicies.ManageAlert)]
+        [AnnotateErrorCodes(typeof(UpdateAlert))]
+        public Task<UpdateAlert.Payload> UpdateAlert(
+            [Inject] IMediator mediator,
+            NonNull<UpdateAlert.Input> input)
+        {
+            return mediator.Send(input.Value);
+        }
+
+        [ApplyPolicy(AuthorizationPolicies.ManageAlert)]
+        [AnnotateErrorCodes(typeof(DeleteAlert))]
+        public Task<DeleteAlert.Payload> DeleteAlert(
+            [Inject] IMediator mediator,
+            NonNull<DeleteAlert.Input> input)
+        {
+            return mediator.Send(input.Value);
+        }
+
         [ApplyPolicy(AuthorizationPolicies.IsUser)]
         [AnnotateErrorCodes(typeof(CreateConversation))]
         public Task<CreateConversation.Payload> CreateConversation(

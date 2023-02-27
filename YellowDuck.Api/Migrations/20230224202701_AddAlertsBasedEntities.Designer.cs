@@ -10,8 +10,8 @@ using YellowDuck.Api.DbModel;
 namespace YellowDuck.Api.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20230222221020_AddAlertAndAlertAddress")]
-    partial class AddAlertAndAlertAddress
+    [Migration("20230224202701_AddAlertsBasedEntities")]
+    partial class AddAlertsBasedEntities
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -341,17 +341,12 @@ namespace YellowDuck.Api.Migrations
                     b.Property<long>("AdId")
                         .HasColumnType("bigint");
 
-                    b.Property<long?>("AlertId")
-                        .HasColumnType("bigint");
-
                     b.Property<int>("ProfessionalKitchenEquipment")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
 
                     b.HasIndex("AdId");
-
-                    b.HasIndex("AlertId");
 
                     b.ToTable("AdProfessionalKitchenEquipments");
                 });
@@ -500,6 +495,26 @@ namespace YellowDuck.Api.Migrations
                         .IsUnique();
 
                     b.ToTable("AlertAddress");
+                });
+
+            modelBuilder.Entity("YellowDuck.Api.DbModel.Entities.Alerts.AlertProfessionalKitchenEquipment", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<long>("AlertId")
+                        .HasColumnType("bigint");
+
+                    b.Property<int>("ProfessionalKitchenEquipment")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AlertId");
+
+                    b.ToTable("AlertProfessionalKitchenEquipments");
                 });
 
             modelBuilder.Entity("YellowDuck.Api.DbModel.Entities.AppUser", b =>
@@ -1061,10 +1076,6 @@ namespace YellowDuck.Api.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("YellowDuck.Api.DbModel.Entities.Alerts.Alert", null)
-                        .WithMany("ProfessionalKitchenEquipments")
-                        .HasForeignKey("AlertId");
-
                     b.Navigation("Ad");
                 });
 
@@ -1094,6 +1105,17 @@ namespace YellowDuck.Api.Migrations
                     b.Navigation("Address");
 
                     b.Navigation("User");
+                });
+
+            modelBuilder.Entity("YellowDuck.Api.DbModel.Entities.Alerts.AlertProfessionalKitchenEquipment", b =>
+                {
+                    b.HasOne("YellowDuck.Api.DbModel.Entities.Alerts.Alert", "Alert")
+                        .WithMany("ProfessionalKitchenEquipments")
+                        .HasForeignKey("AlertId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Alert");
                 });
 
             modelBuilder.Entity("YellowDuck.Api.DbModel.Entities.Contracts.Contract", b =>

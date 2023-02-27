@@ -1,7 +1,7 @@
 <template>
   <div class="w-100">
     <portal v-if="!alertCreated" :to="$consts.enums.PORTAL_HEADER">
-      <nav-close :to="{ name: $consts.urls.URL_LIST_AD }"></nav-close>
+      <nav-close :to="closeRoute"></nav-close>
     </portal>
     <template v-if="!alertCreated">
       <div class="section section--md section--padding-x section--border-bottom my-4">
@@ -25,7 +25,7 @@ import NavClose from "@/components/nav/close";
 import FormComplete from "@/components/generic/form-complete";
 import AlertForm from "@/components/alert/form";
 
-import { URL_ROOT } from "@/consts/urls";
+import { URL_ROOT, URL_AD_ALERT_LIST } from "@/consts/urls";
 
 import { createAlert } from "@/services/alert";
 
@@ -35,11 +35,22 @@ export default {
     FormComplete,
     NavClose
   },
+  computed: {
+    isConnected() {
+      return this.user && this.user.isConnected;
+    },
+    closeRoute() {
+      return { name: this.isConnected ? this.$consts.urls.URL_AD_ALERT_LIST : this.$consts.urls.URL_LIST_AD };
+    }
+  },
   data() {
     return {
       alertCreated: false,
       isSubmitted: false,
-      formCompleteCtas: [{ action: () => this.$router.push({ name: URL_ROOT }), text: this.$t("btn.return-dashboard") }]
+      formCompleteCtas: [
+        { action: () => this.$router.push({ name: URL_AD_ALERT_LIST }), text: this.$t("btn.manage-my-alerts") },
+        { action: () => this.$router.push({ name: URL_ROOT }), text: this.$t("btn.return-dashboard") }
+      ]
     };
   },
   gqlErrors() {
@@ -60,6 +71,21 @@ export default {
       }
       this.isSubmitted = false;
     }
+  },
+  apollo: {
+    user: {
+      query() {
+        return this.$options.query.LocalUser;
+      }
+    }
   }
 };
 </script>
+
+<graphql>
+query LocalUser {
+  user @client {
+    isConnected
+  }
+}
+</graphql>

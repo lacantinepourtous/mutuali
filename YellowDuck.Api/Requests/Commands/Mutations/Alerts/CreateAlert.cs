@@ -72,8 +72,8 @@ namespace YellowDuck.Api.Requests.Commands.Mutations.Alerts
 
             request.ProfessionalKitchenEquipment.IfSet(v =>
             {
-                alert.ProfessionalKitchenEquipments = new List<AdProfessionalKitchenEquipment>();
-                v.ForEach(x => alert.ProfessionalKitchenEquipments.Add(new AdProfessionalKitchenEquipment() { ProfessionalKitchenEquipment = x }));
+                alert.ProfessionalKitchenEquipments = new List<AlertProfessionalKitchenEquipment>();
+                v.ForEach(x => alert.ProfessionalKitchenEquipments.Add(new AlertProfessionalKitchenEquipment() { ProfessionalKitchenEquipment = x }));
             });
 
             if (owner != null) alert.UserId = owner.Id;

@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using YellowDuck.Api.DbModel.Enums;
-using YellowDuck.Api.DbModel.Entities.Ads;
 using System;
 
 namespace YellowDuck.Api.DbModel.Entities.Alerts
@@ -11,7 +10,7 @@ namespace YellowDuck.Api.DbModel.Entities.Alerts
         public string UserId { get; set; }
         public AppUser User { get; set; }
         public AdCategory Category { get; set; }
-        public IList<AdProfessionalKitchenEquipment> ProfessionalKitchenEquipments { get; set; }
+        public IList<AlertProfessionalKitchenEquipment> ProfessionalKitchenEquipments { get; set; }
         public DeliveryTruckType DeliveryTruckType { get; set; }
         public bool Refrigerated { get; set; }
         public bool CanSharedRoad { get; set; }

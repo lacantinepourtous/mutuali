@@ -10,6 +10,8 @@
         :options="categoryOptions"
         right
         variant="outline-secondary"
+        required
+        rules="required"
       />
     </div>
 
@@ -255,6 +257,11 @@ export default {
     },
     hasTwoCols() {
       return this.form.category === CATEGORY_PROFESSIONAL_KITCHEN || this.form.category === CATEGORY_DELIVERY_TRUCK;
+    }
+  },
+  watch: {
+    value() {
+      this.form = { ...this.value };
     }
   },
   apollo: {

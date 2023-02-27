@@ -46,6 +46,7 @@ namespace YellowDuck.Api.DbModel
         public DbSet<UserRating> UserRatings { get; set; }
         public DbSet<Alert> Alerts { get; set; }
         public DbSet<AlertAddress> AlertAddress { get; set; }
+        public DbSet<AlertProfessionalKitchenEquipment> AlertProfessionalKitchenEquipments { get; set; }
         public DbSet<Conversation> Conversations { get; set; }
         public DbSet<ConversationParticipant> ConversationParticipants { get; set; }
         public DbSet<ConversationNotification> ConversationNotifications { get; set; }

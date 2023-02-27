@@ -296,6 +296,7 @@ namespace YellowDuck.Api
             options.AddPolicy(AuthorizationPolicies.IsUser, policy => { policy.RequireClaim(AppClaimTypes.UserType, UserType.User.ToString()); });
 
             options.AddPolicy(AuthorizationPolicies.ManageAd, policy => { policy.AddRequirements(new CanManageAdRequirement()); });
+            options.AddPolicy(AuthorizationPolicies.ManageAlert, policy => { policy.AddRequirements(new CanManageAlertRequirement()); });
             options.AddPolicy(AuthorizationPolicies.ManageUser, policy => { policy.AddRequirements(new CanManageUserRequirement()); });
 
             options.AddPolicy(AuthorizationPolicies.InConversation, policy => { policy.AddRequirements(new InConversationRequirement()); });

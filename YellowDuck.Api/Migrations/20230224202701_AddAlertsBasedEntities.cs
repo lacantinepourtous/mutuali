@@ -3,16 +3,10 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace YellowDuck.Api.Migrations
 {
-    public partial class AddAlertAndAlertAddress : Migration
+    public partial class AddAlertsBasedEntities : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.AddColumn<long>(
-                name: "AlertId",
-                table: "AdProfessionalKitchenEquipments",
-                type: "bigint",
-                nullable: true);
-
             migrationBuilder.CreateTable(
                 name: "AlertAddress",
                 columns: table => new
@@ -71,16 +65,36 @@ namespace YellowDuck.Api.Migrations
                         onDelete: ReferentialAction.Restrict);
                 });
 
-            migrationBuilder.CreateIndex(
-                name: "IX_AdProfessionalKitchenEquipments_AlertId",
-                table: "AdProfessionalKitchenEquipments",
-                column: "AlertId");
+            migrationBuilder.CreateTable(
+                name: "AlertProfessionalKitchenEquipments",
+                columns: table => new
+                {
+                    Id = table.Column<long>(type: "bigint", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    AlertId = table.Column<long>(type: "bigint", nullable: false),
+                    ProfessionalKitchenEquipment = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_AlertProfessionalKitchenEquipments", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_AlertProfessionalKitchenEquipments_Alerts_AlertId",
+                        column: x => x.AlertId,
+                        principalTable: "Alerts",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
 
             migrationBuilder.CreateIndex(
                 name: "IX_AlertAddress_Id_Latitude_Longitude",
                 table: "AlertAddress",
                 columns: new[] { "Id", "Latitude", "Longitude" },
                 unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_AlertProfessionalKitchenEquipments_AlertId",
+                table: "AlertProfessionalKitchenEquipments",
+                column: "AlertId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Alerts_AddressId",
@@ -92,35 +106,18 @@ namespace YellowDuck.Api.Migrations
                 name: "IX_Alerts_UserId",
                 table: "Alerts",
                 column: "UserId");
-
-            migrationBuilder.AddForeignKey(
-                name: "FK_AdProfessionalKitchenEquipments_Alerts_AlertId",
-                table: "AdProfessionalKitchenEquipments",
-                column: "AlertId",
-                principalTable: "Alerts",
-                principalColumn: "Id",
-                onDelete: ReferentialAction.Restrict);
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropForeignKey(
-                name: "FK_AdProfessionalKitchenEquipments_Alerts_AlertId",
-                table: "AdProfessionalKitchenEquipments");
+            migrationBuilder.DropTable(
+                name: "AlertProfessionalKitchenEquipments");
 
             migrationBuilder.DropTable(
                 name: "Alerts");
 
             migrationBuilder.DropTable(
                 name: "AlertAddress");
-
-            migrationBuilder.DropIndex(
-                name: "IX_AdProfessionalKitchenEquipments_AlertId",
-                table: "AdProfessionalKitchenEquipments");
-
-            migrationBuilder.DropColumn(
-                name: "AlertId",
-                table: "AdProfessionalKitchenEquipments");
         }
     }
 }
