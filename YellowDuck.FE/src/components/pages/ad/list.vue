@@ -145,7 +145,7 @@
       </alert-modal>
       <alert-modal v-else-if="isConnected && !createAlertModalHidden" :icon="require('@/assets/ambiance/bell.svg')">
         <p>
-          <strong>{{ $t("title.modal-first-login") }}</strong> <br />
+          <strong>{{ $t("title.modal-first-login") }}</strong>
           {{ $t("text.modal-first-login") }}
         </p>
         <template v-slot:footer>
@@ -162,7 +162,7 @@
         :icon="require('@/assets/ambiance/bell.svg')"
       >
         <p>
-          <strong>{{ $t("title.modal-first-visit") }}</strong> <br />
+          <strong>{{ $t("title.modal-first-visit") }}</strong>
           {{ $t("text.modal-first-visit") }}
         </p>
         <template v-slot:footer>
