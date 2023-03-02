@@ -525,7 +525,7 @@
   "select.date-asc": "Date (croissant)",
   "select.date-desc": "Date (décroissant)",
   "label-reinit-filters": "Réinitialiser les filtres",
-  "text.no-result": "Aucun résultats",
+  "text.no-result": "Aucune annonces ne correspond à vos critères",
   "btn.show-ad-card": "Chercher une annonce sur la carte",
   "btn.show-ad-list": "Afficher la liste des annonces",
   "sr.ad-list-view": "La liste des annonces est affichée.",
@@ -542,5 +542,13 @@
   "label.ad-availability": "Disponibilités",
   "section-title.general-info": "Informations générales",
   "section-title.description": "Description",
-  "section-title.contact-details": "Coordonnées"
+  "section-title.contact-details": "Coordonnées",
+  "btn.create-alert": "Créer une alerte",
+  "title.modal-first-visit": "Bienvenue sur Mutuali",
+  "text.modal-first-visit": "Ne manquez aucune offre!",
+  "btn.subscribe-alert": "M'inscrire à des alertes",
+  "btn.login-alt": "Me connecter",
+  "title.modal-first-login": "Bienvenue sur Mutuali",
+  "text.modal-first-login": "Pour ne rien manquer des offres à venir, créez des alertes courriel.",
+  "btn.later": "Plus tard"
 }

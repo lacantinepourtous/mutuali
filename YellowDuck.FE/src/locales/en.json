@@ -525,7 +525,7 @@
   "select.date-asc": "Date (asc)",
   "select.date-desc": "Date (desc)",
   "label-reinit-filters": "Reset filters",
-  "text.no-result": "No results",
+  "text.no-result": "No ads match your criteria",
   "btn.show-ad-card": "Find an ad on the map",
   "btn.show-ad-list": "Show ads list",
   "sr.ad-list-view": "The ads list is displayed.",
@@ -542,5 +542,13 @@
   "label.ad-availability": "Availability",
   "section-title.general-info": "General informations",
   "section-title.description": "Description",
-  "section-title.contact-details": "Contact details"
+  "section-title.contact-details": "Contact details",
+  "btn.create-alert": "Create an alert",
+  "title.modal-first-visit": "Welcome to Mutuali",
+  "text.modal-first-visit": "Don't miss any offers!",
+  "btn.subscribe-alert": "Subscribe to alerts",
+  "btn.login-alt": "Login",
+  "title.modal-first-login": "Welcome to Mutuali",
+  "text.modal-first-login": "To not miss any upcoming offers, create email alerts.",
+  "btn.later": "Later"
 }

@@ -116,12 +116,65 @@
             </div>
           </div>
 
-          <p v-if="adMarkers.length === 0">{{ $t("text.no-result") }}</p>
+          <div v-if="adMarkers.length === 0" class="no-content my-5 py-sm-4">
+            <img class="no-content__img mb-4" alt="" :src="require('@/assets/ambiance/nothing.svg')" />
+            <p>{{ $t("text.no-result") }}</p>
+            <div class="mb-2">
+              <b-button variant="primary" v-if="filtersCount != 0" @click="reinitFilters()">{{
+                $t("label-reinit-filters")
+              }}</b-button>
+            </div>
+            <div class="mb-2">
+              <b-button variant="outline-primary" :to="{ name: $consts.urls.URL_LIST_AD_ALERT }">{{
+                $t("btn.create-alert")
+              }}</b-button>
+            </div>
+          </div>
         </div>
       </div>
+      <alert-modal v-if="adMarkers.length === 0" :icon="require('@/assets/ambiance/nothing.svg')">
+        <p>{{ $t("text.no-result") }}</p>
+        <template v-slot:footer>
+          <b-button variant="primary" v-if="filtersCount != 0" @click="reinitFilters()" class="mr-2">{{
+            $t("label-reinit-filters")
+          }}</b-button>
+          <b-button variant="outline-primary" :to="{ name: $consts.urls.URL_AD_ALERT_ADD }">{{
+            $t("btn.create-alert")
+          }}</b-button>
+        </template>
+      </alert-modal>
+      <alert-modal v-else-if="isConnected && !createAlertModalHidden" :icon="require('@/assets/ambiance/bell.svg')">
+        <p>
+          <strong>{{ $t("title.modal-first-login") }}</strong>
+          {{ $t("text.modal-first-login") }}
+        </p>
+        <template v-slot:footer>
+          <b-button variant="primary" :to="{ name: $consts.urls.URL_AD_ALERT_ADD }" class="mr-2">{{
+            $t("btn.create-alert")
+          }}</b-button>
+          <b-button @click="hideCreateAlertModal()" variant="outline-primary" class="mr-2">{{ $t("btn.later") }}</b-button>
+        </template>
+      </alert-modal>
+      <alert-modal
+        v-else-if="!isConnected && !createAlertModalHidden"
+        closable
+        @close="hideCreateAlertModal()"
+        :icon="require('@/assets/ambiance/bell.svg')"
+      >
+        <p>
+          <strong>{{ $t("title.modal-first-visit") }}</strong>
+          {{ $t("text.modal-first-visit") }}
+        </p>
+        <template v-slot:footer>
+          <b-button variant="primary" :to="{ name: $consts.urls.URL_AD_ALERT_ADD }" class="mr-2">{{
+            $t("btn.subscribe-alert")
+          }}</b-button>
+          <b-button variant="outline-primary" :to="{ name: $consts.urls.URL_LOGIN }">{{ $t("btn.login-alt") }}</b-button>
+        </template>
+      </alert-modal>
       <div class="equipment-list__bottom section section--md">
         <ad-card v-if="displayAdSnippet && view === CARD_VIEW" :ad="snippetAd" />
-        <div v-else-if="isConnected && !isAdmin" class="mx-4">
+        <div v-else-if="isConnected && !isAdmin && createAlertModalHidden && adMarkers.length != 0" class="mx-4">
           <b-button variant="primary" size="lg" block :to="{ name: $consts.urls.URL_CREATE_AD }">{{
             $t("nav.create-ad")
           }}</b-button>
@@ -136,6 +189,7 @@ query Me {
   me {
     id
     type
+    firstLoginModalClosed
   }
 }
 
@@ -214,9 +268,11 @@ import SFormGoogleAutocomplete from "@/components/form/s-form-google-autocomplet
 import GoogleMap from "@/components/generic/google-map";
 import NavClose from "@/components/nav/close";
 import AdCategoryBadge from "@/components/ad/category-badge";
+import AlertModal from "@/components/generic/alert-modal";
 
 import { gmapApi } from "gmap-vue";
 import { AdCategory } from "@/mixins/ad-category";
+import UserService from "@/services/user";
 
 const CARD_VIEW = "CARD";
 const LIST_VIEW = "LIST";
@@ -238,13 +294,20 @@ const defaultFilters = {
 
 export default {
   mixins: [AdCategory],
-  components: { AdCard, AdFilters, Dropdown, SFormGoogleAutocomplete, GoogleMap, NavClose, AdCategoryBadge },
+  components: { AdCard, AdFilters, Dropdown, SFormGoogleAutocomplete, GoogleMap, NavClose, AdCategoryBadge, AlertModal },
   computed: {
     isConnected() {
       return this.user && this.user.isConnected;
     },
     isAdmin() {
       return !this.me || this.me.type === this.$consts.enums.USER_TYPE_ADMIN;
+    },
+    createAlertModalHidden() {
+      return (
+        (this.isConnected && this.me.firstLoginModalClosed) ||
+        (!this.isConnected && this.localHideCreateAlertModal) ||
+        (this.displayAdSnippet && this.view === CARD_VIEW)
+      );
     },
     displayAdSnippet() {
       return this.snippetAd !== null;
@@ -477,6 +540,14 @@ export default {
           query
         })
         .catch(() => {});
+    },
+    hideCreateAlertModal() {
+      if (this.isConnected) {
+        UserService.updateFirstLoginModalClosed(true);
+      } else {
+        this.$cookies.set("hideCreateAlertModal", true);
+        this.localHideCreateAlertModal = true;
+      }
     }
   },
   data() {
@@ -499,6 +570,7 @@ export default {
 
     return {
       displayAdvancedFilters: false,
+      localHideCreateAlertModal: this.$cookies.isKey("hideCreateAlertModal"),
       snippetAd: null,
       adMarkers: [],
       initialLatitude: latLng.lat,
