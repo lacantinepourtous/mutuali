@@ -12,19 +12,15 @@ using YellowDuck.Api.Plugins.GraphQL;
 using YellowDuck.Api.Plugins.MediatR;
 using YellowDuck.Api.Services.System;
 
-namespace YellowDuck.Api.Requests.Commands.Mutations.Notifications
+namespace YellowDuck.Api.Requests.Commands.Mutations.Alerts
 {
     public class DeleteAlert : IRequestHandler<DeleteAlert.Input, DeleteAlert.Payload>
     {
         private readonly AppDbContext db;
-        private readonly ILogger<DeleteAlert> logger;
-        private readonly ICurrentUserAccessor currentUserAccessor;
 
-        public DeleteAlert(AppDbContext db, ILogger<DeleteAlert> logger, ICurrentUserAccessor currentUserAccessor)
+        public DeleteAlert(AppDbContext db)
         {
             this.db = db;
-            this.logger = logger;
-            this.currentUserAccessor = currentUserAccessor;
         }
 
         public async Task<Payload> Handle(Input request, CancellationToken cancellationToken)

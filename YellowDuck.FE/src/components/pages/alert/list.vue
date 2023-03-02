@@ -47,7 +47,7 @@ export default {
   },
   methods: {
     refreshAlerts() {
-      this.$apollo.query.userProfile.refetch({
+      this.$apollo.queries.userProfile.refetch({
         id: this.profileId
       });
     }
