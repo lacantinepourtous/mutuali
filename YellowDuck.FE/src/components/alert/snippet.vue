@@ -53,8 +53,8 @@ export default {
   computed: {
     description() {
       const content = [];
-      if (this.alert.dayAvaiability) content.push(this.$t("label.ad-dayAvailability"));
-      if (this.alert.eveningAvaiability) content.push(this.$t("label.ad-eveningAvailability"));
+      if (this.alert.dayAvailability) content.push(this.$t("label.ad-dayAvailability"));
+      if (this.alert.eveningAvailability) content.push(this.$t("label.ad-eveningAvailability"));
       switch (this.alert.category) {
         case CATEGORY_PROFESSIONAL_KITCHEN:
           for (const professionalKitchenEquipment of this.alert.professionalKitchenEquipment) {
@@ -90,11 +90,6 @@ export default {
 
   &:first-child {
     border-top: 1px solid $gray-200;
-  }
-
-  &__alert-link {
-    display: block;
-    text-decoration: none;
   }
 }
 </style>
