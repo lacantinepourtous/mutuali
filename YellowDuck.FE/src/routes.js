@@ -232,6 +232,14 @@ export default [
       anonymous
     }
   },
+  {
+    name: urls.URL_AD_ALERT_EDIT,
+    path: "/alertes/modifier/:id",
+    component: () => import("@/components/pages/alert/edit.vue"),
+    meta: {
+      usertype: USER_TYPE_USER
+    }
+  },
 
   {
     name: urls.URL_LIST_CONVERSATION,

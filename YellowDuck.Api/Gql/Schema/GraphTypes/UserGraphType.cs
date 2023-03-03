@@ -71,6 +71,13 @@ namespace YellowDuck.Api.Gql.Schema.GraphTypes
             return ads.Select(x => new AdGraphType(x)).ToList();
         }
 
+        public async Task<IEnumerable<AlertGraphType>> Alerts(IAppUserContext ctx)
+        {
+            var alerts = await ctx.LoadAlertsByUserId(Id.IdentifierForType<AppUser>());
+
+            return alerts.Select(x => new AlertGraphType(x)).ToList();
+        }
+
         public async Task<IEnumerable<UserRatingGraphType>> UserRatings(IAppUserContext ctx)
         {
             var userRatings = await ctx.LoadUserRatingByUserId(Id.IdentifierForType<AppUser>());

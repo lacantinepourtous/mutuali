@@ -210,7 +210,10 @@ export default {
       return this.displayPlaceholder ? this.placeholder : "";
     },
     address() {
-      return this.value ? this.value.formatedAddress : "";
+      if (this.value) {
+        return this.value.formatedAddress ? this.value.formatedAddress : this.formatAddress(this.value);
+      }
+      return "";
     },
     edit() {
       return this.value === null;

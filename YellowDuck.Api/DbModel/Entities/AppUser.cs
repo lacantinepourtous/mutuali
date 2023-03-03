@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using YellowDuck.Api.DbModel.Entities.Payment;
 using YellowDuck.Api.DbModel.Entities.Ads;
 using YellowDuck.Api.DbModel.Entities.Contracts;
+using YellowDuck.Api.DbModel.Entities.Alerts;
 
 namespace YellowDuck.Api.DbModel.Entities
 {
@@ -35,6 +36,7 @@ namespace YellowDuck.Api.DbModel.Entities
 
         public UserProfile Profile { get; set; }
         public IList<Ad> Ads { get; set; }
+        public IList<Alert> Alerts { get; set; }
         public IList<Contract> TenantContracts { get; set; }
         public IList<Contract> OwnerContracts { get; set; }
         public IList<UserRating> UserRatings { get; set; }

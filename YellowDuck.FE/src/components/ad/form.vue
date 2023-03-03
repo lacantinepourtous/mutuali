@@ -316,7 +316,7 @@ export default {
     }
   },
   methods: {
-    haveDifferentImages: function (images, formImages) {
+    haveDifferentImages: function(images, formImages) {
       for (let i = 0; i < images.length; i++) {
         if (formImages[i].file.name) {
           if (images[i].src !== formImages[i].file.name) {
@@ -332,7 +332,7 @@ export default {
       }
       return false;
     },
-    haveDifferentItems: function (images, formImages) {
+    haveDifferentItems: function(images, formImages) {
       for (let i = 0; i < images.length; i++) {
         if (images[i] !== formImages[i].name) {
           return true;
@@ -340,7 +340,7 @@ export default {
       }
       return false;
     },
-    submitForm: function () {
+    submitForm: function() {
       let input = {};
 
       const maybeEditedFields = [

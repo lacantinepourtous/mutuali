@@ -304,7 +304,7 @@ export default {
     },
     createAlertModalHidden() {
       return (
-        (this.isConnected && this.me.firstLoginModalClosed) ||
+        (this.isConnected && (!this.me || this.me.firstLoginModalClosed)) ||
         (!this.isConnected && this.localHideCreateAlertModal) ||
         (this.displayAdSnippet && this.view === CARD_VIEW)
       );
