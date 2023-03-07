@@ -56,12 +56,12 @@ namespace YellowDuck.Api.BackgroundJobs
                     .Where(x => x.Category == alert.Category)
                     .Where(x => alert.DayAvailability == false || x.DayAvailability.Any())
                     .Where(x => alert.EveningAvailability == false || x.EveningAvailability.Any())
-                    .Where(x => CoordinateHelper.GetDistance(x.Address.Latitude, x.Address.Longitude, alert.Address.Latitude, alert.Address.Longitude) <= alert.Radius);
+                    .Where(x => CoordinateHelper.GetDistanceInMeters(x.Address.Latitude, x.Address.Longitude, alert.Address.Latitude, alert.Address.Longitude)/1000 <= alert.Radius);
 
                 switch (alert.Category)
                 {
                     case AdCategory.ProfessionalKitchen:
-                        filteredAds = filteredAds.Where(x => !alert.ProfessionalKitchenEquipments.Any() || x.ProfessionalKitchenEquipments.Select(x => x.ProfessionalKitchenEquipment).Intersect(alert.ProfessionalKitchenEquipments.Select(x => x.ProfessionalKitchenEquipment)).Count() == alert.ProfessionalKitchenEquipments.Count);
+                        filteredAds = filteredAds.Where(x => !alert.ProfessionalKitchenEquipments?.Any() ?? true || x.ProfessionalKitchenEquipments.Select(x => x.ProfessionalKitchenEquipment).Intersect(alert.ProfessionalKitchenEquipments.Select(x => x.ProfessionalKitchenEquipment)).Count() == alert.ProfessionalKitchenEquipments.Count);
                         break;
                     case AdCategory.DeliveryTruck:
                         filteredAds = filteredAds.Where(x => alert.DeliveryTruckType == null || x.DeliveryTruckType == alert.DeliveryTruckType)
@@ -100,11 +100,11 @@ namespace YellowDuck.Api.BackgroundJobs
                         ManageAlertUrl = (alert.User != null) ? UrlHelper.ManageAlert() : null
                     };
                     await mailer.Send(emailModel);
-
+                    logger.LogInformation($"Alert id {alert.Id} sent with {filteredAds.Count()} ad(s)");
                     alert.LastSendDateUTC = DateTime.UtcNow;
                     await db.SaveChangesAsync();
                 }
-            }
+            } 
         }
     }
 }

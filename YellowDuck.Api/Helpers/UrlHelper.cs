@@ -31,6 +31,12 @@ namespace YellowDuck.Api.Helpers
             return $"alertes{langParameter}";
         }
 
+        public static string ConfirmAlert(string id, string email, string lang = null)
+        {
+            var langParameter = (lang != null) ? $"&lang={lang}" : "";
+            return $"alertes/confirmer/{id}?email={email}{langParameter}";
+        }
+
         public static string UnsubscribeAlert(Id id, string lang = null)
         {
             var langParameter = (lang != null) ? $"?lang={lang}" : "";

@@ -4,7 +4,7 @@ namespace YellowDuck.Api.Helpers
 {
     public static class CoordinateHelper
     {
-        public static double GetDistance(double longitude, double latitude, double otherLongitude, double otherLatitude)
+        public static double GetDistanceInMeters(double longitude, double latitude, double otherLongitude, double otherLatitude)
         {
             var d1 = latitude * (Math.PI / 180.0);
             var num1 = longitude * (Math.PI / 180.0);

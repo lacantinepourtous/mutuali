@@ -29,7 +29,7 @@ namespace YellowDuck.Api.Requests.Commands.Mutations.Alerts
             if (request.Email == null) throw new EmailNotSetException();
             var alertId = request.AlertId.LongIdentifierForType<Alert>();
 
-            var alert = await db.Alerts.Include(x => x.User).Where(x => (x.User != null && x.User.Email == request.Email) || x.Email == request.Email).FirstOrDefaultAsync(cancellationToken);
+            var alert = await db.Alerts.Include(x => x.User).Where(x => x.Id == alertId).Where(x => (x.User != null && x.User.Email == request.Email) || x.Email == request.Email).FirstOrDefaultAsync(cancellationToken);
 
             if (alert == null) throw new AlertNotFoundException();
 
