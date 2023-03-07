@@ -160,7 +160,6 @@ namespace YellowDuck.Api.Gql.Schema
             return mediator.Send(input.Value);
         }
 
-        [ApplyPolicy(AuthorizationPolicies.ManageAlert)]
         [AnnotateErrorCodes(typeof(DeleteAlert))]
         public Task<DeleteAlert.Payload> DeleteAlert(
             [Inject] IMediator mediator,

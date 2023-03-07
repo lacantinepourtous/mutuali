@@ -2,6 +2,7 @@
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using YellowDuck.Api.DbModel;
@@ -25,9 +26,10 @@ namespace YellowDuck.Api.Requests.Commands.Mutations.Alerts
 
         public async Task<Payload> Handle(Input request, CancellationToken cancellationToken)
         {
+            if (request.Email == null) throw new EmailNotSetException();
             var alertId = request.AlertId.LongIdentifierForType<Alert>();
 
-            var alert = await db.Alerts.FirstOrDefaultAsync(x => x.Id == alertId, cancellationToken);
+            var alert = await db.Alerts.Include(x => x.User).Where(x => (x.User != null && x.User.Email == request.Email) || x.Email == request.Email).FirstOrDefaultAsync(cancellationToken);
 
             if (alert == null) throw new AlertNotFoundException();
 
@@ -44,6 +46,7 @@ namespace YellowDuck.Api.Requests.Commands.Mutations.Alerts
         public class Input : IHaveAlertId, IRequest<Payload>
         {
             public Id AlertId { get; set; }
+            public string Email { get; set; }
         }
 
         [MutationPayload]
@@ -53,7 +56,7 @@ namespace YellowDuck.Api.Requests.Commands.Mutations.Alerts
         }
 
         public abstract class DeleteAlertException : RequestValidationException { }
-
+        public class EmailNotSetException : DeleteAlertException { }
         public class AlertNotFoundException : DeleteAlertException { }
     }
 }

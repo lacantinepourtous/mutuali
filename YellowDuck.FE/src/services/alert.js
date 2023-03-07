@@ -63,9 +63,10 @@ export async function updateAlert(input) {
 }
 
 
-export async function deleteAlert(alertId) {
+export async function deleteAlert(alertId, email) {
   let mutationInput = {
-    alertId
+    alertId,
+    email
   };
 
   let result = await Apollo.instance.defaultClient.mutate({
