@@ -1,6 +1,6 @@
 <template>
-  <nav-base>
-    <b-navbar-nav class="nav-header ml-auto mr-n2">
+  <nav-base :aria-title="$t('sr.main-nav')">
+    <b-navbar-nav class="nav-header">
       <b-nav-item link-classes="text-dark" :to="{ name: $consts.urls.URL_LIST_AD }">{{ $t("btn.list-ad") }}</b-nav-item>
       <template v-if="isConnected">
         <template v-if="isAdmin">
@@ -14,6 +14,11 @@
             <span v-if="unreadMessageCount > 0" class="nav-header__notification"></span>
           </b-nav-item>
         </template>
+      </template>
+    </b-navbar-nav>
+
+    <b-navbar-nav class="nav-header ml-auto mr-n2">
+      <template v-if="isConnected">
         <b-nav-item-dropdown right no-caret>
           <template #button-content>
             <span class="text-dark">
@@ -85,13 +90,13 @@ export default {
   },
   components: { NavBase },
   computed: {
-    isConnected: function() {
+    isConnected: function () {
       return this.user && this.user.isConnected;
     },
-    isAdmin: function() {
+    isAdmin: function () {
       return this.user && AuthentificationService.getUserType() === USER_TYPE_ADMIN;
     },
-    userProfileId: function() {
+    userProfileId: function () {
       if (this.me) {
         return this.me.profile.id;
       }
@@ -99,7 +104,7 @@ export default {
     }
   },
   methods: {
-    onMessageAdded: function(event) {
+    onMessageAdded: function (event) {
       // Since the getUnreadMessagesCount is not 100% real time, we wait 3 seconds before displayed the badge
       // https://tinyurl.com/m6s482d3
       let vm = this;
@@ -108,7 +113,7 @@ export default {
       }, 750);
       debounceFn();
     },
-    onMessageRead: function(event) {
+    onMessageRead: function (event) {
       // Since the getUnreadMessagesCount is not 100% real time, we wait 3 seconds before displayed the badge
       // https://tinyurl.com/m6s482d3
       let vm = this;
@@ -120,10 +125,10 @@ export default {
     async updateUnreadMessagesCount() {
       this.unreadMessageCount = await TwilioService.getUnreadMessagesCount();
     },
-    changeLang: function() {
+    changeLang: function () {
       i18nHelpers.changeLang();
     },
-    logout: function() {
+    logout: function () {
       AuthentificationService.logout();
     }
   },

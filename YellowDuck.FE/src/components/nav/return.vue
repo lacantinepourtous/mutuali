@@ -1,5 +1,5 @@
 <template>
-  <b-navbar class="nav-return">
+  <b-navbar class="nav-return" :aria-label="ariaTitle">
     <b-navbar-brand class="text-dark nav-return__back-link" :to="to">
       <b-icon-chevron-left aria-hidden="true" class="nav-return__back-link-arrow"></b-icon-chevron-left>
       <span class="small font-weight-bolder align-text-bottom">{{ label || $t("btn.cancel") }}</span>
@@ -20,6 +20,10 @@ export default {
     label: {
       default: "",
       required: false
+    },
+    ariaTitle: {
+      type: String,
+      default: ""
     }
   }
 };

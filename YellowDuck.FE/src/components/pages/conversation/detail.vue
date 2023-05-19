@@ -2,7 +2,7 @@
   <div class="conversation-detail">
     <portal :to="$consts.enums.PORTAL_HEADER">
       <div>
-        <nav-return :to="{ name: $consts.urls.URL_LIST_CONVERSATION }">
+        <nav-return :aria-title="$t('sr.conversation-nav')" :to="{ name: $consts.urls.URL_LIST_CONVERSATION }">
           <conversation-sidebar :conversation-id="conversationId" />
         </nav-return>
         <ad-snippet
@@ -89,78 +89,78 @@ export default {
     };
   },
   computed: {
-    adId: function() {
+    adId: function () {
       return this.conversation.ad.id;
     },
-    adTitle: function() {
+    adTitle: function () {
       return this.conversation.ad.translationOrDefault.title;
     },
-    adImage: function() {
+    adImage: function () {
       return this.conversation.ad.gallery[0];
     },
-    adOrganization: function() {
+    adOrganization: function () {
       return this.conversation.ad.organization;
     },
-    adOwnerId: function() {
+    adOwnerId: function () {
       return this.conversation.ad.user.id;
     },
-    conversationId: function() {
+    conversationId: function () {
       return this.$route.params.id.split("-").last();
     },
-    conversationSid: function() {
+    conversationSid: function () {
       return this.conversation.sid;
     },
-    otherParticipantName: function() {
+    otherParticipantName: function () {
       if (!this.conversation || !this.me) {
         return "";
       }
       let otherParticipant = this.conversation.participants.find((x) => x.user !== null && x.user.id !== this.me.id);
       return otherParticipant !== null ? otherParticipant.user.profile.publicName : "";
     },
-    canCreateContract: function() {
+    canCreateContract: function () {
       return this.me ? this.adOwnerId === this.me.id : false;
     },
-    haveContract: function() {
+    haveContract: function () {
       return this.conversation.contract !== null;
     },
-    contractId: function() {
+    contractId: function () {
       return this.haveContract ? this.conversation.contract.id : this.conversationContractId;
     },
-    isAccountOnboardingComplete: function() {
+    isAccountOnboardingComplete: function () {
       let account = this.me ? this.me.stripeAccount : null;
       return account !== null ? account.accountOnboardingComplete : false;
     }
   },
   methods: {
-    loadContractId: async function() {
+    loadContractId: async function () {
       this.conversationContractId = await getContractIdByConversationId(this.conversationId);
     },
-    isCurrentUser: function(message) {
+    isCurrentUser: function (message) {
       let participant = this.conversation.participants.find((x) => x.sid === message.participantSid);
       if (participant.user !== null) {
         return participant.user.id === this.me.id;
       }
       return false;
     },
-    isSystemUser: function(message) {
+    isSystemUser: function (message) {
       let participant = this.conversation.participants.find((x) => x.sid === message.participantSid);
       return participant.user === null;
     },
-    onMessageSent: async function() {
+    onMessageSent: async function () {
       await this.scrollBottom();
       await this.refreshMessages();
       this.scrollBottom();
     },
-    onMessageAdded: async function(event) {
+    onMessageAdded: async function (event) {
       await this.refreshMessages();
       this.scrollBottom();
     },
-    refreshMessages: async function() {
+    refreshMessages: async function () {
       await TwilioService.setAllMessagesReadOnConversation(this.conversationSid);
       let messages = await TwilioService.getConversationMessages(this.conversationSid);
       this.messagesByDay = this.getMessagesByDay(messages);
     },
-    getMessagesByDay: function(messages) {
+    getMessagesByDay: function (messages) {
       let result = [];
       let currentDate = null;
       let day = null;
@@ -183,7 +183,7 @@ export default {
 
       return result;
     },
-    scrollBottom: async function() {
+    scrollBottom: async function () {
       new Promise((resolve, reject) => {
         // Timeout because of render race condition
         setTimeout(() => {

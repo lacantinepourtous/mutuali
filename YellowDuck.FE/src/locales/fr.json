@@ -510,6 +510,8 @@
   "sr.dismiss-alert": "Fermer la notification",
   "sr.active-filters": "filtres actifs",
   "sr.open-advanced-search": "Ouvrir la recherche avancée",
+  "sr.main-nav": "Principale",
+  "sr.conversation-nav": "Conversation",
   "btn.search-address": "Rechercher cette adresse",
   "error.duplicate-email": "Un compte Mutuali existe déjà avec cette adresse courriel.",
   "label.advancedSearch": "Recherche avancée",
