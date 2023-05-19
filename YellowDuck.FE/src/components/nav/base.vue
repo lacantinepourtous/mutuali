@@ -1,5 +1,5 @@
 <template>
-  <b-navbar class="gray-lighter nav-base" variant="light">
+  <b-navbar class="gray-lighter nav-base" variant="light" :aria-label="ariaTitle || null">
     <b-navbar-brand class="link-scale" :to="{ name: $consts.urls.URL_ROOT }">
       <span class="nav-base__logo" :class="{ 'nav-base__logo--condensed': isConnected }">
         <span class="sr-only">{{ $t("sr.homepage") }}</span>
@@ -19,6 +19,12 @@ query LocalUser {
 
 <script>
 export default {
+  props: {
+    ariaTitle: {
+      type: String,
+      default: ""
+    }
+  },
   computed: {
     isConnected: function () {
       return this.user && this.user.isConnected;
