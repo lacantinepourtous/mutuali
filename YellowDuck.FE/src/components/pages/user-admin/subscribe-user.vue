@@ -4,7 +4,7 @@
       <nav-close :to="{ name: $consts.urls.URL_LIST_USERS }"></nav-close>
     </portal>
     <div v-if="!userCreated" class="section section--sm">
-      <h1 class="h2 my-4">{{ $t("page-title.create-user-as-admin") }}</h1>
+      <h1 class="my-4">{{ $t("page-title.create-user-as-admin") }}</h1>
       <subscribe-user-form class="my-4" @submitForm="subscribeUser" />
     </div>
   </div>

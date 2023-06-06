@@ -4,7 +4,7 @@
       <nav-close :to="{ name: $consts.urls.URL_LIST_USERS }"></nav-close>
     </portal>
     <div class="section section--sm">
-      <h1 class="h2 my-4">{{ $t("page-title.create-admin") }}</h1>
+      <h1 class="my-4">{{ $t("page-title.create-admin") }}</h1>
       <s-form class="my-4" @submit="subscribeUser">
         <s-form-input
           id="firstname"

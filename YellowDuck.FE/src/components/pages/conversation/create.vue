@@ -2,7 +2,7 @@
   <div v-if="ad" class="conversation-detail">
     <portal :to="$consts.enums.PORTAL_HEADER">
       <div>
-        <nav-return :to="{ name: $consts.urls.URL_LIST_CONVERSATION }">
+        <nav-return :aria-title="$t('sr.conversation-nav')" :to="{ name: $consts.urls.URL_LIST_CONVERSATION }">
           <conversation-sidebar :other-participant-id="otherParticipantId" />
         </nav-return>
         <ad-snippet
