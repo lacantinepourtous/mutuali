@@ -61,7 +61,7 @@ namespace YellowDuck.Api.BackgroundJobs
 
                 logger.LogInformation($"New stripe transfer for the contract ({contract.Id})");
 
-                var body = $"Un paiement de {contract.Price.ToString("N2")} $ CA est en route vers le compte en banque du propriétaire. Un délai maximum de sept jours est attendu. Si suite à ce délai l'argent n'est toujours pas déposé, veuillez entrer en communication à l'adresse suivante info@mutuali.ca";
+                var body = $"Un paiement de {contract.Price.ToString("N2")} $ CA est en route vers le compte en banque du propriétaire. Un délai maximum de sept jours est attendu. Si suite à ce délai l'argent n'est toujours pas déposé, veuillez entrer en communication à l'adresse suivante mutuali@lacantinepourtous.org";
                 await conversationsService.SendMessageAsSystem(contract.Conversation.Sid, body);
             }
         }
