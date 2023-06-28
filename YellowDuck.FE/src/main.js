@@ -21,6 +21,7 @@ import Sluggify from "@/plugins/sluggify";
 import Format from "@/plugins/format";
 import Array from "@/plugins/array";
 import Date from "@/plugins/date";
+import VueCookies from 'vue-cookies'
 
 import Apollo from "@/graphql/vue-apollo";
 
@@ -36,6 +37,7 @@ Vue.use(Consts);
 Vue.use(Format);
 Vue.use(Array);
 Vue.use(Date);
+Vue.use(VueCookies, { expires: '14d' })
 
 Vue.use(GmapVue, {
   load: {

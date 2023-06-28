@@ -11,7 +11,7 @@
       :id="`${id}-items`"
       :name="`${name}-items`"
       :label="specifyLabel"
-      :labelClass="{ 'sr-only': specifyLabelSrOnly }"
+      :label-class="specifyLabelSrOnly ? 'sr-only' : ''"
       v-slot="{ sState }"
       v-if="computedShown"
       :rules="{ required: required }"
@@ -74,7 +74,7 @@ export default {
       }
     }
   },
-  data: function () {
+  data: function() {
     return {
       shown: Array.isArray(this.value) ? this.value.length > 0 : false
     };

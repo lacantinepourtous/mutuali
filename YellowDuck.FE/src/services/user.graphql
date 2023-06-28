@@ -87,6 +87,15 @@ mutation ChangePassword($input: ChangePasswordInput!) {
   }
 }
 
+mutation UpdateFirstLoginModalClosed($input: UpdateFirstLoginModalClosedInput!) {
+  updateFirstLoginModalClosed(input: $input) {
+    user {
+      id
+      firstLoginModalClosed
+    }
+  }
+}
+
 mutation UpdateUserProfile($input: UpdateUserProfileInput!) {
   updateUserProfile(input: $input) {
     user {

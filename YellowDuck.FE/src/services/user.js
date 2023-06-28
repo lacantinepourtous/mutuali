@@ -8,6 +8,7 @@ import {
   VerifyToken,
   UpdateUserProfile,
   ChangePassword,
+  UpdateFirstLoginModalClosed,
   CreateAdminAccount,
   CompleteAdminRegistration
 } from "./user.graphql";
@@ -85,6 +86,16 @@ export default {
 
     await Apollo.instance.defaultClient.mutate({
       mutation: ResetPassword,
+      variables: {
+        input
+      }
+    });
+  },
+  updateFirstLoginModalClosed: async function(firstLoginModalClosed) {
+    let input = { firstLoginModalClosed };
+
+    await Apollo.instance.defaultClient.mutate({
+      mutation: UpdateFirstLoginModalClosed,
       variables: {
         input
       }

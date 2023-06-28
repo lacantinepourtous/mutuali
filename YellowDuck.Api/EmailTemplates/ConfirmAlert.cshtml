@@ -1,0 +1,30 @@
+﻿@using YellowDuck.Api.Helpers
+@using YellowDuck.Api.Constants
+@using YellowDuck.Api.Extensions;
+@model YellowDuck.Api.EmailTemplates.Models.ConfirmAlertEmail
+@{
+    Layout = "_EmailLayout.cshtml";
+}
+<p style="font-style:italic;">--- English will follow ---</p>
+<br>
+<p>Bonjour,</p>
+<p>Veuillez confirmer la création d'une alerte courriel @AdCategoryHelper.AdCategoryToFrenchString(Model.Alert.Category).</p>
+<p>
+    <a href="@Model.BaseUrl/@UrlHelper.ConfirmAlert(Model.Alert.GetIdentifier().ToString(), Model.Alert.Email, Locales.FR)">
+        Ceci est le lien sur lequel vous devez cliquer pour confirmer votre alerte.
+    </a>
+</p>
+<p>Merci</p>
+
+<br>
+<br>
+<p style="font-style:italic;">--- English version ---</p>
+<br>
+<p>Hello,</p>
+<p>Please confirm the creation of an email alert @AdCategoryHelper.AdCategoryToEnglishString(Model.Alert.Category).</p>
+<p>
+    <a href="@Model.BaseUrl/@UrlHelper.ConfirmAlert(Model.Alert.GetIdentifier().ToString(), Model.Alert.Email, Locales.EN)">
+        This is the link you need to click to confirm your alert.
+    </a>
+</p>
+<p>Thanks</p>

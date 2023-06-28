@@ -397,6 +397,124 @@ namespace YellowDuck.Api.Migrations
                     b.ToTable("AdTranslations");
                 });
 
+            modelBuilder.Entity("YellowDuck.Api.DbModel.Entities.Alerts.Alert", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<long>("AddressId")
+                        .HasColumnType("bigint");
+
+                    b.Property<bool>("CanHaveDriver")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("CanSharedRoad")
+                        .HasColumnType("bit");
+
+                    b.Property<int>("Category")
+                        .HasColumnType("int");
+
+                    b.Property<bool>("DayAvailability")
+                        .HasColumnType("bit");
+
+                    b.Property<int?>("DeliveryTruckType")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Email")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("EmailConfirmed")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("EveningAvailability")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTime?>("LastSendDateUTC")
+                        .HasColumnType("datetime2");
+
+                    b.Property<double?>("Radius")
+                        .HasColumnType("float");
+
+                    b.Property<bool>("Refrigerated")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AddressId")
+                        .IsUnique();
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Alerts");
+                });
+
+            modelBuilder.Entity("YellowDuck.Api.DbModel.Entities.Alerts.AlertAddress", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<double>("Latitude")
+                        .HasColumnType("float");
+
+                    b.Property<string>("Locality")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<double>("Longitude")
+                        .HasColumnType("float");
+
+                    b.Property<string>("Neighborhood")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("PostalCode")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Raw")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Route")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("StreetNumber")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Sublocality")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Id", "Latitude", "Longitude")
+                        .IsUnique();
+
+                    b.ToTable("AlertAddress");
+                });
+
+            modelBuilder.Entity("YellowDuck.Api.DbModel.Entities.Alerts.AlertProfessionalKitchenEquipment", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<long>("AlertId")
+                        .HasColumnType("bigint");
+
+                    b.Property<int>("ProfessionalKitchenEquipment")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AlertId");
+
+                    b.ToTable("AlertProfessionalKitchenEquipments");
+                });
+
             modelBuilder.Entity("YellowDuck.Api.DbModel.Entities.AppUser", b =>
                 {
                     b.Property<string>("Id")
@@ -421,6 +539,9 @@ namespace YellowDuck.Api.Migrations
                         .HasColumnType("nvarchar(256)");
 
                     b.Property<bool>("EmailConfirmed")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("FirstLoginModalClosed")
                         .HasColumnType("bit");
 
                     b.Property<bool>("LockoutEnabled")
@@ -967,6 +1088,34 @@ namespace YellowDuck.Api.Migrations
                     b.Navigation("Ad");
                 });
 
+            modelBuilder.Entity("YellowDuck.Api.DbModel.Entities.Alerts.Alert", b =>
+                {
+                    b.HasOne("YellowDuck.Api.DbModel.Entities.Alerts.AlertAddress", "Address")
+                        .WithOne("Alert")
+                        .HasForeignKey("YellowDuck.Api.DbModel.Entities.Alerts.Alert", "AddressId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("YellowDuck.Api.DbModel.Entities.AppUser", "User")
+                        .WithMany("Alerts")
+                        .HasForeignKey("UserId");
+
+                    b.Navigation("Address");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("YellowDuck.Api.DbModel.Entities.Alerts.AlertProfessionalKitchenEquipment", b =>
+                {
+                    b.HasOne("YellowDuck.Api.DbModel.Entities.Alerts.Alert", "Alert")
+                        .WithMany("ProfessionalKitchenEquipments")
+                        .HasForeignKey("AlertId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Alert");
+                });
+
             modelBuilder.Entity("YellowDuck.Api.DbModel.Entities.Contracts.Contract", b =>
                 {
                     b.HasOne("YellowDuck.Api.DbModel.Entities.AppUser", "Owner")
@@ -1146,9 +1295,21 @@ namespace YellowDuck.Api.Migrations
                     b.Navigation("Ad");
                 });
 
+            modelBuilder.Entity("YellowDuck.Api.DbModel.Entities.Alerts.Alert", b =>
+                {
+                    b.Navigation("ProfessionalKitchenEquipments");
+                });
+
+            modelBuilder.Entity("YellowDuck.Api.DbModel.Entities.Alerts.AlertAddress", b =>
+                {
+                    b.Navigation("Alert");
+                });
+
             modelBuilder.Entity("YellowDuck.Api.DbModel.Entities.AppUser", b =>
                 {
                     b.Navigation("Ads");
+
+                    b.Navigation("Alerts");
 
                     b.Navigation("OwnerContracts");
 

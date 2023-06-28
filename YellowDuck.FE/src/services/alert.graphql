@@ -1,0 +1,29 @@
+mutation CreateAlert($input: CreateAlertInput!) {
+  createAlert(input: $input) {
+    alert {
+      id
+    }
+  }
+}
+
+mutation UpdateAlert($input: UpdateAlertInput!) {
+  updateAlert(input: $input) {
+    alert {
+      id
+    }
+  }
+}
+
+mutation DeleteAlert($input: DeleteAlertInput!) {
+  deleteAlert(input: $input) {
+    success
+  }
+}
+
+mutation ConfirmAlert($input: ConfirmAlertInput!) {
+  confirmAlert(input: $input) {
+    alert {
+      id
+    }
+  }
+}

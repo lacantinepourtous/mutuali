@@ -11,6 +11,7 @@ using YellowDuck.Api.Requests.Commands.Mutations.Conversations;
 using YellowDuck.Api.Requests.Commands.Mutations.Notifications;
 using YellowDuck.Api.Requests.Commands.Mutations.Contracts;
 using YellowDuck.Api.Requests.Commands.Mutations.Payment;
+using YellowDuck.Api.Requests.Commands.Mutations.Alerts;
 
 namespace YellowDuck.Api.Gql.Schema
 {
@@ -106,6 +107,15 @@ namespace YellowDuck.Api.Gql.Schema
             return mediator.Send(input.Value);
         }
 
+        [ApplyPolicy(AuthorizationPolicies.LoggedIn)]
+        [AnnotateErrorCodes(typeof(UpdateFirstLoginModalClosed))]
+        public Task<UpdateFirstLoginModalClosed.Payload> UpdateFirstLoginModalClosed(
+            [Inject] IMediator mediator,
+            NonNull<UpdateFirstLoginModalClosed.Input> input)
+        {
+            return mediator.Send(input.Value);
+        }
+
         [ApplyPolicy(AuthorizationPolicies.IsUser)]
         [AnnotateErrorCodes(typeof(CreateAd))]
         public Task<CreateAd.Payload> CreateAd(
@@ -129,6 +139,39 @@ namespace YellowDuck.Api.Gql.Schema
         public Task<UpdateAdTranslation.Payload> UpdateAdTranslation(
             [Inject] IMediator mediator,
             NonNull<UpdateAdTranslation.Input> input)
+        {
+            return mediator.Send(input.Value);
+        }
+
+        [AnnotateErrorCodes(typeof(CreateAlert))]
+        public Task<CreateAlert.Payload> CreateAlert(
+            [Inject] IMediator mediator,
+            NonNull<CreateAlert.Input> input)
+        {
+            return mediator.Send(input.Value);
+        }
+
+        [AnnotateErrorCodes(typeof(ConfirmAlert))]
+        public Task<ConfirmAlert.Payload> ConfirmAlert(
+            [Inject] IMediator mediator,
+            NonNull<ConfirmAlert.Input> input)
+        {
+            return mediator.Send(input.Value);
+        }
+
+        [ApplyPolicy(AuthorizationPolicies.ManageAlert)]
+        [AnnotateErrorCodes(typeof(UpdateAlert))]
+        public Task<UpdateAlert.Payload> UpdateAlert(
+            [Inject] IMediator mediator,
+            NonNull<UpdateAlert.Input> input)
+        {
+            return mediator.Send(input.Value);
+        }
+
+        [AnnotateErrorCodes(typeof(DeleteAlert))]
+        public Task<DeleteAlert.Payload> DeleteAlert(
+            [Inject] IMediator mediator,
+            NonNull<DeleteAlert.Input> input)
         {
             return mediator.Send(input.Value);
         }

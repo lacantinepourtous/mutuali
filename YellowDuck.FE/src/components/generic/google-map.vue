@@ -273,9 +273,9 @@ export default {
 .s-google-map {
   width: 100%;
   height: 100%;
-  height: -webkit-calc(100% - 59px);
-  height: -moz-calc(100% - 59px);
-  height: calc(100% - 59px);
+  height: -webkit-calc(100% - 70px);
+  height: -moz-calc(100% - 70px);
+  height: calc(100% - 70px);
 }
 
 .gmap-custom-control {
