@@ -38,6 +38,7 @@ namespace YellowDuck.ApiTests.Requests.Commands.Mutations.Alerts
                     Route = "Rue Bickell",
                     StreetNumber = "395"
                 }.NonNull(),
+                User = user,
                 Radius = 10
             };
 
@@ -49,7 +50,8 @@ namespace YellowDuck.ApiTests.Requests.Commands.Mutations.Alerts
         {
             return new DeleteAlert.Input
             {
-                AlertId = alert.GetIdentifier()
+                AlertId = alert.GetIdentifier(),
+                Email = "test@example.com"
             };
         }
 
@@ -70,11 +72,24 @@ namespace YellowDuck.ApiTests.Requests.Commands.Mutations.Alerts
         {
             var input = new DeleteAlert.Input
             {
-                AlertId = "QWxlcnQ6MjAwMDc="
+                AlertId = "QWxlcnQ6MjAwMDc=",
+                Email = "test@example.com"
             };
 
             await F(() => handler.Handle(input, CancellationToken.None))
                 .Should().ThrowAsync<DeleteAlert.AlertNotFoundException>();
+        }
+
+        [Fact]
+        public async Task ShouldThrowErrorOnUnSpecifiedEmail()
+        {
+            var input = new DeleteAlert.Input
+            {
+                AlertId = "QWxlcnQ6MjAwMDc=",
+            };
+
+            await F(() => handler.Handle(input, CancellationToken.None))
+                .Should().ThrowAsync<DeleteAlert.EmailNotSetException>();
         }
     }
 }

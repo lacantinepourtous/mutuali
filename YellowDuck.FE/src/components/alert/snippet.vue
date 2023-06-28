@@ -48,6 +48,9 @@ export default {
     alert: {
       type: Object,
       required: true
+    },
+    email: {
+      type: String
     }
   },
   computed: {
@@ -73,7 +76,7 @@ export default {
   },
   methods: {
     async deleteAlert() {
-      await deleteAlert(this.alert.id);
+      await deleteAlert(this.alert.id, this.email);
       NotificationService.showSuccess(this.$t("notification.alert-deleted"));
       this.$emit("deleted");
     }

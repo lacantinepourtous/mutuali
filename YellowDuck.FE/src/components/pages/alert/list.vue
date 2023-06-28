@@ -9,6 +9,7 @@
           v-for="alert in alerts"
           :key="alert.id"
           :alert="alert"
+          :email="me.email"
           @deleted="refreshAlerts()"
           sectionWidth="sm"
           smallTitle
@@ -29,10 +30,8 @@
 <script>
 import AlertNoContent from "@/components/alert/no-content.vue";
 import AlertSnippet from "@/components/alert/snippet.vue";
-import { RatingsCriterias } from "@/mixins/ratings-criterias";
 
 export default {
-  mixins: [RatingsCriterias],
   components: {
     AlertNoContent,
     AlertSnippet
@@ -78,6 +77,7 @@ export default {
 query Me {
   me {
     id
+    email
     profile {
       id
     }
