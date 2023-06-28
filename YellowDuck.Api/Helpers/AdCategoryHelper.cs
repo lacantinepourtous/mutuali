@@ -16,6 +16,17 @@ namespace YellowDuck.Api.Helpers
             };
             return dict[adCategory];
         }
+
+        public static string AdCategoryToEnglishString(AdCategory adCategory)
+        {
+            var dict = new Dictionary<AdCategory, string>() {
+                { AdCategory.ProfessionalKitchen, "Professional kitchens" },
+                { AdCategory.DeliveryTruck, "Delivery trucks" },
+                { AdCategory.StorageSpace, "Storage spaces" },
+                { AdCategory.Other, "Others" },
+            };
+            return dict[adCategory];
+        }
     }
 }
 

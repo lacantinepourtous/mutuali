@@ -5,6 +5,7 @@ using Microsoft.Extensions.Logging;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
+using YellowDuck.Api.Constants;
 using YellowDuck.Api.DbModel;
 using YellowDuck.Api.DbModel.Enums;
 using YellowDuck.Api.EmailTemplates.Models;
@@ -48,7 +49,6 @@ namespace YellowDuck.Api.BackgroundJobs
                 .Include(x => x.Address)
                 .Where(x => x.CreatedAtUTC >= lastWeekUTC.Date)
                 .ToArrayAsync();
-            await db.SaveChangesAsync();
 
             foreach (var alert in alerts)
             {
@@ -93,11 +93,12 @@ namespace YellowDuck.Api.BackgroundJobs
                     
                     var emailModel = new AlertEmail(alert.User?.Email ?? alert.Email)
                     {
-                        Category = AdCategoryHelper.AdCategoryToFrenchString(alert.Category),
+                        AlertIdentifier = alert.GetIdentifier(),
+                        Category = alert.Category,
                         AdsCount = filteredAds.Count(),
-                        CtaUrl = filteredAds.Count() == 1 ? UrlHelper.Ad(filteredAds.First().GetIdentifier()) : UrlHelper.AdsFiltered(filtersParams),
-                        UnsubscribeUrl = UrlHelper.UnsubscribeAlert(alert.GetIdentifier()),
-                        ManageAlertUrl = (alert.User != null) ? UrlHelper.ManageAlert() : null
+                        CtaUrlFr = filteredAds.Count() == 1 ? UrlHelper.Ad(filteredAds.First().GetIdentifier(), Locales.FR) : UrlHelper.AdsFiltered(filtersParams, Locales.FR),
+                        CtaUrlEn = filteredAds.Count() == 1 ? UrlHelper.Ad(filteredAds.First().GetIdentifier(), Locales.EN) : UrlHelper.AdsFiltered(filtersParams, Locales.EN),
+                        CanManageAlert = alert.User != null
                     };
                     await mailer.Send(emailModel);
                     logger.LogInformation($"Alert id {alert.Id} sent with {filteredAds.Count()} ad(s)");

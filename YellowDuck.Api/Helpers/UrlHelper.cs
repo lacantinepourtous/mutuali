@@ -37,10 +37,10 @@ namespace YellowDuck.Api.Helpers
             return $"alertes/confirmer/{id}?email={email}{langParameter}";
         }
 
-        public static string UnsubscribeAlert(Id id, string lang = null)
+        public static string UnsubscribeAlert(Id id, string email, string lang = null)
         {
-            var langParameter = (lang != null) ? $"?lang={lang}" : "";
-            return $"alertes/supprimer/{id}{langParameter}";
+            var langParameter = (lang != null) ? $"&lang={lang}" : "";
+            return $"alertes/supprimer/{id}?email={email}{langParameter}";
         }
 
         public static string Ad(Id id, string lang = null)

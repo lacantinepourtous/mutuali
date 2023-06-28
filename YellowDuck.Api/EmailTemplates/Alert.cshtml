@@ -4,32 +4,65 @@
 @{
     Layout = "_EmailLayout.cshtml";
 }
-
+<p style="font-style:italic;">--- English will follow ---</p>
+<br>
 @if (Model.AdsCount > 1)
 {
     <p>
-        @Model.AdsCount offres @Model.Category qui pourraient vous intéresser viennent d'être publiées.
+        @Model.AdsCount offres @AdCategoryHelper.AdCategoryToFrenchString(Model.Category) qui pourraient vous intéresser viennent d'être publiées.
     </p>
     <p>
-        <a href="@Model.BaseUrl/@Model.CtaUrl">Aller voir les offres</a>
+        <a href="@Model.BaseUrl/@Model.CtaUrlFr">Aller voir les offres</a>
     </p>
 }
 else
 {
     <p>
-        Une offre @Model.Category qui pourrait vous intéresser vient d'être publiée.
+        Une offre @AdCategoryHelper.AdCategoryToFrenchString(Model.Category) qui pourrait vous intéresser vient d'être publiée.
     </p>
     <p>
-        <a href="@Model.BaseUrl/@Model.CtaUrl">Aller voir l'offre</a>
+        <a href="@Model.BaseUrl/@Model.CtaUrlFr">Aller voir l'offre</a>
     </p>
 }
 
 
-   <p>
-     <a href="@Model.BaseUrl/@Model.UnsubscribeUrl">Se désabonner de cette alerte</a>
-    @if(Model.ManageAlertUrl != null)
+<p>
+    <a href="@Model.BaseUrl/@UrlHelper.UnsubscribeAlert(Model.AlertIdentifier, Model.To, Locales.FR)">Se désabonner de cette alerte</a>
+    @if (Model.CanManageAlert)
     {
-        <text>•</text> <a href="@Model.BaseUrl/@Model.ManageAlertUrl">Gérer ses alertes</a>
+        <text>•</text> <a href="@Model.BaseUrl/@UrlHelper.ManageAlert(Locales.FR)">Gérer ses alertes</a>
     }
-</p> 
+</p>
 
+<br>
+<br>
+<p style="font-style:italic;">--- English version ---</p>
+<br>
+
+@if (Model.AdsCount > 1)
+{
+    <p>
+        @Model.AdsCount offers @AdCategoryHelper.AdCategoryToEnglishString(Model.Category) that might interest you have just been published.
+    </p>
+    <p>
+        <a href="@Model.BaseUrl/@Model.CtaUrlEn">Go see the offers</a>
+    </p>
+}
+else
+{
+    <p>
+        One offer @AdCategoryHelper.AdCategoryToEnglishString(Model.Category) that might interest you has just been published.
+    </p>
+    <p>
+        <a href="@Model.BaseUrl/@Model.CtaUrlEn">Go see the offer</a>
+    </p>
+}
+
+
+<p>
+    <a href="@Model.BaseUrl/@UrlHelper.UnsubscribeAlert(Model.AlertIdentifier, Model.To, Locales.EN)">Unsubscribe from this alert</a>
+    @if (Model.CanManageAlert)
+    {
+        <text>•</text> <a href="@Model.BaseUrl/@UrlHelper.ManageAlert(Locales.EN)">Manage your alerts</a>
+    }
+</p>

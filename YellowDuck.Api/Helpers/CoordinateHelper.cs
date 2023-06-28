@@ -6,6 +6,7 @@ namespace YellowDuck.Api.Helpers
     {
         public static double GetDistanceInMeters(double longitude, double latitude, double otherLongitude, double otherLatitude)
         {
+            // Source: https://stackoverflow.com/a/51839058
             var d1 = latitude * (Math.PI / 180.0);
             var num1 = longitude * (Math.PI / 180.0);
             var d2 = otherLatitude * (Math.PI / 180.0);
