@@ -20,6 +20,16 @@
         </template>
 
         <template #actions>
+          <b-button
+            v-if="canTransfer"
+            :to="{ name: $consts.urls.URL_AD_TRANSFER, params: { id } }"
+            variant="secondary"
+            size="sm"
+            class="mt-2 ml-2"
+          >
+            <b-icon icon="arrow-right" class="mr-1" aria-hidden="true"></b-icon>
+            {{ $t("btn.transfer") }}
+          </b-button>
           <template v-if="showManageBtn">
             <b-button v-if="isPublished" @click="unpublishAd" variant="outline-primary" size="sm" class="mt-2 ml-2">
               <b-icon icon="eye-slash-fill" class="mr-1" aria-hidden="true"></b-icon>
@@ -117,21 +127,23 @@ export default {
     isAccountOnboardingComplete: Boolean,
     showAdDetailBtn: Boolean,
     showManageBtn: Boolean,
-    isPublished: Boolean
+    isPublished: Boolean,
+    isAdminOnly: Boolean,
+    canTransfer: Boolean
   },
   computed: {
-    haveContract: function() {
+    haveContract: function () {
       return this.conversation.contract !== null;
     },
-    contractId: function() {
+    contractId: function () {
       return this.conversation.contract.id;
     }
   },
   methods: {
-    unpublishAd: async function() {
+    unpublishAd: async function () {
       await unpublishAd(this.id);
     },
-    publishAd: async function() {
+    publishAd: async function () {
       await publishAd(this.id);
     }
   }

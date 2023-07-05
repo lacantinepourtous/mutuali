@@ -5,6 +5,12 @@
     </div>
 
     <div class="mutuali-ad-card__pic">
+      <div
+        v-if="adIsAdminOnly"
+        style="position: absolute; background: orange; color: white; widht: 100%; height: 100%; padding: 10px; opacity: 0.8"
+      >
+        ADMIN ONLY
+      </div>
       <img
         v-if="adGallery && adGallery[0]"
         class="mutuali-ad-card__img"
@@ -14,7 +20,7 @@
     </div>
     <div class="mutuali-ad-card__text">
       <p class="mutuali-ad-card__organization mb-2 letter-spacing-wide small">
-        <span class="font-weight-bolder text-uppercase ">{{ adOrganization }}</span>
+        <span class="font-weight-bolder text-uppercase">{{ adOrganization }}</span>
         <template v-if="typeof distance === 'number'">
           <svg
             class="mutuali-ad-card__circle green mx-2"
@@ -60,26 +66,29 @@ export default {
     }
   },
   computed: {
-    adTitle: function() {
+    adTitle: function () {
       return this.ad.translationOrDefault.title;
     },
-    adCategory: function() {
+    adCategory: function () {
       return this.ad.category;
     },
-    adGallery: function() {
+    adGallery: function () {
       return this.ad.gallery;
     },
-    adPrice: function() {
+    adPrice: function () {
       return this.ad.priceToBeDetermined ? this.$t("price.toBeDetermined") : this.$format.formatMoney(this.ad.price);
     },
-    adPriceDescription: function() {
+    adPriceDescription: function () {
       return this.ad.priceToBeDetermined ? "" : this.ad.translationOrDefault.priceDescription;
     },
-    adOrganization: function() {
+    adOrganization: function () {
       return this.ad.organization;
     },
-    adDistance: function() {
+    adDistance: function () {
       return Math.round(this.distance / 100) / 10; // m to km, rounded to first decimal.
+    },
+    adIsAdminOnly: function () {
+      return this.ad.isAdminOnly;
     }
   }
 };

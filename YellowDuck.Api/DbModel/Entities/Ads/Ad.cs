@@ -40,6 +40,7 @@ namespace YellowDuck.Api.DbModel.Entities.Ads
         public bool CanHaveDriver { get; set; }
 
         public bool IsPublish { get; set; }
+        public bool IsAdminOnly { get; set; }
         public DateTime? CreatedAtUTC { get; set; }
     }
 }

@@ -180,7 +180,7 @@ export default [
     path: "/gerer-annonces",
     component: () => import("@/components/pages/ad/manage.vue"),
     meta: {
-      usertype: USER_TYPE_USER
+      usertype: [USER_TYPE_USER, USER_TYPE_ADMIN]
     }
   },
 
@@ -201,6 +201,14 @@ export default [
     }
   },
   {
+    name: urls.URL_PREPARE_AD,
+    path: "/annonces/preparer",
+    component: () => import("@/components/pages/ad/prepare.vue"),
+    meta: {
+      usertype: USER_TYPE_ADMIN
+    }
+  },
+  {
     name: urls.URL_AD_DETAIL,
     path: "/annonces/:id",
     component: () => import("@/components/pages/ad/detail.vue"),
@@ -213,7 +221,15 @@ export default [
     path: "/annonces/modifier/:id",
     component: () => import("@/components/pages/ad/edit.vue"),
     meta: {
-      usertype: USER_TYPE_USER
+      usertype: [USER_TYPE_USER, USER_TYPE_ADMIN]
+    }
+  },
+  {
+    name: urls.URL_AD_TRANSFER,
+    path: "/annonces/transferer/:id",
+    component: () => import("@/components/pages/ad/transfer.vue"),
+    meta: {
+      usertype: USER_TYPE_ADMIN
     }
   },
   {

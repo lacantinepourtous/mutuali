@@ -116,7 +116,7 @@ namespace YellowDuck.Api.Gql.Schema
             return mediator.Send(input.Value);
         }
 
-        [ApplyPolicy(AuthorizationPolicies.IsUser)]
+        [ApplyPolicy(AuthorizationPolicies.LoggedIn)]
         [AnnotateErrorCodes(typeof(CreateAd))]
         public Task<CreateAd.Payload> CreateAd(
             [Inject] IMediator mediator,
@@ -261,6 +261,15 @@ namespace YellowDuck.Api.Gql.Schema
         public Task<UnpublishAd.Payload> UnpublishAd(
             [Inject] IMediator mediator,
             NonNull<UnpublishAd.Input> input)
+        {
+            return mediator.Send(input.Value);
+        }
+
+        [ApplyPolicy(AuthorizationPolicies.IsAdmin)]
+        [AnnotateErrorCodes(typeof(TransferAd))]
+        public Task<TransferAd.Payload> TransferAd(
+            [Inject] IMediator mediator,
+            NonNull<TransferAd.Input> input)
         {
             return mediator.Send(input.Value);
         }

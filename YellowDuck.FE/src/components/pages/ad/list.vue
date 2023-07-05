@@ -174,11 +174,18 @@
       </alert-modal>
       <div class="equipment-list__bottom section section--md">
         <ad-card v-if="displayAdSnippet && view === CARD_VIEW" :ad="snippetAd" />
-        <div v-else-if="isConnected && !isAdmin && createAlertModalHidden && adMarkers.length != 0" class="mx-4">
-          <b-button variant="primary" size="lg" block :to="{ name: $consts.urls.URL_CREATE_AD }">{{
-            $t("nav.create-ad")
-          }}</b-button>
-        </div>
+        <template v-else-if="isConnected && createAlertModalHidden && adMarkers.length != 0">
+          <div v-if="isAdmin" class="mx-4">
+            <b-button variant="secondary" size="lg" block :to="{ name: $consts.urls.URL_PREPARE_AD }">{{
+              $t("nav.prepare-ad")
+            }}</b-button>
+          </div>
+          <div v-else class="mx-4">
+            <b-button variant="primary" size="lg" block :to="{ name: $consts.urls.URL_CREATE_AD }">{{
+              $t("nav.create-ad")
+            }}</b-button>
+          </div>
+        </template>
       </div>
     </template>
   </div>
@@ -222,6 +229,7 @@ query Ads(
   ) {
     id
     isPublish
+    isAdminOnly
     createdAtUTC
     address {
       id
@@ -306,7 +314,8 @@ export default {
       return (
         (this.isConnected && (!this.me || this.me.firstLoginModalClosed)) ||
         (!this.isConnected && this.localHideCreateAlertModal) ||
-        (this.displayAdSnippet && this.view === CARD_VIEW)
+        (this.displayAdSnippet && this.view === CARD_VIEW) ||
+        this.isAdmin
       );
     },
     displayAdSnippet() {
@@ -672,7 +681,7 @@ export default {
                 lng: pos.lng,
                 distance: null,
                 createdTimestamp: new Date(x.createdAtUTC).getTime(),
-                icon: require("@/assets/icons/marker-green.svg")
+                icon: x.isAdminOnly ? require("@/assets/icons/marker-yellow.svg") : require("@/assets/icons/marker-green.svg")
               };
             });
           this.$gmapApiPromiseLazy().then(() => {

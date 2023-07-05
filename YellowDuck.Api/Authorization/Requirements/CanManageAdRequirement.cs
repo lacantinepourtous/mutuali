@@ -1,7 +1,10 @@
 ﻿using GraphQL.Conventions;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.EntityFrameworkCore;
+using System.Linq;
 using System.Threading.Tasks;
 using YellowDuck.Api.Constants;
+using YellowDuck.Api.DbModel;
 using YellowDuck.Api.DbModel.Entities.Ads;
 using YellowDuck.Api.Extensions;
 using YellowDuck.Api.Gql.Interfaces;
@@ -19,6 +22,12 @@ namespace YellowDuck.Api.Authorization.Requirements
 
     public class CanManageAdRequirementHandler : AuthorizationHandler<CanManageAdRequirement>
     {
+        private readonly AppDbContext db;
+
+        public CanManageAdRequirementHandler(AppDbContext db)
+        {
+            this.db = db;
+        }
         protected override async Task HandleRequirementAsync(AuthorizationHandlerContext context, CanManageAdRequirement requirement)
         {
             Id adId;
@@ -36,6 +45,12 @@ namespace YellowDuck.Api.Authorization.Requirements
                     break;
                 default:
                     return;
+            }
+
+            if (context.User.IsAdmin() && await db.Ads.Where(x =>  x.Id == adId.LongIdentifierForType<Ad>() && x.IsAdminOnly == true).AnyAsync())
+            {
+                context.Succeed(requirement);
+                return;
             }
 
             if (context.User.HasClaim(AppClaimTypes.AdOwner, adId.ToString()))

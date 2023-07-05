@@ -126,6 +126,11 @@ namespace YellowDuck.Api.Requests.Commands.Mutations.Ads
             var owner = await currentUserAccessor.GetCurrentUser();
             ad.UserId = owner.Id;
 
+            if(owner.Type == UserType.Admin)
+            {
+                ad.IsAdminOnly = true;
+            }
+
             db.Ads.Add(ad);
 
             await db.SaveChangesAsync(cancellationToken);

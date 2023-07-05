@@ -1,5 +1,5 @@
 import Apollo from "@/graphql/vue-apollo";
-import { CreateAd, UpdateAd, UpdateAdTranslation, PublishAd, UnpublishAd } from "./ad.graphql";
+import { CreateAd, UpdateAd, UpdateAdTranslation, PublishAd, UnpublishAd, TransferAd } from "./ad.graphql";
 
 import { CONTENT_LANG_FR } from "@/consts/langs";
 
@@ -129,6 +129,17 @@ export async function unpublishAd(adId) {
     mutation: UnpublishAd,
     variables: {
       input: mutationInput
+    }
+  });
+
+  return result;
+}
+
+export async function transferAd(input) {
+  const result = await Apollo.instance.defaultClient.mutate({
+    mutation: TransferAd,
+    variables: {
+      input
     }
   });
 

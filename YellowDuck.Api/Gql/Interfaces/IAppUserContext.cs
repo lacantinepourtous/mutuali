@@ -24,6 +24,7 @@ namespace YellowDuck.Api.Gql.Interfaces
         Task<UserProfile> LoadProfileByUserId(string id);
         Task<IEnumerable<UserProfileRegisteringInterest>> LoadRegisteringInterestByUserProfileId(long id);
         Task<IEnumerable<Ad>> LoadAdsByUserId(string id);
+        Task<IEnumerable<Ad>> LoadAdByIsAdminOnly(bool isAdminOnly);
         Task<Ad> LoadAd(long id);
         Task<IEnumerable<AdTranslation>> LoadAdTranslations(long id);
         Task<AdAddress> LoadAdAddress(long id);

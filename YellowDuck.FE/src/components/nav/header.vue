@@ -33,6 +33,9 @@
             <b-dropdown-item :to="{ name: $consts.urls.URL_MANAGE_ADS }">{{ $t("btn.manage-my-ads") }}</b-dropdown-item>
             <b-dropdown-item :to="{ name: $consts.urls.URL_AD_ALERT_LIST }">{{ $t("btn.manage-my-alerts") }}</b-dropdown-item>
           </template>
+          <template v-else>
+            <b-dropdown-item :to="{ name: $consts.urls.URL_MANAGE_ADS }">{{ $t("btn.manage-admin-ads") }}</b-dropdown-item>
+          </template>
           <b-dropdown-item :to="{ name: $consts.urls.URL_PROFILE_EDIT }">{{ $t("btn.edit-my-profile") }}</b-dropdown-item>
           <b-dropdown-item :to="{ name: $consts.urls.URL_ACCOUNT_SETTINGS }">{{ $t("btn.account-settings") }}</b-dropdown-item>
           <b-dropdown-item @click="logout">{{ $t("btn.logout") }}</b-dropdown-item>

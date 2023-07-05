@@ -28,6 +28,7 @@ using MediatR;
 using YellowDuck.Api.Requests.Queries.Users;
 using YellowDuck.Api.Requests.Queries.Ads;
 using YellowDuck.Api.DbModel.Entities.Alerts;
+using YellowDuck.Api.Services.System;
 
 namespace YellowDuck.Api.Gql.Schema
 {
@@ -99,6 +100,7 @@ namespace YellowDuck.Api.Gql.Schema
         public async Task<AdGraphType> Ad(IAppUserContext ctx, Id id)
         {
             var ad = await ctx.LoadAd(id.LongIdentifierForType<Ad>());
+            if(ad == null) return null;
             return new AdGraphType(ad);
         }
 
@@ -106,6 +108,7 @@ namespace YellowDuck.Api.Gql.Schema
         public async Task<IEnumerable<AdGraphType>> Ads(
             [Inject] IAppCache cache, 
             [Inject] IMediator mediator,
+[Inject] ICurrentUserAccessor currentUserAccessor,
             AdCategory? category = null, 
             IList<DayOfWeek> dayAvailability = null,
             IList<DayOfWeek> eveningAvailability = null, 
@@ -115,21 +118,31 @@ namespace YellowDuck.Api.Gql.Schema
             bool? canSharedRoad = null, 
             bool? canHaveDriver = null)
         {
+            var adsQuery = new SearchAds.Query
+            {
+                Category = category,
+                DayAvailability = dayAvailability,
+                EveningAvailability = eveningAvailability,
+                ProfessionalKitchenEquipment = professionalKitchenEquipment,
+                DeliveryTruckType = deliveryTruckType,
+                Refrigerated = refrigerated,
+                CanHaveDriver = canHaveDriver,
+                CanSharedRoad = canSharedRoad,
+            };
+
+            // No cache for admin + show admin only ads
+            if (currentUserAccessor.IsUserType(UserType.Admin)) {
+                adsQuery.ShowAdminOnly = true;
+                var ads = await mediator.Send(adsQuery);
+                return ads.Select(x => new AdGraphType(x));
+            }
+
             return await cache.GetOrAddAsync($"Ads:{category}-{string.Join(",", dayAvailability.OrderBy(x => x))}-{string.Join(",", eveningAvailability.OrderBy(x => x))}-{string.Join(",", professionalKitchenEquipment.OrderBy(x => x))}-{deliveryTruckType}-{refrigerated}-{canHaveDriver}-{canSharedRoad}", async entry =>
             {
                 entry.SetAbsoluteExpiration(DateTimeOffset.UtcNow.AddMinutes(5));
                 entry.Priority = CacheItemPriority.Low;
 
-                var ads = await mediator.Send(new SearchAds.Query { 
-                    Category = category,
-                    DayAvailability = dayAvailability,
-                    EveningAvailability = eveningAvailability,
-                    ProfessionalKitchenEquipment = professionalKitchenEquipment,
-                    DeliveryTruckType = deliveryTruckType,
-                    Refrigerated = refrigerated,
-                    CanHaveDriver = canHaveDriver,
-                    CanSharedRoad = canSharedRoad
-                });
+                var ads = await mediator.Send(adsQuery);
                 return ads.Select(x => new AdGraphType(x));
             });
         }
