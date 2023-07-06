@@ -575,7 +575,7 @@
   "page-text.prepare-ad": "As an <strong>admin</strong>, you can prepare an ad and transfer it to a user. You can transfer direct after save or later.",
   "btn.prepare-ad": "Save ad",
   "form-complete.prepare-ad.title": "The ad has been saved",
-  "form-complete.prepare-ad.description": "Your ad is visible only to Mutuali administrators. To make it available to everyone, it must be transferred to a user. You can do this from the the announcement.",
+  "form-complete.prepare-ad.description": "Your ad is visible only to Mutuali administrators. To make it available to everyone, it must be transferred to a user. You can do this from the announcement.",
   "page-title.transfer-ad": "Transfer ad to user",
   "label.ad-transfer-user-email": "Email Address",
   "placeholder.ad-transfer-user-email": "Email Address",
