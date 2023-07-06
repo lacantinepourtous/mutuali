@@ -572,7 +572,7 @@
   "banner.ad-is-admin-only": "This ad is not listed.",
   "nav.prepare-ad": "Prepare ad",
   "page-title.prepare-ad": "Preparing an ad",
-  "page-text.prepare-ad": "As an admin, you can prepare an ad and transfer it to a user. You can transfer direct after save or later.",
+  "page-text.prepare-ad": "As an <strong>admin</strong>, you can prepare an ad and transfer it to a user. You can transfer direct after save or later.",
   "btn.prepare-ad": "Save ad",
   "form-complete.prepare-ad.title": "The ad has been saved",
   "form-complete.prepare-ad.description": "Your ad is visible only to Mutuali administrators. To make it available to everyone, it must be transferred to a user. You can do this from the the announcement.",
@@ -582,6 +582,6 @@
   "btn.confirm-ad-transfer": "Confirm Transfer",
   "sr.confirm": "Confirm",
   "form-complete.transfer-ad.title": "Ad transferred successfully",
-  "form-complete.transfer-ad.description": "The ad has been unpublished and an email has been sent to the user to notify them that they can access their account to publish it.",
+  "form-complete.transfer-ad.description": "The ad has been transferred and an email has been sent to the user to notify them that they can access their account to publish it.",
   "error.transfer-user-not-found": "No user matching this email address was found."
 }

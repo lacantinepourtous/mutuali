@@ -582,7 +582,7 @@
   "banner.ad-is-admin-only": "Cette annonce n'est pas répertoriée.",
   "nav.prepare-ad": "Préparer une annonce",
   "page-title.prepare-ad": "Préparation d'une annonce",
-  "page-text.prepare-ad": "En tant qu’administrateur, vous pouvez préparer une annonce et la transférer à un utilisateur. Vous pouvez transférer tout de suite après l'enregistrement ou plus tard.",
+  "page-text.prepare-ad": "En tant qu’<strong>administrateur</strong>, vous pouvez préparer une annonce et la transférer à un utilisateur. Vous pouvez transférer tout de suite après l'enregistrement ou plus tard.",
   "btn.prepare-ad": "Enregistrer l'annonce",
   "form-complete.prepare-ad.title": "L'annonce a bien été enregistrée",
   "form-complete.prepare-ad.description": "Votre annonce est visible seulement par les administrateurs de Mutuali. Pour la rendre disponnible à tous, elle doit être transférée à un utilisateur. Vous pouvez faire cette action à partir de la fiche de l'annonce.",
@@ -592,6 +592,6 @@
   "btn.confirm-ad-transfer": "Confirmer le transfert",
   "sr.confirm": "Confirmer",
   "form-complete.transfer-ad.title": "L'annonce à bien été transférée",
-  "form-complete.transfer-ad.description": "L'annonce a été dépubliée et un courriel a été envoyé à l'utilisateur pour l'aviser qu'il peut accèder à son compte pour la publier.",
+  "form-complete.transfer-ad.description": "L'annonce a été transférée et un courriel a été envoyé à l'utilisateur pour l'aviser qu'il peut accèder à son compte pour la publier.",
   "error.transfer-user-not-found": "Aucun utilisateur correspondant à cette adresse courriel n'a été trouvé."
 }

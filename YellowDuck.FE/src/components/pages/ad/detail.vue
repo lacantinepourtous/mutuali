@@ -1,8 +1,9 @@
 <template>
   <div v-if="ad" class="equipment-detail fab-container" :class="{ 'equipment-detail--modal': displayMap }">
-    <div v-if="ad.isAdminOnly" style="background: orange; color: white; width: 100%; padding: 10px">
+    <div v-if="ad.isAdminOnly" class="px-3 py-2 orange equipment-detail__notif text-white">
+      <b-img class="equipment-detail__notif-icon" :src="require('@/assets/icons/invisible.svg')" alt="" height="20" block></b-img>
       {{ $t("banner.ad-is-admin-only") }}
-      <b-button size="sm" style="outline-primary" :to="{ name: $consts.urls.URL_AD_TRANSFER, params: { id: this.adId } }">{{
+      <b-button size="sm" variant="link" :to="{ name: $consts.urls.URL_AD_TRANSFER, params: { id: this.adId } }">{{
         $t("btn.transfer-ad")
       }}</b-button>
     </div>
@@ -139,11 +140,11 @@
             <b-icon icon="pencil" class="mr-1" aria-hidden="true"></b-icon>
             {{ $t("btn.edit-ad") }}
           </b-button>
-          <b-button variant="secondary" size="lg" class="text-truncate" block @click="transferAd">
+          <b-button variant="admin" size="lg" class="text-truncate" block @click="transferAd">
             <b-icon icon="arrow-right" class="mr-1" aria-hidden="true"></b-icon>
             {{ $t("btn.transfer-ad") }}
           </b-button>
-          <b-button variant="danger" size="lg" class="text-truncate" block @click="unpublishAd">
+          <b-button v-if="!ad.isAdminOnly" variant="danger" size="lg" class="text-truncate" block @click="unpublishAd">
             {{ $t("btn.unpublish-ad") }}
           </b-button>
         </template>
@@ -445,6 +446,14 @@ query LocalUser {
       display: flex;
       flex-direction: column;
     }
+  }
+
+  &__notif {
+    background-color: $orange;
+    color: $white;
+    display: flex;
+    align-items: center;
+    column-gap: 12px;
   }
 
   &__carousel {

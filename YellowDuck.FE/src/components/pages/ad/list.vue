@@ -176,7 +176,7 @@
         <ad-card v-if="displayAdSnippet && view === CARD_VIEW" :ad="snippetAd" />
         <template v-else-if="isConnected && createAlertModalHidden && adMarkers.length != 0">
           <div v-if="isAdmin" class="mx-4">
-            <b-button variant="secondary" size="lg" block :to="{ name: $consts.urls.URL_PREPARE_AD }">{{
+            <b-button variant="admin" size="lg" block :to="{ name: $consts.urls.URL_PREPARE_AD }">{{
               $t("nav.prepare-ad")
             }}</b-button>
           </div>
@@ -681,7 +681,7 @@ export default {
                 lng: pos.lng,
                 distance: null,
                 createdTimestamp: new Date(x.createdAtUTC).getTime(),
-                icon: x.isAdminOnly ? require("@/assets/icons/marker-yellow.svg") : require("@/assets/icons/marker-green.svg")
+                icon: x.isAdminOnly ? require("@/assets/icons/marker-orange.svg") : require("@/assets/icons/marker-green.svg")
               };
             });
           this.$gmapApiPromiseLazy().then(() => {

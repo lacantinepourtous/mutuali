@@ -7,6 +7,15 @@
   >
     <div v-if="imageSrc" class="ui-snippet__img-container">
       <img class="ui-snippet__img" :src="`${imageSrc}?mode=crop&width=200&height=200`" :alt="imageAlt ? imageAlt : ''" />
+      <div v-if="isAdminOnly" class="ui-snippet__overlay-admin"></div>
+      <b-img
+        v-if="isAdminOnly"
+        class="ui-snippet__icon-invisible"
+        :src="require('@/assets/icons/invisible.svg')"
+        alt=""
+        height="30"
+        block
+      ></b-img>
     </div>
 
     <div class="ui-snippet__content">
@@ -71,7 +80,8 @@ export default {
     snippetIsLink: Boolean,
     smallTitle: Boolean,
     noWrapTitle: Boolean,
-    hideActions: Boolean
+    hideActions: Boolean,
+    isAdminOnly: Boolean
   }
 };
 </script>
@@ -123,6 +133,23 @@ export default {
     width: 100%;
     object-fit: cover;
     object-position: center;
+  }
+
+  &__overlay-admin {
+    background-color: $orange;
+    opacity: 0.8;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+  }
+
+  &__icon-invisible {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
   }
 
   &__content {

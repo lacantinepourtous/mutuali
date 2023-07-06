@@ -6,11 +6,11 @@
     <template v-if="!adCreated">
       <div class="section section--md section--padding-x section--border-bottom my-4">
         <h1 class="my-4">{{ $t("page-title.prepare-ad") }}</h1>
-        <img :src="require('@/assets/icons/adult.png')" class="w-25" alt="" />
-        <p>{{ $t("page-text.prepare-ad") }}</p>
+        <b-img class="mb-3" :src="require('@/assets/icons/adult.png')" height="100" alt="" block></b-img>
+        <p class="mb-4" v-html="$t('page-text.prepare-ad')"></p>
       </div>
 
-      <ad-form @submitForm="createAd" :disabledBtn="isSubmitted" :btnLabel="$t('btn.prepare-ad')" />
+      <ad-form @submitForm="createAd" :disabledBtn="isSubmitted" btnVariant="admin" :btnLabel="$t('btn.prepare-ad')" />
     </template>
 
     <form-complete
@@ -19,6 +19,7 @@
       :description="$t('form-complete.prepare-ad.description')"
       :image="require('@/assets/icons/checklist.png')"
       :ctas="formCompleteCtas"
+      is-admin
     />
   </div>
 </template>

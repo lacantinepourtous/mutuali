@@ -125,7 +125,7 @@
     </div>
     <div class="fab-container__fab">
       <div class="section section--md">
-        <b-button :disabled="disabledBtn" type="submit" variant="primary" size="lg" block :aria-label="$t('sr.edit')">
+        <b-button :disabled="disabledBtn" type="submit" :variant="btnVariant" size="lg" block :aria-label="$t('sr.edit')">
           <b-icon icon="pencil" class="mr-2" aria-hidden="true"></b-icon>{{ btnLabel }}
         </b-button>
         <b-button
@@ -270,6 +270,10 @@ export default {
     btnLabel: {
       type: String,
       required: true
+    },
+    btnVariant: {
+      type: String,
+      default: "primary"
     },
     canTransfer: {
       type: Boolean,

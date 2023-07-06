@@ -12,6 +12,7 @@
         :imageAlt="image.alt"
         :mainRoute="{ name: $consts.urls.URL_AD_DETAIL, params: { id: this.id } }"
         :mainRouteLabel="$t('btn.ad-detail')"
+        :is-admin-only="isAdminOnly"
       >
         <template #description>
           <p v-if="price" class="text-muted mb-0 mt-1">
@@ -23,7 +24,7 @@
           <b-button
             v-if="canTransfer"
             :to="{ name: $consts.urls.URL_AD_TRANSFER, params: { id } }"
-            variant="secondary"
+            variant="outline-admin"
             size="sm"
             class="mt-2 ml-2"
           >
