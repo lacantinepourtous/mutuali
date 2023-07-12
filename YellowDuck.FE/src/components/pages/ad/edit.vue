@@ -9,6 +9,7 @@
       </div>
       <ad-form
         v-if="ad"
+        :adId="adId"
         :title="adTitle"
         :description="adDescription"
         :category="adCategory"
@@ -34,6 +35,8 @@
         :canSharedRoad="adCanSharedRoad"
         @submitForm="editAd"
         :btnLabel="$t('btn.edit-ad')"
+        :transferBtnLabel="$t('btn.transfer-ad')"
+        :canTransfer="isAdmin"
         :disabledBtn="isSubmitted"
       />
     </template>
@@ -78,6 +81,19 @@ export default {
     };
   },
   apollo: {
+    me: {
+      query() {
+        return this.$options.query.Me;
+      },
+      skip() {
+        return !this.isConnected;
+      }
+    },
+    user: {
+      query() {
+        return this.$options.query.LocalUser;
+      }
+    },
     ad: {
       fetchPolicy: "no-cache",
       query() {
@@ -110,6 +126,12 @@ export default {
     };
   },
   computed: {
+    isConnected() {
+      return this.user && this.user.isConnected;
+    },
+    isAdmin() {
+      return !this.me || this.me.type === this.$consts.enums.USER_TYPE_ADMIN;
+    },
     adId: function () {
       return this.$route.params.id.split("-").last();
     },
@@ -201,6 +223,19 @@ export default {
 </script>
 
 <graphql>
+query Me {
+  me {
+    id
+    type
+  }
+}
+
+query LocalUser {
+  user @client {
+    isConnected
+  }
+}
+
 query AdById($id: ID!, $language: ContentLanguage!) {
   ad(id: $id) {
     id

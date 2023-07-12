@@ -125,8 +125,20 @@
     </div>
     <div class="fab-container__fab">
       <div class="section section--md">
-        <b-button :disabled="disabledBtn" type="submit" variant="primary" size="lg" block :aria-label="$t('sr.edit')">
+        <b-button :disabled="disabledBtn" type="submit" :variant="btnVariant" size="lg" block :aria-label="$t('sr.edit')">
           <b-icon icon="pencil" class="mr-2" aria-hidden="true"></b-icon>{{ btnLabel }}
+        </b-button>
+        <b-button
+          v-if="canTransfer"
+          :disabled="disabledBtn"
+          type="button"
+          :to="{ name: $consts.urls.URL_AD_TRANSFER, params: { id: this.adId } }"
+          variant="secondary"
+          size="lg"
+          block
+          :aria-label="$t('sr.transfer')"
+        >
+          <b-icon icon="arrow-right" class="mr-2" aria-hidden="true"></b-icon>{{ transferBtnLabel }}
         </b-button>
       </div>
     </div>
@@ -160,6 +172,10 @@ import {
 export default {
   mixins: [AdCategory, AvailabilityWeekday],
   props: {
+    adId: {
+      type: String,
+      default: ""
+    },
     title: {
       type: String,
       default: ""
@@ -255,6 +271,18 @@ export default {
       type: String,
       required: true
     },
+    btnVariant: {
+      type: String,
+      default: "primary"
+    },
+    canTransfer: {
+      type: Boolean,
+      default: false
+    },
+    transferBtnLabel: {
+      type: String,
+      required: false
+    },
     disabledBtn: {
       type: Boolean,
       default: false
@@ -316,7 +344,7 @@ export default {
     }
   },
   methods: {
-    haveDifferentImages: function(images, formImages) {
+    haveDifferentImages: function (images, formImages) {
       for (let i = 0; i < images.length; i++) {
         if (formImages[i].file.name) {
           if (images[i].src !== formImages[i].file.name) {
@@ -332,7 +360,7 @@ export default {
       }
       return false;
     },
-    haveDifferentItems: function(images, formImages) {
+    haveDifferentItems: function (images, formImages) {
       for (let i = 0; i < images.length; i++) {
         if (images[i] !== formImages[i].name) {
           return true;
@@ -340,7 +368,7 @@ export default {
       }
       return false;
     },
-    submitForm: function() {
+    submitForm: function () {
       let input = {};
 
       const maybeEditedFields = [

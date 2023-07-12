@@ -3,15 +3,12 @@ using MediatR;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using YellowDuck.Api.Utilities;
-using YellowDuck.Api.DbModel.Entities;
 using YellowDuck.Api.DbModel;
-using YellowDuck.Api.Utilities.Sorting;
 using System.Collections.Generic;
 using YellowDuck.Api.DbModel.Entities.Ads;
 using Microsoft.EntityFrameworkCore;
-using YellowDuck.Api.Gql.Schema.GraphTypes;
 using YellowDuck.Api.DbModel.Enums;
+using YellowDuck.Api.Services.System;
 
 namespace YellowDuck.Api.Requests.Queries.Ads
 {
@@ -19,7 +16,7 @@ namespace YellowDuck.Api.Requests.Queries.Ads
     {
         private readonly AppDbContext db;
 
-        public SearchAds(AppDbContext db)
+        public SearchAds(AppDbContext db, ICurrentUserAccessor currentUserAccessor)
         {
             this.db = db;
         }
@@ -87,6 +84,11 @@ namespace YellowDuck.Api.Requests.Queries.Ads
                 adsQuery = adsQuery.Where(x => professionalKitchenEquipmentsAdIds.Contains(x.Id));
             }
 
+            if(!query.ShowAdminOnly)
+            {
+                adsQuery = adsQuery.Where(x => x.IsAdminOnly == false);
+            }
+
             var ads = await adsQuery.ToListAsync(cancellationToken: cancellationToken);
             return ads;
         }
@@ -101,6 +103,7 @@ namespace YellowDuck.Api.Requests.Queries.Ads
             public bool? Refrigerated = null;
             public bool? CanSharedRoad = null;
             public bool? CanHaveDriver = null;
+            public bool ShowAdminOnly = false;
         }
 
     }

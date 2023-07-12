@@ -5,9 +5,6 @@ using YellowDuck.Api.DbModel.Entities.Ads;
 using YellowDuck.Api.Gql.Interfaces;
 using System.Linq;
 using YellowDuck.Api.DbModel.Enums;
-using YellowDuck.Api.Services.Files;
-using YellowDuck.Api.Gql.Schema.Types;
-using YellowDuck.Api.DbModel.Entities;
 using MediatR;
 using YellowDuck.Api.Requests.Queries.Rating;
 using System;
@@ -118,6 +115,8 @@ namespace YellowDuck.Api.Gql.Schema.GraphTypes
         public Task<string> Organization => WithData(x => x.Organization);
 
         public Task<bool> IsPublish => WithData(x => x.IsPublish);
+
+        public Task<bool> IsAdminOnly => WithData(x => x.IsAdminOnly);
 
         public Task<DateTime?> CreatedAtUTC => WithData(x => x.CreatedAtUTC);
     }

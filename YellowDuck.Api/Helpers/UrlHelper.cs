@@ -49,6 +49,12 @@ namespace YellowDuck.Api.Helpers
             return $"annonces/{id}{langParameter}";
         }
 
+        public static string ManageAds(string lang = null)
+        {
+            var langParameter = (lang != null) ? $"?lang={lang}" : "";
+            return $"gerer-annonces{langParameter}";
+        }
+
         public static string AdsFiltered(AdsFilteredParams filters, string lang = null)
         {
             var snakeCaseStrategy = new SnakeCaseNamingStrategy();

@@ -1,5 +1,12 @@
 <template>
   <div v-if="ad" class="equipment-detail fab-container" :class="{ 'equipment-detail--modal': displayMap }">
+    <div v-if="ad.isAdminOnly" class="px-3 py-2 orange equipment-detail__notif text-white">
+      <b-img class="equipment-detail__notif-icon" :src="require('@/assets/icons/invisible.svg')" alt="" height="20" block></b-img>
+      {{ $t("banner.ad-is-admin-only") }}
+      <b-button size="sm" variant="link" :to="{ name: $consts.urls.URL_AD_TRANSFER, params: { id: this.adId } }">{{
+        $t("btn.transfer-ad")
+      }}</b-button>
+    </div>
     <template v-if="displayMap">
       <div class="equipment-detail__modal-body">
         <portal :to="$consts.enums.PORTAL_HEADER">
@@ -54,11 +61,9 @@
                 <a
                   :aria-label="$t('btn.report-ad')"
                   class="equipment-detail__report btn-link"
-                  :href="
-                    `mailto:${contactUsEmail}?subject=${$t('email.report-subject')}&body=${$t('email.report-body', {
-                      url: adUrlForReport
-                    })}`
-                  "
+                  :href="`mailto:${contactUsEmail}?subject=${$t('email.report-subject')}&body=${$t('email.report-body', {
+                    url: adUrlForReport
+                  })}`"
                 >
                   <b-icon-flag class="mr-sm-2" aria-hidden="true" />
                   <span class="d-none d-sm-inline">{{ $t("btn.report-ad") }}</span>
@@ -135,7 +140,11 @@
             <b-icon icon="pencil" class="mr-1" aria-hidden="true"></b-icon>
             {{ $t("btn.edit-ad") }}
           </b-button>
-          <b-button variant="danger" size="lg" class="text-truncate" block @click="unpublishAd">
+          <b-button variant="admin" size="lg" class="text-truncate" block @click="transferAd">
+            <b-icon icon="arrow-right" class="mr-1" aria-hidden="true"></b-icon>
+            {{ $t("btn.transfer-ad") }}
+          </b-button>
+          <b-button v-if="!ad.isAdminOnly" variant="danger" size="lg" class="text-truncate" block @click="unpublishAd">
             {{ $t("btn.unpublish-ad") }}
           </b-button>
         </template>
@@ -147,6 +156,9 @@
           <b-button variant="primary" size="sm" class="text-truncate mr-2" @click="publishAd">
             {{ $t("btn.publish-ad") }}
           </b-button>
+          <b-button variant="secondary" size="sm" class="text-truncate mr-2" @click="transferAd">
+            {{ $t("btn.transfer-ad") }}
+          </b-button>
           <b-button variant="outline-primary" size="sm" class="text-truncate" @click="editAd">
             {{ $t("btn.edit-ad") }}
           </b-button>
@@ -157,7 +169,7 @@
 </template>
 
 <script>
-import { URL_LIST_AD, URL_AD_DETAIL, URL_CREATE_CONVERSATION, URL_AD_EDIT } from "@/consts/urls";
+import { URL_LIST_AD, URL_AD_DETAIL, URL_CREATE_CONVERSATION, URL_AD_EDIT, URL_AD_TRANSFER } from "@/consts/urls";
 import { CONTENT_LANG_FR } from "@/consts/langs";
 import {
   CATEGORY_PROFESSIONAL_KITCHEN,
@@ -210,17 +222,24 @@ export default {
     };
   },
   computed: {
-    contactUsEmail: function() {
+    contactUsEmail: function () {
       return VUE_APP_MUTUALI_CONTACT_MAIL;
     },
     isConnected() {
       return this.user && this.user.isConnected;
     },
+    isAdmin() {
+      return !this.me || this.me.type === this.$consts.enums.USER_TYPE_ADMIN;
+    },
     breadcrumbs() {
       return [{ to: { name: URL_LIST_AD }, text: this.$t("breadcrumb.list-ad") }, { text: this.adTitle }];
     },
     isAdOwnByCurrentUser() {
-      return this.me ? this.ad.user.id === this.me.id : false;
+      if (this.isAdmin) {
+        return this.ad.isAdminOnly;
+      } else {
+        return this.me ? this.ad.user.id === this.me.id : false;
+      }
     },
     adId() {
       return this.$route.params.id.split("-").last();
@@ -294,6 +313,9 @@ export default {
     editAd() {
       this.$router.push({ name: URL_AD_EDIT, params: { id: this.adId } });
     },
+    transferAd() {
+      this.$router.push({ name: URL_AD_TRANSFER, params: { id: this.adId } });
+    },
     async unpublishAd() {
       this.haveJustUnpublish = true;
       await unpublishAd(this.adId);
@@ -347,6 +369,7 @@ query AdById($id: ID!, $language: ContentLanguage!) {
   ad(id: $id) {
     id
     isPublish
+    isAdminOnly
     translationOrDefault(language: $language) {
       id
       language
@@ -404,6 +427,7 @@ query AdById($id: ID!, $language: ContentLanguage!) {
 query Me {
   me {
     id
+    type
   }
 }
 
@@ -422,6 +446,14 @@ query LocalUser {
       display: flex;
       flex-direction: column;
     }
+  }
+
+  &__notif {
+    background-color: $orange;
+    color: $white;
+    display: flex;
+    align-items: center;
+    column-gap: 12px;
   }
 
   &__carousel {

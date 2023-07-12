@@ -66,6 +66,9 @@ namespace YellowDuck.Api.Gql
         public Task<IEnumerable<Ad>> LoadAdsByUserId(string id) =>
             loader.LoadCollection<GetAdsByUserId.Query, Ad, string>(id);
 
+        public Task<IEnumerable<Ad>> LoadAdByIsAdminOnly(bool isAdminOnly) =>
+            loader.LoadCollection<GetAdsByIsAdminOnly.Query, Ad, bool>(isAdminOnly);
+
         public Task<IEnumerable<AdTranslation>> LoadAdTranslations(long id) =>
             loader.LoadCollection<GetTranslationsByAd.Query, AdTranslation, long>(id);
 
