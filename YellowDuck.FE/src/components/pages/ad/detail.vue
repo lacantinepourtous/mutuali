@@ -140,7 +140,7 @@
             <b-icon icon="pencil" class="mr-1" aria-hidden="true"></b-icon>
             {{ $t("btn.edit-ad") }}
           </b-button>
-          <b-button variant="admin" size="lg" class="text-truncate" block @click="transferAd">
+          <b-button v-if="ad.isAdminOnly" variant="admin" size="lg" class="text-truncate" block @click="transferAd">
             <b-icon icon="arrow-right" class="mr-1" aria-hidden="true"></b-icon>
             {{ $t("btn.transfer-ad") }}
           </b-button>
@@ -156,7 +156,7 @@
           <b-button variant="primary" size="sm" class="text-truncate mr-2" @click="publishAd">
             {{ $t("btn.publish-ad") }}
           </b-button>
-          <b-button variant="secondary" size="sm" class="text-truncate mr-2" @click="transferAd">
+          <b-button v-if="ad.isAdminOnly" variant="secondary" size="sm" class="text-truncate mr-2" @click="transferAd">
             {{ $t("btn.transfer-ad") }}
           </b-button>
           <b-button variant="outline-primary" size="sm" class="text-truncate" @click="editAd">

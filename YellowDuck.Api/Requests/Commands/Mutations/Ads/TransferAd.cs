@@ -11,6 +11,7 @@ using YellowDuck.Api.Constants;
 using YellowDuck.Api.DbModel;
 using YellowDuck.Api.DbModel.Entities;
 using YellowDuck.Api.DbModel.Entities.Ads;
+using YellowDuck.Api.DbModel.Enums;
 using YellowDuck.Api.EmailTemplates.Models;
 using YellowDuck.Api.Extensions;
 using YellowDuck.Api.Gql.Interfaces;
@@ -59,6 +60,11 @@ namespace YellowDuck.Api.Requests.Commands.Mutations.Ads
                 throw new UserNotFoundException();
             }
 
+            if (newOwner.Type == UserType.Admin)
+            {
+                throw new CantTransferToAdminException();
+            }
+
             ad.IsAdminOnly = false;
             ad.IsPublish = false;
             ad.UserId = newOwner.Id;
@@ -67,7 +73,7 @@ namespace YellowDuck.Api.Requests.Commands.Mutations.Ads
 
             var claims = await userManager.GetClaimsAsync(ad.User);
             var adOwnerClaim = claims.Where(x => x.Type == AppClaimTypes.AdOwner && x.Value == Id.New<Ad>(ad.Id.ToString()).ToString()).FirstOrDefault();
-            if(adOwnerClaim != null) await userManager.RemoveClaimAsync(ad.User, adOwnerClaim);
+            if (adOwnerClaim != null) await userManager.RemoveClaimAsync(ad.User, adOwnerClaim);
 
             await userManager.AddClaimAsync(newOwner, new Claim(AppClaimTypes.AdOwner, Id.New<Ad>(ad.Id.ToString()).ToString()));
 
@@ -99,5 +105,6 @@ namespace YellowDuck.Api.Requests.Commands.Mutations.Ads
         public class AdNotFoundException : TransferAdException { }
         public class AdNotAdminOnlyException : TransferAdException { }
         public class UserNotFoundException : TransferAdException { }
+        public class CantTransferToAdminException : TransferAdException { }
     }
 }
