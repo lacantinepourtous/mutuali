@@ -46,28 +46,30 @@ namespace YellowDuck.Api.BackgroundJobs
                 .Where(x => x.EmailConfirmed || x.UserId != null)
                 .ToArrayAsync();
             var recentAds = await db.Ads
+                .Include(x => x.DayAvailability)
+                .Include(x => x.EveningAvailability)
                 .Include(x => x.Address)
                 .Where(x => x.CreatedAtUTC >= lastWeekUTC.Date)
                 .ToArrayAsync();
 
             foreach (var alert in alerts)
             {
-                var filteredAds = recentAds
-                    .Where(x => x.Category == alert.Category)
+                var filteredAds = recentAds.Where(x => x.Category == alert.Category)
                     .Where(x => alert.DayAvailability == false || x.DayAvailability.Any())
                     .Where(x => alert.EveningAvailability == false || x.EveningAvailability.Any())
-                    .Where(x => CoordinateHelper.GetDistanceInMeters(x.Address.Latitude, x.Address.Longitude, alert.Address.Latitude, alert.Address.Longitude)/1000 <= alert.Radius);
+                    .Where(x => CoordinateHelper.GetDistanceInMeters(x.Address.Latitude, x.Address.Longitude, alert.Address.Latitude, alert.Address.Longitude) / 1000 <= alert.Radius).ToArray();
 
                 switch (alert.Category)
                 {
                     case AdCategory.ProfessionalKitchen:
-                        filteredAds = filteredAds.Where(x => !alert.ProfessionalKitchenEquipments?.Any() ?? true || x.ProfessionalKitchenEquipments.Select(x => x.ProfessionalKitchenEquipment).Intersect(alert.ProfessionalKitchenEquipments.Select(x => x.ProfessionalKitchenEquipment)).Count() == alert.ProfessionalKitchenEquipments.Count);
+                        filteredAds = filteredAds.Where(x => !alert.ProfessionalKitchenEquipments?.Any() ?? true || x.ProfessionalKitchenEquipments.Select(x => x.ProfessionalKitchenEquipment).Intersect(alert.ProfessionalKitchenEquipments.Select(x => x.ProfessionalKitchenEquipment)).Count() == alert.ProfessionalKitchenEquipments.Count).ToArray();
                         break;
                     case AdCategory.DeliveryTruck:
                         filteredAds = filteredAds.Where(x => alert.DeliveryTruckType == null || x.DeliveryTruckType == alert.DeliveryTruckType)
-                                               .Where(x => !alert.Refrigerated || alert.Refrigerated)
-                                               .Where(x => !alert.CanHaveDriver || alert.CanHaveDriver)
-                                               .Where(x => !alert.CanSharedRoad || alert.CanSharedRoad);
+                                               .Where(x => !alert.Refrigerated || x.Refrigerated)
+                                               .Where(x => !alert.CanHaveDriver || x.CanHaveDriver)
+                                               .Where(x => !alert.CanSharedRoad || x.CanSharedRoad)
+                                               .ToArray();
                         break;
                 }
 

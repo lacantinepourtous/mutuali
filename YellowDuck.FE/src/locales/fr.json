@@ -526,7 +526,7 @@
   "select.date-asc": "Date (croissant)",
   "select.date-desc": "Date (décroissant)",
   "label-reinit-filters": "Réinitialiser les filtres",
-  "text.no-result": "Aucune annonces ne correspond à vos critères",
+  "text.no-result": "Aucune annonce ne correspond à vos critères",
   "btn.show-ad-card": "Chercher une annonce sur la carte",
   "btn.show-ad-list": "Afficher la liste des annonces",
   "sr.ad-list-view": "La liste des annonces est affichée.",
@@ -563,7 +563,7 @@
   "label.send-to": "Et on envoie ça où?",
   "label.your-email": "Votre email",
   "form-complete.create-alert.title": "Alerte créée",
-  "form-complete.create-alert.description": "Votre alerte est maintenant créée. Vous receverez donc à partir de maintenant les nouvelles offres qui répondent à vos critères une fois par semaine.",
+  "form-complete.create-alert.description": "Votre alerte est maintenant créée. Vous recevrez donc à partir de maintenant les nouvelles offres qui répondent à vos critères une fois par semaine.",
   "btn.manage-my-alerts": "Gérer mes alertes",
   "title.manage-my-alerts": "Gérer mes alertes",
   "text.alert-radius": "Dans un rayon de {radius} km",
@@ -572,9 +572,9 @@
   "nav.create-alert": "Créer une alerte",
   "profile-detail.no-alerts": "Vous n'avez aucune alerte.",
   "form-complete.edit-alert.title": "Alerte modifiée",
-  "form-complete.edit-alert.description": "Votre alerte a bien été modifié. Vous receverez donc à partir de maintenant les nouvelles offres qui répondent à vos critères une fois par semaine.",
+  "form-complete.edit-alert.description": "Votre alerte a bien été modifiée. Vous recevrez donc à partir de maintenant les nouvelles offres qui répondent à vos critères une fois par semaine.",
   "notification.alert-deleted": "L'alerte à bien été supprimée.",
-  "notification.alert-confirmed": "L'alerte à bien été confirmée. Vous receverez donc à partir de maintenant les nouvelles offres qui répondent à vos critères une fois par semaine.",
+  "notification.alert-confirmed": "L'alerte à bien été confirmée. Vous recevrez donc à partir de maintenant les nouvelles offres qui répondent à vos critères une fois par semaine.",
   "btn.manage-admin-ads": "Gérer les annonces non-répertoriées",
   "title.manage-admin-ads": "Gérer les annonces non-répertoriées",
   "btn.transfer-ad": "Transférer à un utilisateur",
@@ -593,5 +593,6 @@
   "sr.confirm": "Confirmer",
   "form-complete.transfer-ad.title": "L'annonce à bien été transférée",
   "form-complete.transfer-ad.description": "L'annonce a été transférée et un courriel a été envoyé à l'utilisateur pour l'aviser qu'il peut accèder à son compte pour la publier.",
-  "error.transfer-user-not-found": "Aucun utilisateur correspondant à cette adresse courriel n'a été trouvé."
+  "error.transfer-user-not-found": "Aucun utilisateur correspondant à cette adresse courriel n'a été trouvé.",
+  "notification.edit-alert-empty": "Aucun changement n'a été détecté dans l'alerte. Sauvegarde ignorée."
 }

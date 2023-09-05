@@ -132,7 +132,7 @@
           </div>
         </div>
       </div>
-      <alert-modal v-if="adMarkers.length === 0" :icon="require('@/assets/ambiance/nothing.svg')">
+      <alert-modal v-if="adMarkers.length === 0 && view === CARD_VIEW" :icon="require('@/assets/ambiance/nothing.svg')">
         <p>{{ $t("text.no-result") }}</p>
         <template v-slot:footer>
           <b-button variant="primary" v-if="filtersCount != 0" @click="reinitFilters()" class="mr-2">{{

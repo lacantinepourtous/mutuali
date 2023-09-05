@@ -563,6 +563,15 @@
   "label.your-email": "Your email",
   "form-complete.create-alert.title": "Alert created",
   "form-complete.create-alert.description": "Your alert has now been set. From now on, you will receive new offers that meet your criteria once a week.",
+  "btn.manage-my-alerts": "Manage My Alerts",
+  "title.manage-my-alerts": "Manage My Alerts",
+  "text.alert-radius": "Within {radius} km",
+  "btn.alert-edit": "Edit",
+  "btn.alert-delete": "Delete",
+  "nav.create-alert": "Create Alert",
+  "profile-detail.no-alerts": "You have no alerts.",
+  "form-complete.edit-alert.title": "Alert has been edited",
+  "form-complete.edit-alert.description": "Your alert has been successfully edited. From now on, you will receive new offers that meet your criteria once a week.",
   "notification.alert-deleted": "The alert has been deleted.",
   "notification.alert-confirmed": "The alert has been confirmed. From now on, you will receive new offers that meet your criteria once a week.",
   "btn.manage-admin-ads": "Manage Unlisted Ads",
@@ -583,5 +592,9 @@
   "sr.confirm": "Confirm",
   "form-complete.transfer-ad.title": "Ad transferred successfully",
   "form-complete.transfer-ad.description": "The ad has been transferred and an email has been sent to the user to notify them that they can access their account to publish it.",
-  "error.transfer-user-not-found": "No user matching this email address was found."
+  "error.transfer-user-not-found": "No user matching this email address was found.",
+  "alt.contact-us": "Hands arrange quiche wedges on a plate",
+  "page-title.edit-alert": "Edit an email alert",
+  "btn.edit-alert": "Save alert",
+  "notification.edit-alert-empty": "No changes were detected in the alert. Save skipped."
 }
