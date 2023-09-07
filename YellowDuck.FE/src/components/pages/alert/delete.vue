@@ -28,6 +28,13 @@ export default {
         return this.$options.query.LocalUser;
       }
     }
+  },
+  gqlErrors() {
+    return {
+      ALERT_NOT_FOUND(error) {
+        return this.$t("error.alert-already-deleted");
+      }
+    };
   }
 };
 </script>

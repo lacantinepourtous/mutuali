@@ -573,8 +573,8 @@
   "profile-detail.no-alerts": "Vous n'avez aucune alerte.",
   "form-complete.edit-alert.title": "Alerte modifiée",
   "form-complete.edit-alert.description": "Votre alerte a bien été modifiée. Vous recevrez donc à partir de maintenant les nouvelles offres qui répondent à vos critères une fois par semaine.",
-  "notification.alert-deleted": "L'alerte à bien été supprimée.",
-  "notification.alert-confirmed": "L'alerte à bien été confirmée. Vous recevrez donc à partir de maintenant les nouvelles offres qui répondent à vos critères une fois par semaine.",
+  "notification.alert-deleted": "L'alerte est bien supprimée.",
+  "notification.alert-confirmed": "L'alerte a bien été confirmée. Vous recevrez donc à partir de maintenant les nouvelles offres qui répondent à vos critères une fois par semaine.",
   "btn.manage-admin-ads": "Gérer les annonces non-répertoriées",
   "title.manage-admin-ads": "Gérer les annonces non-répertoriées",
   "btn.transfer-ad": "Transférer à un utilisateur",
@@ -594,5 +594,6 @@
   "form-complete.transfer-ad.title": "L'annonce à bien été transférée",
   "form-complete.transfer-ad.description": "L'annonce a été transférée et un courriel a été envoyé à l'utilisateur pour l'aviser qu'il peut accèder à son compte pour la publier.",
   "error.transfer-user-not-found": "Aucun utilisateur correspondant à cette adresse courriel n'a été trouvé.",
-  "notification.edit-alert-empty": "Aucun changement n'a été détecté dans l'alerte. Sauvegarde ignorée."
+  "notification.edit-alert-empty": "Aucun changement n'a été détecté dans l'alerte. Sauvegarde ignorée.",
+  "error.alert-already-deleted": "L'alerte avait déjà été supprimé."
 }

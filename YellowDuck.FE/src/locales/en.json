@@ -596,5 +596,6 @@
   "alt.contact-us": "Hands arrange quiche wedges on a plate",
   "page-title.edit-alert": "Edit an email alert",
   "btn.edit-alert": "Save alert",
-  "notification.edit-alert-empty": "No changes were detected in the alert. Save skipped."
+  "notification.edit-alert-empty": "No changes were detected in the alert. Save skipped.",
+  "error.alert-already-deleted": "Alert already been deleted."
 }
