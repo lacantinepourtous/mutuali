@@ -5,11 +5,11 @@ import { addMaybeValue } from "@/helpers/graphql";
 import { getAddressFromGooglePlace } from "@/services/google-map";
 import AuthentificationService from "./authentification";
 
-export async function createAlert(input) {
+export async function createAlert(input, isConnected) {
   let mutationInput = {
     category: input.category,
     address: await getAddressFromGooglePlace(input.address),
-    radius: input.radius,
+    radius: input.radius
   };
 
   addMaybeValue(input, mutationInput, "professionalKitchenEquipment");
@@ -28,8 +28,11 @@ export async function createAlert(input) {
     }
   });
 
-  // Renew the token since we want the new alert in our
-  await AuthentificationService.renewToken();
+  if (isConnected) {
+    // Renew the token since we want the new alert in our
+    await AuthentificationService.renewToken();
+  }
+
   return result;
 }
 
@@ -61,7 +64,6 @@ export async function updateAlert(input) {
     return result;
   }
 }
-
 
 export async function deleteAlert(alertId, email) {
   let mutationInput = {

@@ -668,6 +668,7 @@ export default {
       },
       result({ data }) {
         this.filtersCount = 0;
+        this.snippetAd = null;
         if (data) {
           this.adMarkers = data.ads
             .filter((x) => x.isPublish)

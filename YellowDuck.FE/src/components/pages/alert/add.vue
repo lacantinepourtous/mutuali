@@ -60,9 +60,9 @@ export default {
     };
   },
   methods: {
-    createAlert: async function(input) {
+    createAlert: async function (input) {
       this.isSubmitted = true;
-      let result = await createAlert(input);
+      let result = await createAlert(input, this.isConnected);
 
       if (result) {
         this.alertCreated = true;
