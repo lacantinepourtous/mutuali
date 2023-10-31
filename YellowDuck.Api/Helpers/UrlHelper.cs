@@ -2,6 +2,7 @@
 using Newtonsoft.Json.Serialization;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using YellowDuck.Api.DbModel.Enums;
 
 namespace YellowDuck.Api.Helpers
@@ -11,18 +12,18 @@ namespace YellowDuck.Api.Helpers
         public static string ConfirmEmail(string to, string token, string lang = null)
         {
             var langParameter = (lang != null) ? $"&lang={lang}" : "";
-            return $"confirmez-courriel?email={System.Net.WebUtility.UrlEncode(to)}&token={System.Net.WebUtility.UrlEncode(token)}{langParameter}";
+            return $"confirmez-courriel?email={WebUtility.UrlEncode(to)}&token={System.Net.WebUtility.UrlEncode(token)}{langParameter}";
         }
 
         public static string RegistrationAdmin(string to, string token)
         {
-            return $"registration/admin?email={System.Net.WebUtility.UrlEncode(to)}&token={System.Net.WebUtility.UrlEncode(token)}";
+            return $"registration/admin?email={WebUtility.UrlEncode(to)}&token={System.Net.WebUtility.UrlEncode(token)}";
         }
 
         public static string ResetPassword(string to, string token, string lang = null)
         {
             var langParameter = (lang != null) ? $"&lang={lang}" : "";
-            return $"reinitialiser-mot-de-passe?email={System.Net.WebUtility.UrlEncode(to)}&token={System.Net.WebUtility.UrlEncode(token)}{langParameter}";
+            return $"reinitialiser-mot-de-passe?email={WebUtility.UrlEncode(to)}&token={System.Net.WebUtility.UrlEncode(token)}{langParameter}";
         }
 
         public static string ManageAlert(string lang = null)
@@ -34,13 +35,13 @@ namespace YellowDuck.Api.Helpers
         public static string ConfirmAlert(string id, string email, string lang = null)
         {
             var langParameter = (lang != null) ? $"&lang={lang}" : "";
-            return $"alertes/confirmer/{id}?email={email}{langParameter}";
+            return $"alertes/confirmer/{id}?email={WebUtility.UrlEncode(email)}{langParameter}";
         }
 
         public static string UnsubscribeAlert(Id id, string email, string lang = null)
         {
             var langParameter = (lang != null) ? $"&lang={lang}" : "";
-            return $"alertes/supprimer/{id}?email={email}{langParameter}";
+            return $"alertes/supprimer/{id}?email={WebUtility.UrlEncode(email)}{langParameter}";
         }
 
         public static string Ad(Id id, string lang = null)
