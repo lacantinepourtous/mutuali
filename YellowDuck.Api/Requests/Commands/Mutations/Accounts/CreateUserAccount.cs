@@ -19,6 +19,9 @@ using System.Collections.Generic;
 using System.Linq;
 using YellowDuck.Api.DbModel;
 using Microsoft.EntityFrameworkCore;
+using System.Security.Claims;
+using YellowDuck.Api.Constants;
+using YellowDuck.Api.DbModel.Entities.Alerts;
 
 namespace YellowDuck.Api.Requests.Commands.Mutations.Accounts
 {
@@ -80,7 +83,14 @@ namespace YellowDuck.Api.Requests.Commands.Mutations.Accounts
             var confirmToken = await userManager.GenerateEmailConfirmationTokenAsync(user);
 
             var alerts = await db.Alerts.Where(x => x.Email == request.Email && x.EmailConfirmed).ToListAsync(cancellationToken: cancellationToken);
-            alerts.ForEach(x => x.UserId = user.Id);
+
+            foreach (var alert in alerts)
+            {
+                alert.UserId = user.Id;
+                await userManager.AddClaimAsync(user, new Claim(AppClaimTypes.AlertOwner, Id.New<Alert>(alert.Id.ToString()).ToString()));
+            }
+
+
             await db.SaveChangesAsync(cancellationToken);
 
             await mailer.Send(new ConfirmEmailEmail(request.Email, confirmToken, request.ReturnPath));
