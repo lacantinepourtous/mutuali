@@ -13,6 +13,7 @@ using System.Linq;
 using YellowDuck.Api.Services.Stripe;
 using System;
 using YellowDuck.Api.Requests.Queries.Rating;
+using YellowDuck.Api.DbModel.Entities.Ads;
 
 namespace YellowDuck.Api.Gql.Schema.GraphTypes
 {
@@ -66,9 +67,24 @@ namespace YellowDuck.Api.Gql.Schema.GraphTypes
 
         public async Task<IEnumerable<AdGraphType>> Ads(IAppUserContext ctx)
         {
-            var ads = await ctx.LoadAdsByUserId(Id.IdentifierForType<AppUser>());
+            IEnumerable<Ad> ads;
+            if(await Type == UserType.Admin)
+            {
+                ads = await ctx.LoadAdByIsAdminOnly(true);
+            }
+            else
+            {
+                ads = await ctx.LoadAdsByUserId(Id.IdentifierForType<AppUser>());
+            }
 
             return ads.Select(x => new AdGraphType(x)).ToList();
+        }
+
+        public async Task<IEnumerable<AlertGraphType>> Alerts(IAppUserContext ctx)
+        {
+            var alerts = await ctx.LoadAlertsByUserId(Id.IdentifierForType<AppUser>());
+
+            return alerts.Select(x => new AlertGraphType(x)).ToList();
         }
 
         public async Task<IEnumerable<UserRatingGraphType>> UserRatings(IAppUserContext ctx)
@@ -94,5 +110,6 @@ namespace YellowDuck.Api.Gql.Schema.GraphTypes
         }
 
         public Task<DateTime> RegistrationDate() => WithData(x => x.CreatedAtUtc.ToLocalTime());
+        public Task<bool> FirstLoginModalClosed => WithData(x => x.FirstLoginModalClosed);
     }
 }

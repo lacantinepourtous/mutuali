@@ -1,5 +1,12 @@
 <template>
   <div v-if="ad" class="equipment-detail fab-container" :class="{ 'equipment-detail--modal': displayMap }">
+    <div v-if="ad.isAdminOnly" class="px-3 py-2 orange equipment-detail__notif text-white">
+      <b-img class="equipment-detail__notif-icon" :src="require('@/assets/icons/invisible.svg')" alt="" height="20" block></b-img>
+      {{ $t("banner.ad-is-admin-only") }}
+      <b-button size="sm" variant="link" :to="{ name: $consts.urls.URL_AD_TRANSFER, params: { id: this.adId } }">{{
+        $t("btn.transfer-ad")
+      }}</b-button>
+    </div>
     <template v-if="displayMap">
       <div class="equipment-detail__modal-body">
         <portal :to="$consts.enums.PORTAL_HEADER">
@@ -9,13 +16,13 @@
           :markers="adMarkers"
           :zoom-control="false"
           :geolocation-control="false"
-          :latitude="adLatitude"
-          :longitude="adLongitude"
+          :latitude="ad.address.Latitude"
+          :longitude="ad.address.Longitude"
         />
       </div>
       <div class="equipment-detail__model-footer">
         <p class="equipment-detail__map-location">
-          <template v-if="adShowAddress">
+          <template v-if="ad.showAddress">
             {{ adAddressReadable }}
           </template>
           <template v-else>
@@ -31,15 +38,15 @@
       </div>
 
       <div class="my-4 equipment-detail__carousel">
-        <carousel v-if="adGallery.length > 1" isFullWidth isLight>
-          <b-carousel-slide v-for="(item, index) in adGallery" :key="index">
+        <carousel v-if="ad.gallery.length > 1" isFullWidth isLight>
+          <b-carousel-slide v-for="(item, index) in ad.gallery" :key="index">
             <template #img>
               <ad-picture :src="item.src" :alt="item.alt ? item.alt : ''" />
             </template>
           </b-carousel-slide>
         </carousel>
         <div v-else class="equipment-detail__carousel-img-container">
-          <ad-picture :src="adGallery[0].src" :alt="adGallery[0].alt ? adGallery[0].alt : ''" />
+          <ad-picture :src="ad.gallery[0].src" :alt="ad.gallery[0].alt ? ad.gallery[0].alt : ''" />
         </div>
       </div>
 
@@ -48,17 +55,15 @@
           <div class="container-fluid">
             <div class="row align-items-center">
               <div class="col">
-                <ad-category-badge :category="adCategory" />
+                <ad-category-badge :category="ad.category" />
               </div>
               <div class="col col-auto" v-if="!isAdOwnByCurrentUser">
                 <a
                   :aria-label="$t('btn.report-ad')"
                   class="equipment-detail__report btn-link"
-                  :href="
-                    `mailto:${contactUsEmail}?subject=${$t('email.report-subject')}&body=${$t('email.report-body', {
-                      url: adUrlForReport
-                    })}`
-                  "
+                  :href="`mailto:${contactUsEmail}?subject=${$t('email.report-subject')}&body=${$t('email.report-body', {
+                    url: adUrlForReport
+                  })}`"
                 >
                   <b-icon-flag class="mr-sm-2" aria-hidden="true" />
                   <span class="d-none d-sm-inline">{{ $t("btn.report-ad") }}</span>
@@ -67,9 +72,9 @@
             </div>
           </div>
 
-          <p class="mt-2 text-uppercase font-weight-bold letter-spacing-wide small">{{ adOrganization }}</p>
+          <p class="mt-2 text-uppercase font-weight-bold letter-spacing-wide small">{{ ad.organization }}</p>
         </div>
-        <h1 class="my-4">{{ adTitle }}</h1>
+        <h1 class="my-4">{{ ad.translationOrDefault.title }}</h1>
         <p class="mb-0 mt-n2 small text-decoration-none">
           <strong class="h4 font-weight-normal font-family-base mr-1">{{ adPrice }}</strong>
           {{ adPriceDescription }}
@@ -77,7 +82,7 @@
       </div>
       <div class="section section--md section--border-top section--border-bottom mt-6">
         <div class="equipment-detail__location">
-          <p v-if="adShowAddress">
+          <p v-if="ad.showAddress">
             <span class="responsive-text">{{ adAddressReadable }}</span
             ><br />
             <b-button variant="link" class="p-0 mr-1 font-weight-bolder" @click="showMap">{{
@@ -95,20 +100,29 @@
         </div>
       </div>
       <user-profile-snippet
-        :id="adOwnerProfileId"
+        :id="ad.user.profile.id"
         show-registration-date
         hide-organization
         titleTag="p"
         class="section--border-bottom py-4"
       />
-      <div class="section section--md py-6">
-        <h2 class="font-family-base font-weight-bold mb-4">{{ $t("label.ad-description") }}</h2>
-        <div class="rm-child-margin" v-html="adDescription"></div>
+      <detail-partial-delivery-truck v-if="ad.category === CATEGORY_DELIVERY_TRUCK" :ad="ad" />
+      <detail-partial-professional-kitchen v-if="ad.category === CATEGORY_PROFESSIONAL_KITCHEN" :ad="ad" />
+      <detail-partial-storage-space v-if="ad.category === CATEGORY_STORAGE_SPACE" :ad="ad" />
+      <detail-partial-other v-if="ad.category === CATEGORY_OTHER" :ad="ad" />
+
+      <div v-if="adAvailability.length" class="section section--md section--border-top py-6">
+        <h2 class="font-family-base font-weight-bold mb-4">{{ $t("label.ad-availability") }}</h2>
+        <ul>
+          <li v-for="weekdayAvailability in adAvailability" :key="weekdayAvailability.key" class="mb-3">
+            <strong> {{ weekdayAvailability.weekday }} </strong><br />
+            <template v-if="weekdayAvailability.availability.day">{{ $t("label.ad-dayAvailability") }}</template>
+            <template v-if="weekdayAvailability.availability.day && weekdayAvailability.availability.evening"> • </template>
+            <template v-if="weekdayAvailability.availability.evening">{{ $t("label.ad-eveningAvailability") }}</template>
+          </li>
+        </ul>
       </div>
-      <div v-if="haveAdConditions" class="section section--md section--border-top py-6">
-        <h2 class="font-family-base font-weight-bold mb-4">{{ $t("label.ad-conditions") }}</h2>
-        <div class="rm-child-margin" v-html="adConditions"></div>
-      </div>
+
       <div v-if="ad.averageRating > 0" class="section section--md section--border-top my-4">
         <ad-rating-carousel :id="adId" class="mt-4" />
       </div>
@@ -116,17 +130,21 @@
         <h2 class="font-family-base h4 font-weight-bold mb-4">{{ $t("label.ad-disclaimers") }}</h2>
         <div class="small rm-child-margin" v-html="$t('text.ad-disclaimers')"></div>
       </div>
-      <div v-if="adIsPublish" class="fab-container__fab section section--md">
+      <div v-if="ad.isPublish" class="fab-container__fab section section--md">
         <b-button v-if="!isAdOwnByCurrentUser" variant="primary" size="lg" class="text-truncate" block @click="contactUser">
           <b-icon icon="envelope" class="mr-1" aria-hidden="true"></b-icon>
-          {{ $t("btn.contact-owner", { owner: adOwnerName }) }}
+          {{ $t("btn.contact-owner", { owner: ad.user.profile.publicName }) }}
         </b-button>
         <template v-else-if="isAdOwnByCurrentUser">
           <b-button variant="primary" size="lg" class="text-truncate" block @click="editAd">
             <b-icon icon="pencil" class="mr-1" aria-hidden="true"></b-icon>
             {{ $t("btn.edit-ad") }}
           </b-button>
-          <b-button variant="danger" size="lg" class="text-truncate" block @click="unpublishAd">
+          <b-button v-if="ad.isAdminOnly" variant="admin" size="lg" class="text-truncate" block @click="transferAd">
+            <b-icon icon="arrow-right" class="mr-1" aria-hidden="true"></b-icon>
+            {{ $t("btn.transfer-ad") }}
+          </b-button>
+          <b-button v-if="!ad.isAdminOnly" variant="danger" size="lg" class="text-truncate" block @click="unpublishAd">
             {{ $t("btn.unpublish-ad") }}
           </b-button>
         </template>
@@ -138,6 +156,9 @@
           <b-button variant="primary" size="sm" class="text-truncate mr-2" @click="publishAd">
             {{ $t("btn.publish-ad") }}
           </b-button>
+          <b-button v-if="ad.isAdminOnly" variant="secondary" size="sm" class="text-truncate mr-2" @click="transferAd">
+            {{ $t("btn.transfer-ad") }}
+          </b-button>
           <b-button variant="outline-primary" size="sm" class="text-truncate" @click="editAd">
             {{ $t("btn.edit-ad") }}
           </b-button>
@@ -148,11 +169,18 @@
 </template>
 
 <script>
-import { URL_LIST_AD, URL_AD_DETAIL, URL_CREATE_CONVERSATION, URL_AD_EDIT } from "@/consts/urls";
+import { URL_LIST_AD, URL_AD_DETAIL, URL_CREATE_CONVERSATION, URL_AD_EDIT, URL_AD_TRANSFER } from "@/consts/urls";
 import { CONTENT_LANG_FR } from "@/consts/langs";
+import {
+  CATEGORY_PROFESSIONAL_KITCHEN,
+  CATEGORY_DELIVERY_TRUCK,
+  CATEGORY_STORAGE_SPACE,
+  CATEGORY_OTHER
+} from "@/consts/categories";
 import { VUE_APP_MUTUALI_CONTACT_MAIL } from "@/helpers/env";
 
 import { unpublishAd, publishAd } from "@/services/ad";
+import { AvailabilityWeekday } from "@/mixins/availability-weekday";
 
 import AdCategoryBadge from "@/components/ad/category-badge";
 import AdRatingCarousel from "@/components/ad/rating-carousel";
@@ -162,8 +190,13 @@ import Carousel from "@/components/generic/carousel";
 import GoogleMap from "@/components/generic/google-map";
 import NavClose from "@/components/nav/close";
 import UserProfileSnippet from "@/components/user-profile/snippet";
+import DetailPartialDeliveryTruck from "@/components/ad/detail-partial-delivery-truck";
+import DetailPartialProfessionalKitchen from "@/components/ad/detail-partial-professional-kitchen";
+import DetailPartialStorageSpace from "@/components/ad/detail-partial-storage-space";
+import DetailPartialOther from "@/components/ad/detail-partial-other";
 
 export default {
+  mixins: [AvailabilityWeekday],
   components: {
     AdCategoryBadge,
     AdRatingCarousel,
@@ -172,55 +205,46 @@ export default {
     Carousel,
     GoogleMap,
     NavClose,
-    UserProfileSnippet
+    UserProfileSnippet,
+    DetailPartialDeliveryTruck,
+    DetailPartialProfessionalKitchen,
+    DetailPartialStorageSpace,
+    DetailPartialOther
   },
   data() {
     return {
       displayMap: false,
-      haveJustUnpublish: false
+      haveJustUnpublish: false,
+      CATEGORY_PROFESSIONAL_KITCHEN,
+      CATEGORY_DELIVERY_TRUCK,
+      CATEGORY_STORAGE_SPACE,
+      CATEGORY_OTHER
     };
   },
   computed: {
-    contactUsEmail: function() {
+    contactUsEmail: function () {
       return VUE_APP_MUTUALI_CONTACT_MAIL;
     },
-    isConnected: function() {
+    isConnected() {
       return this.user && this.user.isConnected;
     },
-    breadcrumbs: function() {
+    isAdmin() {
+      return !this.me || this.me.type === this.$consts.enums.USER_TYPE_ADMIN;
+    },
+    breadcrumbs() {
       return [{ to: { name: URL_LIST_AD }, text: this.$t("breadcrumb.list-ad") }, { text: this.adTitle }];
     },
-    isAdOwnByCurrentUser: function() {
-      return this.me ? this.adOwnerId === this.me.id : false;
+    isAdOwnByCurrentUser() {
+      if (this.isAdmin) {
+        return this.ad.isAdminOnly;
+      } else {
+        return this.me ? this.ad.user.id === this.me.id : false;
+      }
     },
-    adId: function() {
+    adId() {
       return this.$route.params.id.split("-").last();
     },
-    adTitle: function() {
-      return this.ad.translationOrDefault.title;
-    },
-    adOrganization: function() {
-      return this.ad.organization;
-    },
-    adDescription: function() {
-      return this.ad.translationOrDefault.description;
-    },
-    adCategory: function() {
-      return this.ad.category;
-    },
-    adGallery: function() {
-      return this.ad.gallery;
-    },
-    adOwnerId: function() {
-      return this.ad.user.id;
-    },
-    adOwnerName: function() {
-      return this.ad.user.profile.publicName;
-    },
-    adOwnerProfileId: function() {
-      return this.ad.user.profile.id;
-    },
-    adCity: function() {
+    adCity() {
       let neighborhood = this.ad.address.neighborhood ? this.ad.address.neighborhood : this.ad.address.sublocality;
       let locality = this.ad.address.locality;
 
@@ -232,71 +256,71 @@ export default {
         return locality;
       }
     },
-    adAddress: function() {
-      return this.ad.address;
-    },
-    adAddressReadable: function() {
+    adAddressReadable() {
       const addressElements = [];
-      if (this.adAddress.route) addressElements.push(`${this.adAddress.streetNumber} ${this.adAddress.route}`.trim());
-      addressElements.push(this.adCity);
-      if (this.adAddress.postalCode) addressElements.push(this.adAddress.postalCode);
+      if (this.ad.address.route) addressElements.push(`${this.ad.address.streetNumber} ${this.ad.address.route}`.trim());
+      addressElements.push(this.ad.city);
+      if (this.ad.address.postalCode) addressElements.push(this.ad.address.postalCode);
       return addressElements.join(", ");
     },
-    adLatitude: function() {
-      return this.ad.address.latitude;
-    },
-    adLongitude: function() {
-      return this.ad.address.longitude;
-    },
-    adShowAddress: function() {
-      return this.ad.showAddress;
-    },
-    adMarkers: function() {
-      const markerIcon = this.adShowAddress
+    adMarkers() {
+      const markerIcon = this.ad.showAddress
         ? require("@/assets/icons/marker-green.svg")
         : require("@/assets/icons/marker-radius.svg");
-      return [{ lat: this.adLatitude, lng: this.adLongitude, icon: markerIcon }];
+      return [{ lat: this.ad.address.latitude, lng: this.ad.address.longitude, icon: markerIcon }];
     },
-    adPrice: function() {
+    adPrice() {
       return this.ad.priceToBeDetermined ? this.$t("price.toBeDetermined") : this.$format.formatMoney(this.ad.price);
     },
-    adPriceDescription: function() {
+    adPriceDescription() {
       return this.ad.priceToBeDetermined ? "" : this.ad.translationOrDefault.priceDescription;
     },
-    adConditions: function() {
-      return this.ad.translationOrDefault.conditions;
-    },
-    adIsPublish: function() {
-      return this.ad.isPublish;
-    },
-    adUrlForReport: function() {
+    adUrlForReport() {
       return encodeURI(window.location.href);
     },
-    haveAdConditions: function() {
-      let adConditionsEl = document.createElement("div");
-      adConditionsEl.innerHTML = this.adConditions;
-      return adConditionsEl.textContent.trim() !== "";
+    adAvailability() {
+      var adAvailability = [];
+      for (var availabilityWeekdayOption of this.availabilityWeekdayOptions) {
+        var availability = { day: false, evening: false };
+        if (this.ad.dayAvailability.includes(availabilityWeekdayOption.value)) {
+          availability.day = true;
+        }
+        if (this.ad.eveningAvailability.includes(availabilityWeekdayOption.value)) {
+          availability.evening = true;
+        }
+        if (availability.day || availability.evening) {
+          adAvailability.push({
+            key: availabilityWeekdayOption.value,
+            weekday: availabilityWeekdayOption.text,
+            availability
+          });
+        }
+      }
+      return adAvailability;
     }
   },
   methods: {
-    contactUser: function() {
+    contactUser() {
       let routeData = this.$router.resolve({ name: URL_CREATE_CONVERSATION, params: { adId: this.adId } });
       window.open(routeData.href, "_blank");
     },
-    showMap: function() {
+    showMap() {
       this.displayMap = true;
     },
-    hideMap: function() {
+    hideMap() {
       this.displayMap = false;
     },
-    editAd: function() {
+    editAd() {
       this.$router.push({ name: URL_AD_EDIT, params: { id: this.adId } });
     },
-    unpublishAd: async function() {
+    transferAd() {
+      this.$router.push({ name: URL_AD_TRANSFER, params: { id: this.adId } });
+    },
+    async unpublishAd() {
       this.haveJustUnpublish = true;
       await unpublishAd(this.adId);
     },
-    publishAd: async function() {
+    async publishAd() {
       await publishAd(this.adId);
     }
   },
@@ -345,6 +369,7 @@ query AdById($id: ID!, $language: ContentLanguage!) {
   ad(id: $id) {
     id
     isPublish
+    isAdminOnly
     translationOrDefault(language: $language) {
       id
       language
@@ -352,6 +377,11 @@ query AdById($id: ID!, $language: ContentLanguage!) {
       description
       priceDescription
       conditions
+      equipment
+      surfaceSize
+      surfaceDescription
+      professionalKitchenEquipmentOther
+      deliveryTruckTypeOther
     }
     address {
       id
@@ -384,12 +414,20 @@ query AdById($id: ID!, $language: ContentLanguage!) {
     priceToBeDetermined
     averageRating
     organization
+    refrigerated
+    canSharedRoad
+    canHaveDriver
+    professionalKitchenEquipment
+    deliveryTruckType
+    dayAvailability
+    eveningAvailability
   }
 }
 
 query Me {
   me {
     id
+    type
   }
 }
 
@@ -408,6 +446,14 @@ query LocalUser {
       display: flex;
       flex-direction: column;
     }
+  }
+
+  &__notif {
+    background-color: $orange;
+    color: $white;
+    display: flex;
+    align-items: center;
+    column-gap: 12px;
   }
 
   &__carousel {

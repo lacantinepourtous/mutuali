@@ -125,7 +125,6 @@
       name="showPhoneNumber"
     />
     <s-form-checkbox-group
-      v-if="false"
       v-model="registeringInterests"
       id="registeringInterests"
       :label="$t('label.userProfile-registeringInterests')"
@@ -133,14 +132,12 @@
       :options="registeringInterestOptions"
     />
     <s-form-checkbox
-      v-if="false"
       v-model="contactAuthorizationSurveys"
       id="contactAuthorizationSurveys"
       :label="$t('label.userProfile-contactAuthorizationSurveys')"
       name="contactAuthorizationSurveys"
     />
     <s-form-checkbox
-      v-if="false"
       v-model="contactAuthorizationNews"
       id="contactAuthorizationNews"
       :label="$t('label.userProfile-contactAuthorizationNews')"

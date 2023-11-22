@@ -21,6 +21,7 @@ import Sluggify from "@/plugins/sluggify";
 import Format from "@/plugins/format";
 import Array from "@/plugins/array";
 import Date from "@/plugins/date";
+import VueCookies from 'vue-cookies'
 
 import Apollo from "@/graphql/vue-apollo";
 
@@ -36,18 +37,21 @@ Vue.use(Consts);
 Vue.use(Format);
 Vue.use(Array);
 Vue.use(Date);
+Vue.use(VueCookies, { expires: '14d' })
 
 Vue.use(GmapVue, {
   load: {
     key: VUE_APP_GOOGLE_PLACES_API_KEY,
-    libraries: "places",
+    libraries: "places,geometry",
     language: i18nHelpers.locale() === "fr" ? "fr-CA" : "en-ca"
   },
   installComponents: true
 });
 
 if (VUE_APP_GA_MEASUREMENT_ID !== "") {
-  Vue.use(VueGtag, {
+  Vue.use(
+    VueGtag,
+    {
       config: {
         id: VUE_APP_GA_MEASUREMENT_ID,
         params: {

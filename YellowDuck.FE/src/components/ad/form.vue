@@ -1,114 +1,146 @@
 <template>
-  <s-form @submit="submitForm">
-    <s-form-input
-      v-model="form.title"
-      id="title"
-      :label="$t('label.ad-title')"
-      name="title"
-      rules="required"
-      :placeholder="$t('placeholder.ad-title')"
-      required
-    />
-    <s-form-select
-      v-model="form.category"
-      id="category"
-      :label="$t('label.ad-category')"
-      name="category"
-      rules="required"
-      :placeholder="$t('placeholder.ad-category')"
-      :options="categoryOptions"
-      required
-    />
-    <s-form-input
-      v-if="!form.priceToBeDetermined"
-      v-model="form.price"
-      id="price"
-      type="number"
-      :label="$t('label.ad-price')"
-      name="price"
-      rules="requiredNumeric"
-      :placeholder="$t('placeholder.ad-price')"
-      required
-      append="$"
-    />
-    <s-form-checkbox
-      v-model="form.priceToBeDetermined"
-      id="priceToBeDetermined"
-      :label="$t('label.ad-priceToBeDetermined')"
-      name="priceToBeDetermined"
-    />
-    <s-form-input
-      v-if="!form.priceToBeDetermined"
-      v-model="form.priceDescription"
-      id="priceDescription"
-      :label="$t('label.ad-priceDescription')"
-      name="priceDescription"
-      rules="required"
-      :placeholder="$t('placeholder.ad-priceDescription')"
-      required
-    />
-    <s-form-image
-      v-model="form.images"
-      :currentImages="form.currentImages"
-      id="image"
-      :label="$t('label.ad-image')"
-      name="image"
-      :placeholder="$t('placeholder.ad-image')"
-      :drop-placeholder="$t('placeholder.ad-drop-image')"
-      rules="required|image"
-      required
-    />
-    <form-partial-delivery-truck v-if="false" v-model="form" />
-    <form-partial-professional-kitchen v-if="false" v-model="form" />
-    <form-partial-storage-space v-if="false" v-model="form" />
-    <form-partial-other v-if="true" v-model="form" />
-    <s-form-availability
-      v-if="false"
-      v-model="form.dayAvailability"
-      id="dayAvailability"
-      :label="$t('label.ad-dayAvailability')"
-      :specify-label="$t('label.ad-dayAvailability.specify')"
-      name="dayAvailability"
-      :options="availabilityWeekdayOptions"
-    />
-    <s-form-availability
-      v-if="false"
-      v-model="form.eveningAvailability"
-      id="eveningAvailability"
-      :label="$t('label.ad-eveningAvailability')"
-      :specify-label="$t('label.ad-eveningAvailability.specify')"
-      name="eveningAvailability"
-      :options="availabilityWeekdayOptions"
-    />
-    <s-form-input
-      v-model="form.organization"
-      id="organization"
-      :label="$t('label.ad-organization')"
-      name="organization"
-      rules="required"
-      :placeholder="$t('placeholder.ad-organization')"
-      required
-    />
-    <s-form-google-autocomplete
-      v-model="form.address"
-      id="address"
-      :label="$t('label.ad-address')"
-      name="address"
-      rules="required|haveLatLong"
-      :placeholder="$t('placeholder.ad-address')"
-      required
-    />
-    <s-form-checkbox
-      v-if="false"
-      v-model="form.showAddress"
-      id="showAddress"
-      :label="$t('label.ad-showAddress')"
-      name="showAddress"
-    />
+  <s-form @submit="submitForm" class="ad-form">
+    <div class="section section--md section--padding-x section--border-bottom my-4 pb-5 rm-child-margin">
+      <h2 class="my-4">{{ $t("section-title.general-info") }}</h2>
+      <s-form-input
+        v-model="form.title"
+        id="title"
+        :label="$t('label.ad-title')"
+        name="title"
+        rules="required"
+        :placeholder="$t('placeholder.ad-title')"
+        required
+      />
+      <s-form-select
+        v-model="form.category"
+        id="category"
+        :label="$t('label.ad-category')"
+        name="category"
+        rules="required"
+        :placeholder="$t('placeholder.ad-category')"
+        :options="categoryOptions"
+        required
+      />
+      <s-form-input
+        v-if="!form.priceToBeDetermined"
+        v-model="form.price"
+        id="price"
+        type="number"
+        :label="$t('label.ad-price')"
+        name="price"
+        rules="requiredNumeric"
+        :placeholder="$t('placeholder.ad-price')"
+        required
+        append="$"
+      />
+      <s-form-checkbox
+        v-model="form.priceToBeDetermined"
+        id="priceToBeDetermined"
+        :label="$t('label.ad-priceToBeDetermined')"
+        name="priceToBeDetermined"
+      />
+      <s-form-input
+        v-if="!form.priceToBeDetermined"
+        v-model="form.priceDescription"
+        id="priceDescription"
+        :label="$t('label.ad-priceDescription')"
+        name="priceDescription"
+        rules="required"
+        :placeholder="$t('placeholder.ad-priceDescription')"
+        required
+      />
+    </div>
+
+    <div class="section section--md section--padding-x section--border-bottom my-4 pb-5 rm-child-margin">
+      <h2 class="my-4">{{ $t("section-title.description") }}</h2>
+      <s-form-image
+        v-model="form.images"
+        :currentImages="form.currentImages"
+        id="image"
+        :label="$t('label.ad-image')"
+        name="image"
+        :placeholder="$t('placeholder.ad-image')"
+        :drop-placeholder="$t('placeholder.ad-drop-image')"
+        rules="required|image"
+        required
+      />
+
+      <form-partial-delivery-truck v-if="form.category === CATEGORY_DELIVERY_TRUCK" v-model="form" />
+      <form-partial-professional-kitchen v-if="form.category === CATEGORY_PROFESSIONAL_KITCHEN" v-model="form" />
+      <form-partial-storage-space v-if="form.category === CATEGORY_STORAGE_SPACE" v-model="form" />
+      <form-partial-other v-if="form.category === CATEGORY_OTHER" v-model="form" />
+    </div>
+
+    <div class="section section--md section--padding-x section--border-bottom my-4 pb-5 rm-child-margin">
+      <fieldset id="availabilitiesFieldset" aria-labelledby="availabilitiesFieldset__legend">
+        <legend id="availabilitiesFieldset__legend" class="h2 mt-4 mb-3">{{ $t("label.availability") }}</legend>
+        <b-row>
+          <b-col>
+            <s-form-availability
+              v-model="form.dayAvailability"
+              id="dayAvailability"
+              :label="$t('label.ad-dayAvailability')"
+              :specify-label="$t('label.ad-dayAvailability.specify')"
+              :specify-label-sr-only="true"
+              name="dayAvailability"
+              :options="availabilityWeekdayOptions"
+            />
+          </b-col>
+          <b-col>
+            <s-form-availability
+              v-model="form.eveningAvailability"
+              id="eveningAvailability"
+              :label="$t('label.ad-eveningAvailability')"
+              :specify-label="$t('label.ad-eveningAvailability.specify')"
+              :specify-label-sr-only="true"
+              name="eveningAvailability"
+              :options="availabilityWeekdayOptions"
+            />
+          </b-col>
+        </b-row>
+      </fieldset>
+    </div>
+
+    <div class="section section--md mt-4 mb-5">
+      <h2 class="my-4">{{ $t("section-title.contact-details") }}</h2>
+      <s-form-input
+        v-model="form.organization"
+        id="organization"
+        :label="$t('label.ad-organization')"
+        name="organization"
+        rules="required"
+        :placeholder="$t('placeholder.ad-organization')"
+        required
+      />
+      <s-form-google-autocomplete
+        v-model="form.address"
+        id="address"
+        :label="$t('label.ad-address')"
+        name="address"
+        rules="required|haveLatLong"
+        :placeholder="$t('placeholder.ad-address')"
+        required
+      />
+      <s-form-checkbox v-model="form.showAddress" id="showAddress" :label="$t('label.ad-showAddress')" name="showAddress" />
+    </div>
     <div class="fab-container__fab">
-      <b-button :disabled="disabledBtn" type="submit" variant="primary" size="lg" block :aria-label="$t('sr.edit')">
-        <b-icon icon="pencil" class="mr-2" aria-hidden="true"></b-icon>{{ btnLabel }}
-      </b-button>
+      <div class="section section--md">
+        <b-button :disabled="disabledBtn" type="submit" :variant="btnVariant" size="lg" block :aria-label="$t('sr.edit')">
+          <b-icon icon="pencil" class="mr-2" aria-hidden="true"></b-icon>{{ btnLabel }}
+        </b-button>
+        <b-button
+          v-if="canTransfer"
+          :disabled="disabledBtn"
+          type="button"
+          :to="{ name: $consts.urls.URL_AD_TRANSFER, params: { id: this.adId } }"
+          variant="secondary"
+          size="lg"
+          block
+          :aria-label="$t('sr.transfer')"
+        >
+          <b-icon icon="arrow-right" class="mr-2" aria-hidden="true"></b-icon>{{ transferBtnLabel }}
+        </b-button>
+      </div>
     </div>
   </s-form>
 </template>
@@ -140,6 +172,10 @@ import {
 export default {
   mixins: [AdCategory, AvailabilityWeekday],
   props: {
+    adId: {
+      type: String,
+      default: ""
+    },
     title: {
       type: String,
       default: ""
@@ -235,6 +271,18 @@ export default {
       type: String,
       required: true
     },
+    btnVariant: {
+      type: String,
+      default: "primary"
+    },
+    canTransfer: {
+      type: Boolean,
+      default: false
+    },
+    transferBtnLabel: {
+      type: String,
+      required: false
+    },
     disabledBtn: {
       type: Boolean,
       default: false
@@ -296,7 +344,7 @@ export default {
     }
   },
   methods: {
-    haveDifferentImages: function(images, formImages) {
+    haveDifferentImages: function (images, formImages) {
       for (let i = 0; i < images.length; i++) {
         if (formImages[i].file.name) {
           if (images[i].src !== formImages[i].file.name) {
@@ -312,7 +360,7 @@ export default {
       }
       return false;
     },
-    haveDifferentItems: function(images, formImages) {
+    haveDifferentItems: function (images, formImages) {
       for (let i = 0; i < images.length; i++) {
         if (images[i] !== formImages[i].name) {
           return true;
@@ -320,7 +368,7 @@ export default {
       }
       return false;
     },
-    submitForm: function() {
+    submitForm: function () {
       let input = {};
 
       const maybeEditedFields = [
@@ -371,3 +419,18 @@ export default {
   }
 };
 </script>
+
+<style lang="scss">
+.ad-form {
+  // Override style legend with h2 class
+  .h2 {
+    padding-bottom: 0;
+    padding-top: 0;
+    font-size: 2rem;
+
+    @include media-breakpoint-down(lg) {
+      font-size: calc(1.325rem + 0.9vw);
+    }
+  }
+}
+</style>

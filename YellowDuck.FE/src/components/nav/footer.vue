@@ -1,20 +1,23 @@
 <template>
   <div class="gray-lighter bg-light footer-app">
-    <b-nav small class="px-2">
-      <b-nav-item class="footer-app__nav-item" :to="{ name: $consts.urls.URL_LANDING }">
+    <b-nav small>
+      <b-nav-item class="footer-app__nav-item navbar-nav mx-2" :to="{ name: $consts.urls.URL_LANDING }">
         <b-icon icon="question-circle" class="mr-1" aria-hidden="true"></b-icon>
         {{ $t("btn.about") }}
       </b-nav-item>
       <b-nav-item
-        class="footer-app__nav-item"
+        class="footer-app__nav-item navbar-nav mx-2"
         href="https://mutuali.notion.site/mutuali/Foire-aux-questions-0b482ef447694f73926b495675f1685e"
         target="_blank"
         >{{ $t("btn.faq") }}</b-nav-item
       >
-      <b-nav-item class="footer-app__nav-item navbar-nav ml-auto" :href="`mailto:${contactUsEmail}`">
+      <b-nav-item class="footer-app__nav-item navbar-nav mx-2" :href="`mailto:${contactUsEmail}`">
         {{ $t("btn.contact-us") }}
       </b-nav-item>
-      <b-nav-item class="footer-app__nav-item ml-auto" @click="changeLang">{{ $t("btn.change-lang") }}</b-nav-item>
+      <b-nav-item class="footer-app__nav-item navbar-nav ml-auto mr-2" @click="changeLang"
+        ><span class="sr-only">{{ $t("btn.change-lang") }}</span>
+        <span aria-hidden>{{ $t("btn.change-lang-shortcut") }}</span></b-nav-item
+      >
     </b-nav>
   </div>
 </template>

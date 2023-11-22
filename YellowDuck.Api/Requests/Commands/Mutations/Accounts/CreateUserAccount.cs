@@ -17,20 +17,27 @@ using GraphQL.Conventions;
 using YellowDuck.Api.Gql.Schema.Types;
 using System.Collections.Generic;
 using System.Linq;
+using YellowDuck.Api.DbModel;
+using Microsoft.EntityFrameworkCore;
+using System.Security.Claims;
+using YellowDuck.Api.Constants;
+using YellowDuck.Api.DbModel.Entities.Alerts;
 
 namespace YellowDuck.Api.Requests.Commands.Mutations.Accounts
 {
     public class CreateUserAccount : IRequestHandler<CreateUserAccount.Input, CreateUserAccount.Payload>
     {
         private readonly UserManager<AppUser> userManager;
+        private readonly AppDbContext db;
         private readonly IMailer mailer;
         private readonly ILogger<CreateUserAccount> logger;
         private readonly IHttpContextAccessor httpContextAccessor;
 
-        public CreateUserAccount(UserManager<AppUser> userManager, IMailer mailer, ILogger<CreateUserAccount> logger, IHttpContextAccessor httpContextAccessor)
+        public CreateUserAccount(UserManager<AppUser> userManager, AppDbContext db, IMailer mailer, ILogger<CreateUserAccount> logger, IHttpContextAccessor httpContextAccessor)
         {
             this.httpContextAccessor = httpContextAccessor;
             this.userManager = userManager;
+            this.db = db;
             this.mailer = mailer;
             this.logger = logger;
         }
@@ -74,6 +81,17 @@ namespace YellowDuck.Api.Requests.Commands.Mutations.Accounts
             var result = await userManager.CreateAsync(user, request.Password);
             result.AssertSuccess();
             var confirmToken = await userManager.GenerateEmailConfirmationTokenAsync(user);
+
+            var alerts = await db.Alerts.Where(x => x.Email == request.Email && x.EmailConfirmed).ToListAsync(cancellationToken: cancellationToken);
+
+            foreach (var alert in alerts)
+            {
+                alert.UserId = user.Id;
+                await userManager.AddClaimAsync(user, new Claim(AppClaimTypes.AlertOwner, Id.New<Alert>(alert.Id.ToString()).ToString()));
+            }
+
+
+            await db.SaveChangesAsync(cancellationToken);
 
             await mailer.Send(new ConfirmEmailEmail(request.Email, confirmToken, request.ReturnPath));
 

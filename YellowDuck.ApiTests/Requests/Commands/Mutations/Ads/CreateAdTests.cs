@@ -72,7 +72,7 @@ namespace YellowDuck.ApiTests.Requests.Commands.Mutations.Ads
                     PostalCode = "G1K-0H1".NonNull(),
                     Raw = "{raw object}"
                 }.NonNull(),
-                //ShowAddress = true,
+                ShowAddress = true,
                 DeliveryTruckType = DeliveryTruckType.CubeTruck12Foot,
             };
 
@@ -90,7 +90,7 @@ namespace YellowDuck.ApiTests.Requests.Commands.Mutations.Ads
                 ad.Category.Should().Be(AdCategory.ProfessionalKitchen);
                 ad.Gallery.Should().BeNull();
                 ad.Translations.Should().HaveCount(1);
-                //ad.ShowAddress.Should().Be(true);
+                ad.ShowAddress.Should().Be(true);
                 ad.DeliveryTruckType.Should().Be(DeliveryTruckType.CubeTruck12Foot);
                 ad.ProfessionalKitchenEquipments.Should().HaveCount(2);
                 ad.DayAvailability.Should().Contain(x => x.Weekday == DayOfWeek.Saturday);
@@ -123,8 +123,7 @@ namespace YellowDuck.ApiTests.Requests.Commands.Mutations.Ads
                     PostalCode = "G1K-0H1".NonNull(),
                     Raw = "{raw object}"
                 }.NonNull(),
-                ShowAddress = true,
-                Description = new Maybe<NonNull<string>>("Test ad description")
+                ShowAddress = true
             };
 
             var result = await handler.Handle(input, CancellationToken.None);
@@ -152,8 +151,7 @@ namespace YellowDuck.ApiTests.Requests.Commands.Mutations.Ads
                     PostalCode = "G1K-0H1".NonNull(),
                     Raw = "{raw object}"
                 }.NonNull(),
-                ShowAddress= true,
-                Description = new Maybe<NonNull<string>>("Test ad description")
+                ShowAddress= true
             };
 
             var result = await handler.Handle(input, CancellationToken.None);
@@ -184,8 +182,7 @@ namespace YellowDuck.ApiTests.Requests.Commands.Mutations.Ads
                     PostalCode = "G1K-0H1".NonNull(),
                     Raw = "{raw object}"
                 }.NonNull(),
-                ShowAddress = true,
-                Description = new Maybe<NonNull<string>>("Test ad description")
+                ShowAddress = true
             };
 
             await F(() => handler.Handle(input, CancellationToken.None))
@@ -223,9 +220,7 @@ namespace YellowDuck.ApiTests.Requests.Commands.Mutations.Ads
                     PostalCode = "G1K-0H1".NonNull(),
                     Raw = "{raw object}"
                 }.NonNull(),
-                ShowAddress = true,
-                Description = new Maybe<NonNull<string>>("Test ad description")
-
+                ShowAddress = true
             };
 
             var result = await handler.Handle(input, CancellationToken.None);

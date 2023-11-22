@@ -15,7 +15,6 @@ using YellowDuck.Api.DbModel.Entities.Ads;
 using YellowDuck.Api.DbModel.Entities.Conversations;
 using YellowDuck.Api.DbModel.Enums;
 using YellowDuck.Api.Extensions;
-using YellowDuck.Api.Gql.Schema.Types;
 using YellowDuck.Api.Requests.Commands.Mutations.Ads;
 using YellowDuck.Api.Requests.Commands.Mutations.Contracts;
 using YellowDuck.Api.Requests.Commands.Mutations.Conversations;
@@ -55,7 +54,6 @@ namespace YellowDuck.ApiTests.Requests.Commands.Mutations.Contracts
                 Title = "Test ad",
                 Category = AdCategory.DeliveryTruck,
                 DeliveryTruckType = DeliveryTruckType.Van,
-                Description = new Maybe<NonNull<string>>("Test ad description"),
                 Language = ContentLanguage.French,
                 Address = new CreateAd.AddressInput()
                 {

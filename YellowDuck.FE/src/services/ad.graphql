@@ -39,3 +39,12 @@ mutation UnpublishAd($input: UnpublishAdInput!) {
     }
   }
 }
+
+mutation TransferAd($input: TransferAdInput!) {
+  transferAd(input: $input) {
+    ad {
+      id
+      isAdminOnly
+    }
+  }
+}

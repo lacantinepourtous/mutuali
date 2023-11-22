@@ -6,6 +6,7 @@
 @import "node_modules/bootstrap-vue/src/index.scss";
 
 @import "./utilities/_animations.scss";
+@import "./utilities/_extend-cursor-area.scss";
 @import "./utilities/_fab-container.scss";
 @import "./utilities/_no-content.scss";
 @import "./utilities/_responsive-text.scss";
@@ -41,6 +42,11 @@
     --offset-outline-color: #{$cyan-darker};
     --outline-color: #{$gray-100};
   }
+
+  .orange {
+    --offset-outline-color: #{$orange};
+    --outline-color: #{$gray-100};
+  }
 }
 
 // Unify focus-visible look for keyboard navigation
@@ -51,6 +57,7 @@ button,
 .btn-secondary,
 .btn-outline-primary,
 .btn-outline-secondary,
+.btn-admin,
 .form-control,
 .custom-select,
 .navbar-text[tabindex="0"],
@@ -81,8 +88,11 @@ button,
 .btn-primary,
 .btn-secondary,
 .btn-outline-primary,
-.btn-danger {
-  transition: background-color 0.2s ease-in-out, transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+.btn-outline-admin,
+.btn-danger,
+.btn-admin {
+  transition: background-color 0.2s ease-in-out, transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out, color 0.2s ease-in-out,
+    border-color 0.2s ease-in-out;
   &:hover {
     transform: translate(0, -3px);
 
@@ -91,12 +101,28 @@ button,
       box-shadow: none;
     }
   }
+
+  &[disabled] {
+    cursor: not-allowed;
+  }
 }
 
 .btn-primary {
   &:hover {
     box-shadow: 0px 3px 0px $green;
     background-color: $green-darker;
+  }
+}
+
+.btn-admin {
+  border-color: $orange;
+  background-color: $orange;
+  color: $white;
+
+  &:hover {
+    box-shadow: 0px 3px 0px $orange-light;
+    background-color: $orange-dark;
+    color: $white;
   }
 }
 
@@ -143,6 +169,16 @@ button,
     background-color: $green-darker;
     border-color: $green-darker;
     color: $gray-100;
+  }
+}
+
+.btn-outline-admin {
+  border-color: $orange;
+  color: $orange;
+  &:hover {
+    background-color: transparent;
+    color: $orange;
+    box-shadow: 0px 3px 0px $orange-light;
   }
 }
 
@@ -237,6 +273,18 @@ a[href^="tel:"] {
     &:focus,
     &:active {
       color: $yellow;
+    }
+  }
+}
+
+.text-white {
+  .btn-link {
+    color: $white;
+
+    &:hover,
+    &:focus,
+    &:active {
+      color: $white;
     }
   }
 }

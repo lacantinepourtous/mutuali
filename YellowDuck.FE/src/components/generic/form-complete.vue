@@ -31,7 +31,7 @@
         <b-button
           v-for="cta in ctas"
           :key="cta.text"
-          :variant="cta === ctas[0] ? 'primary' : 'outline-primary'"
+          :variant="getBtnVariant(cta)"
           :class="{ 'mt-3': cta !== ctas[0] }"
           size="lg"
           block
@@ -55,7 +55,19 @@ export default {
 
     linkTitle: String,
     ctas: Array,
-    links: Array
+    links: Array,
+
+    isAdmin: Boolean
+  },
+  methods: {
+    getBtnVariant(cta) {
+      let variant = "";
+      if (cta !== this.ctas[0]) {
+        variant = "outline-";
+      }
+      this.isAdmin ? (variant += "admin") : (variant += "primary");
+      return variant;
+    }
   }
 };
 </script>

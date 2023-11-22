@@ -4,7 +4,7 @@
     <TargetFramework>net5.0</TargetFramework>
     <AspNetCoreHostingModel>InProcess</AspNetCoreHostingModel>
     <OutputType>Exe</OutputType>
-    <UserSecretsId>160bc5bd-f0bc-4615-98b9-39f3a9e0fb5f</UserSecretsId>
+    <UserSecretsId>9ae183b3-0cd8-4ae2-97ba-575a812611c7</UserSecretsId>
   </PropertyGroup>
 
   <ItemGroup>

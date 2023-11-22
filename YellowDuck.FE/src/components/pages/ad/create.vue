@@ -3,10 +3,13 @@
     <portal v-if="!adCreated" :to="$consts.enums.PORTAL_HEADER">
       <nav-close :to="{ name: $consts.urls.URL_LIST_AD }"></nav-close>
     </portal>
-    <div v-if="!adCreated" class="section section--md my-4">
-      <h1 class="my-4">{{ $t("page-title.create-ad") }}</h1>
+    <template v-if="!adCreated">
+      <div class="section section--md section--padding-x section--border-bottom my-4">
+        <h1 class="my-4">{{ $t("page-title.create-ad") }}</h1>
+      </div>
       <ad-form @submitForm="createAd" :disabledBtn="isSubmitted" :btnLabel="$t('btn.create-ad')" />
-    </div>
+    </template>
+
     <form-complete
       v-else
       :title="$t('form-complete.create-ad.title')"

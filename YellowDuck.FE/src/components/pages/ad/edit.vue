@@ -4,38 +4,41 @@
       <portal :to="$consts.enums.PORTAL_HEADER">
         <nav-close :to="{ name: $consts.urls.URL_AD_DETAIL, params: { id: this.adId } }"></nav-close>
       </portal>
-      <div class="section section--md my-4">
+      <div class="section section--md section--padding-x section--border-bottom my-4">
         <h1 class="my-4">{{ $t("page-title.edit-ad") }}</h1>
-        <ad-form
-          v-if="ad"
-          :title="adTitle"
-          :description="adDescription"
-          :category="adCategory"
-          :images="adImages"
-          :address="adAddress"
-          :show-address="adShowAddress"
-          :price="adPrice"
-          :priceToBeDetermined="adPriceToBeDetermined"
-          :priceDescription="adPriceDescription"
-          :conditions="adConditions"
-          :organization="adOrganization"
-          :surfaceSize="adSurfaceSize"
-          :equipment="adEquipment"
-          :surfaceDescription="adSurfaceDescription"
-          :professionalKitchenEquipment="adProfessionalKitchenEquipment"
-          :professionalKitchenEquipmentOther="adProfessionalKitchenEquipmentOther"
-          :deliveryTruckType="adDeliveryTruckType"
-          :deliveryTruckTypeOther="adDeliveryTruckTypeOther"
-          :dayAvailability="adDayAvailability"
-          :eveningAvailability="adEveningAvailability"
-          :refrigerated="adRefrigerated"
-          :canHaveDriver="adCanHaveDriver"
-          :canSharedRoad="adCanSharedRoad"
-          @submitForm="editAd"
-          :btnLabel="$t('btn.edit-ad')"
-          :disabledBtn="isSubmitted"
-        />
       </div>
+      <ad-form
+        v-if="ad"
+        :adId="adId"
+        :title="adTitle"
+        :description="adDescription"
+        :category="adCategory"
+        :images="adImages"
+        :address="adAddress"
+        :show-address="adShowAddress"
+        :price="adPrice"
+        :priceToBeDetermined="adPriceToBeDetermined"
+        :priceDescription="adPriceDescription"
+        :conditions="adConditions"
+        :organization="adOrganization"
+        :surfaceSize="adSurfaceSize"
+        :equipment="adEquipment"
+        :surfaceDescription="adSurfaceDescription"
+        :professionalKitchenEquipment="adProfessionalKitchenEquipment"
+        :professionalKitchenEquipmentOther="adProfessionalKitchenEquipmentOther"
+        :deliveryTruckType="adDeliveryTruckType"
+        :deliveryTruckTypeOther="adDeliveryTruckTypeOther"
+        :dayAvailability="adDayAvailability"
+        :eveningAvailability="adEveningAvailability"
+        :refrigerated="adRefrigerated"
+        :canHaveDriver="adCanHaveDriver"
+        :canSharedRoad="adCanSharedRoad"
+        @submitForm="editAd"
+        :btnLabel="$t('btn.edit-ad')"
+        :transferBtnLabel="$t('btn.transfer-ad')"
+        :canTransfer="isAdmin"
+        :disabledBtn="isSubmitted"
+      />
     </template>
     <form-complete
       v-else
@@ -78,6 +81,19 @@ export default {
     };
   },
   apollo: {
+    me: {
+      query() {
+        return this.$options.query.Me;
+      },
+      skip() {
+        return !this.isConnected;
+      }
+    },
+    user: {
+      query() {
+        return this.$options.query.LocalUser;
+      }
+    },
     ad: {
       fetchPolicy: "no-cache",
       query() {
@@ -110,6 +126,12 @@ export default {
     };
   },
   computed: {
+    isConnected() {
+      return this.user && this.user.isConnected;
+    },
+    isAdmin() {
+      return !this.me || this.me.type === this.$consts.enums.USER_TYPE_ADMIN;
+    },
     adId: function () {
       return this.$route.params.id.split("-").last();
     },
@@ -201,6 +223,19 @@ export default {
 </script>
 
 <graphql>
+query Me {
+  me {
+    id
+    type
+  }
+}
+
+query LocalUser {
+  user @client {
+    isConnected
+  }
+}
+
 query AdById($id: ID!, $language: ContentLanguage!) {
   ad(id: $id) {
     id

@@ -50,6 +50,7 @@ namespace YellowDuck.Api.Requests.Commands.Mutations.Ads
 
             var ad = new Ad
             {
+                CreatedAtUTC = DateTime.UtcNow,
                 Category = request.Category,
                 Translations = new List<AdTranslation>()
                 {
@@ -74,7 +75,7 @@ namespace YellowDuck.Api.Requests.Commands.Mutations.Ads
                     Latitude = address.Latitude,
                     Longitude = address.Longitude
                 },
-                // ShowAddress = request.ShowAddress,
+                ShowAddress = request.ShowAddress,
                 Organization = request.Organization,
                 IsPublish = true
             };
@@ -125,6 +126,11 @@ namespace YellowDuck.Api.Requests.Commands.Mutations.Ads
             var owner = await currentUserAccessor.GetCurrentUser();
             ad.UserId = owner.Id;
 
+            if(owner.Type == UserType.Admin)
+            {
+                ad.IsAdminOnly = true;
+            }
+
             db.Ads.Add(ad);
 
             await db.SaveChangesAsync(cancellationToken);
@@ -161,67 +167,58 @@ namespace YellowDuck.Api.Requests.Commands.Mutations.Ads
                 throw new AddressInvalidException();
             }
 
-            if(false) // Awaiting approval
+            switch (request.Category)
             {
-                switch (request.Category)
-                {
-                    case AdCategory.DeliveryTruck:
+                case AdCategory.DeliveryTruck:
+                    {
+                        if (!request.DeliveryTruckType.IsSet())
                         {
-                            if (!request.DeliveryTruckType.IsSet())
-                            {
-                                throw new DeliveryTruckTypeInvalidException();
-                            }
-                            else if (request.DeliveryTruckType.Value == DeliveryTruckType.Other && !string.IsNullOrWhiteSpace(request.DeliveryTruckTypeOther.Value))
-                            {
-                                throw new DeliveryTruckTypeOtherInvalidException();
-                            }
-                            break;
+                            throw new DeliveryTruckTypeInvalidException();
                         }
-                    case AdCategory.ProfessionalKitchen:
+                        else if (request.DeliveryTruckType.Value == DeliveryTruckType.Other && !string.IsNullOrWhiteSpace(request.DeliveryTruckTypeOther.Value))
                         {
-                            if (!request.SurfaceDescription.IsSet())
-                            {
-                                throw new SurfaceDescriptionInvalidException();
-                            }
-                            if (!request.ProfessionalKitchenEquipment.IsSet() || request.ProfessionalKitchenEquipment.Value.Count == 0)
-                            {
-                                throw new ProfessionalKitchenEquipmentInvalidException();
-                            }
-                            break;
+                            throw new DeliveryTruckTypeOtherInvalidException();
                         }
-                    case AdCategory.StorageSpace:
+                        break;
+                    }
+                case AdCategory.ProfessionalKitchen:
+                    {
+                        if (!request.SurfaceDescription.IsSet())
                         {
-                            if (!request.SurfaceSize.IsSet())
-                            {
-                                throw new SurfaceSizeInvalidException();
-                            }
-                            if (!request.Description.IsSet() || string.IsNullOrWhiteSpace(request.Description.Value))
-                            {
-                                throw new DescriptionInvalidException();
-                            }
-                            if (!request.Equipment.IsSet() || string.IsNullOrWhiteSpace(request.Description.Value))
-                            {
-                                throw new EquipmentInvalidException();
-                            }
-                            break;
+                            throw new SurfaceDescriptionInvalidException();
                         }
-                    case AdCategory.Other:
+                        if (!request.ProfessionalKitchenEquipment.IsSet() || request.ProfessionalKitchenEquipment.Value.Count == 0)
                         {
-                            if (!request.Description.IsSet() || string.IsNullOrWhiteSpace(request.Description.Value))
-                            {
-                                throw new DescriptionInvalidException();
-                            }
-                            break;
+                            throw new ProfessionalKitchenEquipmentInvalidException();
                         }
-                }
+                        break;
+                    }
+                case AdCategory.StorageSpace:
+                    {
+                        if (!request.SurfaceSize.IsSet())
+                        {
+                            throw new SurfaceSizeInvalidException();
+                        }
+                        if (!request.Description.IsSet() || string.IsNullOrWhiteSpace(request.Description.Value))
+                        {
+                            throw new DescriptionInvalidException();
+                        }
+                        if (!request.Equipment.IsSet() || string.IsNullOrWhiteSpace(request.Description.Value))
+                        {
+                            throw new EquipmentInvalidException();
+                        }
+                        break;
+                    }
+                case AdCategory.Other:
+                    {
+                        if (!request.Description.IsSet() || string.IsNullOrWhiteSpace(request.Description.Value))
+                        {
+                            throw new DescriptionInvalidException();
+                        }
+                        break;
+                    }
             }
-            else
-            {
-                if (!request.Description.IsSet() || string.IsNullOrWhiteSpace(request.Description.Value))
-                {
-                    throw new DescriptionInvalidException();
-                }
-            }
+           
         }
 
         [MutationInput]
@@ -233,7 +230,7 @@ namespace YellowDuck.Api.Requests.Commands.Mutations.Ads
             public NonNull<string> Title { get; set; }
             public Maybe<NonNull<string>> Description { get; set; }
             public NonNull<AddressInput> Address { get; set; }
-            public bool? ShowAddress { get; set; }
+            public bool ShowAddress { get; set; }
             public double? Price { get; set; }
             public bool PriceToBeDetermined { get; set; }
             public string PriceDescription { get; set; }

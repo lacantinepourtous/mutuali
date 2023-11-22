@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="rm-child-margin">
     <s-form-rich-text-editor
       v-model="form.surfaceDescription"
       @input="$emit('input', value)"
@@ -29,6 +29,7 @@
       @input="$emit('input', value)"
       id="professionalKitchenEquipment"
       :label="$t('label.ad-professionalKitchenEquipment')"
+      label-class="h2 mt-4 mb-2"
       name="professionalKitchenEquipment"
       :options="professionalKitchenEquipmentOptions"
       rules="required:true"

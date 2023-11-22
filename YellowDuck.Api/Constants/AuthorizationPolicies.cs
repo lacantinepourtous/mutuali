@@ -9,6 +9,7 @@
 
         public const string ManageUser = "ManageUser";
         public const string ManageAd = "ManageAd";
+        public const string ManageAlert = "ManageAlert";
 
         public const string InConversation = "InConversation";
     }

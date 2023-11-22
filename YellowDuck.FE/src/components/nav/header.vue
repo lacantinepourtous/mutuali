@@ -22,7 +22,7 @@
         <b-nav-item-dropdown right no-caret>
           <template #button-content>
             <span class="text-dark">
-              <b-icon-person-circle aria-hidden="true"></b-icon-person-circle>
+              <span class="nav-header__profile-icon" aria-hidden="true"><b-icon-person-circle></b-icon-person-circle></span>
               {{ $t("nav.profile") }}
             </span>
           </template>
@@ -31,6 +31,10 @@
               $t("btn.my-profile")
             }}</b-dropdown-item>
             <b-dropdown-item :to="{ name: $consts.urls.URL_MANAGE_ADS }">{{ $t("btn.manage-my-ads") }}</b-dropdown-item>
+            <b-dropdown-item :to="{ name: $consts.urls.URL_AD_ALERT_LIST }">{{ $t("btn.manage-my-alerts") }}</b-dropdown-item>
+          </template>
+          <template v-else>
+            <b-dropdown-item :to="{ name: $consts.urls.URL_MANAGE_ADS }">{{ $t("btn.manage-admin-ads") }}</b-dropdown-item>
           </template>
           <b-dropdown-item :to="{ name: $consts.urls.URL_PROFILE_EDIT }">{{ $t("btn.edit-my-profile") }}</b-dropdown-item>
           <b-dropdown-item :to="{ name: $consts.urls.URL_ACCOUNT_SETTINGS }">{{ $t("btn.account-settings") }}</b-dropdown-item>
@@ -40,7 +44,10 @@
       <template v-else>
         <b-nav-item link-classes="text-dark" :to="{ name: $consts.urls.URL_LOGIN }">{{ $t("btn.login") }}</b-nav-item>
       </template>
-      <b-nav-item @click="changeLang">{{ $t("btn.change-lang") }}</b-nav-item>
+      <b-nav-item link-classes="text-dark" @click="changeLang">
+        <span class="sr-only">{{ $t("btn.change-lang") }}</span>
+        <span aria-hidden>{{ $t("btn.change-lang-shortcut") }}</span>
+      </b-nav-item>
     </b-navbar-nav>
   </nav-base>
 </template>
@@ -196,6 +203,13 @@ export default {
       &::before {
         background-color: $yellow;
       }
+    }
+  }
+
+  &__profile-icon {
+    display: none;
+    @include media-breakpoint-up(sm) {
+      display: inline;
     }
   }
 

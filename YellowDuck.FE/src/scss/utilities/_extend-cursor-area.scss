@@ -1,0 +1,12 @@
+.h-extend-cursor-area {
+  &:after {
+    position: absolute;
+    display: block;
+    top: 50%;
+    left: 50%;
+    content: "";
+    transform: translate(-50%, -50%);
+    width: calc(100% + 1rem * 2);
+    height: calc(100% + 0.5rem * 2);
+  }
+}

@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="rm-child-margin">
     <s-form-rich-text-editor
       v-model="form.conditions"
       @input="$emit('input', value)"

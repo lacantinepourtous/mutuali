@@ -1,0 +1,68 @@
+﻿@using YellowDuck.Api.Helpers
+@using YellowDuck.Api.Constants
+@model YellowDuck.Api.EmailTemplates.Models.AlertEmail
+@{
+    Layout = "_EmailLayout.cshtml";
+}
+<p style="font-style:italic;">--- English will follow ---</p>
+<br>
+@if (Model.AdsCount > 1)
+{
+    <p>
+        @Model.AdsCount offres @AdCategoryHelper.AdCategoryToFrenchString(Model.Category) qui pourraient vous intéresser viennent d'être publiées.
+    </p>
+    <p>
+        <a href="@Model.BaseUrl/@Model.CtaUrlFr">Aller voir les offres</a>
+    </p>
+}
+else
+{
+    <p>
+        Une offre @AdCategoryHelper.AdCategoryToFrenchString(Model.Category) qui pourrait vous intéresser vient d'être publiée.
+    </p>
+    <p>
+        <a href="@Model.BaseUrl/@Model.CtaUrlFr">Aller voir l'offre</a>
+    </p>
+}
+
+
+<p>
+    <a href="@Model.BaseUrl/@UrlHelper.UnsubscribeAlert(Model.AlertIdentifier, Model.To, Locales.FR)">Se désabonner de cette alerte</a>
+    @if (Model.CanManageAlert)
+    {
+        <text>•</text> <a href="@Model.BaseUrl/@UrlHelper.ManageAlert(Locales.FR)">Gérer ses alertes</a>
+    }
+</p>
+
+<br>
+<br>
+<p style="font-style:italic;">--- English version ---</p>
+<br>
+
+@if (Model.AdsCount > 1)
+{
+    <p>
+        @Model.AdsCount offers @AdCategoryHelper.AdCategoryToEnglishString(Model.Category) that might interest you have just been published.
+    </p>
+    <p>
+        <a href="@Model.BaseUrl/@Model.CtaUrlEn">Go see the offers</a>
+    </p>
+}
+else
+{
+    <p>
+        One offer @AdCategoryHelper.AdCategoryToEnglishString(Model.Category) that might interest you has just been published.
+    </p>
+    <p>
+        <a href="@Model.BaseUrl/@Model.CtaUrlEn">Go see the offer</a>
+    </p>
+}
+
+
+<p>
+    <a href="@Model.BaseUrl/@UrlHelper.UnsubscribeAlert(Model.AlertIdentifier, Model.To, Locales.EN)">Unsubscribe from this alert</a>
+    @if (Model.CanManageAlert)
+    {
+        <text>•</text> <a href="@Model.BaseUrl/@UrlHelper.ManageAlert(Locales.EN)">Manage your alerts</a>
+    }
+</p>

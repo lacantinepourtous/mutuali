@@ -1,5 +1,14 @@
 <template>
-  <s-field :id="id" :label="label" :name="name" :inputId="inputId" :rules="rules" :description="description" v-slot="{ sState }">
+  <s-field
+    :id="id"
+    :label="label"
+    :labelClass="labelClass"
+    :name="name"
+    :inputId="inputId"
+    :rules="rules"
+    :description="description"
+    v-slot="{ sState }"
+  >
     <b-form-select
       :id="inputId"
       v-model="computedValue"
@@ -17,6 +26,10 @@ export default {
   props: {
     id: String,
     label: String,
+    labelClass: {
+      type: String,
+      default: "label"
+    },
     name: String,
     rules: {
       type: [String, Object]
@@ -32,7 +45,7 @@ export default {
     SField
   },
   computed: {
-    computedOptions: function () {
+    computedOptions: function() {
       let options = [...this.options];
       if (this.addDisableOptions || this.placeholder) {
         options.unshift({

@@ -1,7 +1,8 @@
 <template>
   <div v-if="userProfile" class="w-100 mt-4 mt-md-5">
     <div class="section section--sm mb-4">
-      <h1>{{ $t("title.manage-my-ads") }}</h1>
+      <h1 v-if="isAdmin">{{ $t("title.manage-admin-ads") }}</h1>
+      <h1 v-else>{{ $t("title.manage-my-ads") }}</h1>
     </div>
     <template v-if="publishedAds.length > 0">
       <div class="section section--sm">
@@ -24,6 +25,8 @@
           show-ad-detail-btn
           show-manage-btn
           :isPublished="ad.isPublish"
+          :canTransfer="isAdmin"
+          :isAdminOnly="ad.isAdminOnly"
         />
       </div>
     </template>
@@ -46,10 +49,12 @@
           show-ad-detail-btn
           show-manage-btn
           :isPublished="ad.isPublish"
+          :canTransfer="isAdmin"
+          :isAdminOnly="ad.isAdminOnly"
         />
       </div>
     </template>
-    <ad-no-content v-if="ads.length === 0" class="my-5 py-sm-5" />
+    <ad-no-content v-if="ads.length === 0" class="my-5 py-sm-5" :isAdmin="isAdmin" />
   </div>
 </template>
 
@@ -66,24 +71,27 @@ export default {
     AdSnippet
   },
   computed: {
-    profileId: function() {
+    isAdmin() {
+      return !this.me || this.me.type === this.$consts.enums.USER_TYPE_ADMIN;
+    },
+    profileId: function () {
       return this.me.profile.id;
     },
-    publishedAds: function() {
+    publishedAds: function () {
       return this.userProfile.user ? this.userProfile.user.ads.filter((x) => x.isPublish) : [];
     },
-    unpublishedAds: function() {
+    unpublishedAds: function () {
       return this.userProfile.user ? this.userProfile.user.ads.filter((x) => !x.isPublish) : [];
     },
-    ads: function() {
+    ads: function () {
       return this.userProfile.user ? this.userProfile.user.ads : [];
     }
   },
   methods: {
-    adPrice: function(ad) {
+    adPrice: function (ad) {
       return ad.priceToBeDetermined ? this.$t("price.toBeDetermined") : this.$format.formatMoney(ad.price);
     },
-    adPriceDescription: function(ad) {
+    adPriceDescription: function (ad) {
       return ad.priceToBeDetermined ? "" : ad.translationOrDefault.priceDescription;
     }
   },
@@ -114,6 +122,7 @@ export default {
 query Me {
   me {
     id
+    type
     profile {
       id
     }
@@ -126,6 +135,7 @@ query UserProfileById($id: ID!, $language: ContentLanguage!) {
       ads {
         id
         isPublish
+        isAdminOnly
         gallery {
           id
           src
