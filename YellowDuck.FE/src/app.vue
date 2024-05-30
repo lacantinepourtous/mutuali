@@ -38,7 +38,7 @@ import NotificationContainer from "@/components/notifications/notification-conta
 import NavHeader from "@/components/nav/header";
 import NavFooter from "@/components/nav/footer";
 import SkipToContent from "@/components/nav/skip-to-content";
-
+import { bootstrap } from "vue-gtag";
 import { Wormhole } from "portal-vue";
 
 export default {
@@ -73,6 +73,13 @@ export default {
         return this.$t("error.unauthorized");
       }
     };
+  },
+  mounted() {
+    this.$termsFeed.onChange((acceptedLevels) => {
+      if (acceptedLevels.tracking) {
+        bootstrap();
+      }
+    });
   }
 };
 </script>

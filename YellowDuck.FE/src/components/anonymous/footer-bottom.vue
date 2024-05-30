@@ -9,6 +9,9 @@
         <small class="footer-bottom__item">{{ $t("text.landing-page-all-right-reserved") }}</small>
         <small class="footer-bottom__item" v-html="$t('text.landing-page-terms-of-use')"></small>
         <small class="footer-bottom__item" v-html="$t('text.landing-page-privacy-policy')"></small>
+        <small class="footer-bottom__item"
+          ><a href="#" @click.prevent="$termsFeed.openPreferencesCenter()">$t('text.landing-page-terms-feed')</a></small
+        >
       </span>
     </div>
   </div>
