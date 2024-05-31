@@ -605,5 +605,6 @@
   "accept-tos.text": "The terms of service and privacy policy have been updated since your last login:",
   "accept-tos.question": "Do you accept the new terms to continue using the application?",
   "accept-tos.button": "I Accept",
-  "accept-tos.logout": "Not now, log me out"
+  "accept-tos.logout": "Not now, log me out",
+  "text.landing-page-terms-feed": "Cookies preferences"
 }

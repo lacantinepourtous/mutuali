@@ -603,5 +603,6 @@
   "accept-tos.text": "Les conditions d'utilisation et la politique de confidentialité ont été mises à jour depuis votre dernière connexion:",
   "accept-tos.question": "Acceptez-vous les nouvelles conditions pour continuer à utiliser l'application ?",
   "accept-tos.button": "J'accepte",
-  "accept-tos.logout": "Pas pour l'instant, me déconnecter"
+  "accept-tos.logout": "Pas pour l'instant, me déconnecter",
+  "text.landing-page-terms-feed": "Préférences de cookies"
 }
