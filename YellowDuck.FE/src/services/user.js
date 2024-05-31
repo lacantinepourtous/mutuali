@@ -19,7 +19,6 @@ export default {
       mutation: CreateUserAccount,
       variables: {
         input: {
-          postalCode: input.postalCode,
           phoneNumber: input.phoneNumber,
           showPhoneNumber: input.showPhoneNumber || false,
           showEmail: input.showEmail || false,
@@ -112,7 +111,6 @@ export default {
     addMaybeValue(input, mutationInput, "organizationTypeOtherSpecification");
     addMaybeValue(input, mutationInput, "industry");
     addMaybeValue(input, mutationInput, "industryOtherSpecification");
-    addMaybeValue(input, mutationInput, "postalCode");
     addMaybeValue(input, mutationInput, "phoneNumber");
     addMaybeValue(input, mutationInput, "showPhoneNumber");
     addMaybeValue(input, mutationInput, "showEmail");

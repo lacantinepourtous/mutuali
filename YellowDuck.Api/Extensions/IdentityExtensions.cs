@@ -42,7 +42,6 @@ namespace YellowDuck.Api.Extensions
                         OrganizationName = identity.OrganizationName,
                         OrganizationType = identity.OrganizationType,
                         Industry = identity.Industry,
-                        PostalCode = identity.PostalCode,
                         PhoneNumber = identity.PhoneNumber,
                         ShowPhoneNumber = identity.ShowPhoneNumber,
                         ShowEmail = identity.ShowEmail
@@ -126,7 +125,6 @@ namespace YellowDuck.Api.Extensions
         public string OrganizationName { get; set; }
         public OrganizationType OrganizationType { get; set; }
         public Industry Industry { get; set; }
-        public string PostalCode { get; set; }
         public string PhoneNumber { get; set; }
         public bool ShowPhoneNumber { get; set; }
         public bool ShowEmail { get; set; }

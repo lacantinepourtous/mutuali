@@ -40,7 +40,6 @@ namespace YellowDuck.Api.Gql.Schema.GraphTypes
         public Task<string> OrganizationTypeOtherSpecification => WithData(x => x.OrganizationTypeOtherSpecification);
         public Task<Industry> Industry => WithData(x => x.Industry);
         public Task<string> IndustryOtherSpecification => WithData(x => x.IndustryOtherSpecification);
-        public Task<string> PostalCode => WithData(x => x.PostalCode);
         public Task<string> PhoneNumber => WithData(x => x.PhoneNumber);
         public Task<bool> ShowPhoneNumber => WithData(x => x.ShowPhoneNumber);
         public Task<bool> ShowEmail => WithData(x => x.ShowEmail);
