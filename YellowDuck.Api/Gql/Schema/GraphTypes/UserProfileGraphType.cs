@@ -57,6 +57,7 @@ namespace YellowDuck.Api.Gql.Schema.GraphTypes
             var professionalKitchenEquipments = await ctx.LoadRegisteringInterestByUserProfileId(id);
             return professionalKitchenEquipments.Select(x => x.RegisteringInterest).ToList();
         }
+        public Task<TosGraphType> AcceptedTos => WithData(x => new TosGraphType(x.User));
     }
 }
 

@@ -44,8 +44,6 @@ namespace YellowDuck.Api.Requests.Commands.Mutations.Accounts
 
         public async Task<Payload> Handle(Input request, CancellationToken cancellationToken)
         {
-            var ipAddress = httpContextAccessor.HttpContext.Connection.RemoteIpAddress?.ToString() ?? "";
-
             var user = new AppUser(request.Email?.Trim())
             {
                 Type = UserType.User,
@@ -64,7 +62,6 @@ namespace YellowDuck.Api.Requests.Commands.Mutations.Accounts
                 },
                 AcceptedTos = TosVersion.Latest,
                 TosAcceptationDate = DateTime.Now,
-                TosAcceptationIpAddress = ipAddress,
                 CreatedAtUtc = DateTime.UtcNow
             };
 

@@ -111,3 +111,19 @@ mutation CompleteAdminRegistration($input: CompleteAdminRegistrationInput!) {
     }
   }
 }
+
+mutation AcceptTos($input: AcceptTosInput!) {
+  acceptTos(input: $input) {
+    user {
+      profile {
+        id
+        ... on UserProfileGraphType {
+          acceptedTos {
+            id
+            hasAcceptedLatest
+          }
+        }
+      }
+    }
+  }
+}

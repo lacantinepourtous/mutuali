@@ -600,5 +600,10 @@
   "page-title.edit-alert": "Edit an email alert",
   "btn.edit-alert": "Save alert",
   "notification.edit-alert-empty": "No changes were detected in the alert. Save skipped.",
-  "error.alert-already-deleted": "Alert already been deleted."
+  "error.alert-already-deleted": "Alert already been deleted.",
+  "accept-tos.title": "Terms and Conditions Update",
+  "accept-tos.text": "The terms of service and privacy policy have been updated since your last login:",
+  "accept-tos.question": "Do you accept the new terms to continue using the application?",
+  "accept-tos.button": "I Accept",
+  "accept-tos.logout": "Not now, log me out"
 }

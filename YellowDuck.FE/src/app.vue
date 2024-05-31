@@ -13,6 +13,7 @@
     </header>
     <main class="app__middle" id="main">
       <router-view />
+      <accept-tos />
     </main>
     <footer class="app__bottom">
       <nav-footer v-if="showAppHeader && !showHeaderPortal" />
@@ -33,6 +34,7 @@ query LocalShowMenu {
 import AnonymousNav from "@/components/anonymous/nav";
 import AnonymousFooter from "@/components/anonymous/footer-bottom";
 import AppStatus from "@/components/app-status";
+import AcceptTos from "@/components/user-profile/accept-tos";
 import ConversationNotification from "@/components/notifications/conversation";
 import NotificationContainer from "@/components/notifications/notification-container";
 import NavHeader from "@/components/nav/header";
@@ -61,6 +63,7 @@ export default {
     AnonymousNav,
     AnonymousFooter,
     AppStatus,
+    AcceptTos,
     NotificationContainer,
     NavHeader,
     NavFooter,

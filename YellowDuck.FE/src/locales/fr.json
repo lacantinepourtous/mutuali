@@ -598,5 +598,10 @@
   "form-complete.transfer-ad.description": "L'annonce a été transférée et un courriel a été envoyé à l'utilisateur pour l'aviser qu'il peut accèder à son compte pour la publier.",
   "error.transfer-user-not-found": "Aucun utilisateur correspondant à cette adresse courriel n'a été trouvé.",
   "notification.edit-alert-empty": "Aucun changement n'a été détecté dans l'alerte. Sauvegarde ignorée.",
-  "error.alert-already-deleted": "L'alerte avait déjà été supprimé."
+  "error.alert-already-deleted": "L'alerte avait déjà été supprimé.",
+  "accept-tos.title": "Mise à jour des termes et conditions",
+  "accept-tos.text": "Les conditions d'utilisation et la politique de confidentialité ont été mises à jour depuis votre dernière connexion:",
+  "accept-tos.question": "Acceptez-vous les nouvelles conditions pour continuer à utiliser l'application ?",
+  "accept-tos.button": "J'accepte",
+  "accept-tos.logout": "Pas pour l'instant, me déconnecter"
 }

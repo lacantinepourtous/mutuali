@@ -10,7 +10,8 @@ import {
   ChangePassword,
   UpdateFirstLoginModalClosed,
   CreateAdminAccount,
-  CompleteAdminRegistration
+  CompleteAdminRegistration,
+  AcceptTos
 } from "./user.graphql";
 
 export default {
@@ -128,5 +129,15 @@ export default {
         input
       }
     });
-  }
+  },
+  acceptTos: async function(tosVersion) {
+    await Apollo.instance.defaultClient.mutate({
+      mutation: AcceptTos,
+      variables: {
+        input: {
+          tosVersion
+        }
+      }
+    });
+  },
 };
