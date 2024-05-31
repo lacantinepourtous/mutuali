@@ -2,8 +2,8 @@
   <div class="footer-bottom gray-lighter bg-light text-center">
     <div class="section section--xl">
       <p class="h3 mb-3">{{ $t("text.landing-page-project-by") }}</p>
-      <a class="footer-bottom__link link-scale" href="https://lacantinepourtous.org/" target="_blank">
-        <b-img width="192" alt="Logo Cantine pour tous" :src="require('@/assets/logos/logo-cantine.png')" class="mb-3"></b-img>
+      <a class="footer-bottom__link link-scale" href="https://cibim.org/" target="_blank">
+        <b-img width="192" alt="Logo CIBÎM" :src="require('@/assets/logos/logo-cantine.png')" class="mb-3"></b-img>
       </a>
       <span class="footer-bottom__items">
         <small class="footer-bottom__item">{{ $t("text.landing-page-all-right-reserved") }}</small>
