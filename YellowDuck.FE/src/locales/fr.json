@@ -385,6 +385,9 @@
   "text.landingpage.heading.gotEquipmentToShare": "J'ai de l'équipement à partager",
   "text.landingpage.heading.lookingForEquipment": "Je recherche de l'équipement",
   "text.landingpage.video.description": "Le partage d’équipements alimentaires, expliqué en 2 minutes — 02:36",
+  "text.landingpage.video.cookie-notice": "Ce contenu n'est pas disponible, car certains cookies sont bloqués.",
+  "text.landingpage.video.youtube-consent": "En cliquant sur ce bouton, vous consentez à ce que Youtube puisse récolter des données sur vous à des fins de ciblage. Le contenu de la vidéo sera affiché.",
+  "text.landingpage.video.consent-button": "J'accepte",
   "text.landingpage.video.id": "7iYbYBMsDy0",
   "text.landingpage.cta.list": "Vous souhaitez être contacté pour une présentation du projet\nVous désirez recevoir de l'aide personnalisée\nVous avez d'autres questions",
   "text.landingpage.btn": "",
@@ -595,5 +598,11 @@
   "form-complete.transfer-ad.description": "L'annonce a été transférée et un courriel a été envoyé à l'utilisateur pour l'aviser qu'il peut accèder à son compte pour la publier.",
   "error.transfer-user-not-found": "Aucun utilisateur correspondant à cette adresse courriel n'a été trouvé.",
   "notification.edit-alert-empty": "Aucun changement n'a été détecté dans l'alerte. Sauvegarde ignorée.",
-  "error.alert-already-deleted": "L'alerte avait déjà été supprimé."
+  "error.alert-already-deleted": "L'alerte avait déjà été supprimé.",
+  "accept-tos.title": "Mise à jour des termes et conditions",
+  "accept-tos.text": "Les conditions d'utilisation et la politique de confidentialité ont été mises à jour depuis votre dernière connexion:",
+  "accept-tos.question": "Acceptez-vous les nouvelles conditions pour continuer à utiliser l'application ?",
+  "accept-tos.button": "J'accepte",
+  "accept-tos.logout": "Pas pour l'instant, me déconnecter",
+  "text.landing-page-terms-feed": "Préférences de cookies"
 }

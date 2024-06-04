@@ -385,6 +385,9 @@
   "text.landingpage.heading.gotEquipmentToShare": "I have equipment to share",
   "text.landingpage.heading.lookingForEquipment": "I am looking for equipment",
   "text.landingpage.video.description": "Sharing food equipment, explained in 2 minutes — 02:36",
+  "text.landingpage.video.cookie-notice": "This content is not available because some cookies are blocked.",
+  "text.landingpage.video.youtube-consent": "By clicking on this button, you agree that Youtube may collect data about you for targeting purposes. The video content will be displayed.",
+  "text.landingpage.video.consent-button": "I accept",
   "text.landingpage.video.id": "7iYbYBMsDy0",
   "text.landingpage.cta.list": "You wish to be contacted for a presentation of the project\nYou would like to receive personalized help\nDo you have any other questions",
   "text.landingpage.btn": "",
@@ -597,5 +600,11 @@
   "page-title.edit-alert": "Edit an email alert",
   "btn.edit-alert": "Save alert",
   "notification.edit-alert-empty": "No changes were detected in the alert. Save skipped.",
-  "error.alert-already-deleted": "Alert already been deleted."
+  "error.alert-already-deleted": "Alert already been deleted.",
+  "accept-tos.title": "Terms and Conditions Update",
+  "accept-tos.text": "The terms of service and privacy policy have been updated since your last login:",
+  "accept-tos.question": "Do you accept the new terms to continue using the application?",
+  "accept-tos.button": "I Accept",
+  "accept-tos.logout": "Not now, log me out",
+  "text.landing-page-terms-feed": "Cookies preferences"
 }

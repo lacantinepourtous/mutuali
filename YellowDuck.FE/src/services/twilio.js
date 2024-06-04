@@ -142,10 +142,16 @@ async function setToken(token) {
 async function initTwilioClient() {
   if (!twilioClient) {
     let token = await getTwilioToken();
-    twilioClient = await ConversationsClient.create(token);
-
-    twilioClient.on("messageAdded", onMessageAdded);
-    twilioClient.on("participantJoined", onParticipantJoined);
+    twilioClient = await Promise.race([
+      ConversationsClient.create(token),
+      new Promise((resolve) => {
+        setTimeout(resolve, 2500, null);
+      })
+    ]);
+    if (twilioClient) {
+      twilioClient.on("messageAdded", onMessageAdded);
+      twilioClient.on("participantJoined", onParticipantJoined);
+    }
   }
 }
 

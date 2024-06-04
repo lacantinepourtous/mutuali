@@ -101,15 +101,6 @@
       required
     />
     <s-form-input
-      v-model="postalCode"
-      id="postalCode"
-      :label="$t('label.postalCode')"
-      name="postalCode"
-      rules="required|postalCode"
-      :placeholder="$t('placeholder.postalCode')"
-      required
-    />
-    <s-form-input
       v-model="phoneNumber"
       id="phoneNumber"
       :label="$t('label.phoneNumber')"
@@ -212,7 +203,6 @@ export default {
       organizationName: "",
       organizationType: null,
       industry: null,
-      postalCode: null,
       phoneNumber: null,
       showPhoneNumber: null,
       showEmail: null,
@@ -264,7 +254,6 @@ export default {
         organizationName: this.organizationName,
         organizationType: this.organizationType,
         industry: this.industry,
-        postalCode: this.postalCode,
         phoneNumber: this.phoneNumber,
         showPhoneNumber: this.showPhoneNumber,
         showEmail: this.showEmail,
