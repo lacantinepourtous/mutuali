@@ -133,7 +133,7 @@ export default {
     // Bias autocomplete location from VueGoogleAutocomplete
     biasAutocompleteLocation() {
       const _this = this;
-      this.$gmapApiPromiseLazy().then(function() {
+      this.$gmapApiPromiseLazy().then(function () {
         navigator.geolocation.getCurrentPosition((position) => {
           // eslint-disable-next-line
           let circle = new google.maps.Circle({
@@ -257,7 +257,7 @@ export default {
     width: calc(#{$input-padding-x} + 4px);
 
     &-marker {
-      background: url("~@/assets/icons/marker-green.svg") no-repeat 0% 50%;
+      background: url("~@/assets/icons/marker-red.svg") no-repeat 0% 50%;
       background-size: contain;
     }
   }

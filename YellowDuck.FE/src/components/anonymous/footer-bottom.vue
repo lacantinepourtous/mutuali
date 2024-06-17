@@ -1,50 +1,80 @@
 <template>
-  <div class="footer-bottom gray-lighter bg-light text-center">
+  <div class="footer-bottom">
     <div class="section section--xl">
-      <p class="h3 mb-3">{{ $t("text.landing-page-project-by") }}</p>
-      <a class="footer-bottom__link link-scale" href="https://lacantinepourtous.org/" target="_blank">
-        <b-img width="192" alt="Logo Cantine pour tous" :src="require('@/assets/logos/logo-cantine.png')" class="mb-3"></b-img>
-      </a>
-      <span class="footer-bottom__items">
-        <small class="footer-bottom__item">{{ $t("text.landing-page-all-right-reserved") }}</small>
-        <small class="footer-bottom__item" v-html="$t('text.landing-page-terms-of-use')"></small>
-        <small class="footer-bottom__item" v-html="$t('text.landing-page-privacy-policy')"></small>
-      </span>
+      <div class="footer-bottom__items">
+        <div class="footer-bottom__logos">
+          <a class="footer-bottom__link footer-bottom__link--cibim" href="https://cibim.org/" target="_blank">
+            <b-img
+              width="258"
+              alt="Logo Carrefour de l'Industrie Bioalimentaire de l'Île de Montréal (CIBÎM)"
+              :src="require('@/assets/logos/logo-cibim.svg')"
+              class="mr-3"
+            ></b-img>
+          </a>
+          <a class="footer-bottom__link" href="https://www.rtcbq.com/" target="_blank">
+            <b-img
+              width="230"
+              alt="Logo Regroupement des tables de concertation bioalimentaire du Québec (RTCBQ)"
+              :src="require('@/assets/logos/logo-rtcbq.png')"
+            ></b-img>
+          </a>
+        </div>
+
+        <div class="footer-bottom__small">
+          <span class="footer-bottom__item">
+            &copy; {{ new Date().getFullYear() }}
+            {{ $t("text.landing-page-all-right-reserved") }}
+          </span>
+          <span class="footer-bottom__item" v-html="$t('text.landing-page-terms-of-use')"></span>
+          <span class="footer-bottom__item" v-html="$t('text.landing-page-privacy-policy')"></span>
+        </div>
+      </div>
     </div>
   </div>
 </template>
 
 <style lang="scss" scoped>
 .footer-bottom {
-  padding: $spacer * 6 0 $spacer * 4;
+  padding: $spacer * 4 0 $spacer * 2;
 
   @include media-breakpoint-up(md) {
-    padding: $spacer * 12 0 $spacer * 8;
+    padding: $spacer * 6 0 $spacer;
   }
 
   &__items {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-direction: column;
-
-    @include media-breakpoint-up(sm) {
-      flex-direction: row;
+    @include media-breakpoint-up(lg) {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
     }
   }
 
-  &__item:not(:last-child) {
-    margin-bottom: 8px;
+  &__small {
+    font-size: 13px;
+    margin-top: $spacer;
+    flex-grow: 1;
+    text-align: center;
 
-    @include media-breakpoint-up(sm) {
-      margin-bottom: 0;
+    @include media-breakpoint-up(lg) {
+      margin-bottom: $spacer;
+      text-align: right;
+    }
+  }
 
+  &__item {
+    white-space: nowrap;
+
+    &:not(:last-child) {
       &:after {
         content: "–";
         display: inline-block;
         margin: 0 $spacer * 0.5;
       }
     }
+  }
+
+  &__logos {
+    text-align: center;
   }
 
   &__link {

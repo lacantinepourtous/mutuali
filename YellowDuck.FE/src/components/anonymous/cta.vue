@@ -1,27 +1,29 @@
 <template>
   <div class="anonymous-cta">
     <div class="anonymous-cta__bg">
-      <img class="anonymous-cta__bg-img d-sm-none" :src="require('@/assets/ambiance/mockups-864x666.jpg')" alt="" />
-      <img class="anonymous-cta__bg-img d-none d-sm-block" :src="require('@/assets/ambiance/mockups.jpeg')" alt="" />
+      <img class="anonymous-cta__bg-img d-sm-none" :src="require('@/assets/ambiance/parlez-nous-800x630.jpg')" alt="" />
+      <img class="anonymous-cta__bg-img d-none d-sm-block" :src="require('@/assets/ambiance/parlez-nous.jpg')" alt="" />
     </div>
     <div class="section section--xl">
       <div class="anonymous-cta__content">
-        <b-card class="anonymous-cta__card" bg-variant="light" header-bg-variant="transparent">
+        <b-card class="anonymous-cta__card border-info" header-bg-variant="transparent" header-border-variant="info">
           <template #header>
             <h2 class="anonymous-cta__card-title h3 my-2">
               <svg class="mr-3" width="39" height="33" viewBox="0 0 39 33" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <path
                   d="M25.2818 0.223389H13.7186C6.17539 0.223389 0.0253906 6.37339 0.0253906 13.9166C0.0253906 18.4684 2.28039 22.6914 5.97039 25.2334C5.35539 26.3817 4.74039 27.4067 4.12539 28.2667C3.38706 29.2501 3.38706 30.5217 4.08375 31.5467C4.61708 32.3251 5.4771 32.7767 6.42042 32.7767C6.66706 32.7767 6.9121 32.7351 7.15875 32.695C11.6269 31.5067 15.7269 29.3334 18.4756 27.6516H25.2824C32.8256 27.6516 38.9756 21.5016 38.9756 13.9585C38.9756 6.41364 32.8256 0.223463 25.2824 0.223463L25.2818 0.223389ZM25.2818 25.0686H18.1068C17.8602 25.0686 17.6551 25.1502 17.4501 25.2736C15.3185 26.5852 11.0951 29.0052 6.54332 30.1936C6.42001 30.2352 6.29669 30.1936 6.21501 30.0702C6.13333 29.9469 6.13333 29.8236 6.21501 29.7019C7.11668 28.4719 7.97833 26.9952 8.79833 25.2735C9.08501 24.6585 8.83997 23.9618 8.26501 23.6335C4.73995 21.6667 2.56683 17.9353 2.56683 13.9169C2.56683 7.76689 7.56842 2.7653 13.7184 2.7653H25.28C31.43 2.7653 36.4316 7.76689 36.4316 13.9169C36.4332 20.0669 31.4316 25.0685 25.2816 25.0685L25.2818 25.0686Z"
-                  fill="#8DAECC"
+                  fill="#34a49a"
                 />
               </svg>
               {{ $t("text.landingpage.cta.title") }}
             </h2>
           </template>
           <ul class="anonymous-cta__card-list" :style="`--icon-check: url('${require('@/assets/icons/check.svg')}');`">
-            <li v-for="(item, i) in $t('text.landingpage.cta.list').split('\n')" :key="i">{{ item }}</li>
+            <li v-for="(item, i) in $t('text.landingpage.cta.list').split('\n')" :key="i">
+              {{ item }}
+            </li>
           </ul>
-          <RouterLink class="anonymous-cta__btn btn btn-primary btn-lg w-full d-block" :to="{ name: $consts.urls.URL_CONTACT }">
+          <RouterLink class="anonymous-cta__btn btn btn-info btn-lg w-full d-block" :to="{ name: $consts.urls.URL_CONTACT }">
             <svg
               class="anonymous-cta__btn-icon"
               width="22"
@@ -74,9 +76,15 @@ $card-width: 400px;
     bottom: 0;
     width: 100%;
     height: 100%;
+    display: none;
 
     @include media-breakpoint-up(sm) {
-      width: 58.33%;
+      display: block;
+      left: -120px;
+    }
+
+    @include media-breakpoint-up(lg) {
+      left: 0;
     }
   }
 
@@ -87,17 +95,18 @@ $card-width: 400px;
     bottom: 0;
     width: 100%;
     height: 100%;
-    object-fit: cover;
+    object-fit: contain;
     object-position: left center;
-
-    @include media-breakpoint-up(sm) {
-      object-position: right center;
-    }
   }
 
   &__content {
     max-width: $card-width;
     margin-left: auto;
+    margin-right: auto;
+
+    @include media-breakpoint-up(sm) {
+      margin-right: 0;
+    }
   }
 
   &__card {
@@ -115,7 +124,6 @@ $card-width: 400px;
     li {
       position: relative;
       margin-bottom: 8px;
-      color: $green-darker;
 
       &:before {
         content: "";

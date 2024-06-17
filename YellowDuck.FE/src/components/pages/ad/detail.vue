@@ -1,6 +1,6 @@
 <template>
   <div v-if="ad" class="equipment-detail fab-container" :class="{ 'equipment-detail--modal': displayMap }">
-    <div v-if="ad.isAdminOnly" class="px-3 py-2 orange equipment-detail__notif text-white">
+    <div v-if="ad.isAdminOnly" class="px-3 py-2 yellow equipment-detail__notif">
       <b-img class="equipment-detail__notif-icon" :src="require('@/assets/icons/invisible.svg')" alt="" height="20" block></b-img>
       {{ $t("banner.ad-is-admin-only") }}
       <b-button size="sm" variant="link" :to="{ name: $consts.urls.URL_AD_TRANSFER, params: { id: this.adId } }">{{
@@ -72,7 +72,9 @@
             </div>
           </div>
 
-          <p class="mt-2 text-uppercase font-weight-bold letter-spacing-wide small">{{ ad.organization }}</p>
+          <p class="mt-2 text-uppercase font-weight-bold letter-spacing-wide small">
+            {{ ad.organization }}
+          </p>
         </div>
         <h1 class="my-4">{{ ad.translationOrDefault.title }}</h1>
         <p class="mb-0 mt-n2 small text-decoration-none">
@@ -112,7 +114,9 @@
       <detail-partial-other v-if="ad.category === CATEGORY_OTHER" :ad="ad" />
 
       <div v-if="adAvailability.length" class="section section--md section--border-top py-6">
-        <h2 class="font-family-base font-weight-bold mb-4">{{ $t("label.ad-availability") }}</h2>
+        <h2 class="font-family-base font-weight-bold mb-4">
+          {{ $t("label.ad-availability") }}
+        </h2>
         <ul>
           <li v-for="weekdayAvailability in adAvailability" :key="weekdayAvailability.key" class="mb-3">
             <strong> {{ weekdayAvailability.weekday }} </strong><br />
@@ -127,11 +131,13 @@
         <ad-rating-carousel :id="adId" class="mt-4" />
       </div>
       <div class="section section--md section--border-top py-6">
-        <h2 class="font-family-base h4 font-weight-bold mb-4">{{ $t("label.ad-disclaimers") }}</h2>
+        <h2 class="font-family-base h4 font-weight-bold mb-4">
+          {{ $t("label.ad-disclaimers") }}
+        </h2>
         <div class="small rm-child-margin" v-html="$t('text.ad-disclaimers')"></div>
       </div>
       <div v-if="ad.isPublish" class="fab-container__fab section section--md">
-        <b-button v-if="!isAdOwnByCurrentUser" variant="primary" size="lg" class="text-truncate" block @click="contactUser">
+        <b-button v-if="!isAdOwnByCurrentUser" variant="admin" size="lg" class="text-truncate" block @click="contactUser">
           <b-icon icon="envelope" class="mr-1" aria-hidden="true"></b-icon>
           {{ $t("btn.contact-owner", { owner: ad.user.profile.publicName }) }}
         </b-button>
@@ -150,7 +156,9 @@
         </template>
       </div>
       <div v-else class="fab-container__fab section section--md section--padding-x bg-light py-3">
-        <p v-if="isAdOwnByCurrentUser && haveJustUnpublish">{{ $t("text.ad-notpublish-owner") }}</p>
+        <p v-if="isAdOwnByCurrentUser && haveJustUnpublish">
+          {{ $t("text.ad-notpublish-owner") }}
+        </p>
         <p v-else>{{ $t("text.ad-notpublish") }}</p>
         <template v-if="isAdOwnByCurrentUser">
           <b-button variant="primary" size="sm" class="text-truncate mr-2" @click="publishAd">
@@ -265,9 +273,15 @@ export default {
     },
     adMarkers() {
       const markerIcon = this.ad.showAddress
-        ? require("@/assets/icons/marker-green.svg")
+        ? require("@/assets/icons/marker-red.svg")
         : require("@/assets/icons/marker-radius.svg");
-      return [{ lat: this.ad.address.latitude, lng: this.ad.address.longitude, icon: markerIcon }];
+      return [
+        {
+          lat: this.ad.address.latitude,
+          lng: this.ad.address.longitude,
+          icon: markerIcon
+        }
+      ];
     },
     adPrice() {
       return this.ad.priceToBeDetermined ? this.$t("price.toBeDetermined") : this.$format.formatMoney(this.ad.price);
@@ -301,7 +315,10 @@ export default {
   },
   methods: {
     contactUser() {
-      let routeData = this.$router.resolve({ name: URL_CREATE_CONVERSATION, params: { adId: this.adId } });
+      let routeData = this.$router.resolve({
+        name: URL_CREATE_CONVERSATION,
+        params: { adId: this.adId }
+      });
       window.open(routeData.href, "_blank");
     },
     showMap() {
@@ -449,8 +466,7 @@ query LocalUser {
   }
 
   &__notif {
-    background-color: $orange;
-    color: $white;
+    background-color: $yellow;
     display: flex;
     align-items: center;
     column-gap: 12px;
@@ -464,7 +480,7 @@ query LocalUser {
       width: 100%;
       height: 50vh;
       position: relative;
-      background-color: $green-darker;
+      background-color: $gray-900;
     }
   }
 
@@ -482,7 +498,7 @@ query LocalUser {
   }
 
   &__location {
-    background: url("~@/assets/icons/marker-green.svg") no-repeat 0 0;
+    background: url("~@/assets/icons/marker-red.svg") no-repeat 0 0;
     background-size: 13px auto;
     margin: $spacer * 2 0;
     padding: 0 $spacer 0 calc(#{$spacer} + 18px);
@@ -490,7 +506,7 @@ query LocalUser {
 
   &__map {
     &-location {
-      background: $light url("~@/assets/icons/marker-green.svg") no-repeat $spacer 50%;
+      background: $light url("~@/assets/icons/marker-red.svg") no-repeat $spacer 50%;
       background-size: 13px auto;
       margin: 0;
       padding: $spacer $spacer $spacer calc(#{$spacer * 2} + 13px);

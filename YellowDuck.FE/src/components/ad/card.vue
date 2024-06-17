@@ -111,11 +111,11 @@ export default {
 
   &--admin {
     .mutuali-ad-card__pic {
-      border: 1px solid $orange;
+      border: 1px solid $yellow;
       border-right: 0;
     }
     .mutuali-ad-card__text {
-      border: 1px solid $orange;
+      border: 1px solid $yellow;
       border-left: 0;
     }
   }
@@ -170,7 +170,7 @@ export default {
   }
 
   &__overlay-admin {
-    background-color: $orange;
+    background-color: $yellow;
     opacity: 0.8;
     position: absolute;
     top: 0;

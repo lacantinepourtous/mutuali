@@ -28,12 +28,12 @@ import { VUE_APP_MUTUALI_CONTACT_MAIL } from "@/helpers/env";
 
 export default {
   methods: {
-    changeLang: function() {
+    changeLang: function () {
       i18nHelpers.changeLang();
     }
   },
   computed: {
-    contactUsEmail: function() {
+    contactUsEmail: function () {
       return VUE_APP_MUTUALI_CONTACT_MAIL;
     }
   }
@@ -44,7 +44,8 @@ export default {
 .footer-app {
   &__nav-item {
     .nav-link {
-      color: $green;
+      color: $gray-900;
+      font-weight: 500;
       transition: color 0.2s ease-in-out, text-decoration 0.2s ease-in-out;
       text-decoration: underline;
       text-underline-offset: 2px;
@@ -52,11 +53,11 @@ export default {
       text-decoration-thickness: 2px;
       &:hover,
       &.router-link-active {
-        text-decoration-color: $green-darker;
+        text-decoration-color: $green;
       }
 
       &.router-link-active {
-        color: $green-darker;
+        color: $green;
       }
     }
   }

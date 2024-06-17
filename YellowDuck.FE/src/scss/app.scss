@@ -17,7 +17,7 @@
 
 :root {
   --offset-outline-color: white;
-  --outline-color: #{$cyan-darker};
+  --outline-color: #{$green};
 
   .gray-lighter {
     --offset-outline-color: #{$gray-100};
@@ -25,7 +25,7 @@
 
   .green-lighter {
     --offset-outline-color: #{$green-lighter};
-    --outline-color: #{$gray-100};
+    --outline-color: #{$green};
   }
 
   .green {
@@ -34,18 +34,13 @@
   }
 
   .green-darker {
-    --offset-outline-color: #{$green-darker};
+    --offset-outline-color: #{$gray-900};
     --outline-color: #{$gray-100};
   }
 
-  .cyan-darker {
-    --offset-outline-color: #{$cyan-darker};
-    --outline-color: #{$gray-100};
-  }
-
-  .orange {
-    --offset-outline-color: #{$orange};
-    --outline-color: #{$gray-100};
+  .yellow {
+    --offset-outline-color: #{$yellow};
+    --outline-color: #{$gray-900};
   }
 }
 
@@ -58,6 +53,7 @@ button,
 .btn-outline-primary,
 .btn-outline-secondary,
 .btn-admin,
+.btn-info,
 .form-control,
 .custom-select,
 .navbar-text[tabindex="0"],
@@ -90,7 +86,9 @@ button,
 .btn-outline-primary,
 .btn-outline-admin,
 .btn-danger,
-.btn-admin {
+.btn-admin,
+.btn-info {
+  font-weight: 600;
   transition: background-color 0.2s ease-in-out, transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out, color 0.2s ease-in-out,
     border-color 0.2s ease-in-out;
   &:hover {
@@ -109,40 +107,36 @@ button,
 
 .btn-primary {
   &:hover {
-    box-shadow: 0px 3px 0px $green;
-    background-color: $green-darker;
+    box-shadow: 0px 3px 0px $gray-600;
+    background-color: $gray-900;
   }
 }
 
 .btn-admin {
-  border-color: $orange;
-  background-color: $orange;
-  color: $white;
+  border-color: $yellow;
+  background-color: $yellow;
 
   &:hover {
-    box-shadow: 0px 3px 0px $orange-light;
-    background-color: $orange-dark;
-    color: $white;
+    border-color: $yellow-light;
+    box-shadow: 0px 3px 0px $gray-600;
+    background-color: $yellow-light;
   }
 }
 
-.green,
-.green-lighter {
-  .btn-primary {
-    background-color: $green-darker;
-    border-color: $green-darker;
+.btn-info {
+  border-color: $green;
+  background-color: $green;
 
-    &:hover {
-      background-color: $green;
-      border-color: $green;
-      box-shadow: 0px 3px 0px $green-darker;
-    }
+  &:hover {
+    box-shadow: 0px 3px 0px $gray-600;
+    border-color: $gray-900;
+    background-color: $gray-900;
   }
 }
 
 .btn-secondary {
   &:hover {
-    box-shadow: 0px 3px 0px $green;
+    box-shadow: 0px 3px 0px $gray-600;
   }
 }
 
@@ -155,30 +149,30 @@ button,
 .btn-outline-primary {
   &:hover {
     background-color: transparent;
-    color: $green-darker;
-    box-shadow: 0px 3px 0px $gray-400;
+    color: $gray-900;
+    box-shadow: 0px 3px 0px $gray-600;
   }
 }
 
 .btn-outline-secondary {
   transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out;
-  border-color: $green;
-  color: $green;
+  border-color: $gray-600;
+  color: $gray-900;
 
   &:hover {
-    background-color: $green-darker;
-    border-color: $green-darker;
+    background-color: $gray-900;
+    border-color: $gray-900;
     color: $gray-100;
   }
 }
 
 .btn-outline-admin {
-  border-color: $orange;
-  color: $orange;
+  border-color: $gray-600;
+  color: $gray-900;
   &:hover {
     background-color: transparent;
-    color: $orange;
-    box-shadow: 0px 3px 0px $orange-light;
+    color: $gray-900;
+    box-shadow: 0px 3px 0px $gray-600;
   }
 }
 
@@ -201,16 +195,16 @@ a[href^="tel:"] {
 }
 
 .link-title {
-  color: $gray-100;
+  color: inherit;
   text-decoration: underline;
   text-underline-offset: 2px;
   text-decoration-thickness: 2px;
-  transition: color 0.2s ease-in-out;
+  transition: text-decoration 0.3s ease;
 
   &:hover,
   &:focus,
   &:active {
-    color: $yellow;
+    color: inherit;
     text-decoration-thickness: 4px;
   }
 }
@@ -232,7 +226,7 @@ a[href^="tel:"] {
 
   &:hover {
     color: $gray-100;
-    background-color: $green-darker;
+    background-color: $gray-900;
   }
 }
 
@@ -242,7 +236,7 @@ a[href^="tel:"] {
   border-radius: 50%;
 
   &:hover {
-    background-color: $green-darker;
+    background-color: $gray-900;
     color: $gray-100;
   }
 }
@@ -259,7 +253,7 @@ a[href^="tel:"] {
     &:hover,
     &:focus,
     &:active {
-      color: $yellow;
+      color: $white;
     }
   }
 }
@@ -272,7 +266,7 @@ a[href^="tel:"] {
     &:hover,
     &:focus,
     &:active {
-      color: $yellow;
+      color: $white;
     }
   }
 }
@@ -302,10 +296,7 @@ dl {
 }
 
 h1,
-.h1 {
-  color: $green-dark;
-}
-
+.h1,
 h2,
 .h2,
 h3,
@@ -316,5 +307,5 @@ h5,
 .h5,
 h6,
 .h6 {
-  color: $green;
+  color: $primary;
 }

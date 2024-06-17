@@ -1,5 +1,5 @@
 <template>
-  <div class="green-lighter green-section w-full text-white">
+  <div class="green-lighter green-section w-full">
     <div class="section section--lg">
       <slot></slot>
       <div v-if="$slots.form" class="green-section__form">
@@ -13,7 +13,7 @@
 $form-width: 440px;
 
 .green-section {
-  background-color: $green-dark;
+  background-color: $green-lighter;
   padding: $spacer * 2 0;
 
   @include media-breakpoint-up(sm) {
@@ -41,7 +41,6 @@ $form-width: 440px;
   h2 {
     margin-top: $spacer * 3;
     margin-bottom: $spacer * 1.5;
-    color: $white;
   }
 
   ul {
@@ -54,10 +53,6 @@ $form-width: 440px;
 
   .btn {
     margin: $spacer * 1 0;
-  }
-
-  .form-text .text-info {
-    color: $white !important;
   }
 
   .invalid-feedback {

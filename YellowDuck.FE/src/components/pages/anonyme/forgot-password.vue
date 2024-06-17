@@ -23,7 +23,7 @@
       v-else
       :title="$t('form-complete.reset-password.title')"
       :description="$t('form-complete.reset-password.description', { email })"
-      :image="require('@/assets/icons/adult.png')"
+      :image="require('@/assets/icons/adult.svg')"
     />
   </div>
 </template>

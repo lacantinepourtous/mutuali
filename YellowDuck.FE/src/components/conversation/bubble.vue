@@ -15,7 +15,12 @@
       <p v-if="hasActions" class="text-light font-weight-bold">
         <span v-if="isRatingRequest && contractId" class="conversation-bubble__link">
           <b-icon icon="star-half" class="mr-2" aria-hidden="true"></b-icon>
-          <router-link :to="{ name: $consts.urls.URL_CONTRACT_RATING, params: { id: this.contractId } }">
+          <router-link
+            :to="{
+              name: $consts.urls.URL_CONTRACT_RATING,
+              params: { id: this.contractId }
+            }"
+          >
             {{ $t("conversation.btn-rate-transaction") }}
           </router-link>
         </span>
@@ -37,7 +42,7 @@
         </span>
       </p>
       <p class="small text-right m-0" :class="{ 'text-muted': isCurrentUser }">
-        <img class="mt-n1 mr-1" :src="messageIcon(isSystem)" :alt="$t('alt.message-sent-at')" />
+        <img class="conversation-bubble__icon mt-n1 mr-1" :src="messageIcon(isSystem)" :alt="$t('alt.message-sent-at')" />
         {{ messageDate }}
       </p>
     </div>
@@ -87,7 +92,7 @@ export default {
     };
   },
   computed: {
-    bodyWithLink: function() {
+    bodyWithLink: function () {
       return linkifyHtml(this.body, {
         defaultProtocol: "https",
         target: {
@@ -95,19 +100,19 @@ export default {
         }
       });
     },
-    messageDate: function() {
+    messageDate: function () {
       return i18nHelpers.getLocalizedDate(this.dateUpdated, SHORT_HOUR_MINUTE);
     },
-    hasActions: function() {
+    hasActions: function () {
       return "Action" in this.attributes && this.handledActions.includes(this.attributes.Action);
     },
-    isRatingRequest: function() {
+    isRatingRequest: function () {
       return this.hasActions && this.attributes.Action === RATING_REQUEST;
     },
-    isCreateConversation: function() {
+    isCreateConversation: function () {
       return this.hasActions && this.attributes.Action === CREATE_CONVERSATION;
     },
-    isContractCreatedOrUpdated: function() {
+    isContractCreatedOrUpdated: function () {
       let result = this.hasActions && [CONTRACT_CREATED, CONTRACT_UPDATED].includes(this.attributes.Action);
       if (result && (this.contractId === "" || this.contractId === null)) {
         this.$emit("loadContractId");
@@ -116,10 +121,10 @@ export default {
     }
   },
   methods: {
-    messageIcon: function(isSystem) {
+    messageIcon: function (isSystem) {
       return isSystem ? require("@/assets/icons/mutuali.svg") : require("@/assets/icons/user.svg");
     },
-    onCreateConversation: function() {
+    onCreateConversation: function () {
       this.$emit("createConversation");
     }
   }
@@ -193,6 +198,10 @@ export default {
     &:focus {
       color: $gray-100 !important;
     }
+  }
+
+  &__icon {
+    width: 20px;
   }
 }
 </style>

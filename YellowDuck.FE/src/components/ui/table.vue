@@ -60,57 +60,55 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-  .table {
-    display: flex;
-    flex-direction: column;
-    &__container {
-      margin: -0.5rem 0;
-      overflow-x: auto;
+.table {
+  display: flex;
+  flex-direction: column;
+  &__container {
+    margin: -0.5rem 0;
+    overflow-x: auto;
 
-      @include media-breakpoint-up(sm) {
-        margin: -0.5rem -2rem;
-      }
-
-      @include media-breakpoint-up(lg) {
-        margin: -0.5rem -3rem;
-      }
+    @include media-breakpoint-up(sm) {
+      margin: -0.5rem -2rem;
     }
 
-    &__inside-container {
-      padding: 0.5rem 0;
-      display: inline-block;
-      text-align: middle;
-      min-width: 100%;
-
-      @include media-breakpoint-up(sm) {
-        padding: 0.5rem 2rem;
-      }
-
-      @include media-breakpoint-up(lg) {
-        padding: 0.5rem 3rem;
-      }
-    }
-
-    &__content {
-      position: relative;
-      width: 100%;
-      overflow: hidden;
-    }
-
-    &__table {
-      min-width: 100%;
-      border-top-width: 0px;
-      border-bottom-width: 2px;
-      border-color: $gray-700;
-
-      thead {
-        th {
-          border-top-width: 0;
-          border-bottom-width: 1px;
-        }
-      }
-
-      
+    @include media-breakpoint-up(lg) {
+      margin: -0.5rem -3rem;
     }
   }
+
+  &__inside-container {
+    padding: 0.5rem 0;
+    display: inline-block;
+    text-align: middle;
+    min-width: 100%;
+
+    @include media-breakpoint-up(sm) {
+      padding: 0.5rem 2rem;
+    }
+
+    @include media-breakpoint-up(lg) {
+      padding: 0.5rem 3rem;
+    }
+  }
+
+  &__content {
+    position: relative;
+    width: 100%;
+    overflow: hidden;
+  }
+
+  &__table {
+    min-width: 100%;
+    border-top-width: 0px;
+    border-bottom-width: 2px;
+    border-color: $gray-600;
+
+    thead {
+      th {
+        border-top-width: 0;
+        border-bottom-width: 1px;
+      }
+    }
+  }
+}
 </style>
