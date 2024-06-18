@@ -5,7 +5,7 @@
       v-else
       :title="$t('add-payment.title')"
       :description="$t('add-payment.description')"
-      :image="require('@/assets/icons/adult.png')"
+      :image="require('@/assets/icons/adult.svg')"
       :ctas="formCompleteCtas"
     />
   </div>

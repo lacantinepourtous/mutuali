@@ -41,7 +41,7 @@ export default {
     border-radius: 50%;
     height: 13px;
     width: 13px;
-    color: $blue;
+    color: $gray-900;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -53,7 +53,7 @@ export default {
 
     &:hover,
     &:focus {
-      background-color: $blue;
+      background-color: $green;
       color: $white;
       transform: translate(0, 0);
     }

@@ -7,14 +7,14 @@
       <form-complete
         :title="$t('form-complete.error-reset-password.title')"
         :description="$t('form-complete.error-reset-password.description', { email })"
-        :image="require('@/assets/icons/adult.png')"
+        :image="require('@/assets/icons/adult.svg')"
       />
     </template>
     <template v-else-if="showError">
       <form-complete
         :title="$t('form-complete.error-reset-password.title')"
         :description="$t('reset-password.error-text', { email })"
-        :image="require('@/assets/icons/adult.png')"
+        :image="require('@/assets/icons/adult.svg')"
         :ctas="formCompleteErrorCtas"
       />
     </template>

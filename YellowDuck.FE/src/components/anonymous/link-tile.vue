@@ -39,7 +39,6 @@ export default {
 <style lang="scss" scoped>
 $tile-width: 400px;
 .link-tile {
-  color: $white;
   text-align: center;
   display: flex;
   flex-direction: column;

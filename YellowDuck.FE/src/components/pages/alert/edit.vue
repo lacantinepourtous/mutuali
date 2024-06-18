@@ -19,7 +19,7 @@
       v-else
       :title="$t('form-complete.edit-alert.title')"
       :description="$t('form-complete.edit-alert.description')"
-      :image="require('@/assets/icons/checklist.png')"
+      :image="require('@/assets/icons/checklist-yellow.svg')"
       :ctas="formCompleteCtas"
     />
   </div>
@@ -52,7 +52,7 @@ export default {
     };
   },
   computed: {
-    alertId: function() {
+    alertId: function () {
       return this.$route.params.id;
     }
   },

@@ -1,7 +1,7 @@
 <template>
   <b-navbar class="gray-lighter nav-base" variant="light" :aria-label="ariaTitle || null">
-    <b-navbar-brand class="link-scale" :to="{ name: $consts.urls.URL_ROOT }">
-      <span class="nav-base__logo" :class="{ 'nav-base__logo--condensed': isConnected }">
+    <b-navbar-brand :to="{ name: $consts.urls.URL_ROOT }">
+      <span class="nav-base__logo">
         <span class="sr-only">{{ $t("sr.homepage") }}</span>
       </span>
     </b-navbar-brand>
@@ -43,18 +43,17 @@ export default {
 <style lang="scss">
 .nav-base {
   min-height: $navbar-padding-y * 2 + $navbar-brand-padding-y * 2 + $navbar-brand-height;
+  width: 100%;
 
   &__logo {
-    background: url("~@/assets/logo.svg") no-repeat;
+    background: url("~@/assets/logos/logo-mutuali.svg") no-repeat;
     background-size: auto 100%;
     display: block;
-    height: 26px;
-    width: 113px;
+    height: 28px;
+    width: 107px;
 
     @include media-breakpoint-down(xs) {
-      &--condensed {
-        width: 28px;
-      }
+      width: 28px;
     }
   }
 }

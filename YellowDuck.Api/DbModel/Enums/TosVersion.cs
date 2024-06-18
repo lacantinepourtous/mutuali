@@ -7,6 +7,9 @@
         // Version initial
         Version1 = 1,
 
-        Latest = Version1
+        // Version CIBIM - Juin 2024
+        Version2 = 2,
+
+        Latest = Version2
     }
 }

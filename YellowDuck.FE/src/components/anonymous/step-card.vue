@@ -4,7 +4,7 @@
       <span class="step-card__number font-weight-bolder text-white">{{ counter }}</span>
       <img class="step-card__img" :class="{ 'step-card__img--alt-position': imgAltPos }" :src="imgSrc" alt="" />
     </div>
-    <p class="h4 text-white">
+    <p class="h4 step-card__text">
       <slot></slot>
     </p>
   </div>
@@ -31,7 +31,6 @@ $circle-width: 100px;
 $card-width: 400px;
 .step-card {
   & {
-    background-color: $cyan-darker;
     max-width: $card-width;
     height: 100%;
     display: flex;
@@ -41,11 +40,43 @@ $card-width: 400px;
     border-radius: 12px;
   }
 
+  &--green {
+    background-color: $green;
+
+    .step-card__number {
+      -webkit-text-stroke: 3px $green;
+    }
+
+    .step-card__text {
+      color: white;
+    }
+  }
+
+  &--yellow {
+    background-color: $yellow;
+
+    .step-card__number {
+      -webkit-text-stroke: 3px $yellow;
+    }
+  }
+
+  &--red {
+    background-color: $red;
+
+    .step-card__number {
+      -webkit-text-stroke: 3px $red;
+    }
+
+    .step-card__text {
+      color: white;
+    }
+  }
+
   &__circle {
     position: relative;
     width: $circle-width;
     height: $circle-width;
-    background-color: $yellow;
+    background-color: white;
     border-radius: 50%;
     margin: $spacer * 2 0;
   }
@@ -57,7 +88,6 @@ $card-width: 400px;
     font-size: 96px;
     font-family: $font-family-brand;
     line-height: 1;
-    -webkit-text-stroke: 3px $cyan-darker;
   }
 
   &__img {

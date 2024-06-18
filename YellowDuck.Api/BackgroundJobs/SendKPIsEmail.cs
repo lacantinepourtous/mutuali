@@ -51,7 +51,6 @@ namespace YellowDuck.Api.BackgroundJobs
                 AdByOrganizationType = ads.GroupBy(x => x.User.Profile.OrganizationType).ToList(),
                 AdByRegion = ads.GroupBy(x => x.Address.Locality).ToList(),
                 AdByPostalCode = ads.GroupBy(x => x.Address.PostalCode).ToList(),
-                UserByPostalCode = users.GroupBy(x => x.Profile.PostalCode).ToList()
             };
 
             await mailer.Send(model);

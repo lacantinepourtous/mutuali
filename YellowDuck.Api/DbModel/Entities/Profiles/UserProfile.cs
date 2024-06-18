@@ -42,7 +42,7 @@ namespace YellowDuck.Api.DbModel.Entities.Profiles
 
         public bool ContactAuthorizationNews { get; set; }
 
-        public OrganizationType OrganizationType { get;set; }
+        public OrganizationType OrganizationType { get; set; }
         public string OrganizationTypeOtherSpecification { get; set; }
 
         public Industry Industry { get; set; }

@@ -72,15 +72,6 @@
         required
       />
       <s-form-input
-        v-model="form.postalCode"
-        id="postalCode"
-        :label="$t('label.postalCode')"
-        name="postalCode"
-        rules="required|postalCode"
-        :placeholder="$t('placeholder.postalCode')"
-        required
-      />
-      <s-form-input
         v-model="form.phoneNumber"
         id="phoneNumber"
         :label="$t('label.phoneNumber')"
@@ -141,7 +132,6 @@ export default {
         organizationTypeOtherSpecification: "",
         industry: null,
         industryOtherSpecification: "",
-        postalCode: null,
         phoneNumber: null,
         showPhoneNumber: null,
         showEmail: null
@@ -226,7 +216,6 @@ export default {
           "organizationTypeOtherSpecification",
           "industry",
           "industryOtherSpecification",
-          "postalCode",
           "phoneNumber",
           "showPhoneNumber",
           "showEmail"
@@ -255,7 +244,6 @@ query UserProfileById($id: ID!) {
     organizationTypeOtherSpecification
     industry
     industryOtherSpecification
-    postalCode
     phoneNumber
     showPhoneNumber
     showEmail

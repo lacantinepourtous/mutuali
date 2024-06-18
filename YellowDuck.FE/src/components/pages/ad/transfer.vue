@@ -34,7 +34,7 @@
       v-else
       :title="$t('form-complete.transfer-ad.title')"
       :description="$t('form-complete.transfer-ad.description')"
-      :image="require('@/assets/icons/checklist.png')"
+      :image="require('@/assets/icons/checklist-yellow.svg')"
       :ctas="formCompleteCtas"
     />
   </div>

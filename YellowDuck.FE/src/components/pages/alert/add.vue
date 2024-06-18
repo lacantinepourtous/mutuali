@@ -14,7 +14,7 @@
       v-else
       :title="$t('form-complete.create-alert.title')"
       :description="$t('form-complete.create-alert.description')"
-      :image="require('@/assets/icons/checklist.png')"
+      :image="require('@/assets/icons/checklist-yellow.svg')"
       :ctas="formCompleteCtas"
     />
   </div>
