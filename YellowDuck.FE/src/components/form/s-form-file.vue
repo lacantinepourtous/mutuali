@@ -75,7 +75,7 @@ export default {
 
   &:hover {
     &::after {
-      background-color: $green-darker;
+      background-color: $gray-900;
       color: $gray-100;
     }
   }

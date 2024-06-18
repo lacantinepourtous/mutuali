@@ -1,9 +1,9 @@
 <template>
-  <div class="gray-lighter anonymous-nav bg-light">
-    <div class="anonymous-nav__content section section--xl border-b border-gray-600">
-      <b-navbar toggleable="lg" type="light" variant="light" class="px-0 pt-4 pb-3">
-        <b-navbar-brand class="link-scale d-flex align-items-center mr-lg-4" :to="{ name: $consts.urls.URL_ROOT }">
-          <b-img class="anonymous-nav__logo" alt="Mutuali" :src="require('@/assets/logo.svg')"></b-img>
+  <div class="anonymous-nav">
+    <div class="anonymous-nav__content section section--xl border-b">
+      <b-navbar toggleable="lg" type="light" class="px-0 pt-4 pb-3">
+        <b-navbar-brand class="d-flex align-items-center mr-lg-4" :to="{ name: $consts.urls.URL_ROOT }">
+          <b-img class="anonymous-nav__logo" alt="Mutuali" :src="require('@/assets/logos/logo-mutuali-cibim.svg')"></b-img>
         </b-navbar-brand>
 
         <b-navbar-toggle class="anonymous-nav__toggle" target="nav-collapse"></b-navbar-toggle>
@@ -33,7 +33,7 @@
                 </router-link>
               </li>
               <li class="nav-item">
-                <router-link class="btn btn-primary" :to="{ name: $consts.urls.URL_USER_SUBSCRIBE }">
+                <router-link class="btn btn-admin" :to="{ name: $consts.urls.URL_USER_SUBSCRIBE }">
                   {{ this.$t("btn.landing-create-account") }}
                 </router-link>
               </li>
@@ -42,14 +42,20 @@
               <li class="nav-item">
                 <router-link
                   class="btn btn-primary"
-                  :to="{ name: $consts.urls.URL_USER_PROFILE_DETAIL, params: { id: userProfileId } }"
+                  :to="{
+                    name: $consts.urls.URL_USER_PROFILE_DETAIL,
+                    params: { id: userProfileId }
+                  }"
                 >
                   <b-icon-person-circle aria-hidden="true"></b-icon-person-circle>
                   {{ userProfilePublicName }}
                 </router-link>
               </li>
             </template>
-            <b-nav-item class="anonymous-nav__item mr-lg-3" @click="changeLang">{{ $t("btn.change-lang") }}</b-nav-item>
+            <b-nav-item class="anonymous-nav__item ml-2" @click="changeLang">
+              <span aria-hidden="true">{{ $t("btn.change-lang-shortcut") }}</span>
+              <span class="sr-only">{{ $t("btn.change-lang") }}</span>
+            </b-nav-item>
           </b-navbar-nav>
         </b-collapse>
       </b-navbar>
@@ -62,13 +68,13 @@ import i18nHelpers from "@/helpers/i18n";
 
 export default {
   computed: {
-    isConnected: function() {
+    isConnected: function () {
       return this.user && this.user.isConnected;
     },
-    userProfileId: function() {
+    userProfileId: function () {
       return this.me ? this.me.profile.id : "";
     },
-    userProfilePublicName: function() {
+    userProfilePublicName: function () {
       return this.me ? this.me.profile.publicName : "";
     }
   },
@@ -88,7 +94,7 @@ export default {
     }
   },
   methods: {
-    changeLang: function() {
+    changeLang: function () {
       i18nHelpers.changeLang();
     }
   }
@@ -119,7 +125,7 @@ query Me {
 $logo-width: 144px;
 .anonymous-nav {
   &__content {
-    border-bottom: solid 2px $secondary;
+    border-bottom: solid 2px $green-lighter;
   }
 
   &__logo {
@@ -133,7 +139,7 @@ $logo-width: 144px;
 
   &__item {
     .nav-link {
-      color: $green;
+      color: $gray-800;
       transition: color 0.2s ease-in-out, text-decoration 0.2s ease-in-out;
       text-decoration: underline;
       text-underline-offset: 2px;
@@ -141,11 +147,11 @@ $logo-width: 144px;
       text-decoration-thickness: 2px;
       &:hover,
       &.router-link-active {
-        text-decoration-color: $green-darker;
+        text-decoration-color: $primary;
       }
 
       &.router-link-active {
-        color: $green-darker;
+        color: $primary;
       }
     }
   }

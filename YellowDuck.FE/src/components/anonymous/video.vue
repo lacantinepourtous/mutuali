@@ -35,7 +35,7 @@
         </div>
       </div>
     </div>
-    <p class="text-white text-center mt-4 mb-0">{{ $t("text.landingpage.video.description") }}</p>
+    <p class="text-center mt-4 mb-0">{{ $t("text.landingpage.video.description") }}</p>
   </div>
 </template>
 
@@ -156,7 +156,7 @@ $video-overlap: 100px;
 
     &:hover,
     &:focus {
-      color: $green-darker;
+      color: $gray-900;
     }
   }
 

@@ -27,9 +27,13 @@
             </span>
           </template>
           <template v-if="!isAdmin">
-            <b-dropdown-item :to="{ name: $consts.urls.URL_USER_PROFILE_DETAIL, params: { id: userProfileId } }">{{
-              $t("btn.my-profile")
-            }}</b-dropdown-item>
+            <b-dropdown-item
+              :to="{
+                name: $consts.urls.URL_USER_PROFILE_DETAIL,
+                params: { id: userProfileId }
+              }"
+              >{{ $t("btn.my-profile") }}</b-dropdown-item
+            >
             <b-dropdown-item :to="{ name: $consts.urls.URL_MANAGE_ADS }">{{ $t("btn.manage-my-ads") }}</b-dropdown-item>
             <b-dropdown-item :to="{ name: $consts.urls.URL_AD_ALERT_LIST }">{{ $t("btn.manage-my-alerts") }}</b-dropdown-item>
           </template>
@@ -172,10 +176,11 @@ export default {
 .nav-header {
   .nav-link {
     position: relative;
+    font-weight: 500;
 
     &.nav-link,
     &.router-link-active {
-      color: $green-darker;
+      color: $gray-900;
 
       &::before {
         background-color: transparent;
@@ -194,7 +199,7 @@ export default {
     &.nav-link:not(.router-link-active) {
       &:hover {
         &::before {
-          background-color: $green-darker;
+          background-color: $gray-900;
         }
       }
     }

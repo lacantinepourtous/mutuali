@@ -1,5 +1,5 @@
 <template>
-  <div class="bg-light w-100">
+  <div class="w-100">
     <div class="section section--xl">
       <BackLink />
     </div>

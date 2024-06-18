@@ -45,7 +45,7 @@ export default {
     SField
   },
   computed: {
-    computedOptions: function() {
+    computedOptions: function () {
       let options = [...this.options];
       if (this.addDisableOptions || this.placeholder) {
         options.unshift({
@@ -79,7 +79,7 @@ export default {
   }
 
   option {
-    color: $green-darker;
+    color: $gray-900;
   }
 }
 </style>

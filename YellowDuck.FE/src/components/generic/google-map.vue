@@ -15,7 +15,7 @@
       :position="{ lat: m.lat, lng: m.lng }"
       :clickable="m.clickable || markerClickable"
       :draggable="m.draggable || markerDraggable"
-      :icon="m.icon || require('@/assets/icons/marker-green.svg')"
+      :icon="m.icon || require('@/assets/icons/marker-red.svg')"
       @click="markerClick(m)"
     ></GmapMarker>
   </GmapMap>
@@ -93,7 +93,9 @@ export default {
     this.$refs.mapRef.$mapPromise.then((map) => {
       map.mapTypes.set(
         "styled_map",
-        new this.google.maps.StyledMapType(require("@/assets/gmap/style.json"), { name: "Styled Map" })
+        new this.google.maps.StyledMapType(require("@/assets/gmap/style.json"), {
+          name: "Styled Map"
+        })
       );
 
       this.google.maps.event.addListenerOnce(map, "idle", () => {
@@ -110,13 +112,13 @@ export default {
     }
   },
   computed: {
-    allMarkers: function() {
+    allMarkers: function () {
       if (this.positionMarker !== null) {
         return [...this.markers, this.positionMarker];
       }
       return this.markers;
     },
-    options: function() {
+    options: function () {
       return {
         zoomControl: this.zoomControl,
         zoomControlOptions: {
@@ -132,7 +134,7 @@ export default {
       };
     },
     google: gmapApi,
-    center: function() {
+    center: function () {
       if (this.latitude && this.longitude) {
         return { lat: this.latitude, lng: this.longitude };
       } else if (this.geolocLatitude && this.geolocLongitude) {
@@ -144,9 +146,12 @@ export default {
       let latitude = this.markers.reduce((accumulator, x) => accumulator + parseFloat(x.lat), 0);
       let longitude = this.markers.reduce((accumulator, x) => accumulator + parseFloat(x.lng), 0);
 
-      return { lat: latitude / this.markers.length, lng: longitude / this.markers.length };
+      return {
+        lat: latitude / this.markers.length,
+        lng: longitude / this.markers.length
+      };
     },
-    computedZoom: function() {
+    computedZoom: function () {
       if (this.zoom) {
         return this.zoom;
       }
@@ -214,7 +219,7 @@ export default {
         this.preventEmitEvents = false;
       }
     },
-    generateBoundsWithMarkers: function() {
+    generateBoundsWithMarkers: function () {
       if (!this.google) return;
       var bounds = new this.google.maps.LatLngBounds();
       for (var marker of this.markers) {

@@ -62,7 +62,9 @@
       <div class="alert-form__row">
         <div class="alert-form__col">
           <fieldset id="availabilitiesFieldset" aria-labelledby="availabilitiesFieldset__legend">
-            <legend id="availabilitiesFieldset__legend" class="h2 my-0">{{ $t("label.availability") }}</legend>
+            <legend id="availabilitiesFieldset__legend" class="h2 my-0">
+              {{ $t("label.availability") }}
+            </legend>
             <b-row>
               <b-col>
                 <s-form-checkbox
@@ -89,7 +91,9 @@
       <div class="alert-form__row">
         <div class="alert-form__col">
           <fieldset id="radiusFieldset" aria-labelledby="radiusFieldset__legend">
-            <legend id="radiusFieldset__legend" class="h2 my-0">{{ $t("label.radius") }}</legend>
+            <legend id="radiusFieldset__legend" class="h2 my-0">
+              {{ $t("label.radius") }}
+            </legend>
             <s-form-input
               id="radius"
               type="number"
@@ -118,7 +122,9 @@
       <div class="alert-form__row">
         <div class="alert-form__col">
           <fieldset id="emailFieldset" aria-labelledby="emailFieldset__legend">
-            <legend id="emailFieldset__legend" class="h2 my-0">{{ $t("label.send-to") }}</legend>
+            <legend id="emailFieldset__legend" class="h2 my-0">
+              {{ $t("label.send-to") }}
+            </legend>
             <s-form-input
               id="email"
               type="email"
@@ -137,7 +143,7 @@
     <div class="section section--md section--padding-x my-4 pb-5 rm-child-margin">
       <div class="fab-container__fab">
         <div class="section section--md">
-          <b-button :disabled="disabledBtn" type="submit" variant="primary" size="lg" block :aria-label="$t('sr.edit')">
+          <b-button :disabled="disabledBtn" type="submit" variant="admin" size="lg" block :aria-label="$t('sr.edit')">
             <b-icon icon="pencil" class="mr-2" aria-hidden="true"></b-icon>{{ btnLabel }}
           </b-button>
         </div>
@@ -181,7 +187,14 @@ const defaultFormValue = {
 };
 export default {
   mixins: [AdCategory, ProfessionalKitchenEquipment, AvailabilityWeekday, AdDeliveryTruckType],
-  components: { SForm, SFormCheckboxGroup, SFormCheckbox, SFormSelect, SFormGoogleAutocomplete, SFormInput },
+  components: {
+    SForm,
+    SFormCheckboxGroup,
+    SFormCheckbox,
+    SFormSelect,
+    SFormGoogleAutocomplete,
+    SFormInput
+  },
   props: {
     btnLabel: {
       type: String,
@@ -199,7 +212,7 @@ export default {
     }
   },
   methods: {
-    submitForm: function() {
+    submitForm: function () {
       let input = {};
 
       const maybeEditedFields = [
@@ -235,8 +248,14 @@ export default {
       professionalKitchenEquipment: [],
       categoryOptions: [
         { value: null, text: this.$t("select.all-equipment") },
-        { value: CATEGORY_PROFESSIONAL_KITCHEN, text: this.$t("select.category-professional-kitchen") },
-        { value: CATEGORY_DELIVERY_TRUCK, text: this.$t("select.category-delivery-truck") },
+        {
+          value: CATEGORY_PROFESSIONAL_KITCHEN,
+          text: this.$t("select.category-professional-kitchen")
+        },
+        {
+          value: CATEGORY_DELIVERY_TRUCK,
+          text: this.$t("select.category-delivery-truck")
+        },
         { value: CATEGORY_STORAGE_SPACE, text: this.$t("select.category-storage-space") },
         { value: CATEGORY_OTHER, text: this.$t("select.category-other") }
       ],

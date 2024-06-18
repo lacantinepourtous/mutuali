@@ -1,5 +1,5 @@
 <template>
-  <div class="bg-light w-100">
+  <div class="w-100">
     <div class="section section--xl">
       <BackLink />
     </div>
@@ -15,7 +15,7 @@
     </div>
 
     <GreenSection>
-      <div v-html="$t('text.about-us.cantine')"></div>
+      <div v-html="$t('text.about-us.cibim')"></div>
       <div v-html="$t('text.about-us.pooling')"></div>
       <div v-html="$t('text.about-us.mutuali')"></div>
     </GreenSection>
