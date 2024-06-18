@@ -1,0 +1,99 @@
+/* Style du plugin TermsFeed - Free Cookie Consent */
+/* Bannière */
+#termsfeed-com---nb {
+  .cc-nb-main-container {
+    background-color: $gray-100;
+    font-family: $font-family-base;
+  }
+
+  .cc-nb-buttons-container {
+    display: flex;
+    flex-wrap: wrap;
+    column-gap: 12px;
+    row-gap: 8px;
+
+    .cc-nb-changep,
+    .cc-nb-okagree,
+    .cc-nb-reject {
+      margin: 0 !important;
+    }
+  }
+}
+
+/* Dialogue */
+#termsfeed-com---preferences-center {
+  & {
+    font-family: $font-family-base;
+  }
+
+  .cc-pc-head-lang select {
+    &:focus {
+      outline: none;
+      box-shadow: 0 0 0 1px $green;
+    }
+  }
+
+  .cc-custom-checkbox input.cc-custom-checkbox {
+    &:focus {
+      outline: none;
+      box-shadow: none;
+      background-color: transparent;
+    }
+
+    &:active {
+      background-color: transparent !important;
+    }
+
+    &:focus-visible {
+      & ~ label:before {
+        background-color: $green;
+      }
+    }
+  }
+
+  .cc-pc-head-close {
+    &:focus {
+      outline: none;
+      border: 0;
+      box-shadow: 0 0 0 1px $green;
+    }
+  }
+
+  .cc-cp-body-tabs-item-link,
+  a {
+    &:focus {
+      outline: none;
+    }
+
+    &:focus-visible {
+      box-shadow: 0 0 0 1px $green;
+    }
+  }
+
+  .cc-cp-foot-save {
+    opacity: 1;
+  }
+}
+
+/* Boutons */
+/* Style général */
+#termsfeed-com---nb .cc-nb-okagree,
+#termsfeed-com---nb .cc-nb-reject,
+#termsfeed-com---nb .cc-nb-changep,
+#termsfeed-com---preferences-center .cc-cp-foot-save {
+  border-radius: 4px;
+  color: $gray-900;
+}
+
+/* Primaire */
+#termsfeed-com---nb .cc-nb-okagree,
+#termsfeed-com---nb .cc-nb-reject,
+#termsfeed-com---preferences-center .cc-cp-foot-save {
+  background-color: $yellow;
+}
+
+/* Outline */
+#termsfeed-com---nb .cc-nb-changep {
+  background-color: transparent;
+  border: 1px solid $gray-900;
+}
