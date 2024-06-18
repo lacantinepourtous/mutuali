@@ -79,7 +79,6 @@ namespace YellowDuck.Api.Requests.Commands.Mutations.Profiles
             request.OrganizationTypeOtherSpecification.IfSet(v => profile.OrganizationTypeOtherSpecification = v.Trim());
             request.Industry.IfSet(v => profile.Industry = v);
             request.IndustryOtherSpecification.IfSet(v => profile.IndustryOtherSpecification = v.Trim());
-            request.PostalCode.IfSet(v => profile.PostalCode = v.Trim());
             request.PhoneNumber.IfSet(v => profile.PhoneNumber = v.Trim());
             request.ShowPhoneNumber.IfSet(v => profile.ShowPhoneNumber = v);
             request.ShowEmail.IfSet(v => profile.ShowEmail = v);

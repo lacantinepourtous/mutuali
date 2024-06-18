@@ -167,17 +167,6 @@
 </p>
 
 <p>
-    <b>Liste des codes postaux associés à un compte utilisateur</b>
-    <br />
-    @{
-        foreach (var group in Model.UserByPostalCode)
-        {
-        <span>@(group.Key);@(group.Count())<br /></span>
-        }
-    }
-</p>
-
-<p>
     <b>Liste des codes postaux associés à une annonce</b>
     <br />
     @{

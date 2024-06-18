@@ -27,6 +27,9 @@
           </span>
           <span class="footer-bottom__item" v-html="$t('text.landing-page-terms-of-use')"></span>
           <span class="footer-bottom__item" v-html="$t('text.landing-page-privacy-policy')"></span>
+          <span class="footer-bottom__item">
+            <a href="#" @click.prevent="$termsFeed.openPreferencesCenter()">{{ $t("text.landing-page-terms-feed") }}</a>
+          </span>
         </div>
       </div>
     </div>
@@ -42,7 +45,7 @@
   }
 
   &__items {
-    @include media-breakpoint-up(lg) {
+    @include media-breakpoint-up(xl) {
       display: flex;
       align-items: flex-end;
       justify-content: space-between;
@@ -55,7 +58,7 @@
     flex-grow: 1;
     text-align: center;
 
-    @include media-breakpoint-up(lg) {
+    @include media-breakpoint-up(xl) {
       margin-bottom: $spacer;
       text-align: right;
     }

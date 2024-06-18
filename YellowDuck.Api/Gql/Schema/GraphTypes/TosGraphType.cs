@@ -9,18 +9,18 @@ namespace YellowDuck.Api.Gql.Schema.GraphTypes
     {
         private readonly TosVersion acceptedVersion;
         public DateTime acceptationDate;
-        public string acceptationIpAddress;
 
-        public TosGraphType(string userId, TosVersion acceptedVersion, DateTime acceptationDate, string acceptationIpAddress)
+        public TosGraphType(AppUser appUser)
         {
-            Id = Id.New<AppUser>(userId);
-            this.acceptedVersion = acceptedVersion;
-            this.acceptationDate = acceptationDate;
-            this.acceptationIpAddress = acceptationIpAddress;
+            Id = Id.New<AppUser>(appUser.Id);
+            this.acceptedVersion = appUser.AcceptedTos;
+            this.acceptationDate = appUser.TosAcceptationDate;
         }
 
         public Id Id { get; }
+        public bool HasAcceptedVersion2 => acceptedVersion >= TosVersion.Version2;
         public bool HasAcceptedVersion1 => acceptedVersion >= TosVersion.Version1;
         public bool HasAcceptedLatest => acceptedVersion >= TosVersion.Latest;
+        public TosVersion LatestVersionAvailable => TosVersion.Latest;
     }
 }

@@ -44,8 +44,6 @@ namespace YellowDuck.Api.Requests.Commands.Mutations.Accounts
 
         public async Task<Payload> Handle(Input request, CancellationToken cancellationToken)
         {
-            var ipAddress = httpContextAccessor.HttpContext.Connection.RemoteIpAddress?.ToString() ?? "";
-
             var user = new AppUser(request.Email?.Trim())
             {
                 Type = UserType.User,
@@ -56,7 +54,6 @@ namespace YellowDuck.Api.Requests.Commands.Mutations.Accounts
                     OrganizationName = request.OrganizationName,
                     OrganizationType = request.OrganizationType,
                     Industry = request.Industry,
-                    PostalCode = request.PostalCode,
                     PhoneNumber = request.PhoneNumber,
                     ShowPhoneNumber = request.ShowPhoneNumber,
                     ShowEmail = request.ShowEmail,
@@ -65,7 +62,6 @@ namespace YellowDuck.Api.Requests.Commands.Mutations.Accounts
                 },
                 AcceptedTos = TosVersion.Latest,
                 TosAcceptationDate = DateTime.Now,
-                TosAcceptationIpAddress = ipAddress,
                 CreatedAtUtc = DateTime.UtcNow
             };
 
@@ -115,7 +111,6 @@ namespace YellowDuck.Api.Requests.Commands.Mutations.Accounts
             public Maybe<NonNull<string>> OrganizationTypeOtherSpecification { get; set; }
             public Industry Industry { get; set; }
             public Maybe<NonNull<string>> IndustryOtherSpecification { get; set; }
-            public string PostalCode { get; set; }
             public string PhoneNumber { get; set; }
             public bool ShowPhoneNumber { get; set; }
             public bool ShowEmail { get; set; }
