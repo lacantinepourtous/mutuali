@@ -15,7 +15,7 @@ namespace YellowDuck.ApiTests.Requests.Commands.Mutations.Accounts
 
         public AcceptTosTests()
         {
-            handler = new AcceptTos(DbContext, UserAccessor, HttpContextAccessor);
+            handler = new AcceptTos(DbContext, UserAccessor);
             user = AddUser("test@example.com", UserType.User);
             SetLoggedInUser(user);
         }
