@@ -28,7 +28,7 @@ namespace YellowDuck.Api.BackgroundJobs
             RecurringJob.AddOrUpdate<SendKPIsEmail>(
                 x => x.Run(),
                 Cron.Weekly(DayOfWeek.Monday, 2, 0),
-                TimeZoneInfo.FindSystemTimeZoneById(config["systemLocalTimezone"]));;
+                TimeZoneInfo.FindSystemTimeZoneById(config["systemLocalTimezone"]));
         }
 
         public async Task Run()
