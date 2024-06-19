@@ -14,12 +14,16 @@
         <h2 v-if="otherParticipantName" class="conversation-snippet__title h6 font-family-base m-0">
           {{ otherParticipantName }}
         </h2>
-        <p v-if="lastMessageDate" class="ml-auto mb-0 text-primary text-nowrap small">{{ lastMessageDate }}</p>
+        <p v-if="lastMessageDate" class="ml-auto mb-0 text-primary text-nowrap small">
+          {{ lastMessageDate }}
+        </p>
       </div>
       <div v-if="lastMessageComputed" class="text-truncate small mt-1" :class="{ 'font-weight-bolder': unread }">
         {{ lastMessageComputed }}
       </div>
-      <p v-if="adTitle" class="conversation-snippet__ad-title small mt-2 mb-0">{{ adTitle }}</p>
+      <p v-if="adTitle" class="conversation-snippet__ad-title small mt-2 mb-0">
+        {{ adTitle }}
+      </p>
     </div>
   </router-link>
 </template>
@@ -79,12 +83,12 @@ export default {
     }
   },
   methods: {
-    updateLastMessage: async function() {
+    updateLastMessage: async function () {
       this.lastMessage = await this.twilioConversation.getMessages();
       this.updateUnreadMessagesStatus(true);
       this.updateLastMessageDate();
     },
-    onMessageAdded: function(event) {
+    onMessageAdded: function (event) {
       if (event.conversation.sid === this.conversation.sid) {
         // Since the getUnreadMessagesCount is not 100% real time, we wait 750 ms before displayed the badge
         // https://tinyurl.com/m6s482d3
@@ -95,10 +99,10 @@ export default {
         debounceFn();
       }
     },
-    updateUnreadMessagesStatus: async function() {
+    updateUnreadMessagesStatus: async function () {
       this.unreadMessageCount = await TwilioService.getConversationUnreadMessagesCount(this.conversation.sid);
     },
-    updateLastMessageDate: function() {
+    updateLastMessageDate: function () {
       if (this.twilioConversation) {
         let updatedDate = this.twilioConversation.dateUpdated;
 
@@ -121,23 +125,23 @@ export default {
     }
   },
   computed: {
-    id: function() {
+    id: function () {
       return this.conversation.id;
     },
-    adTitle: function() {
+    adTitle: function () {
       return this.conversation.ad.translationOrDefault.title;
     },
-    adGallery: function() {
+    adGallery: function () {
       return this.conversation.ad.gallery;
     },
-    unread: function() {
+    unread: function () {
       return this.unreadMessageCount === null || this.unreadMessageCount > 0;
     },
-    otherParticipantName: function() {
+    otherParticipantName: function () {
       let otherParticipant = this.conversation.participants.find((x) => x.user !== null && x.user.id !== this.userId);
       return otherParticipant !== null ? otherParticipant.user.profile.publicName : "";
     },
-    lastMessageComputed: function() {
+    lastMessageComputed: function () {
       if (this.lastMessage) {
         if (this.lastMessage.items.length > 0) {
           return this.lastMessage.items.last().body;
@@ -211,7 +215,7 @@ export default {
   }
 
   &__ad-title {
-    background: url("~@/assets/icons/marker-green.svg") no-repeat 0 0;
+    background: url("~@/assets/icons/marker-red.svg") no-repeat 0 0;
     background-size: 8px auto;
     padding-left: calc(#{$spacer / 2} + 8px);
   }

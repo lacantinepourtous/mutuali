@@ -280,19 +280,19 @@ $no-review-img-width: 170px;
 
     .badge {
       background-color: $gray-400;
-      color: $green-darker;
+      color: $gray-900;
     }
 
     &--active {
       cursor: default;
 
       .profile-tabs__nav-item-title {
-        color: $green-darker;
+        color: $gray-900;
       }
 
       .badge {
         background-color: $yellow;
-        color: $green-darker;
+        color: $gray-900;
       }
     }
   }

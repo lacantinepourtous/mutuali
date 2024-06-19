@@ -17,7 +17,7 @@
       <b-form-rating
         :id="`input-${name}`"
         v-model="computedValue"
-        color="#fbce0a"
+        color="#f4b42b"
         :class="[{ 'b-rating--small': size === 'sm' }, { 'b-rating--readonly': readonly }]"
         :readonly="readonly"
         no-border

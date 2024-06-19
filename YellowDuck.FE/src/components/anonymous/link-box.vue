@@ -29,17 +29,17 @@ export default {
   align-items: center;
   justify-content: space-between;
   position: relative;
-  border-bottom: solid 1px $gray-100;
+  border-bottom: solid 1px $gray-900;
   transition: border 0.2s ease-in-out;
-  color: $gray-100;
+  color: $gray-900;
 
   &:hover {
     text-decoration: none;
-    border-bottom: solid 1px $yellow;
-    color: $yellow;
+    border-bottom: solid 1px black;
+    color: black;
 
     .link-box__title {
-      color: $yellow;
+      color: black;
     }
 
     .link-box__arrow {
@@ -53,7 +53,7 @@ export default {
   }
 
   &__title {
-    color: $gray-100;
+    color: $gray-900;
     transition: color 0.2s ease-in-out;
   }
 

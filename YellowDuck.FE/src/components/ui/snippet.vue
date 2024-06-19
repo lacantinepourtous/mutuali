@@ -20,7 +20,9 @@
 
     <div class="ui-snippet__content">
       <slot name="suptitle">
-        <p v-if="suptitle" class="my-0 text-uppercase font-weight-bold letter-spacing-wide smaller">{{ suptitle }}</p>
+        <p v-if="suptitle" class="my-0 text-uppercase font-weight-bold letter-spacing-wide smaller">
+          {{ suptitle }}
+        </p>
       </slot>
 
       <slot name="title">
@@ -136,7 +138,7 @@ export default {
   }
 
   &__overlay-admin {
-    background-color: $orange;
+    background-color: $yellow;
     opacity: 0.8;
     position: absolute;
     top: 0;

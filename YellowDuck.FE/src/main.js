@@ -21,6 +21,7 @@ import Sluggify from "@/plugins/sluggify";
 import Format from "@/plugins/format";
 import Array from "@/plugins/array";
 import Date from "@/plugins/date";
+import TermsFeed from "@/plugins/terms-feed";
 import VueCookies from 'vue-cookies'
 
 import Apollo from "@/graphql/vue-apollo";
@@ -37,6 +38,7 @@ Vue.use(Consts);
 Vue.use(Format);
 Vue.use(Array);
 Vue.use(Date);
+Vue.use(TermsFeed, { language: i18nHelpers.locale(), websiteName: "Mutuali" });
 Vue.use(VueCookies, { expires: '14d' })
 
 Vue.use(GmapVue, {
@@ -57,7 +59,8 @@ if (VUE_APP_GA_MEASUREMENT_ID !== "") {
         params: {
           anonymize_ip: true
         }
-      }
+      },
+      bootstrap: TermsFeed.hasConsent("tracking")
     },
     router
   );

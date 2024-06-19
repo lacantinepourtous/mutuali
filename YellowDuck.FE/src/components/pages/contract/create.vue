@@ -16,7 +16,7 @@
       v-else
       :title="$t('form-complete.create-contract.title')"
       :description="$t('form-complete.create-contract.description', { user: otherParticipantName })"
-      :image="require('@/assets/icons/checklist.png')"
+      :image="require('@/assets/icons/checklist-yellow.svg')"
       :ctas="formCompleteCtas"
     />
   </div>

@@ -41,13 +41,13 @@ export default {
   right: 0;
   padding: 0;
   transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out;
-  background-color: $green-darker;
-  color: $gray-100;
+  background-color: $green;
+  color: white;
   border: 0;
 
   &:hover {
-    background-color: $gray-400;
-    color: $green-darker;
+    background-color: $gray-200;
+    color: $gray-900;
     box-shadow: none;
     transform: translate(0, 0);
   }

@@ -47,7 +47,6 @@ namespace YellowDuck.ApiTests.Requests.Commands.Mutations.Accounts
                 OrganizationName = OrganizationName,
                 OrganizationType = OrganizationType.NonProfitOrganizations,
                 Industry = Industry.HealthAndSocialServices,
-                PostalCode = PostalCode,
                 PhoneNumber = PhoneNumber,
                 ShowPhoneNumber = ShowPhoneNumber,
                 ShowEmail = ShowEmail
@@ -66,7 +65,6 @@ namespace YellowDuck.ApiTests.Requests.Commands.Mutations.Accounts
             user.Profile.OrganizationName.Should().Be(OrganizationName);
             user.Profile.OrganizationType.Should().Be(OrganizationType.NonProfitOrganizations);
             user.Profile.Industry.Should().Be(Industry.HealthAndSocialServices);
-            user.Profile.PostalCode.Should().Be(PostalCode);
             user.Profile.PhoneNumber.Should().Be(PhoneNumber);
             user.Profile.ShowPhoneNumber.Should().Be(ShowPhoneNumber);
             user.Profile.ShowEmail.Should().Be(ShowEmail);
@@ -84,7 +82,6 @@ namespace YellowDuck.ApiTests.Requests.Commands.Mutations.Accounts
                 OrganizationName = OrganizationName,
                 OrganizationType = OrganizationType.NonProfitOrganizations,
                 Industry = Industry.HealthAndSocialServices,
-                PostalCode = PostalCode,
                 PhoneNumber = PhoneNumber,
                 ShowPhoneNumber = ShowPhoneNumber,
                 ShowEmail = ShowEmail

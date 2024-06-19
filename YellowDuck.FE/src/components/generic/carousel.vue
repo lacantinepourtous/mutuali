@@ -67,7 +67,7 @@ export default {
     width: 100%;
     height: 50vh;
     position: relative;
-    background-color: $green-darker;
+    background-color: $gray-900;
   }
 
   .carousel-control-next {

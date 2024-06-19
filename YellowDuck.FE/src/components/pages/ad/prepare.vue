@@ -6,7 +6,7 @@
     <template v-if="!adCreated">
       <div class="section section--md section--padding-x section--border-bottom my-4">
         <h1 class="my-4">{{ $t("page-title.prepare-ad") }}</h1>
-        <b-img class="mb-3" :src="require('@/assets/icons/adult.png')" height="100" alt="" block></b-img>
+        <b-img class="mb-3" :src="require('@/assets/icons/adult.svg')" height="100" alt="" block></b-img>
         <p class="mb-4" v-html="$t('page-text.prepare-ad')"></p>
       </div>
 
@@ -17,7 +17,7 @@
       v-else
       :title="$t('form-complete.prepare-ad.title')"
       :description="$t('form-complete.prepare-ad.description')"
-      :image="require('@/assets/icons/checklist.png')"
+      :image="require('@/assets/icons/checklist-yellow.svg')"
       :ctas="formCompleteCtas"
       is-admin
     />
@@ -49,7 +49,10 @@ export default {
           action: () => this.$router.push({ name: URL_AD_DETAIL, params: { id: this.adCreatedId } }),
           text: this.$t("btn.display-detail-ad")
         },
-        { action: () => this.$router.push({ name: URL_ROOT }), text: this.$t("btn.return-dashboard") }
+        {
+          action: () => this.$router.push({ name: URL_ROOT }),
+          text: this.$t("btn.return-dashboard")
+        }
       ]
     };
   },

@@ -12,8 +12,12 @@
       :title="$t('form-complete.create-account.title')"
       :description="$t('form-complete.create-account.description')"
       :htmlTitle="$t('form-complete.create-account.html-title')"
-      :htmlDescription="$t('form-complete.create-account.html-description', { email: encodeURIComponent(email) })"
-      :image="require('@/assets/icons/adult.png')"
+      :htmlDescription="
+        $t('form-complete.create-account.html-description', {
+          email: encodeURIComponent(email)
+        })
+      "
+      :image="require('@/assets/icons/adult.svg')"
       :linkTitle="$t('form-complete.link-title')"
       :links="formCompleteLinks"
     />
@@ -38,7 +42,12 @@ export default {
   data() {
     return {
       userCreated: false,
-      formCompleteLinks: [{ href: `mailto:${VUE_APP_MUTUALI_CONTACT_MAIL}`, text: this.$t("form-complete.contact-us.link") }],
+      formCompleteLinks: [
+        {
+          href: `mailto:${VUE_APP_MUTUALI_CONTACT_MAIL}`,
+          text: this.$t("form-complete.contact-us.link")
+        }
+      ],
       isSubmitting: false,
       email: ""
     };

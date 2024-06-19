@@ -22,7 +22,7 @@
     >
       <template v-if="description && description.trim() != ''" #description>
         <slot name="description"
-          ><span class="text-info">{{ description }}</span></slot
+          ><span class="text-muted">{{ description }}</span></slot
         >
       </template>
       <slot :sValidate="validate" :sState="getSlotState(failed)" />

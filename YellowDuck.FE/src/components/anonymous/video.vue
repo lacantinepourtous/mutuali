@@ -17,7 +17,7 @@
         class="anonymous-video__play-btn"
         :class="{ 'd-none': showVideo }"
         :aria-label="$t('sr.play-video')"
-        @click.prevent="initializeVideo"
+        @click.prevent="checkForConsent"
       >
         <svg fill="currentColor" width="82" height="82" viewBox="0 0 82 82" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
           <path
@@ -25,8 +25,17 @@
           />
         </svg>
       </button>
+      <div v-if="askForConsent" class="anonymous-video__consent">
+        <div class="vertical-centered">
+          <p class="text-white text-center">{{ $t("text.landingpage.video.cookie-notice") }}</p>
+          <p class="text-white text-center">{{ $t("text.landingpage.video.youtube-consent") }}</p>
+          <button @click="initializeVideo" class="btn btn-primary" @click.prevent="initializeVideo">
+            {{ $t("text.landingpage.video.consent-button") }}
+          </button>
+        </div>
+      </div>
     </div>
-    <p class="text-white text-center mt-4 mb-0">{{ $t("text.landingpage.video.description") }}</p>
+    <p class="text-center mt-4 mb-0">{{ $t("text.landingpage.video.description") }}</p>
   </div>
 </template>
 
@@ -44,11 +53,23 @@ export default {
   },
   data() {
     return {
-      showVideo: false
+      showVideo: false,
+      askForConsent: false,
+      videoEmbed: false
     };
   },
   methods: {
+    checkForConsent() {
+      if (this.$termsFeed.hasConsent("targeting")) {
+        this.initializeVideo();
+      } else {
+        this.askForConsent = true;
+      }
+    },
     initializeVideo() {
+      if (this.videoEmbed) return;
+      this.videoEmbed = true;
+      this.askForConsent = false;
       const video = this.$refs.video;
       const poster = this.$refs.poster;
       const videoId = this.videoId;
@@ -135,7 +156,37 @@ $video-overlap: 100px;
 
     &:hover,
     &:focus {
-      color: $green-darker;
+      color: $gray-900;
+    }
+  }
+
+  &__consent {
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    background-color: rgba(0, 0, 0, 0.95);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: $spacer * 2;
+    z-index: 1;
+
+    .vertical-centered {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+
+      p {
+        margin-bottom: $spacer;
+      }
+
+      button {
+        margin-top: $spacer;
+      }
     }
   }
 }

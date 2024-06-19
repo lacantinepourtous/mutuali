@@ -181,7 +181,7 @@
             }}</b-button>
           </div>
           <div v-else class="mx-4">
-            <b-button variant="primary" size="lg" block :to="{ name: $consts.urls.URL_CREATE_AD }">{{
+            <b-button variant="admin" size="lg" block :to="{ name: $consts.urls.URL_CREATE_AD }">{{
               $t("nav.create-ad")
             }}</b-button>
           </div>
@@ -302,7 +302,16 @@ const defaultFilters = {
 
 export default {
   mixins: [AdCategory],
-  components: { AdCard, AdFilters, Dropdown, SFormGoogleAutocomplete, GoogleMap, NavClose, AdCategoryBadge, AlertModal },
+  components: {
+    AdCard,
+    AdFilters,
+    Dropdown,
+    SFormGoogleAutocomplete,
+    GoogleMap,
+    NavClose,
+    AdCategoryBadge,
+    AlertModal
+  },
   computed: {
     isConnected() {
       return this.user && this.user.isConnected;
@@ -348,7 +357,7 @@ export default {
     resetMarkerIcon() {
       let marker = this.adMarkers.find((x) => this.snippetAd !== null && x.id === this.snippetAd.id);
       if (marker) {
-        marker.icon = require("@/assets/icons/marker-green.svg");
+        marker.icon = require("@/assets/icons/marker-red.svg");
       }
     },
     mapClicked() {
@@ -599,8 +608,14 @@ export default {
       view: this.$router.currentRoute.query.view == LIST_VIEW ? LIST_VIEW : CARD_VIEW,
       categoryOptions: [
         { value: null, text: this.$t("select.all-equipment") },
-        { value: CATEGORY_PROFESSIONAL_KITCHEN, text: this.$t("select.category-professional-kitchen") },
-        { value: CATEGORY_DELIVERY_TRUCK, text: this.$t("select.category-delivery-truck") },
+        {
+          value: CATEGORY_PROFESSIONAL_KITCHEN,
+          text: this.$t("select.category-professional-kitchen")
+        },
+        {
+          value: CATEGORY_DELIVERY_TRUCK,
+          text: this.$t("select.category-delivery-truck")
+        },
         { value: CATEGORY_STORAGE_SPACE, text: this.$t("select.category-storage-space") },
         { value: CATEGORY_OTHER, text: this.$t("select.category-other") }
       ],
@@ -682,7 +697,7 @@ export default {
                 lng: pos.lng,
                 distance: null,
                 createdTimestamp: new Date(x.createdAtUTC).getTime(),
-                icon: x.isAdminOnly ? require("@/assets/icons/marker-orange.svg") : require("@/assets/icons/marker-green.svg")
+                icon: x.isAdminOnly ? require("@/assets/icons/marker-green.svg") : require("@/assets/icons/marker-red.svg")
               };
             });
           this.$gmapApiPromiseLazy().then(() => {
@@ -699,7 +714,7 @@ export default {
 
 <style lang="scss">
 .equipment-list {
-  background-color: $red-50;
+  background-color: $green-lighter;
   position: relative;
   width: 100%;
   z-index: 0;
@@ -741,12 +756,7 @@ export default {
   &__header-bottom {
     display: flex;
     align-items: center;
-    background-color: $green;
     padding: $spacer / 4 0;
-
-    @include media-breakpoint-up(lg) {
-      background-color: transparent;
-    }
   }
 
   &__header-bottom-btns {
@@ -755,7 +765,9 @@ export default {
   }
 
   &__toggle-view {
-    background-color: $green;
+    background-color: $green-lighter;
+    border-color: $green-lighter;
+    color: $gray-900;
     margin-right: 4px;
 
     @include media-breakpoint-down(lg) {
@@ -767,32 +779,26 @@ export default {
       }
     }
 
-    @include media-breakpoint-up(lg) {
-      background-color: $gray-200;
-      border-color: $gray-200;
-      color: $green-dark;
-    }
-
     &--active {
-      background-color: $green-dark;
-      border-color: $green-dark;
+      background-color: $red-darker;
+      border-color: $red-darker;
       color: $white;
 
       &:hover {
         transform: translate(0, 0);
         box-shadow: none;
-        border: 1px solid $green-dark;
-        background-color: $green-dark;
+        border: 1px solid $red-darker;
+        background-color: $red-darker;
         cursor: default !important;
       }
 
       @include media-breakpoint-up(lg) {
-        background-color: $green;
-        border-color: $gray-200;
+        background-color: $red-darker;
+        border-color: $red-darker;
 
         &:hover {
-          background-color: $green;
-          border-color: $gray-200;
+          background-color: $red-darker;
+          border-color: $red-darker;
         }
       }
     }
@@ -806,7 +812,7 @@ export default {
     left: 12px;
 
     @include media-breakpoint-up(lg) {
-      color: $green-darker;
+      color: $gray-900;
       white-space: nowrap;
       font-size: $font-size-base;
       left: 0;
@@ -848,7 +854,7 @@ export default {
   }
 
   &__filters-btn-badge {
-    background-color: $blue;
+    background-color: $green;
     border-radius: 50%;
     width: 18px;
     height: 18px;

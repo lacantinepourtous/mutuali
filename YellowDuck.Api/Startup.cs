@@ -210,7 +210,8 @@ namespace YellowDuck.Api
 
             app.UseAuthentication();
             app.UseImageSharp();
-            app.UseHangfireDashboard(options: new DashboardOptions {
+            app.UseHangfireDashboard(options: new DashboardOptions
+            {
                 Authorization = new[] {
                     new AnyAuthorizationFilter(
                         new LocalRequestsOnlyAuthorizationFilter(),
@@ -377,12 +378,11 @@ namespace YellowDuck.Api
                 OrganizationName = "Example Inc.",
                 OrganizationType = OrganizationType.NonProfitOrganizations,
                 Industry = Industry.HealthAndSocialServices,
-                PostalCode = "G1K 3G5",
                 PhoneNumber = "514 555-1234",
                 ShowEmail = true,
                 ShowPhoneNumber = false,
             });
-            
+
             await userManager.CreateOrUpdateAsync(db, new CreateOrUpdateIdentity()
             {
                 Email = "uguette@example.com",
@@ -393,7 +393,6 @@ namespace YellowDuck.Api
                 OrganizationName = "Example Inc.",
                 OrganizationType = OrganizationType.PrivateCompany,
                 Industry = Industry.Catering,
-                PostalCode = "G1K 3G5",
                 PhoneNumber = "514 555-1234",
                 ShowEmail = false,
                 ShowPhoneNumber = false,
@@ -409,7 +408,6 @@ namespace YellowDuck.Api
                 OrganizationName = "Example Inc.",
                 OrganizationType = OrganizationType.PublicSector,
                 Industry = Industry.EducationAndTeaching,
-                PostalCode = "G1K 3G5",
                 PhoneNumber = "514 555-1234",
                 ShowEmail = true,
                 ShowPhoneNumber = true,
@@ -425,7 +423,6 @@ namespace YellowDuck.Api
                 OrganizationName = "Example Inc.",
                 OrganizationType = OrganizationType.NonProfitOrganizations,
                 Industry = Industry.FoodProcessingAndDistribution,
-                PostalCode = "G1K 3G5",
                 PhoneNumber = "514 555-1234",
                 ShowEmail = false,
                 ShowPhoneNumber = true,

@@ -19,7 +19,7 @@
     <alert-no-content v-if="alerts.length === 0" class="my-5 py-sm-5" />
     <div v-else class="alert-list__bottom section section--md">
       <div class="mx-4">
-        <b-button variant="primary" size="lg" block :to="{ name: $consts.urls.URL_AD_ALERT_ADD }">{{
+        <b-button variant="admin" size="lg" block :to="{ name: $consts.urls.URL_AD_ALERT_ADD }">{{
           $t("nav.create-alert")
         }}</b-button>
       </div>
@@ -37,10 +37,10 @@ export default {
     AlertSnippet
   },
   computed: {
-    profileId: function() {
+    profileId: function () {
       return this.me.profile.id;
     },
-    alerts: function() {
+    alerts: function () {
       return this.userProfile.user ? this.userProfile.user.alerts : [];
     }
   },

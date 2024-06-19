@@ -16,13 +16,11 @@ namespace YellowDuck.Api.Requests.Commands.Mutations.Accounts
     {
         private readonly AppDbContext db;
         private readonly ICurrentUserAccessor currentUserAccessor;
-        private readonly IHttpContextAccessor httpContextAccessor;
 
-        public AcceptTos(AppDbContext db, ICurrentUserAccessor currentUserAccessor, IHttpContextAccessor httpContextAccessor)
+        public AcceptTos(AppDbContext db, ICurrentUserAccessor currentUserAccessor)
         {
             this.db = db;
             this.currentUserAccessor = currentUserAccessor;
-            this.httpContextAccessor = httpContextAccessor;
         }
 
         public async Task<Payload> Handle(Input request, CancellationToken cancellationToken)
@@ -31,13 +29,11 @@ namespace YellowDuck.Api.Requests.Commands.Mutations.Accounts
             if (currentUser.AcceptedTos >= request.TosVersion)
                 throw new VersionAlreadyAcceptedException();
 
-            var ipAddress = httpContextAccessor.HttpContext.Connection.RemoteIpAddress?.ToString() ?? "";
 
             if (currentUser.AcceptedTos < request.TosVersion)
             {
                 currentUser.AcceptedTos = request.TosVersion;
                 currentUser.TosAcceptationDate = DateTime.Now;
-                currentUser.TosAcceptationIpAddress = ipAddress;
             }
 
             await db.SaveChangesAsync(cancellationToken);

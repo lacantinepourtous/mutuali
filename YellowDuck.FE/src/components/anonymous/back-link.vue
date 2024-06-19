@@ -35,6 +35,7 @@ export default {
 
 <style lang="scss" scoped>
 .back-link {
+  font-weight: 600;
   text-decoration: none;
   display: inline-flex;
   align-items: center;

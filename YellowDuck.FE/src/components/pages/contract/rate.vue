@@ -100,7 +100,7 @@
       v-else
       :title="$t('form-complete.rate-contract.title')"
       :description="$t('form-complete.rate-contract.description')"
-      :image="require('@/assets/icons/checklist.png')"
+      :image="require('@/assets/icons/checklist-yellow.svg')"
       :ctas="formCompleteCtas"
     />
   </div>
@@ -159,7 +159,7 @@ export default {
     };
   },
   methods: {
-    rateContract: async function() {
+    rateContract: async function () {
       this.isSubmitted = true;
       let input = {
         contractId: this.contractId,
@@ -172,37 +172,37 @@ export default {
     }
   },
   computed: {
-    contractId: function() {
+    contractId: function () {
       return this.$route.params.id.split("-").last();
     },
-    conversationId: function() {
+    conversationId: function () {
       return this.contract.conversation.id;
     },
-    adId: function() {
+    adId: function () {
       return this.contract.conversation.ad.id;
     },
-    adOrganization: function() {
+    adOrganization: function () {
       return this.contract.conversation.ad.organization;
     },
-    adTitle: function() {
+    adTitle: function () {
       return this.contract.conversation.ad.translationOrDefault.title;
     },
-    adImage: function() {
+    adImage: function () {
       return this.contract.conversation.ad.gallery[0];
     },
-    contractRated: function() {
+    contractRated: function () {
       return this.raterIsOwner ? this.hasAlreadyRateUser : Boolean(this.contract.adRating) || this.hasAlreadyRateUser;
     },
-    tenant: function() {
+    tenant: function () {
       return this.contract.tenant;
     },
-    owner: function() {
+    owner: function () {
       return this.contract.owner;
     },
-    raterIsOwner: function() {
+    raterIsOwner: function () {
       return this.me.id === this.owner.id;
     },
-    hasAlreadyRateUser: function() {
+    hasAlreadyRateUser: function () {
       return this.contract.userRatings.some((x) => x.raterUser.id === this.me.id);
     }
   },
