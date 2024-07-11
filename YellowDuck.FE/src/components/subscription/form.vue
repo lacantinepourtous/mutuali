@@ -138,8 +138,8 @@
       id="tosAccepted"
       :label="
         $t('label.tos-accepted', {
-          url1: '/static/terms/MutuAli_conditionsgenerales.pdf',
-          url2: '/static/terms/MutuAli_politiqueconfidentialite.pdf'
+          url1: '/static/terms/MutuAli_ConditionsGenerales_2024-07-05.pdf',
+          url2: '/static/terms/MutuAli_PolitiqueConfidentialite_2024-07-05.pdf'
         })
       "
       name="tosAccepted"
