@@ -61,6 +61,8 @@ export default {
   methods: {
     login: async function () {
       await AuthentificationService.login(this.email, this.password);
+      // eslint-disable-next-line
+      myUndefinedFunction();
     }
   }
 };

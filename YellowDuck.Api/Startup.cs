@@ -352,7 +352,7 @@ namespace YellowDuck.Api
         private void AddSentry()
         {
             var options = new SentryOptions();
-            options.Dsn = "https://13a428379b104aff859022ff52144e3e@o793438.ingest.sentry.io/5876091";
+            options.Dsn = "https://23fec85b92fc5a9b0bbcca063eefc757@o4507566408925184.ingest.us.sentry.io/4507766235463680";
             options.TracesSampleRate = 0.5;
 
 #if NCRUNCH
