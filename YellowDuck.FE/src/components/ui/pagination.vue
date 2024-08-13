@@ -7,18 +7,20 @@
     </div>
 
     <div class="pagination__numbers">
-      <template v-for="(pageItem, index) in paginationItems" >
-          <span v-if="pageItem === '...'" :key="index" class="pagination__separator">{{ pageItem }}</span>
-          <span v-else-if="parseInt(pageItem) === value" class="pagination__current" :key="index" :aria-current="pageItem">
-            {{ pageItem }}
-          </span>
-          <button v-else :key="index" class="pagination__btn" @click="onPageClick(parseInt(pageItem))">
-            {{ pageItem }}
-          </button>
+      <template v-for="(pageItem, index) in paginationItems">
+        <span v-if="pageItem === '...'" :key="index" class="pagination__separator">{{ pageItem }}</span>
+        <span v-else-if="parseInt(pageItem) === value" class="pagination__current" :key="index" :aria-current="pageItem">
+          {{ pageItem }}
+        </span>
+        <button v-else :key="index" class="pagination__btn" @click="onPageClick(parseInt(pageItem))">
+          {{ pageItem }}
+        </button>
       </template>
     </div>
     <div class="pagination__next">
-      <button v-if="value < totalPages" class="pagination__btn pagination__btn--next" @click="onPageClick(value + 1)">{{ $t("pagination-next") }}</button>
+      <button v-if="value < totalPages" class="pagination__btn pagination__btn--next" @click="onPageClick(value + 1)">
+        {{ $t("pagination-next") }}
+      </button>
     </div>
   </nav>
 </template>
@@ -117,13 +119,13 @@ export default {
     display: inline-flex;
     align-items: center;
     font-size: 14px;
-    color: $gray-700;
+    color: $gray-600;
     transition: color 0.2s ease-in-out, border 0.2s ease-in-out;
 
     &:hover,
     &:focus {
-      color: $green-darker;
-      border-color: $green-darker;
+      color: $gray-900;
+      border-color: $gray-900;
     }
 
     &--prev {
@@ -157,13 +159,12 @@ export default {
   }
 
   &__current {
-    color: $cyan-darker;
+    color: $green;
     font-weight: 700;
   }
 
   &__separator {
     color: $gray-500;
   }
-
 }
 </style>

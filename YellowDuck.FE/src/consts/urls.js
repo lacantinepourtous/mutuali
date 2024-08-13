@@ -42,3 +42,4 @@ export const URL_CREATE_ADMIN = "create-admin-url";
 export const URL_CREATE_USER = "create-user-url";
 export const URL_CONFIRM_ADMIN = "confirm-admin-url";
 export const URL_EDIT_PROFILE = "edit-user-profile-url";
+export const URL_AD_ALERT_CONFIRM = "confirm-alert-ad-url";

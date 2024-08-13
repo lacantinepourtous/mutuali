@@ -44,7 +44,6 @@ namespace YellowDuck.Api.DbModel.Entities
 
         public TosVersion AcceptedTos { get; set; }
         public DateTime TosAcceptationDate { get; set; }
-        public string TosAcceptationIpAddress { get; set; }
         public bool FirstLoginModalClosed { get; set; }
         public DateTime CreatedAtUtc { get; set; }
     }

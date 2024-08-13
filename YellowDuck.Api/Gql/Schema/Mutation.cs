@@ -51,6 +51,15 @@ namespace YellowDuck.Api.Gql.Schema
             return mediator.Send(input.Value);
         }
 
+        [ApplyPolicy(AuthorizationPolicies.LoggedIn)]
+        [AnnotateErrorCodes(typeof(AcceptTos))]
+        public Task<AcceptTos.Payload> AcceptTos(
+            [Inject] IMediator mediator,
+            NonNull<AcceptTos.Input> input)
+        {
+            return mediator.Send(input.Value);
+        }
+
         [AnnotateErrorCodes(typeof(ResendConfirmationEmail))]
         public async Task<bool> ResendConfirmationEmail(
             [Inject] IMediator mediator,

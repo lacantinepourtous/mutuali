@@ -74,8 +74,8 @@ $dropdownWidth: 240px;
 // Override bootstrap style for toggle btn when open
 .btn-outline-secondary:not(:disabled):not(.disabled):active,
 .show > .btn-outline-secondary.dropdown-toggle {
-  background-color: $green-darker;
+  background-color: $gray-900;
   color: $gray-100;
-  border-color: $green-darker;
+  border-color: $gray-900;
 }
 </style>

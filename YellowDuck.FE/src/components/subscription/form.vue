@@ -101,15 +101,6 @@
       required
     />
     <s-form-input
-      v-model="postalCode"
-      id="postalCode"
-      :label="$t('label.postalCode')"
-      name="postalCode"
-      rules="required|postalCode"
-      :placeholder="$t('placeholder.postalCode')"
-      required
-    />
-    <s-form-input
       v-model="phoneNumber"
       id="phoneNumber"
       :label="$t('label.phoneNumber')"
@@ -147,8 +138,8 @@
       id="tosAccepted"
       :label="
         $t('label.tos-accepted', {
-          url1: '/static/terms/MutuAli_conditionsgenerales.pdf',
-          url2: '/static/terms/MutuAli_politiqueconfidentialite.pdf'
+          url1: '/static/terms/MutuAli_ConditionsGenerales_2024-07-05.pdf',
+          url2: '/static/terms/MutuAli_PolitiqueConfidentialite_2024-07-05.pdf'
         })
       "
       name="tosAccepted"
@@ -212,7 +203,6 @@ export default {
       organizationName: "",
       organizationType: null,
       industry: null,
-      postalCode: null,
       phoneNumber: null,
       showPhoneNumber: null,
       showEmail: null,
@@ -264,7 +254,6 @@ export default {
         organizationName: this.organizationName,
         organizationType: this.organizationType,
         industry: this.industry,
-        postalCode: this.postalCode,
         phoneNumber: this.phoneNumber,
         showPhoneNumber: this.showPhoneNumber,
         showEmail: this.showEmail,

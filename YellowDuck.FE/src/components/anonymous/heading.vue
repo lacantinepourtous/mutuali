@@ -1,11 +1,11 @@
 <template>
   <div class="anonymous-heading pt-4">
-    <div class="section section--lg d-flex justify-content-center align-items-center py-md-5">
+    <div class="section section--lg d-flex justify-content-center align-items-center pb-md-5">
       <b-jumbotron class="text-center bg-transparent mb-0 px-0">
         <template #header>
           <h1
             class="anonymous-heading__title display-5 mb-4"
-            :style="`--green-paint: url('${require('@/assets/ambiance/green-paint.svg')}');`"
+            :style="`--circle: url('${require('@/assets/ambiance/circle.svg')}');`"
             v-html="$t('title.landing-page')"
           ></h1>
         </template>
@@ -59,7 +59,7 @@
 </template>
 
 <style lang="scss">
-$title-max-width: 720px;
+$title-max-width: 660px;
 $text-max-width: 620px;
 
 .anonymous-heading {
@@ -67,14 +67,18 @@ $text-max-width: 620px;
     max-width: $title-max-width;
     margin-left: auto;
     margin-right: auto;
-    strong {
-      color: $yellow;
-      background-image: var(--green-paint);
+    line-height: 1.5;
+    strong:first-child {
+      background-image: var(--circle);
       background-repeat: no-repeat;
-      background-position: center center;
+      background-position: center bottom;
       background-size: contain;
       display: inline-block;
-      padding: 2px 9px;
+      padding: 0 14px;
+    }
+
+    strong:last-child {
+      color: $green;
     }
   }
 

@@ -22,7 +22,7 @@
           type="password"
           required
         />
-        <b-button type="submit" variant="primary" size="lg" block>{{ $t("btn.login-submit") }}</b-button>
+        <b-button type="submit" variant="admin" size="lg" block>{{ $t("btn.login-submit") }}</b-button>
         <b-button variant="outline-primary" block class="mt-4" :to="{ name: $consts.urls.URL_FORGOT_PASSWORD }">{{
           $t("btn.forgot-password")
         }}</b-button>

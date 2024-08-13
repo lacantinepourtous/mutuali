@@ -64,7 +64,9 @@
 
         <div class="search-filters__col">
           <fieldset id="availabilitiesFieldset" aria-labelledby="availabilitiesFieldset__legend">
-            <legend id="availabilitiesFieldset__legend" class="label my-0">{{ $t("label.availability") }}</legend>
+            <legend id="availabilitiesFieldset__legend" class="label my-0">
+              {{ $t("label.availability") }}
+            </legend>
             <b-row>
               <b-col>
                 <s-form-availability
@@ -101,7 +103,7 @@
 
     <div class="section section--lg my-6">
       <div class="fab-container__fab">
-        <b-button @click="confirm()" type="submit" variant="primary" size="lg" block :aria-label="$t('sr.edit')">
+        <b-button @click="confirm()" type="submit" variant="admin" size="lg" block :aria-label="$t('sr.edit')">
           {{ $t("label.search") }}
         </b-button>
         <b-button @click="reinit()" type="submit" variant="outline-primary" size="lg" block :aria-label="$t('sr.edit')">
@@ -169,8 +171,14 @@ export default {
       professionalKitchenEquipment: [],
       categoryOptions: [
         { value: null, text: this.$t("select.all-equipment") },
-        { value: CATEGORY_PROFESSIONAL_KITCHEN, text: this.$t("select.category-professional-kitchen") },
-        { value: CATEGORY_DELIVERY_TRUCK, text: this.$t("select.category-delivery-truck") },
+        {
+          value: CATEGORY_PROFESSIONAL_KITCHEN,
+          text: this.$t("select.category-professional-kitchen")
+        },
+        {
+          value: CATEGORY_DELIVERY_TRUCK,
+          text: this.$t("select.category-delivery-truck")
+        },
         { value: CATEGORY_STORAGE_SPACE, text: this.$t("select.category-storage-space") },
         { value: CATEGORY_OTHER, text: this.$t("select.category-other") }
       ],
