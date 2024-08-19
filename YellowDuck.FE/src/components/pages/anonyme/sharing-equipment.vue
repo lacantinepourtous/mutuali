@@ -9,9 +9,9 @@
         :title="$t('text.sharing-equipment.title')"
         :subtitle="$t('text.sharing-equipment.subtitle')"
         :description="$t('text.sharing-equipment.description')"
-        :imgSrc="require('@/assets/ambiance/sharing-equipment.jpg')"
+        :imgSrc="require('@/assets/ambiance/sharing-equipment-2.jpg')"
         :imgAlt="$t('alt.sharing-equipment-heading')"
-        :imgSrcMobile="require('@/assets/ambiance/sharing-equipment-300x360.jpg')"
+        :imgSrcMobile="require('@/assets/ambiance/sharing-equipment-2-300x360.jpg')"
       />
     </div>
 
