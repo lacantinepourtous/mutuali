@@ -36,11 +36,18 @@ namespace YellowDuck.Api.Gql.Schema.GraphTypes
                 : new UserGraphType(ctx, data.UserId);
         }
 
+        public Task<bool> IsAvailableForRent => WithData(x => x.IsAvailableForRent);
+        public Task<bool> IsAvailableForSale => WithData(x => x.IsAvailableForSale);
+        public Task<bool> IsAvailableForDonation => WithData(x => x.IsAvailableForDonation);
+        public Task<bool> IsAvailableForTrade => WithData(x => x.IsAvailableForTrade);
+
         public Task<AdCategory> Category => WithData(x => x.Category);
 
-        public Task<double?> Price => WithData(x => x.Price);
+        public Task<double?> RentPrice => WithData(x => x.RentPrice);
 
-        public Task<bool> PriceToBeDetermined => WithData(x => x.PriceToBeDetermined);
+        public Task<bool> RentPriceToBeDetermined => WithData(x => x.RentPriceToBeDetermined);
+        public Task<double?> SalePrice => WithData(x => x.SalePrice);
+        public Task<bool> SalePriceToBeDetermined => WithData(x => x.SalePriceToBeDetermined);
 
         public Task<bool> ShowAddress => WithData(x => x.ShowAddress);
 

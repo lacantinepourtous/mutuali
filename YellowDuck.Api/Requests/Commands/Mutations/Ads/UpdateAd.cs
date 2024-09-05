@@ -48,13 +48,19 @@ namespace YellowDuck.Api.Requests.Commands.Mutations.Ads
 
             if (ad == null) throw new AdNotFoundException();
             if(ad.Category == AdCategory.ProfessionalKitchen) ValidateProfessionalKitchenRequest(request);
-
+            
             request.Category.IfSet(v => ad.Category = v);
+            request.IsAvailableForRent.IfSet(v => ad.IsAvailableForRent = v);
+            request.IsAvailableForSale.IfSet(v => ad.IsAvailableForSale = v);
+            request.IsAvailableForDonation.IfSet(v => ad.IsAvailableForDonation = v);
+            request.IsAvailableForTrade.IfSet(v => ad.IsAvailableForTrade = v);
             request.Address.IfSet(v => UpdateAddress(ad.Address, v));
             request.ShowAddress.IfSet(v => ad.ShowAddress = v);
             request.GalleryItems.IfSet(v => UpdateGalleryItems(ad, v.Value));
-            request.Price.IfSet(v => ad.Price = v);
-            request.PriceToBeDetermined.IfSet(v => ad.PriceToBeDetermined = v);
+            request.RentPrice.IfSet(v => ad.RentPrice = v);
+            request.RentPriceToBeDetermined.IfSet(v => ad.RentPriceToBeDetermined = v);
+            request.SalePrice.IfSet(v => ad.SalePrice = v);
+            request.SalePriceToBeDetermined.IfSet(v => ad.SalePriceToBeDetermined = v);
             request.Organization.IfSet(v => ad.Organization = v);
             request.DayAvailability.IfSet( v => UpdateDayAvailability(ad, v));
             request.EveningAvailability.IfSet(v => UpdateEveningAvailability(ad, v));
@@ -162,13 +168,19 @@ namespace YellowDuck.Api.Requests.Commands.Mutations.Ads
         {
             public Id AdId { get; set; }
             public Maybe<AdCategory> Category { get; set; }
+            public Maybe<bool> IsAvailableForRent { get; set; }
+            public Maybe<bool> IsAvailableForSale { get; set; }
+            public Maybe<bool> IsAvailableForDonation { get; set; }
+            public Maybe<bool> IsAvailableForTrade { get; set; }
             public Maybe<NonNull<List<GalleryItemInput>>> GalleryItems { get; set; }
             public Maybe<AddressInput> Address { get; set; }
             public Maybe<bool> ShowAddress { get; set; }
             public Maybe<List<DayOfWeek>> DayAvailability { get; set; }
             public Maybe<List<DayOfWeek>> EveningAvailability { get; set; }
-            public Maybe<double?> Price { get; set; }
-            public Maybe<bool> PriceToBeDetermined { get; set; }
+            public Maybe<double?> RentPrice { get; set; }
+            public Maybe<double?> SalePrice { get; set; }
+            public Maybe<bool> RentPriceToBeDetermined { get; set; }
+            public Maybe<bool> SalePriceToBeDetermined { get; set; }
             public Maybe<string> Organization { get; set; }
             public Maybe<List<ProfessionalKitchenEquipment>> ProfessionalKitchenEquipment { get; set; }
             public Maybe<DeliveryTruckType> DeliveryTruckType { get; set; }

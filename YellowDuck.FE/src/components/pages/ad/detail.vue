@@ -77,9 +77,23 @@
           </p>
         </div>
         <h1 class="my-4">{{ ad.translationOrDefault.title }}</h1>
-        <p class="mb-0 mt-n2 small text-decoration-none">
-          <strong class="h4 font-weight-normal font-family-base mr-1">{{ adPrice }}</strong>
-          {{ adPriceDescription }}
+        <p v-if="adPriceDetails.isAvailableForRent" class="mb-0 mt-n2 small text-decoration-none">
+          <strong class="h4 font-weight-normal font-family-base mr-1">{{ $t("label.forRent") }}</strong>
+          {{ adPriceDetails.rentPrice }}
+          <small v-if="adPriceDetails.rentPriceDescription">{{ adPriceDetails.rentPriceDescription }}</small>
+        </p>
+        <p v-if="adPriceDetails.isAvailableForSale" class="mb-0 mt-n2 small text-decoration-none">
+          <strong class="h4 font-weight-normal font-family-base mr-1">{{ $t("label.forSale") }}</strong>
+          {{ adPriceDetails.salePrice }}
+          <small v-if="adPriceDetails.salePriceDescription">{{ adPriceDetails.salePriceDescription }}</small>
+        </p>
+        <p v-if="adPriceDetails.isAvailableForTrade" class="mb-0 mt-n2 small text-decoration-none">
+          <strong class="h4 font-weight-normal font-family-base mr-1">{{ $t("label.forTrade") }}</strong>
+          {{ adPriceDetails.tradeDescription }}
+        </p>
+        <p v-if="adPriceDetails.isAvailableForDonation" class="mb-0 mt-n2 small text-decoration-none">
+          <strong class="h4 font-weight-normal font-family-base mr-1">{{ $t("label.forDonation") }}</strong>
+          {{ adPriceDetails.donationDescription }}
         </p>
       </div>
       <div class="section section--md section--border-top section--border-bottom mt-6">
@@ -189,6 +203,7 @@ import { VUE_APP_MUTUALI_CONTACT_MAIL } from "@/helpers/env";
 
 import { unpublishAd, publishAd } from "@/services/ad";
 import { AvailabilityWeekday } from "@/mixins/availability-weekday";
+import { PriceDetails } from "@/mixins/price-details";
 
 import AdCategoryBadge from "@/components/ad/category-badge";
 import AdRatingCarousel from "@/components/ad/rating-carousel";
@@ -204,7 +219,7 @@ import DetailPartialStorageSpace from "@/components/ad/detail-partial-storage-sp
 import DetailPartialOther from "@/components/ad/detail-partial-other";
 
 export default {
-  mixins: [AvailabilityWeekday],
+  mixins: [AvailabilityWeekday, PriceDetails],
   components: {
     AdCategoryBadge,
     AdRatingCarousel,
@@ -283,11 +298,8 @@ export default {
         }
       ];
     },
-    adPrice() {
-      return this.ad.priceToBeDetermined ? this.$t("price.toBeDetermined") : this.$format.formatMoney(this.ad.price);
-    },
-    adPriceDescription() {
-      return this.ad.priceToBeDetermined ? "" : this.ad.translationOrDefault.priceDescription;
+    adPriceDetails() {
+      return this.getPriceDetailsFromAd(this.ad);
     },
     adUrlForReport() {
       return encodeURI(window.location.href);
@@ -387,12 +399,19 @@ query AdById($id: ID!, $language: ContentLanguage!) {
     id
     isPublish
     isAdminOnly
+    isAvailableForRent
+    isAvailableForSale
+    isAvailableForTrade
+    isAvailableForDonation
     translationOrDefault(language: $language) {
       id
       language
       title
       description
-      priceDescription
+      rentPriceDescription
+      salePriceDescription
+      tradeDescription
+      donationDescription
       conditions
       equipment
       surfaceSize
@@ -427,8 +446,10 @@ query AdById($id: ID!, $language: ContentLanguage!) {
         }
       }
     }
-    price
-    priceToBeDetermined
+    rentPrice
+    salePrice
+    rentPriceToBeDetermined
+    salePriceToBeDetermined
     averageRating
     organization
     refrigerated

@@ -43,9 +43,26 @@
         </template>
       </p>
       <p class="mutuali-ad-card__title font-weight-bold">{{ adTitle }}</p>
-      <p v-if="showPrice" class="mutuali-ad-card__footer mb-0 small text-decoration-none">
-        <span class="font-weight-bolder">{{ adPrice }}</span>
-        {{ adPriceDescription }}
+      <p v-if="adPriceDetails.isAvailableForRent" class="mutuali-ad-card__footer mb-0 mt-n2 small text-decoration-none">
+        <strong class="h4 font-weight-normal font-family-base mr-1">{{ $t("label.forRent") }}</strong>
+        <span class="font-weight-bolder">{{ adPriceDetails.rentPrice }}</span>
+        <small v-if="adPriceDetails.rentPriceDescription">{{ adPriceDetails.rentPriceDescription }}</small>
+      </p>
+
+      <p v-if="adPriceDetails.isAvailableForSale" class="mutuali-ad-card__footer mb-0 mt-n2 small text-decoration-none">
+        <strong class="h4 font-weight-normal font-family-base mr-1">{{ $t("label.forSale") }}</strong>
+        <span class="font-weight-bolder">{{ adPriceDetails.salePrice }}</span>
+        <small v-if="adPriceDetails.salePriceDescription">{{ adPriceDetails.salePriceDescription }}</small>
+      </p>
+
+      <p v-if="adPriceDetails.isAvailableForTrade" class="mutuali-ad-card__footer mb-0 mt-n2 small text-decoration-none">
+        <strong class="h4 font-weight-normal font-family-base mr-1">{{ $t("label.forTrade") }}</strong>
+        <span class="font-weight-bolder">{{ adPriceDetails.tradeDescription }}</span>
+      </p>
+
+      <p v-if="adPriceDetails.isAvailableForDonation" class="mutuali-ad-card__footer mb-0 mt-n2 small text-decoration-none">
+        <strong class="h4 font-weight-normal font-family-base mr-1">{{ $t("label.forDonation") }}</strong>
+        <span class="font-weight-bolder">{{ adPriceDetails.donationDescription }}</span>
       </p>
     </div>
   </router-link>
@@ -53,11 +70,13 @@
 
 <script>
 import AdCategoryBadge from "@/components/ad/category-badge";
+import { PriceDetails } from "@/mixins/price-details";
 
 export default {
   components: {
     AdCategoryBadge
   },
+  mixins: [PriceDetails],
   props: {
     ad: {
       type: Object,
@@ -83,12 +102,6 @@ export default {
     adGallery: function () {
       return this.ad.gallery;
     },
-    adPrice: function () {
-      return this.ad.priceToBeDetermined ? this.$t("price.toBeDetermined") : this.$format.formatMoney(this.ad.price);
-    },
-    adPriceDescription: function () {
-      return this.ad.priceToBeDetermined ? "" : this.ad.translationOrDefault.priceDescription;
-    },
     adOrganization: function () {
       return this.ad.organization;
     },
@@ -97,6 +110,9 @@ export default {
     },
     adIsAdminOnly: function () {
       return this.ad.isAdminOnly;
+    },
+    adPriceDetails: function () {
+      return this.getPriceDetailsFromAd(this.ad);
     }
   }
 };

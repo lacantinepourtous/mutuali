@@ -9,8 +9,7 @@
           :id="adId"
           :title="adTitle"
           :image="adImage"
-          :price="adPrice"
-          :priceDescription="adPriceDescription"
+          :price-details="getPriceDetailsFromAd(ad)"
           :organization="adOrganization"
           snippet-is-link
         />
@@ -52,12 +51,15 @@ import { URL_CONVERSATION_DETAIL } from "@/consts/urls";
 import { CONTENT_LANG_FR } from "@/consts/langs";
 import { CREATE_CONVERSATION } from "@/consts/message-actions";
 
+import { PriceDetails } from "@/mixins/price-details";
+
 export default {
   data() {
     return {
       creatingConversation: false
     };
   },
+  mixins: [PriceDetails],
   components: {
     ConversationBubble,
     AdSnippet,
@@ -91,14 +93,8 @@ export default {
     adImage: function () {
       return this.ad.gallery[0];
     },
-    adPrice: function () {
-      return this.ad.priceToBeDetermined ? this.$t("price.toBeDetermined") : this.$format.formatMoney(this.ad.price);
-    },
     adOrganization: function () {
       return this.ad.organization;
-    },
-    adPriceDescription: function () {
-      return this.ad.priceToBeDetermined ? "" : this.ad.translationOrDefault.priceDescription;
     },
     otherParticipantId: function () {
       return this.ad.user.profile.id;
@@ -133,10 +129,17 @@ export default {
 query AdById($id: ID!, $language: ContentLanguage!) {
   ad(id: $id) {
     id
+    isAvailableForRent
+    isAvailableForSale
+    isAvailableForTrade
+    isAvailableForDonation
     translationOrDefault(language: $language) {
       id
       title
-      priceDescription
+      rentPriceDescription
+      salePriceDescription
+      tradeDescription
+      donationDescription
       conditions
     }
     gallery {
@@ -153,8 +156,10 @@ query AdById($id: ID!, $language: ContentLanguage!) {
         }
       }
     }
-    price
-    priceToBeDetermined
+    rentPrice
+    salePrice
+    rentPriceToBeDetermined
+    salePriceToBeDetermined
     organization
   }
 }

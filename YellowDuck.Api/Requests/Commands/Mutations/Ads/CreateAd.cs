@@ -52,13 +52,20 @@ namespace YellowDuck.Api.Requests.Commands.Mutations.Ads
             {
                 CreatedAtUTC = DateTime.UtcNow,
                 Category = request.Category,
+                IsAvailableForRent = request.IsAvailableForRent,
+                IsAvailableForSale = request.IsAvailableForSale,
+                IsAvailableForTrade = request.IsAvailableForTrade,
+                IsAvailableForDonation = request.IsAvailableForDonation,
                 Translations = new List<AdTranslation>()
                 {
                     new AdTranslation()
                     {
                         Language = request.Language,
                         Title = request.Title,
-                        PriceDescription = request.PriceDescription,
+                        RentPriceDescription = request.RentPriceDescription,
+                        SalePriceDescription = request.SalePriceDescription,
+                        DonationDescription = request.DonationDescription,
+                        TradeDescription = request.TradeDescription,
                         Conditions = "",
                         SurfaceDescription = "",
                         ProfessionalKitchenEquipmentOther = "",
@@ -67,8 +74,10 @@ namespace YellowDuck.Api.Requests.Commands.Mutations.Ads
                         DeliveryTruckTypeOther = "",
                     }
                 },
-                PriceToBeDetermined = request.PriceToBeDetermined,
-                Price = request.Price,
+                RentPriceToBeDetermined = request.RentPriceToBeDetermined,
+                RentPrice = request.RentPrice,
+                SalePriceToBeDetermined = request.SalePriceToBeDetermined,
+                SalePrice = request.SalePrice,
                 Address = new AdAddress()
                 {
                     Raw = address.Raw,
@@ -226,14 +235,23 @@ namespace YellowDuck.Api.Requests.Commands.Mutations.Ads
         {
             public ContentLanguage Language { get; set; }
             public AdCategory Category { get; set; }
+            public bool IsAvailableForRent { get; set; }
+            public bool IsAvailableForSale { get; set; }
+            public bool IsAvailableForTrade { get; set; }
+            public bool IsAvailableForDonation { get; set; }
             public Maybe<NonNull<List<GalleryItemInput>>> GalleryItems { get; set; }
             public NonNull<string> Title { get; set; }
             public Maybe<NonNull<string>> Description { get; set; }
             public NonNull<AddressInput> Address { get; set; }
             public bool ShowAddress { get; set; }
-            public double? Price { get; set; }
-            public bool PriceToBeDetermined { get; set; }
-            public string PriceDescription { get; set; }
+            public double? RentPrice { get; set; }
+            public bool RentPriceToBeDetermined { get; set; }
+            public double? SalePrice { get; set; }
+            public bool SalePriceToBeDetermined { get; set; }
+            public string RentPriceDescription { get; set; }
+            public string SalePriceDescription { get; set; }
+            public string DonationDescription { get; set; }
+            public string TradeDescription { get; set; }
             public Maybe<List<DayOfWeek>> DayAvailability { get; set; }
             public Maybe<List<DayOfWeek>> EveningAvailability { get; set; }
             public Maybe<string> Conditions { get; set; }
