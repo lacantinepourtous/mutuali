@@ -15,8 +15,26 @@
         :is-admin-only="isAdminOnly"
       >
         <template #description>
-          <p v-if="price" class="text-muted mb-0 mt-1">
-            {{ price }} <span v-if="priceDescription" class="text-lowercase">{{ priceDescription }}</span>
+          <p v-if="priceDetails.isAvailableForRent" class="mb-0 mt-n2 small text-decoration-none">
+            <strong class="h4 font-weight-normal font-family-base mr-1">{{ $t("label.forRent") }}</strong>
+            {{ priceDetails.rentPrice }}
+            <small v-if="priceDetails.rentPriceDescription">{{ priceDetails.rentPriceDescription }}</small>
+          </p>
+
+          <p v-if="priceDetails.isAvailableForSale" class="mb-0 mt-n2 small text-decoration-none">
+            <strong class="h4 font-weight-normal font-family-base mr-1">{{ $t("label.forSale") }}</strong>
+            {{ priceDetails.salePrice }}
+            <small v-if="priceDetails.salePriceDescription">{{ priceDetails.salePriceDescription }}</small>
+          </p>
+
+          <p v-if="priceDetails.isAvailableForTrade" class="mb-0 mt-n2 small text-decoration-none">
+            <strong class="h4 font-weight-normal font-family-base mr-1">{{ $t("label.forTrade") }}</strong>
+            {{ priceDetails.tradeDescription }}
+          </p>
+
+          <p v-if="priceDetails.isAvailableForDonation" class="mb-0 mt-n2 small text-decoration-none">
+            <strong class="h4 font-weight-normal font-family-base mr-1">{{ $t("label.forDonation") }}</strong>
+            {{ priceDetails.donationDescription }}
           </p>
         </template>
 
@@ -109,8 +127,7 @@ export default {
       type: Object,
       required: true
     },
-    priceDescription: String,
-    price: String,
+    priceDetails: Object,
     sectionWidth: {
       type: String,
       default: "md"

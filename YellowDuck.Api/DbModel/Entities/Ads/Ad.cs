@@ -20,14 +20,24 @@ namespace YellowDuck.Api.DbModel.Entities.Ads
         public IList<AdDayAvailability> DayAvailability { get; set; }
         public IList<AdEveningAvailability> EveningAvailability { get; set; }
 
+        // Transaction Types
+        public bool IsAvailableForRent { get; set; }
+        public bool IsAvailableForSale { get; set; }
+        public bool IsAvailableForDonation { get; set; }
+        public bool IsAvailableForTrade { get; set; }
+
         // Address
         public long AddressId { get; set; }
         public AdAddress Address { get; set; }
         public bool ShowAddress { get; set; }
 
         // Price
-        public double? Price { get; set; }
-        public bool PriceToBeDetermined { get; set; }
+        public double? RentPrice { get; set; }
+        public bool RentPriceToBeDetermined { get; set; }
+        public double? SalePrice { get; set; }
+        public bool SalePriceToBeDetermined { get; set; }
+
+        // Rating
         public IList<AdRating> AdRatings { get; set; }
 
         // Professional Kitchen

@@ -21,36 +21,125 @@
         :options="categoryOptions"
         required
       />
-      <s-form-input
-        v-if="!form.priceToBeDetermined"
-        v-model="form.price"
-        id="price"
-        type="number"
-        :label="$t('label.ad-price')"
-        name="price"
-        rules="requiredNumeric"
-        :placeholder="$t('placeholder.ad-price')"
-        required
-        append="$"
-      />
-      <s-form-checkbox
-        v-model="form.priceToBeDetermined"
-        id="priceToBeDetermined"
-        :label="$t('label.ad-priceToBeDetermined')"
-        name="priceToBeDetermined"
-      />
-      <s-form-input
-        v-if="!form.priceToBeDetermined"
-        v-model="form.priceDescription"
-        id="priceDescription"
-        :label="$t('label.ad-priceDescription')"
-        name="priceDescription"
-        rules="required"
-        :placeholder="$t('placeholder.ad-priceDescription')"
-        required
-      />
-    </div>
 
+      <s-form-hidden
+        :value="hasAtLeastOneTransactionType ? 1 : 0"
+        id="hasAtLeastOneTransactionType"
+        name="hasAtLeastOneTransactionType"
+      />
+
+      <!-- Rent Section -->
+      <s-form-checkbox
+        v-model="form.isAvailableForRent"
+        id="isAvailableForRent"
+        :label="$t('label.isAvailableForRent')"
+        name="isAvailableForRent"
+        rules="atLeastOneChecked:@hasAtLeastOneTransactionType"
+      />
+      <div v-if="form.isAvailableForRent">
+        <s-form-input
+          v-if="!form.rentPriceToBeDetermined"
+          v-model="form.rentPrice"
+          id="rentPrice"
+          type="number"
+          :label="$t('label.ad-rent-price')"
+          name="rentPrice"
+          rules="requiredNumeric"
+          :placeholder="$t('placeholder.ad-rent-price')"
+          required
+          append="$"
+        />
+        <s-form-checkbox
+          v-model="form.rentPriceToBeDetermined"
+          id="rentPriceToBeDetermined"
+          :label="$t('label.ad-rentPriceToBeDetermined')"
+          name="rentPriceToBeDetermined"
+        />
+        <s-form-input
+          v-if="!form.rentPriceToBeDetermined"
+          v-model="form.rentPriceDescription"
+          id="rentPriceDescription"
+          :label="$t('label.ad-priceDescription')"
+          name="rentPriceDescription"
+          rules="required"
+          :placeholder="$t('placeholder.ad-priceDescription')"
+          required
+        />
+      </div>
+
+      <!-- Sale Section -->
+      <s-form-checkbox
+        v-model="form.isAvailableForSale"
+        id="isAvailableForSale"
+        :label="$t('label.isAvailableForSale')"
+        name="isAvailableForSale"
+        rules="atLeastOneChecked:@hasAtLeastOneTransactionType"
+      />
+      <div v-if="form.isAvailableForSale">
+        <s-form-input
+          v-if="!form.salePriceToBeDetermined"
+          v-model="form.salePrice"
+          id="salePrice"
+          type="number"
+          :label="$t('label.ad-sale-price')"
+          name="salePrice"
+          rules="requiredNumeric"
+          :placeholder="$t('placeholder.ad-sale-price')"
+          required
+          append="$"
+        />
+        <s-form-checkbox
+          v-model="form.salePriceToBeDetermined"
+          id="salePriceToBeDetermined"
+          :label="$t('label.ad-salePriceToBeDetermined')"
+          name="salePriceToBeDetermined"
+        />
+        <s-form-input
+          v-if="!form.salePriceToBeDetermined"
+          v-model="form.salePriceDescription"
+          id="salePriceDescription"
+          :label="$t('label.ad-priceDescription')"
+          name="salePriceDescription"
+          :placeholder="$t('placeholder.ad-priceDescription')"
+        />
+      </div>
+
+      <!-- Trade Section -->
+      <s-form-checkbox
+        v-model="form.isAvailableForTrade"
+        id="isAvailableForTrade"
+        :label="$t('label.isAvailableForTrade')"
+        name="isAvailableForTrade"
+        rules="atLeastOneChecked:@hasAtLeastOneTransactionType"
+      />
+      <div v-if="form.isAvailableForTrade">
+        <s-form-input
+          v-model="form.tradeDescription"
+          id="tradeDescription"
+          :label="$t('label.ad-tradeDescription')"
+          name="tradeDescription"
+          :placeholder="$t('placeholder.ad-tradeDescription')"
+        />
+      </div>
+
+      <!-- Donation Section -->
+      <s-form-checkbox
+        v-model="form.isAvailableForDonation"
+        id="isAvailableForDonation"
+        :label="$t('label.isAvailableForDonation')"
+        name="isAvailableForDonation"
+        rules="atLeastOneChecked:@hasAtLeastOneTransactionType"
+      />
+      <div v-if="form.isAvailableForDonation">
+        <s-form-input
+          v-model="form.donationDescription"
+          id="donationDescription"
+          :label="$t('label.ad-donationDescription')"
+          name="donationDescription"
+          :placeholder="$t('placeholder.ad-donationDescription')"
+        />
+      </div>
+    </div>
     <div class="section section--md section--padding-x section--border-bottom my-4 pb-5 rm-child-margin">
       <h2 class="my-4">{{ $t("section-title.description") }}</h2>
       <s-form-image
@@ -148,6 +237,7 @@
 <script>
 import SForm from "@/components/form/s-form";
 import SFormInput from "@/components/form/s-form-input";
+import SFormHidden from "@/components/form/s-form-hidden";
 import SFormCheckbox from "@/components/form/s-form-checkbox";
 import SFormSelect from "@/components/form/s-form-select";
 import SFormImage from "@/components/form/s-form-image";
@@ -204,14 +294,49 @@ export default {
       type: Boolean,
       default: false
     },
-    price: {
-      type: Number
-    },
-    priceToBeDetermined: {
+    isAvailableForRent: {
       type: Boolean,
       default: false
     },
-    priceDescription: {
+    isAvailableForSale: {
+      type: Boolean,
+      default: false
+    },
+    isAvailableForTrade: {
+      type: Boolean,
+      default: false
+    },
+    isAvailableForDonation: {
+      type: Boolean,
+      default: false
+    },
+    rentPrice: {
+      type: Number
+    },
+    rentPriceToBeDetermined: {
+      type: Boolean,
+      default: false
+    },
+    rentPriceDescription: {
+      type: String,
+      default: ""
+    },
+    salePrice: {
+      type: Number
+    },
+    salePriceToBeDetermined: {
+      type: Boolean,
+      default: false
+    },
+    salePriceDescription: {
+      type: String,
+      default: ""
+    },
+    tradeDescription: {
+      type: String,
+      default: ""
+    },
+    donationDescription: {
       type: String,
       default: ""
     },
@@ -299,9 +424,18 @@ export default {
         images: this.images || [],
         address: this.address,
         showAddress: this.showAddress,
-        price: this.price,
-        priceToBeDetermined: this.priceToBeDetermined,
-        priceDescription: this.priceDescription,
+        isAvailableForRent: this.isAvailableForRent,
+        isAvailableForSale: this.isAvailableForSale,
+        isAvailableForTrade: this.isAvailableForTrade,
+        isAvailableForDonation: this.isAvailableForDonation,
+        rentPrice: this.rentPrice,
+        rentPriceToBeDetermined: this.rentPriceToBeDetermined,
+        rentPriceDescription: this.rentPriceDescription,
+        salePrice: this.salePrice,
+        salePriceToBeDetermined: this.salePriceToBeDetermined,
+        salePriceDescription: this.salePriceDescription,
+        tradeDescription: this.tradeDescription,
+        donationDescription: this.donationDescription,
         conditions: this.conditions,
         surfaceSize: this.surfaceSize,
         equipment: this.equipment,
@@ -325,6 +459,7 @@ export default {
   components: {
     SForm,
     SFormInput,
+    SFormHidden,
     SFormCheckbox,
     SFormSelect,
     SFormImage,
@@ -336,11 +471,51 @@ export default {
     FormPartialOther
   },
   watch: {
-    "form.priceToBeDetermined"() {
-      if (this.form.priceToBeDetermined) {
-        this.form.price = null;
-        this.form.priceDescription = "";
+    "form.rentPriceToBeDetermined"() {
+      if (this.form.rentPriceToBeDetermined) {
+        this.form.rentPrice = null;
+        this.form.rentPriceDescription = "";
       }
+    },
+    "form.salePriceToBeDetermined"() {
+      if (this.form.salePriceToBeDetermined) {
+        this.form.salePrice = null;
+        this.form.salePriceDescription = "";
+      }
+    },
+    "form.isAvailableForRent"(value) {
+      if (!value) {
+        this.form.rentPrice = null;
+        this.form.rentPriceToBeDetermined = false;
+        this.form.rentPriceDescription = "";
+      }
+    },
+    "form.isAvailableForSale"(value) {
+      if (!value) {
+        this.form.salePrice = null;
+        this.form.salePriceToBeDetermined = false;
+        this.form.salePriceDescription = "";
+      }
+    },
+    "form.isAvailableForTrade"(value) {
+      if (!value) {
+        this.form.tradeDescription = "";
+      }
+    },
+    "form.isAvailableForDonation"(value) {
+      if (!value) {
+        this.form.donationDescription = "";
+      }
+    }
+  },
+  computed: {
+    hasAtLeastOneTransactionType() {
+      return (
+        this.form.isAvailableForRent ||
+        this.form.isAvailableForSale ||
+        this.form.isAvailableForTrade ||
+        this.form.isAvailableForDonation
+      );
     }
   },
   methods: {
@@ -377,9 +552,18 @@ export default {
         "description",
         "address",
         "showAddress",
-        "price",
-        "priceToBeDetermined",
-        "priceDescription",
+        "isAvailableForRent",
+        "isAvailableForSale",
+        "isAvailableForTrade",
+        "isAvailableForDonation",
+        "rentPrice",
+        "rentPriceToBeDetermined",
+        "rentPriceDescription",
+        "salePrice",
+        "salePriceToBeDetermined",
+        "salePriceDescription",
+        "tradeDescription",
+        "donationDescription",
         "conditions",
         "organization",
         "surfaceSize",

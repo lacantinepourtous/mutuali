@@ -230,6 +230,10 @@ query Ads(
     id
     isPublish
     isAdminOnly
+    isAvailableForRent
+    isAvailableForSale
+    isAvailableForTrade
+    isAvailableForDonation
     createdAtUTC
     address {
       id
@@ -240,7 +244,10 @@ query Ads(
       id
       language
       title
-      priceDescription
+      rentPriceDescription
+      salePriceDescription
+      tradeDescription
+      donationDescription
     }
     category
     gallery {
@@ -248,8 +255,10 @@ query Ads(
       src
       alt
     }
-    price
-    priceToBeDetermined
+    rentPrice
+    salePrice
+    rentPriceToBeDetermined
+    salePriceToBeDetermined
     organization
   }
 }

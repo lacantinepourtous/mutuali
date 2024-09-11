@@ -87,6 +87,14 @@ extend("dateMin", {
   message: i18nHelpers.instance().t("validator.date-min")
 });
 
+extend("atLeastOneChecked", {
+  params: ["hasOneChecked"],
+  validate(value, { hasOneChecked }) {
+    return hasOneChecked;
+  },
+  message: i18nHelpers.instance().t("validator.atLeastOneChecked")
+});
+
 // Register globally
 Vue.component("ValidationObserver", ValidationObserver);
 Vue.component("ValidationProvider", ValidationProvider);
