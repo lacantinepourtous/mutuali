@@ -622,5 +622,7 @@
   "label.forSale": "À vendre",
   "label.forTrade": "À échanger",
   "label.forDonation": "À donner",
-  "validator.atLeastOneChecked": "Au moins une option doit être cochée"
+  "validator.atLeastOneChecked": "Au moins une option doit être cochée",
+  "sr.upload-files": "Téléverser des fichiers",
+  "label.drop-files": "Déposez vos fichiers ici"
 }

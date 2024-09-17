@@ -624,5 +624,7 @@
   "label.forSale": "For sale",
   "label.forTrade": "For trade",
   "label.forDonation": "For donation",
-  "validator.atLeastOneChecked": "At least one option must be checked"
+  "validator.atLeastOneChecked": "At least one option must be checked",
+  "sr.upload-files": "Upload files",
+  "label.drop-files": "Drop files here"
 }

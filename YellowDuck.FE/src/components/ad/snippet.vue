@@ -14,7 +14,7 @@
         :mainRouteLabel="$t('btn.ad-detail')"
         :is-admin-only="isAdminOnly"
       >
-        <template #description>
+        <template v-if="priceDetails" #description>
           <p v-if="priceDetails.isAvailableForRent" class="mb-0 mt-n2 small text-decoration-none">
             <strong class="h4 font-weight-normal font-family-base mr-1">{{ $t("label.forRent") }}</strong>
             {{ priceDetails.rentPrice }}

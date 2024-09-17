@@ -74,7 +74,10 @@ export default {
         let result = await ConversationService.createConversation(this.adId);
         let conversation = result.data.createConversation.conversation;
 
-        await TwilioService.addMessageToConversation(conversation.sid, message);
+        await TwilioService.addMessageToConversation({
+          sid: conversation.sid,
+          body: message
+        });
 
         this.$router.replace({ name: URL_CONVERSATION_DETAIL, params: { id: conversation.id } });
       }
