@@ -12,7 +12,10 @@
             {{ file.name }}
           </div>
         </div>
-        <button class="remove-btn" @click="removeFile(index)">x</button>
+        <button class="remove-btn" @click="removeFile(index)">
+          <span class="sr-only">{{ $t("sr.close") }}</span>
+          <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="#FFF" viewBox="0 0 256 256"><path d="M205.66,194.34a8,8,0,0,1-11.32,11.32L128,139.31,61.66,205.66a8,8,0,0,1-11.32-11.32L116.69,128,50.34,61.66A8,8,0,0,1,61.66,50.34L128,116.69l66.34-66.35a8,8,0,0,1,11.32,11.32L139.31,128Z"></path></svg>
+        </button>
       </div>
     </div>
 
@@ -192,7 +195,7 @@ export default {
 };
 </script>
 
-<style scoped>
+<style scoped lang="scss">
 .hasDropzone {
   position: relative;
 }
@@ -222,6 +225,15 @@ export default {
 .file-preview {
   position: relative;
   margin-right: 10px;
+  cursor: default;
+
+  &:hover {
+    opacity: 1;
+  }
+}
+
+.file-thumb:hover {
+  transform: scale(1);
 }
 
 .file-thumb,
@@ -245,16 +257,28 @@ export default {
 
 .remove-btn {
   position: absolute;
-  top: 0;
-  right: 0;
-  background-color: rgba(255, 0, 0, 0.7);
+  top: -8px;
+  right: -8px;
+  background-color: $red-darker;
   color: white;
   border: none;
   border-radius: 50%;
   width: 20px;
   height: 20px;
   cursor: pointer;
-  font-size: 14px;
-  line-height: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  transition: background-color 0.2s ease-in-out;
+
+  &:hover {
+    background-color: $red;
+  }
+
+  & > svg {
+    width: 14px; 
+    height: 14px;
+  }
 }
 </style>

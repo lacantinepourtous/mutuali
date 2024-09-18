@@ -10,9 +10,10 @@
     <div class="conversation-bubble__top" :class="{ 'conversation-bubble__top--system green': isSystem }">
       <div v-if="files.length > 0" class="files-container">
         <div v-for="(file, index) in files" :key="index" class="file-preview">
-          <div v-if="file.isImage">
-            <img :src="file.url" class="file-thumb" @click="openImageModal(file)" />
-          </div>
+          <button v-if="file.isImage" class="file-preview-btn" @click="openImageModal(file)">
+            <span class="sr-only">{{ $t("sr.open") }}</span>
+            <img :src="file.url" :alt="file.name" class="file-thumb" />
+          </button>
           <div v-else class="file-info" @click="openFileInNewTab(file)">
             <div class="file-placeholder">
               <small>{{ file.type }}</small>
@@ -22,7 +23,7 @@
           </div>
         </div>
       </div>
-      <p class="small mb-1" v-html="bodyWithLink"></p>
+      <p v-if="bodyWithLink" class="small mb-1" v-html="bodyWithLink"></p>
     </div>
 
     <div class="conversation-bubble__bottom" :class="{ 'conversation-bubble__bottom--system green-lighter': isSystem }">
@@ -62,8 +63,8 @@
     </div>
 
     <b-modal v-model="showImageModal" size="lg" hide-footer>
-      <div class="d-flex justify-content-center align-items-center" style="height: 100%">
-        <img :src="selectedImage" class="img-fluid" style="max-width: 80%; max-height: 80%" />
+      <div class="d-flex justify-content-center align-items-center">
+        <img :src="selectedImage" class="img-fluid" />
       </div>
     </b-modal>
   </div>
@@ -212,6 +213,12 @@ export default {
     margin-bottom: 0;
   }
 
+  &--current {
+    .files-container {
+      justify-content: flex-end;
+    }
+  }
+
   &:not(&--current) {
     margin-right: auto;
   }
@@ -258,17 +265,23 @@ export default {
 .files-container {
   display: flex;
   flex-wrap: wrap;
+  gap: 12px;
   padding-bottom: 15px;
 }
 
 .file-preview {
   position: relative;
-  margin-right: 10px;
   cursor: pointer;
 
   &:hover {
     opacity: 0.8;
   }
+}
+
+.file-preview-btn {
+  padding: 0;
+  border: 0;
+  box-shadow: none;
 }
 
 .file-thumb,
