@@ -77,24 +77,28 @@
           </p>
         </div>
         <h1 class="my-4">{{ ad.translationOrDefault.title }}</h1>
-        <p v-if="adPriceDetails.isAvailableForRent" class="mb-0 mt-n2 small text-decoration-none">
-          <strong class="h4 font-weight-normal font-family-base mr-1">{{ $t("label.forRent") }}</strong>
-          {{ adPriceDetails.rentPrice }}
-          <small v-if="adPriceDetails.rentPriceDescription">{{ adPriceDetails.rentPriceDescription }}</small>
-        </p>
-        <p v-if="adPriceDetails.isAvailableForSale" class="mb-0 mt-n2 small text-decoration-none">
-          <strong class="h4 font-weight-normal font-family-base mr-1">{{ $t("label.forSale") }}</strong>
-          {{ adPriceDetails.salePrice }}
-          <small v-if="adPriceDetails.salePriceDescription">{{ adPriceDetails.salePriceDescription }}</small>
-        </p>
-        <p v-if="adPriceDetails.isAvailableForTrade" class="mb-0 mt-n2 small text-decoration-none">
-          <strong class="h4 font-weight-normal font-family-base mr-1">{{ $t("label.forTrade") }}</strong>
-          {{ adPriceDetails.tradeDescription }}
-        </p>
-        <p v-if="adPriceDetails.isAvailableForDonation" class="mb-0 mt-n2 small text-decoration-none">
-          <strong class="h4 font-weight-normal font-family-base mr-1">{{ $t("label.forDonation") }}</strong>
-          {{ adPriceDetails.donationDescription }}
-        </p>
+        <ul class="equipment-detail__types">
+          <li v-if="adPriceDetails.isAvailableForRent">
+            <AdTypeCard :title="$t('label.forRent')" :price="adPriceDetails.rentPrice" :modality="adPriceDetails.rentPriceDescription">
+              <b-img :src="require('@/assets/icons/rent.svg')" alt="" height="30" block></b-img>
+            </AdTypeCard>
+          </li>
+          <li v-if="adPriceDetails.isAvailableForSale">
+            <AdTypeCard :title="$t('label.forSale')" :price="adPriceDetails.salePrice" :modality="adPriceDetails.salePriceDescription">
+              <b-img :src="require('@/assets/icons/sale.svg')" alt="" height="30" block></b-img>
+            </AdTypeCard>
+          </li>
+          <li v-if="adPriceDetails.isAvailableForTrade">
+            <AdTypeCard :title="$t('label.forTrade')" :description="adPriceDetails.tradeDescription">
+              <b-img :src="require('@/assets/icons/trade.svg')" alt="" height="30" block></b-img>
+            </AdTypeCard>
+          </li>
+          <li v-if="adPriceDetails.isAvailableForDonation">
+            <AdTypeCard :title="$t('label.forDonation')" :description="adPriceDetails.donationDescription">
+              <b-img :src="require('@/assets/icons/donation.svg')" alt="" height="30" block></b-img>
+            </AdTypeCard>
+          </li>
+        </ul>
       </div>
       <div class="section section--md section--border-top section--border-bottom mt-6">
         <div class="equipment-detail__location">
@@ -208,6 +212,7 @@ import { PriceDetails } from "@/mixins/price-details";
 import AdCategoryBadge from "@/components/ad/category-badge";
 import AdRatingCarousel from "@/components/ad/rating-carousel";
 import AdPicture from "@/components/ad/picture";
+import AdTypeCard from "@/components/ad/type-card";
 import Breadcrumb from "@/components/generic/breadcrumb";
 import Carousel from "@/components/generic/carousel";
 import GoogleMap from "@/components/generic/google-map";
@@ -224,6 +229,7 @@ export default {
     AdCategoryBadge,
     AdRatingCarousel,
     AdPicture,
+    AdTypeCard,
     Breadcrumb,
     Carousel,
     GoogleMap,
@@ -550,6 +556,25 @@ query LocalUser {
       transform: translate(-50%, -50%);
       top: 50%;
       left: 50%;
+    }
+  }
+
+  &__types {
+    list-style-type: none;
+    padding-left: 0;
+
+    @include media-breakpoint-up(lg) {
+      display: flex;
+      column-gap: $spacer;
+    }
+
+    & > li {
+      margin-bottom: $spacer / 2;
+
+      @include media-breakpoint-up(lg) {
+        flex: 1 1 0;
+        margin-bottom: 0;
+      }
     }
   }
 }

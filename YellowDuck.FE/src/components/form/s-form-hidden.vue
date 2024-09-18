@@ -1,6 +1,6 @@
 <template>
   <s-field :id="id" :name="name" :inputId="inputId" :rules="rules" v-slot="{ sState }">
-    <input type="hidde" :value="value" :id="id" :name="name" :required="required" :state="sState" />
+    <input type="hidden" :value="value" :id="id" :name="name" :required="required" :state="sState" />
   </s-field>
 </template>
 
