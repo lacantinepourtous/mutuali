@@ -36,7 +36,7 @@
         name="isAvailableForRent"
         rules="atLeastOneChecked:@hasAtLeastOneTransactionType"
       />
-      <div v-if="form.isAvailableForRent">
+      <div v-if="form.isAvailableForRent" class="sub-section">
         <s-form-input
           v-if="!form.rentPriceToBeDetermined"
           v-model="form.rentPrice"
@@ -75,7 +75,7 @@
         name="isAvailableForSale"
         rules="atLeastOneChecked:@hasAtLeastOneTransactionType"
       />
-      <div v-if="form.isAvailableForSale">
+      <div v-if="form.isAvailableForSale" class="sub-section">
         <s-form-input
           v-if="!form.salePriceToBeDetermined"
           v-model="form.salePrice"
@@ -112,7 +112,7 @@
         name="isAvailableForTrade"
         rules="atLeastOneChecked:@hasAtLeastOneTransactionType"
       />
-      <div v-if="form.isAvailableForTrade">
+      <div v-if="form.isAvailableForTrade" class="sub-section">
         <s-form-input
           v-model="form.tradeDescription"
           id="tradeDescription"
@@ -130,7 +130,7 @@
         name="isAvailableForDonation"
         rules="atLeastOneChecked:@hasAtLeastOneTransactionType"
       />
-      <div v-if="form.isAvailableForDonation">
+      <div v-if="form.isAvailableForDonation" class="sub-section">
         <s-form-input
           v-model="form.donationDescription"
           id="donationDescription"
@@ -615,6 +615,13 @@ export default {
     @include media-breakpoint-down(lg) {
       font-size: calc(1.325rem + 0.9vw);
     }
+  }
+
+  .sub-section {
+    margin-top: $spacer / -2;
+    margin-bottom: $spacer * 2;
+    border-left: 3px solid $yellow;
+    padding-left: $spacer * 1.25;
   }
 }
 </style>
