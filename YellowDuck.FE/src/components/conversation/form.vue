@@ -50,6 +50,8 @@
 import SForm from "@/components/form/s-form";
 import SFormInput from "@/components/form/s-form-input";
 import TwilioService from "@/services/twilio";
+import NotificationService from "@/services/notification";
+import { DANGEROUS_MIME_TYPES } from "@/consts/mime-types";
 
 export default {
   data() {
@@ -87,12 +89,27 @@ export default {
     handleFileUpload(event) {
       const files = event.target.files;
       if (files.length > 0) {
+        let totalBusted = false;
+        let totalSize = this.uploadedFiles.reduce((acc, file) => acc + file.file.size, 0);
+
         for (let i = 0; i < files.length; i++) {
           const file = files[i];
           const reader = new FileReader();
           const fileExtension = file.name.split(".").pop();
-
           const isImage = file.type.startsWith("image/");
+
+          if (DANGEROUS_MIME_TYPES.includes(file.type)) {
+            NotificationService.showError(this.$t("notification.conversation-no-dangerous-files"));
+            continue;
+          }
+
+          totalSize += file.size;
+          // Max total size is 100MB
+          if (totalSize > 100 * 1024 * 1024) {
+            totalSize -= file.size;
+            totalBusted = true;
+            continue;
+          }
 
           if (isImage) {
             reader.onload = (e) => {
@@ -113,6 +130,10 @@ export default {
               isImage: false
             });
           }
+        }
+
+        if (totalBusted) {
+          NotificationService.showError(this.$t("notification.conversation-file-size-limit"));
         }
       }
     },

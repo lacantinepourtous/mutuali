@@ -11,9 +11,9 @@
       <div v-if="files.length > 0" class="files-container">
         <div v-for="(file, index) in files" :key="index" class="file-preview">
           <div v-if="file.isImage">
-            <img :src="file.url" class="file-thumb" @click="openImageModal(file.url)" />
+            <img :src="file.url" class="file-thumb" @click="openImageModal(file)" />
           </div>
-          <div v-else class="file-info" @click="openFileInNewTab(file.url)">
+          <div v-else class="file-info" @click="openFileInNewTab(file)">
             <div class="file-placeholder">
               <small>{{ file.type }}</small>
               <br />
@@ -155,7 +155,8 @@ export default {
           isImage: media.state.contentType.startsWith("image/"),
           url: media.temporaryUrl,
           name: media.state.filename,
-          type: media.state.contentType.split("/").last()
+          type: media.state.contentType.split("/").last(),
+          twilioMedia: media
         };
       });
     }
@@ -167,10 +168,12 @@ export default {
     onCreateConversation: function () {
       this.$emit("createConversation");
     },
-    openFileInNewTab(url) {
+    async openFileInNewTab(file) {
+      var url = await file.twilioMedia.getContentTemporaryUrl();
       window.open(url, "_blank");
     },
-    openImageModal(url) {
+    async openImageModal(file) {
+      var url = await file.twilioMedia.getContentTemporaryUrl();
       this.selectedImage = url;
       this.showImageModal = true;
     }
