@@ -8,6 +8,20 @@
     }"
   >
     <div class="conversation-bubble__top" :class="{ 'conversation-bubble__top--system green': isSystem }">
+      <div v-if="files.length > 0" class="files-container">
+        <div v-for="(file, index) in files" :key="index" class="file-preview">
+          <div v-if="file.isImage">
+            <img :src="file.url" class="file-thumb" @click="openImageModal(file)" />
+          </div>
+          <div v-else class="file-info" @click="openFileInNewTab(file)">
+            <div class="file-placeholder">
+              <small>{{ file.type }}</small>
+              <br />
+              {{ file.name }}
+            </div>
+          </div>
+        </div>
+      </div>
       <p class="small mb-1" v-html="bodyWithLink"></p>
     </div>
 
@@ -46,8 +60,15 @@
         {{ messageDate }}
       </p>
     </div>
+
+    <b-modal v-model="showImageModal" size="lg" hide-footer>
+      <div class="d-flex justify-content-center align-items-center" style="height: 100%">
+        <img :src="selectedImage" class="img-fluid" style="max-width: 80%; max-height: 80%" />
+      </div>
+    </b-modal>
   </div>
 </template>
+
 
 <script>
 import linkifyHtml from "linkifyjs/html";
@@ -60,6 +81,13 @@ export default {
     body: {
       type: String,
       required: true
+    },
+    medias: {
+      type: Array,
+      required: false,
+      default() {
+        return [];
+      }
     },
     dateUpdated: {
       type: Date,
@@ -88,7 +116,9 @@ export default {
   },
   data() {
     return {
-      handledActions: [RATING_REQUEST, CONTRACT_CREATED, CONTRACT_UPDATED, CREATE_CONVERSATION]
+      handledActions: [RATING_REQUEST, CONTRACT_CREATED, CONTRACT_UPDATED, CREATE_CONVERSATION],
+      showImageModal: false,
+      selectedImage: ""
     };
   },
   computed: {
@@ -118,6 +148,17 @@ export default {
         this.$emit("loadContractId");
       }
       return result;
+    },
+    files: function () {
+      return this.medias.map((media) => {
+        return {
+          isImage: media.state.contentType.startsWith("image/"),
+          url: media.temporaryUrl,
+          name: media.state.filename,
+          type: media.state.contentType.split("/").last(),
+          twilioMedia: media
+        };
+      });
     }
   },
   methods: {
@@ -126,6 +167,15 @@ export default {
     },
     onCreateConversation: function () {
       this.$emit("createConversation");
+    },
+    async openFileInNewTab(file) {
+      var url = await file.twilioMedia.getContentTemporaryUrl();
+      window.open(url, "_blank");
+    },
+    async openImageModal(file) {
+      var url = await file.twilioMedia.getContentTemporaryUrl();
+      this.selectedImage = url;
+      this.showImageModal = true;
     }
   }
 };
@@ -203,5 +253,46 @@ export default {
   &__icon {
     width: 20px;
   }
+}
+
+.files-container {
+  display: flex;
+  flex-wrap: wrap;
+  padding-bottom: 15px;
+}
+
+.file-preview {
+  position: relative;
+  margin-right: 10px;
+  cursor: pointer;
+
+  &:hover {
+    opacity: 0.8;
+  }
+}
+
+.file-thumb,
+.file-info {
+  width: 100px;
+  height: 100px;
+  object-fit: cover;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  transition: transform 0.3s ease;
+
+  &:hover {
+    transform: scale(1.1);
+  }
+}
+
+.file-info {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #f0f0f0;
+  text-align: center;
+  font-size: 12px;
+  padding: 10px;
+  overflow: hidden;
 }
 </style>
