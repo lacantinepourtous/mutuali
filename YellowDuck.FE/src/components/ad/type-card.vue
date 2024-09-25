@@ -83,7 +83,7 @@ export default {
 
   &__icon {
     @include media-breakpoint-up(lg) {
-      margin-bottom: $spacer * 3;
+      margin-bottom: $spacer;
     }
   }
 }

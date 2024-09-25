@@ -15,27 +15,34 @@
         :is-admin-only="isAdminOnly"
       >
         <template v-if="priceDetails" #description>
-          <p v-if="priceDetails.isAvailableForRent" class="mb-0 mt-n2 small text-decoration-none">
-            <strong class="h4 font-weight-normal font-family-base mr-1">{{ $t("label.forRent") }}</strong>
-            {{ priceDetails.rentPrice }}
-            <small v-if="priceDetails.rentPriceDescription">{{ priceDetails.rentPriceDescription }}</small>
-          </p>
-
-          <p v-if="priceDetails.isAvailableForSale" class="mb-0 mt-n2 small text-decoration-none">
-            <strong class="h4 font-weight-normal font-family-base mr-1">{{ $t("label.forSale") }}</strong>
-            {{ priceDetails.salePrice }}
-            <small v-if="priceDetails.salePriceDescription">{{ priceDetails.salePriceDescription }}</small>
-          </p>
-
-          <p v-if="priceDetails.isAvailableForTrade" class="mb-0 mt-n2 small text-decoration-none">
-            <strong class="h4 font-weight-normal font-family-base mr-1">{{ $t("label.forTrade") }}</strong>
-            {{ priceDetails.tradeDescription }}
-          </p>
-
-          <p v-if="priceDetails.isAvailableForDonation" class="mb-0 mt-n2 small text-decoration-none">
-            <strong class="h4 font-weight-normal font-family-base mr-1">{{ $t("label.forDonation") }}</strong>
-            {{ priceDetails.donationDescription }}
-          </p>
+          <ul class="equipment-snippet__types">
+            <li v-if="priceDetails.isAvailableForRent" class="equipment-snippet__types-item">
+              <b-img :src="require('@/assets/icons/rent.svg')" alt="" height="16" block></b-img>
+              <div class="equipment-snippet__types-text">
+                <div class="equipment-snippet__types-title">{{ $t("label.forRent") }}</div>
+                <div class="equipment-snippet__types-price">{{ priceDetails.rentPrice }}</div>
+              </div>
+            </li>
+            <li v-if="priceDetails.isAvailableForSale" class="equipment-snippet__types-item">
+              <b-img :src="require('@/assets/icons/sale.svg')" alt="" height="16" block></b-img>
+              <div class="equipment-snippet__types-text">
+                <div class="equipment-snippet__types-title">{{ $t("label.forSale") }}</div>
+                <div class="equipment-snippet__types-price">{{ priceDetails.salePrice }}</div>
+              </div>
+            </li>
+            <li v-if="priceDetails.isAvailableForTrade" class="equipment-snippet__types-item">
+              <b-img :src="require('@/assets/icons/trade.svg')" alt="" height="16" block></b-img>
+              <div class="equipment-snippet__types-text">
+                <div class="equipment-snippet__types-title">{{ $t("label.forTrade") }}</div>
+              </div>
+            </li>
+            <li v-if="priceDetails.isAvailableForDonation" class="equipment-snippet__types-item">
+              <b-img :src="require('@/assets/icons/donation.svg')" alt="" height="16" block></b-img>
+              <div class="equipment-snippet__types-text">
+                <div class="equipment-snippet__types-title">{{ $t("label.forDonation") }}</div>
+              </div>
+            </li>
+          </ul>
         </template>
 
         <template #actions>
@@ -182,6 +189,41 @@ export default {
   &__ad-link {
     display: block;
     text-decoration: none;
+  }
+
+  &__types {
+    display: flex;
+    flex-wrap: wrap;
+    row-gap: $spacer / 1.5;
+    column-gap: $spacer;
+    list-style-type: none;
+    padding-left: 0;
+    margin: $spacer 0 0;
+
+    &-item {
+      display: flex;
+      flex: 1 1 0;
+      column-gap: $spacer / 2;
+      text-transform: uppercase;
+      font-weight: 700;
+      color: $gray-700;
+      line-height: 1.4;
+    }
+
+    &-title {
+      font-size: 10px;
+      @include media-breakpoint-up(lg) {
+        font-size: 12px;
+      }
+    }
+
+    &-price {
+      font-size: 13px;
+      text-wrap: nowrap;
+      @include media-breakpoint-up(lg) {
+        font-size: 14px;
+      }
+    }
   }
 }
 </style>
