@@ -15,7 +15,7 @@
         <div class="d-sm-flex justify-content-sm-center">
           <router-link
             :to="{ name: $consts.urls.URL_SHARING_EQUIPMENT }"
-            class="anonymous-heading__btn btn btn-primary btn-lg mb-3 mr-sm-3 mb-sm-0"
+            class="anonymous-heading__btn btn btn-info btn-lg mb-3 mr-sm-3 mb-sm-0"
           >
             <svg
               class="anonymous-heading__btn-svg mr-1"
