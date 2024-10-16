@@ -11,6 +11,20 @@ import routes from "./routes";
 Vue.use(VueRouter);
 
 function scrollBehavior(to, from, savedPosition) {
+  // Mimics the behavior of scrolling to an anchor
+  if (to.hash) {
+    return new Promise((resolve, reject) => {
+      setTimeout(() => {
+        const elToScroll = document.querySelector(to.hash);
+        if (!elToScroll) {
+          return { x: 0, y: 0, behavior: "smooth" };
+        }
+        const yPos = elToScroll.getBoundingClientRect().top;
+        resolve({ x: 0, y: yPos, behavior: "smooth" });
+      }, 500);
+    });
+  }
+
   return savedPosition || { x: 0, y: 0 };
 }
 
