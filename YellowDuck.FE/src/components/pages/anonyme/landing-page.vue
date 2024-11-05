@@ -4,6 +4,7 @@
 
     <div class="landing__block landing__block--green-lighter landing__block--include-margin position-relative">
       <div class="position-relative">
+        <div id="introVideo" class="landing__video-anchor"></div>
         <IntroVideo video-id="1026565988" video-type="Vimeo" />
         <div class="section section--xl">
           <div class="landing__tiles">
@@ -98,12 +99,10 @@ import LinkTile from "@/components/anonymous/link-tile";
 import Logos from "@/components/anonymous/logos";
 
 import StepCard from "@/components/anonymous/step-card";
-import AmbianceImage from "@/components/anonymous/ambiance-image";
 import IntroVideo from "@/components/anonymous/video";
 
 export default {
   components: {
-    AmbianceImage,
     IntroVideo,
     Cta,
     Heading,
@@ -254,6 +253,11 @@ export default {
     &-title {
       color: $green-lighter;
     }
+  }
+
+  &__video-anchor {
+    position: relative;
+    top: -140px;
   }
 }
 </style>
