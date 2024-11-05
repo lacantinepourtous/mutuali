@@ -5,7 +5,7 @@
     <div class="landing__block landing__block--green-lighter landing__block--include-margin position-relative">
       <div class="position-relative">
         <div id="introVideo" class="landing__video-anchor"></div>
-        <Video :video-id="$t('text.landingpage.video.id')" video-type="Youtube" />
+        <IntroVideo video-id="1026565988" video-type="Vimeo" />
         <div class="section section--xl">
           <div class="landing__tiles">
             <LinkTile
@@ -81,7 +81,7 @@
 
     <div class="landing__block landing__block--gray">
       <div class="landing__partners section section--xl">
-        <Logos :logos="partnersLogos">
+        <Logos :logos="partnersLogos" :description="$t('text.landingpage.partners-desc')">
           <template #title>
             <h2 class="landing__partners-title text-center h3 pb-md-3 mb-6" v-html="$t('text.landingpage.support-title')"></h2>
           </template>
@@ -99,17 +99,17 @@ import LinkTile from "@/components/anonymous/link-tile";
 import Logos from "@/components/anonymous/logos";
 
 import StepCard from "@/components/anonymous/step-card";
-import Video from "@/components/anonymous/video";
+import IntroVideo from "@/components/anonymous/video";
 
 export default {
   components: {
+    IntroVideo,
     Cta,
     Heading,
     LinkList,
     LinkTile,
     Logos,
-    StepCard,
-    Video
+    StepCard
   },
   data() {
     return {
@@ -135,6 +135,10 @@ export default {
         {
           src: require("@/assets/logos/" + this.$t("text.landingpage.partners1-logo")),
           alt: this.$t("text.landingpage.partners1-alt")
+        },
+        {
+          src: require("@/assets/logos/" + this.$t("text.landingpage.partners4-logo")),
+          alt: this.$t("text.landingpage.partners4-alt")
         },
         {
           src: require("@/assets/logos/" + this.$t("text.landingpage.partners2-logo")),
