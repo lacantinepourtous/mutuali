@@ -60,7 +60,7 @@ export default {
   },
   methods: {
     checkForConsent() {
-      if (this.$termsFeed.hasConsent("targeting")) {
+      if (this.videoType === "Vimeo" || this.$termsFeed.hasConsent("targeting")) {
         this.initializeVideo();
       } else {
         this.askForConsent = true;
@@ -87,7 +87,7 @@ export default {
       if (videoType === "Youtube") {
         iframe.src = `https://www.youtube.com/embed/${videoId}?autoplay=1`;
       } else if (videoType === "Vimeo") {
-        iframe.src = `https://player.vimeo.com/video/${videoId}?autoplay=1`;
+        iframe.src = `https://player.vimeo.com/video/${videoId}?autoplay=1&dnt=1`;
       }
 
       iframe.width = "100%";
