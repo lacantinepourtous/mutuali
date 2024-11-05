@@ -3,13 +3,14 @@
     <slot name="title">
       <h2 v-if="title" class="h3">{{ title }}</h2>
     </slot>
-    <div class="logos__items">
-      <div class="logos__item" v-for="(logo, index) in logos" :key="index">
+    <ul class="logos__items">
+      <li class="logos__item" v-for="(logo, index) in logos" :key="index">
         <div class="logos__img-container">
           <img class="logos__img" :src="logo.src" :alt="logo.alt" />
         </div>
-      </div>
-    </div>
+      </li>
+    </ul>
+    <p v-if="description" class="logos__desc text-light">{{ description }}</p>
   </div>
 </template>
 
@@ -17,6 +18,10 @@
 export default {
   props: {
     title: {
+      type: String,
+      default: ""
+    },
+    description: {
       type: String,
       default: ""
     },
@@ -35,33 +40,25 @@ $logo-width: 240px;
 $logo-height: 110px;
 .logos {
   &__items {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    flex-direction: col;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: auto;
+    column-gap: $spacer * 2;
+    row-gap: $spacer * 0.5;
+    padding-left: 0;
 
     @include media-breakpoint-up(md) {
-      flex-direction: row;
-      justify-content: space-between;
-      margin: 0 $spacer * -1 $spacer * -1;
+      grid-template-columns: 1fr 1fr 1fr 1fr;
     }
   }
 
   &__item {
-    margin: 0 0 $spacer * 2;
-    width: 100%;
     height: $logo-height;
-
-    @include media-breakpoint-up(md) {
-      margin: 0 $spacer $spacer;
-      width: calc(33.33% - #{$spacer} * 2);
-    }
   }
 
   &__img-container {
     position: relative;
-    max-width: 100%;
-    width: $logo-width;
+    max-width: $logo-width;
     height: $logo-height;
     margin: 0 auto;
   }
@@ -75,6 +72,13 @@ $logo-height: 110px;
     height: 100%;
     width: 100%;
     object-fit: contain;
+  }
+
+  &__desc {
+    max-width: 540px;
+    margin: $spacer * 2.5 auto 0;
+    text-align: center;
+    font-size: 14px;
   }
 }
 </style>

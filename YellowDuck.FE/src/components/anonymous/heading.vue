@@ -14,8 +14,8 @@
         </p>
         <div class="d-sm-flex justify-content-sm-center">
           <router-link
-            :to="{ name: $consts.urls.URL_SHARING_EQUIPMENT }"
-            class="anonymous-heading__btn btn btn-primary btn-lg mb-3 mr-sm-3 mb-sm-0"
+            :to="{ name: $consts.urls.URL_CREATE_AD }"
+            class="anonymous-heading__btn btn btn-info btn-lg mb-3 mr-sm-3 mb-sm-0"
           >
             <svg
               class="anonymous-heading__btn-svg mr-1"
@@ -35,7 +35,7 @@
             {{ $t("text.landingpage.heading.gotEquipmentToShare") }}
           </router-link>
           <router-link
-            :to="{ name: $consts.urls.URL_LOOKING_FOR_EQUIPMENT }"
+            :to="{ name: $consts.urls.URL_LIST_AD }"
             class="anonymous-heading__btn btn btn-outline-primary btn-lg mb-3 mb-sm-0"
           >
             <svg
