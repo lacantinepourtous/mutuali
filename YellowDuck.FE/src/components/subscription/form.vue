@@ -138,8 +138,8 @@
       id="tosAccepted"
       :label="
         $t('label.tos-accepted', {
-          url1: '/static/terms/MutuAli_ConditionsGenerales_2024-07-05.pdf',
-          url2: '/static/terms/MutuAli_PolitiqueConfidentialite_2024-07-05.pdf'
+          url1: '/static/terms/MutuAli_ConditionsGenerales_2024-07-05.pdf?v=2',
+          url2: '/static/terms/MutuAli_PolitiqueConfidentialite_2024-07-05.pdf?v=2'
         })
       "
       name="tosAccepted"
@@ -231,21 +231,21 @@ export default {
     };
   },
   computed: {
-    organizationTypeOtherSpecificationRules: function() {
+    organizationTypeOtherSpecificationRules: function () {
       return this.organizationType ? "required" : "";
     },
-    displayOrganizationTypeOtherSpecification: function() {
+    displayOrganizationTypeOtherSpecification: function () {
       return this.organizationType === ORGANIZATION_TYPE_OTHER;
     },
-    industryOtherSpecificationRules: function() {
+    industryOtherSpecificationRules: function () {
       return this.industry ? "required" : "";
     },
-    displayIndustryOtherSpecification: function() {
+    displayIndustryOtherSpecification: function () {
       return this.industry === INDUSTRY_OTHER;
     }
   },
   methods: {
-    subscribeUser: async function() {
+    subscribeUser: async function () {
       let input = {
         email: this.email,
         password: this.password,
