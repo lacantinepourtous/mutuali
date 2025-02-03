@@ -29,6 +29,7 @@ namespace YellowDuck.Api.DbModel.Entities.Profiles
         public DateTime UpdateTimeUtc { get; set; }
 
         public string OrganizationName { get; set; }
+        public string OrganizationNEQ { get; set; }
 
         public string PostalCode { get; set; }
 

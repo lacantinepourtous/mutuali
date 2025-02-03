@@ -23,6 +23,7 @@ namespace YellowDuck.ApiTests.Requests.Commands.Mutations.Accounts
         private const string FirstName = "Example";
         private const string LastName = "Bliblou";
         private const string OrganizationName = "Example Inc.";
+        private const string OrganizationNEQ = "0000000000";
         private const string PostalCode = "G1K 0H1";
         private const string PhoneNumber = "514 555-1234";
         private const bool ShowPhoneNumber = true;
@@ -45,7 +46,8 @@ namespace YellowDuck.ApiTests.Requests.Commands.Mutations.Accounts
                 FirstName = FirstName,
                 LastName = LastName,
                 OrganizationName = OrganizationName,
-                OrganizationType = OrganizationType.NonProfitOrganizations,
+                OrganizationNEQ = OrganizationNEQ,
+                OrganizationType = OrganizationType.NonProfit,
                 Industry = Industry.HealthAndSocialServices,
                 PhoneNumber = PhoneNumber,
                 ShowPhoneNumber = ShowPhoneNumber,
@@ -63,7 +65,8 @@ namespace YellowDuck.ApiTests.Requests.Commands.Mutations.Accounts
             user.Profile.FirstName.Should().Be(FirstName);
             user.Profile.LastName.Should().Be(LastName);
             user.Profile.OrganizationName.Should().Be(OrganizationName);
-            user.Profile.OrganizationType.Should().Be(OrganizationType.NonProfitOrganizations);
+            user.Profile.OrganizationNEQ.Should().Be(OrganizationNEQ);
+            user.Profile.OrganizationType.Should().Be(OrganizationType.NonProfit);
             user.Profile.Industry.Should().Be(Industry.HealthAndSocialServices);
             user.Profile.PhoneNumber.Should().Be(PhoneNumber);
             user.Profile.ShowPhoneNumber.Should().Be(ShowPhoneNumber);
@@ -80,7 +83,8 @@ namespace YellowDuck.ApiTests.Requests.Commands.Mutations.Accounts
                 FirstName = FirstName,
                 LastName = LastName,
                 OrganizationName = OrganizationName,
-                OrganizationType = OrganizationType.NonProfitOrganizations,
+                OrganizationNEQ = OrganizationNEQ,
+                OrganizationType = OrganizationType.NonProfit,
                 Industry = Industry.HealthAndSocialServices,
                 PhoneNumber = PhoneNumber,
                 ShowPhoneNumber = ShowPhoneNumber,

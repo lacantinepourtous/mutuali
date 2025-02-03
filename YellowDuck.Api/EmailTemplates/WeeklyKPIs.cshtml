@@ -13,9 +13,9 @@
             var organizationType = "";
             switch (group.Key)
             {
-                case YellowDuck.Api.DbModel.Enums.OrganizationType.NonProfitOrganizations:
+                case YellowDuck.Api.DbModel.Enums.OrganizationType.NonProfit:
                 {
-                    organizationType = "Entreprises d'économie sociale, organismes communautaires, organismes bénévoles et autres organismes à but non lucratif";
+                    organizationType = "Organisme à but non lucratif";
                     break;
                 }
                 case YellowDuck.Api.DbModel.Enums.OrganizationType.Other:
@@ -23,14 +23,19 @@
                     organizationType = "Autre";
                     break;
                 }
-                case YellowDuck.Api.DbModel.Enums.OrganizationType.PrivateCompany:
+                case YellowDuck.Api.DbModel.Enums.OrganizationType.SocialEconomyOrganizations:
                 {
-                    organizationType = "Entreprises privées à but lucratif";
+                    organizationType = "Entreprise d’économie sociale ou organisme communautaire";
                     break;
                 }
-                case YellowDuck.Api.DbModel.Enums.OrganizationType.PublicSector:
+                case YellowDuck.Api.DbModel.Enums.OrganizationType.FoodProcessingOrganizations:
                 {
-                    organizationType = "Organisations du secteur public";
+                    organizationType = "Entreprise de transformation alimentaire";
+                    break;
+                }
+                case YellowDuck.Api.DbModel.Enums.OrganizationType.AgricultureOrganizations:
+                {
+                    organizationType = "Entreprise de production agricole ou d’agriculture urbaine";
                     break;
                 }
             }
@@ -97,9 +102,9 @@
             var organizationType = "";
             switch (group.Key)
             {
-                case YellowDuck.Api.DbModel.Enums.OrganizationType.NonProfitOrganizations:
+                case YellowDuck.Api.DbModel.Enums.OrganizationType.NonProfit:
                 {
-                    organizationType = "Entreprises d'économie sociale, organismes communautaires, organismes bénévoles et autres organismes à but non lucratif";
+                    organizationType = "Organisme à but non lucratif";
                     break;
                 }
                 case YellowDuck.Api.DbModel.Enums.OrganizationType.Other:
@@ -107,14 +112,19 @@
                     organizationType = "Autre";
                     break;
                 }
-                case YellowDuck.Api.DbModel.Enums.OrganizationType.PrivateCompany:
+                case YellowDuck.Api.DbModel.Enums.OrganizationType.SocialEconomyOrganizations:
                 {
-                    organizationType = "Entreprises privées à but lucratif";
+                    organizationType = "Entreprise d’économie sociale ou organisme communautaire";
                     break;
                 }
-                case YellowDuck.Api.DbModel.Enums.OrganizationType.PublicSector:
+                case YellowDuck.Api.DbModel.Enums.OrganizationType.FoodProcessingOrganizations:
                 {
-                    organizationType = "Organisations du secteur public";
+                    organizationType = "Entreprise de transformation alimentaire";
+                    break;
+                }
+                case YellowDuck.Api.DbModel.Enums.OrganizationType.AgricultureOrganizations:
+                {
+                    organizationType = "Entreprise de production agricole ou d’agriculture urbaine";
                     break;
                 }
             }

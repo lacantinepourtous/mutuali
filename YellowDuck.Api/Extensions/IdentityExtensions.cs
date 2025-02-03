@@ -40,6 +40,7 @@ namespace YellowDuck.Api.Extensions
                         FirstName = identity.FirstName,
                         LastName = identity.LastName,
                         OrganizationName = identity.OrganizationName,
+                        OrganizationNEQ = identity.OrganizationNEQ,
                         OrganizationType = identity.OrganizationType,
                         Industry = identity.Industry,
                         PhoneNumber = identity.PhoneNumber,
@@ -77,6 +78,7 @@ namespace YellowDuck.Api.Extensions
                         FirstName = identity.FirstName,
                         LastName = identity.LastName,
                         OrganizationName = identity.OrganizationName,
+                        OrganizationNEQ = identity.OrganizationNEQ,
                         OrganizationType = identity.OrganizationType,
                         Industry = identity.Industry,
                         PhoneNumber = identity.PhoneNumber,
@@ -123,6 +125,7 @@ namespace YellowDuck.Api.Extensions
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public string OrganizationName { get; set; }
+        public string OrganizationNEQ { get; set; }
         public OrganizationType OrganizationType { get; set; }
         public Industry Industry { get; set; }
         public string PhoneNumber { get; set; }

@@ -52,6 +52,7 @@ namespace YellowDuck.Api.Requests.Commands.Mutations.Accounts
                     FirstName = request.FirstName,
                     LastName = request.LastName,
                     OrganizationName = request.OrganizationName,
+                    OrganizationNEQ = request.OrganizationNEQ,
                     OrganizationType = request.OrganizationType,
                     Industry = request.Industry,
                     PhoneNumber = request.PhoneNumber,
@@ -107,6 +108,7 @@ namespace YellowDuck.Api.Requests.Commands.Mutations.Accounts
             public string FirstName { get; set; }
             public string LastName { get; set; }
             public string OrganizationName { get; set; }
+            public string OrganizationNEQ { get; set; }
             public OrganizationType OrganizationType { get; set; }
             public Maybe<NonNull<string>> OrganizationTypeOtherSpecification { get; set; }
             public Industry Industry { get; set; }

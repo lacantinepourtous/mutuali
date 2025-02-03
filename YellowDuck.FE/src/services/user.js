@@ -27,6 +27,7 @@ export default {
           firstName: input.firstName,
           lastName: input.lastName,
           organizationName: input.organizationName,
+          organizationNEQ: input.organizationNEQ,
           organizationType: input.organizationType,
           organizationTypeOtherSpecification: input.organizationTypeOtherSpecification,
           industry: input.industry,
@@ -108,6 +109,7 @@ export default {
     addMaybeValue(input, mutationInput, "firstName");
     addMaybeValue(input, mutationInput, "lastName");
     addMaybeValue(input, mutationInput, "organizationName");
+    addMaybeValue(input, mutationInput, "organizationNEQ");
     addMaybeValue(input, mutationInput, "organizationType");
     addMaybeValue(input, mutationInput, "organizationTypeOtherSpecification");
     addMaybeValue(input, mutationInput, "industry");
