@@ -99,9 +99,10 @@ import SFormSelect from "@/components/form/s-form-select";
 import SFormCheckbox from "@/components/form/s-form-checkbox";
 
 import {
-  ORGANIZATION_TYPE_NON_PROFIT_ORGANIZATIONS,
-  ORGANIZATION_TYPE_PRIVATE_COMPANY,
-  ORGANIZATION_TYPE_PUBLIC_SECTOR,
+  ORGANIZATION_TYPE_NON_PROFIT,
+  ORGANIZATION_TYPE_FOOD_PROCESSING,
+  ORGANIZATION_TYPE_AGRICULTURE,
+  ORGANIZATION_TYPE_SOCIAL_ECONOMY,
   ORGANIZATION_TYPE_OTHER
 } from "@/consts/organization-type";
 
@@ -137,9 +138,10 @@ export default {
         showEmail: null
       },
       organizationTypeOptions: [
-        { value: ORGANIZATION_TYPE_NON_PROFIT_ORGANIZATIONS, text: this.$t("select.non-profit-organizations") },
-        { value: ORGANIZATION_TYPE_PRIVATE_COMPANY, text: this.$t("select.private-company") },
-        { value: ORGANIZATION_TYPE_PUBLIC_SECTOR, text: this.$t("select.public-sector") },
+        { value: ORGANIZATION_TYPE_SOCIAL_ECONOMY, text: this.$t("select.social-economy-organizations") },
+        { value: ORGANIZATION_TYPE_FOOD_PROCESSING, text: this.$t("select.food-processing-organizations") },
+        { value: ORGANIZATION_TYPE_AGRICULTURE, text: this.$t("select.agriculture-organizations") },
+        { value: ORGANIZATION_TYPE_NON_PROFIT, text: this.$t("select.non-profit-organizations") },
         { value: ORGANIZATION_TYPE_OTHER, text: this.$t("select.other") }
       ],
       industryOptions: [
