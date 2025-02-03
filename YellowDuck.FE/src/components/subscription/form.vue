@@ -60,6 +60,15 @@
       :placeholder="$t('placeholder.organizationName')"
       required
     />
+    <s-form-input
+      id="organizationNEQ"
+      :label="$t('label.organizationNEQ')"
+      name="organizationNEQ"
+      rules="required"
+      v-model="organizationNEQ"
+      type="text"
+      required
+    />
     <s-form-select
       v-model="organizationType"
       id="organizationType"
@@ -203,6 +212,7 @@ export default {
       firstname: "",
       lastname: "",
       organizationName: "",
+      organizationNEQ: "",
       organizationType: null,
       industry: null,
       phoneNumber: null,
@@ -256,6 +266,7 @@ export default {
         firstName: this.firstname,
         lastName: this.lastname,
         organizationName: this.organizationName,
+        organizationNEQ: this.organizationNEQ,
         organizationType: this.organizationType,
         industry: this.industry,
         phoneNumber: this.phoneNumber,

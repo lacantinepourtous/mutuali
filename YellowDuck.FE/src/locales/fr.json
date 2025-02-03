@@ -175,6 +175,7 @@
   "form-complete.edit-contract.title": "Contrat modifié et envoyé",
   "form-complete.edit-contract.description": "Le contrat modifié est maintenant disponible pour {user}. Vous pouvez le modifier et le soumettre à nouveau tant que le paiement n’a pas été effectué.",
   "label.organizationName": "Nom de votre entreprise ou organisme",
+  "label.organizationNEQ": "Numéro d'entreprise du Québec (NEQ)",
   "label.address": "Adresse",
   "placeholder.organizationName": "Ex: Le CIBÎM",
   "placeholder.address": "6450 Ave Christophe-Colomb",

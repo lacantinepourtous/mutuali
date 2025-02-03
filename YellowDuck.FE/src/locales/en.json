@@ -175,6 +175,7 @@
   "form-complete.edit-contract.title": "Contract amended and sent",
   "form-complete.edit-contract.description": "The modified contract is now available for {user}. You can edit and resubmit it as long as payment has not been made.",
   "label.organizationName": "Organization name",
+  "label.organizationNEQ": "Québec Enterprise Number (NEQ)",
   "label.address": "Address",
   "placeholder.organizationName": "Ex: CIBÎM",
   "placeholder.address": "6450 Ave Christophe-Colomb",

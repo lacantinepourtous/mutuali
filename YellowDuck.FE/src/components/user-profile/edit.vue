@@ -31,6 +31,15 @@
         :placeholder="$t('placeholder.organizationName')"
         required
       />
+      <s-form-input
+        id="organizationNEQ"
+        :label="$t('label.organizationNEQ')"
+        name="organizationNEQ"
+        rules="required"
+        v-model="form.organizationNEQ"
+        type="text"
+        required
+      />
       <s-form-select
         v-model="form.organizationType"
         id="organizationType"
@@ -129,6 +138,7 @@ export default {
         firstName: "",
         lastName: "",
         organizationName: "",
+        organizationNEQ: "",
         organizationType: null,
         organizationTypeOtherSpecification: "",
         industry: null,
@@ -214,6 +224,7 @@ export default {
       if (this.userType === this.$consts.enums.USER_TYPE_USER) {
         maybeEditedFields.push(
           "organizationName",
+          "organizationNEQ",
           "organizationType",
           "organizationTypeOtherSpecification",
           "industry",
@@ -242,6 +253,7 @@ query UserProfileById($id: ID!) {
     firstName
     lastName
     organizationName
+    organizationNEQ
     organizationType
     organizationTypeOtherSpecification
     industry
