@@ -632,5 +632,10 @@
   "label.drop-files": "Drop files here",
   "notification.conversation-no-dangerous-files": "Some selected files are not allowed. They have been ignored.",
   "notification.conversation-file-size-limit": "The maximum size of a message is 100 MB. File(s) exceeding this size have been ignored.",
-  "use-of-masculine-notice": ""
+  "use-of-masculine-notice": "",
+  "section-title.certifications": "Certifications",
+  "select.certification-restaurant-cooking": "Restaurant cooking permit",
+  "select.certification-c1": "Type C1 cooking permit",
+  "select.certification-haccp": "HACCP (Hazard Analysis Critical Control Point)",
+  "select.certification-gfsi": "GFSI (Global Food Safety Initiative)"
 }

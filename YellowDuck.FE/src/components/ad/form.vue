@@ -212,6 +212,17 @@
       />
       <s-form-checkbox v-model="form.showAddress" id="showAddress" :label="$t('label.ad-showAddress')" name="showAddress" />
     </div>
+
+    <div class="section section--md section--padding-x section--border-bottom my-4 pb-5 rm-child-margin">
+      <h2 class="my-4">{{ $t("section-title.certifications") }}</h2>
+      <s-form-checkbox-group
+        v-model="form.certifications"
+        id="certifications"
+        name="certifications"
+        :options="certificationOptions"
+      />
+    </div>
+
     <div class="fab-container__fab">
       <div class="section section--md">
         <b-button :disabled="disabledBtn" type="submit" :variant="btnVariant" size="lg" block :aria-label="$t('sr.edit')">
@@ -239,6 +250,7 @@ import SForm from "@/components/form/s-form";
 import SFormInput from "@/components/form/s-form-input";
 import SFormHidden from "@/components/form/s-form-hidden";
 import SFormCheckbox from "@/components/form/s-form-checkbox";
+import SFormCheckboxGroup from "@/components/form/s-form-checkbox-group";
 import SFormSelect from "@/components/form/s-form-select";
 import SFormImage from "@/components/form/s-form-image";
 import SFormGoogleAutocomplete from "@/components/form/s-form-google-autocomplete";
@@ -251,6 +263,7 @@ import FormPartialOther from "@/components/ad/form-partial-other";
 
 import { AdCategory } from "@/mixins/ad-category";
 import { AvailabilityWeekday } from "@/mixins/availability-weekday";
+import { Certification } from "@/mixins/certification";
 
 import {
   CATEGORY_PROFESSIONAL_KITCHEN,
@@ -260,7 +273,7 @@ import {
 } from "@/consts/categories";
 
 export default {
-  mixins: [AdCategory, AvailabilityWeekday],
+  mixins: [AdCategory, AvailabilityWeekday, Certification],
   props: {
     adId: {
       type: String,
@@ -392,6 +405,10 @@ export default {
       type: String,
       default: ""
     },
+    certifications: {
+      type: Array,
+      default: null
+    },
     btnLabel: {
       type: String,
       required: true
@@ -448,12 +465,14 @@ export default {
         eveningAvailability: this.eveningAvailability || [],
         refrigerated: this.refrigerated,
         canSharedRoad: this.canSharedRoad,
-        canHaveDriver: this.canHaveDriver
+        canHaveDriver: this.canHaveDriver,
+        certifications: this.certifications || []
       },
       CATEGORY_PROFESSIONAL_KITCHEN,
       CATEGORY_DELIVERY_TRUCK,
       CATEGORY_STORAGE_SPACE,
       CATEGORY_OTHER
+
     };
   },
   components: {
@@ -461,6 +480,7 @@ export default {
     SFormInput,
     SFormHidden,
     SFormCheckbox,
+    SFormCheckboxGroup,
     SFormSelect,
     SFormImage,
     SFormGoogleAutocomplete,
@@ -577,10 +597,12 @@ export default {
         "eveningAvailability",
         "refrigerated",
         "canSharedRoad",
-        "canHaveDriver"
+        "canHaveDriver",
+        "certifications"
       ];
       for (let maybeEditedField of maybeEditedFields) {
         if (
+
           Array.isArray(this[maybeEditedField]) &&
           this[maybeEditedField].sort().join(",") === this.form[maybeEditedField].sort().join(",")
         ) {
