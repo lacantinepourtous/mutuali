@@ -190,7 +190,7 @@
       </fieldset>
     </div>
 
-    <div class="section section--md mt-4 mb-5">
+    <div class="section section--md section--padding-x section--border-bottom my-4 pb-5 rm-child-margin">
       <h2 class="my-4">{{ $t("section-title.contact-details") }}</h2>
       <s-form-input
         v-model="form.organization"
@@ -211,6 +211,16 @@
         required
       />
       <s-form-checkbox v-model="form.showAddress" id="showAddress" :label="$t('label.ad-showAddress')" name="showAddress" />
+    </div>
+    <div class="section section--md mt-4 mb-5">
+      <s-form-checkbox
+        v-model="form.infoIsTrue"
+        id="infoIsTrue"
+        :label="$t('label.infoIsTrue')"
+        name="infoIsTrue"
+        :rules="{ required: { allowFalse: false } }"
+        required
+      />
     </div>
     <div class="fab-container__fab">
       <div class="section section--md">
@@ -392,6 +402,10 @@ export default {
       type: String,
       default: ""
     },
+    infoIsTrue: {
+      type: Boolean,
+      default: false
+    },
     btnLabel: {
       type: String,
       required: true
@@ -448,12 +462,14 @@ export default {
         eveningAvailability: this.eveningAvailability || [],
         refrigerated: this.refrigerated,
         canSharedRoad: this.canSharedRoad,
-        canHaveDriver: this.canHaveDriver
+        canHaveDriver: this.canHaveDriver,
+        infoIsTrue: this.infoIsTrue
       },
       CATEGORY_PROFESSIONAL_KITCHEN,
       CATEGORY_DELIVERY_TRUCK,
       CATEGORY_STORAGE_SPACE,
       CATEGORY_OTHER
+
     };
   },
   components: {
@@ -577,10 +593,12 @@ export default {
         "eveningAvailability",
         "refrigerated",
         "canSharedRoad",
-        "canHaveDriver"
+        "canHaveDriver",
+        "infoIsTrue"
       ];
       for (let maybeEditedField of maybeEditedFields) {
         if (
+
           Array.isArray(this[maybeEditedField]) &&
           this[maybeEditedField].sort().join(",") === this.form[maybeEditedField].sort().join(",")
         ) {
