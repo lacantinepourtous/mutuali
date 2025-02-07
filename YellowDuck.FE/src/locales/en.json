@@ -632,5 +632,15 @@
   "label.drop-files": "Drop files here",
   "notification.conversation-no-dangerous-files": "Some selected files are not allowed. They have been ignored.",
   "notification.conversation-file-size-limit": "The maximum size of a message is 100 MB. File(s) exceeding this size have been ignored.",
-  "use-of-masculine-notice": ""
+  "use-of-masculine-notice": "",
+  "label.infoIsTrue": "I declare that the information provided in the ad is true.",
+  "label.ad-rent-price-range": "Please estimate the asking price range",
+  "placeholder.ad-rent-price-range": "Price range",
+  "label.ad-sale-price-range": "Please estimate the asking price range",
+  "placeholder.ad-sale-price-range": "Price range",
+  "select.price-range-0": "0$",
+  "select.price-range-100-500": "100-500$",
+  "select.price-range-500-1000": "500-1000$",
+  "select.price-range-1000-2000": "1000-2000$",
+  "select.price-range-2000-or-more": "2000$ and more"
 }
