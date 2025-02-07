@@ -51,6 +51,7 @@
   "validator.password": "The password is invalid.",
   "validator.numeric": "Please provide a valid number.",
   "validator.samePassword": "The password must be the same.",
+  "validator.isNEQ": "Please provide a valide NEQ.",
   "error.unauthorized": "You are not authorized to perform this operation.",
   "error.image-upload": "An error occured while saving the image",
   "label.tos-accepted": "I have read and agree to the <a href=\"{url1}\" target=\"_blank\" onclick=\"event.stopPropagation();\">Terms of Service</a> and the <a href=\"{url2}\" target=\"_blank\" onclick=\"event.stopPropagation();\">Privacy Policy</a>.",

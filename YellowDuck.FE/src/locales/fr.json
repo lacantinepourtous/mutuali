@@ -51,6 +51,7 @@
   "validator.password": "Le mot de passe n’est pas valide",
   "validator.numeric": "Veuillez fournir un nombre valide.",
   "validator.samePassword": "Le mot de passe doit être le même",
+  "validator.isNEQ": "Veuillez fournir un NEQ valide.",
   "error.unauthorized": "Vous n’avez pas les droits nécessaires pour faire cette opération.",
   "error.image-upload": "Une erreur c’est produite pendant la sauvegarde de l’image",
   "label.tos-accepted": "J’ai lu et j’accepte les <a href=\"{url1}\" target=\"_blank\" onclick=\"event.stopPropagation();\">Conditions générales d’utilisation</a> et la <a href=\"{url2}\" target=\"_blank\" onclick=\"event.stopPropagation();\">Politique de confidentialité</a>.",

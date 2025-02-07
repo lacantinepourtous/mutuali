@@ -64,7 +64,7 @@
       id="organizationNEQ"
       :label="$t('label.organizationNEQ')"
       name="organizationNEQ"
-      rules="required"
+      rules="required|isNEQ"
       v-model="organizationNEQ"
       type="text"
       required
@@ -260,6 +260,7 @@ export default {
   },
   methods: {
     subscribeUser: async function() {
+
       let input = {
         email: this.email,
         password: this.password,
