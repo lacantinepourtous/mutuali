@@ -611,8 +611,8 @@
   "accept-tos.button": "I Accept",
   "accept-tos.logout": "Not now, log me out",
   "text.landing-page-terms-feed": "Cookies preferences",
-  "label.isAvailableForRent": "",
-  "label.ad-rent-price": "",
+  "label.isAvailableForRent": "Is available for rent",
+  "label.ad-rent-price": "Rent price",
   "placeholder.ad-rent-price": "100",
   "label.isAvailableForSale": "Is available for sale",
   "label.ad-sale-price": "Sale price",
@@ -632,5 +632,6 @@
   "label.drop-files": "Drop files here",
   "notification.conversation-no-dangerous-files": "Some selected files are not allowed. They have been ignored.",
   "notification.conversation-file-size-limit": "The maximum size of a message is 100 MB. File(s) exceeding this size have been ignored.",
-  "use-of-masculine-notice": ""
+  "use-of-masculine-notice": "",
+  "label.infoIsTrue": "I declare that the information provided in the ad is true."
 }
