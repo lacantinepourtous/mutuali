@@ -60,6 +60,15 @@
       :placeholder="$t('placeholder.organizationName')"
       required
     />
+    <s-form-input
+      id="organizationNEQ"
+      :label="$t('label.organizationNEQ')"
+      name="organizationNEQ"
+      rules="required|isNEQ"
+      v-model="organizationNEQ"
+      type="text"
+      required
+    />
     <s-form-select
       v-model="organizationType"
       id="organizationType"
@@ -168,11 +177,13 @@ import SFormCheckboxGroup from "@/components/form/s-form-checkbox-group";
 import { RegisteringInterests } from "@/mixins/registering-interests";
 
 import {
-  ORGANIZATION_TYPE_NON_PROFIT_ORGANIZATIONS,
-  ORGANIZATION_TYPE_PRIVATE_COMPANY,
-  ORGANIZATION_TYPE_PUBLIC_SECTOR,
+  ORGANIZATION_TYPE_NON_PROFIT,
+  ORGANIZATION_TYPE_FOOD_PROCESSING,
+  ORGANIZATION_TYPE_AGRICULTURE,
+  ORGANIZATION_TYPE_SOCIAL_ECONOMY,
   ORGANIZATION_TYPE_OTHER
 } from "@/consts/organization-type";
+
 
 import {
   INDUSTRY_FOOD_PROCESSING_AND_DISTRIBUTION,
@@ -201,6 +212,7 @@ export default {
       firstname: "",
       lastname: "",
       organizationName: "",
+      organizationNEQ: "",
       organizationType: null,
       industry: null,
       phoneNumber: null,
@@ -212,9 +224,11 @@ export default {
       tosAccepted: false,
       notRentalCompany: false,
       organizationTypeOptions: [
-        { value: ORGANIZATION_TYPE_NON_PROFIT_ORGANIZATIONS, text: this.$t("select.non-profit-organizations") },
-        { value: ORGANIZATION_TYPE_PRIVATE_COMPANY, text: this.$t("select.private-company") },
-        { value: ORGANIZATION_TYPE_PUBLIC_SECTOR, text: this.$t("select.public-sector") },
+        { value: ORGANIZATION_TYPE_SOCIAL_ECONOMY, text: this.$t("select.social-economy-organizations") },
+        { value: ORGANIZATION_TYPE_FOOD_PROCESSING, text: this.$t("select.food-processing-organizations") },
+        { value: ORGANIZATION_TYPE_AGRICULTURE, text: this.$t("select.agriculture-organizations") },
+        { value: ORGANIZATION_TYPE_NON_PROFIT, text: this.$t("select.non-profit-organizations") },
+
         { value: ORGANIZATION_TYPE_OTHER, text: this.$t("select.other") }
       ],
       industryOptions: [
@@ -246,12 +260,14 @@ export default {
   },
   methods: {
     subscribeUser: async function() {
+
       let input = {
         email: this.email,
         password: this.password,
         firstName: this.firstname,
         lastName: this.lastname,
         organizationName: this.organizationName,
+        organizationNEQ: this.organizationNEQ,
         organizationType: this.organizationType,
         industry: this.industry,
         phoneNumber: this.phoneNumber,

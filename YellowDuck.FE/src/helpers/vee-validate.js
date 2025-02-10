@@ -95,6 +95,13 @@ extend("atLeastOneChecked", {
   message: i18nHelpers.instance().t("validator.atLeastOneChecked")
 });
 
+extend("isNEQ", {
+  validate(value) {
+    return new RegExp("^[1-7]\\d{9}$").test(value);
+  },
+  message: i18nHelpers.instance().t("validator.isNEQ")
+});
+
 // Register globally
 Vue.component("ValidationObserver", ValidationObserver);
 Vue.component("ValidationProvider", ValidationProvider);
