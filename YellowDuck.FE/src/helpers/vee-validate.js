@@ -102,6 +102,10 @@ extend("isNEQ", {
   message: i18nHelpers.instance().t("validator.isNEQ")
 });
 
+extend("isValidPhoneNumber", {
+  ...required,
+  message: i18nHelpers.instance().t("validator.isValidPhoneNumber")
+});
 // Register globally
 Vue.component("ValidationObserver", ValidationObserver);
 Vue.component("ValidationProvider", ValidationProvider);

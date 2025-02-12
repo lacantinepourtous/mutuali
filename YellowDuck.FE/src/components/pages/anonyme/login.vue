@@ -2,7 +2,7 @@
   <div class="w-100">
     <div class="section section--sm">
       <h1 class="h2 my-4">{{ $t("page-title.login") }}</h1>
-      <s-form class="my-4" @submit="login">
+      <s-form class="my-4" @submit="managePhoneNumberModal">
         <s-form-input
           id="email"
           :label="$t('label.username')"
@@ -27,6 +27,16 @@
           $t("btn.forgot-password")
         }}</b-button>
       </s-form>
+
+      <b-modal v-model="validatePhoneModal" :title="$t('twofa.title')" hide-footer centered>
+        <p>{{ $t("twofa.description") }}</p>
+
+        <s-form class="my-4" @submit="validatePhoneNumber">
+          <s-form-input id="pin" :label="$t('label.pin')" name="pin" rules="required" v-model="pin" type="number" required />
+          <b-button type="submit" variant="primary" class="mr-2">{{ $t("twofa.validate-btn") }}</b-button>
+          <b-button @click="resendCode" variant="link">{{ $t("twofa.resend-code-btn") }}</b-button>
+        </s-form>
+      </b-modal>
     </div>
     <div class="section section--sm section--border-top">
       <div class="my-4">
@@ -50,7 +60,10 @@ export default {
   data() {
     return {
       email: this.$router.currentRoute.query.email || "",
-      password: ""
+      password: "",
+      phoneNumberIsValid: false,
+      validatePhoneModal: false,
+      pin: ""
     };
   },
   computed: {
@@ -59,6 +72,21 @@ export default {
     }
   },
   methods: {
+    // TODO: Fonctionnement 2FA
+    managePhoneNumberModal: function () {
+      if (this.phoneNumberIsValid) {
+        this.login();
+      } else {
+        this.validatePhoneModal = true;
+      }
+    },
+    validatePhoneNumber: async function () {
+      if (this.pin === "123456") {
+        this.phoneNumberIsValid = true;
+        this.validatePhoneModal = false;
+        this.login();
+      }
+    },
     login: async function () {
       await AuthentificationService.login(this.email, this.password);
     }

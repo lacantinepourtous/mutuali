@@ -117,7 +117,51 @@
       rules="required"
       :placeholder="$t('placeholder.phoneNumber')"
       required
+      @change="phoneNumberIsConfirmed = false"
     />
+    <div class="d-flex flex-wrap align-items-center mt-n3">
+      <b-button
+        class="mr-3 my-1"
+        :disabled="!phoneNumber || phoneNumberIsConfirmed"
+        variant="primary"
+        type="button"
+        @click="validatePhoneModal = true"
+        >{{ $t("confirm-phone.open-modal") }}</b-button
+      >
+      <div class="d-flex align-items-center">
+        <b-icon v-if="phoneNumberIsConfirmed" icon="check-circle" variant="success"></b-icon>
+        <p v-if="phoneNumberIsConfirmed" class="mb-0 ml-2 text-success">{{ $t("confirm-phone.phone-number-confirmed") }}</p>
+      </div>
+    </div>
+
+    <s-form-hidden
+      v-if="phoneNumber"
+      class="mt-n1"
+      :value="phoneNumberIsConfirmed ? 1 : null"
+      id="phoneNumberIsConfirmed"
+      name="phoneNumberIsConfirmed"
+      rules="isValidPhoneNumber"
+    />
+
+    <b-modal v-model="validatePhoneModal" :title="$t('confirm-phone.title')" hide-footer centered>
+      <p>{{ $t("confirm-phone.description") }}</p>
+
+      <s-form class="my-4" @submit="validatePhoneNumber">
+        <s-form-input
+          id="pin"
+          :label="$t('label.pin')"
+          :description="$t('description.pin')"
+          name="pin"
+          rules="required"
+          v-model="pin"
+          type="number"
+          required
+        />
+        <b-button type="submit" variant="primary" class="mr-2">{{ $t("confirm-phone.validate-btn") }}</b-button>
+        <b-button @click="resendCode" variant="link">{{ $t("confirm-phone.resend-code-btn") }}</b-button>
+      </s-form>
+    </b-modal>
+
     <s-form-checkbox
       v-model="showPhoneNumber"
       id="showPhoneNumber"
@@ -170,6 +214,7 @@
 
 <script>
 import SForm from "@/components/form/s-form";
+import SFormHidden from "@/components/form/s-form-hidden";
 import SFormInput from "@/components/form/s-form-input";
 import SFormCheckbox from "@/components/form/s-form-checkbox";
 import SFormSelect from "@/components/form/s-form-select";
@@ -183,7 +228,6 @@ import {
   ORGANIZATION_TYPE_SOCIAL_ECONOMY,
   ORGANIZATION_TYPE_OTHER
 } from "@/consts/organization-type";
-
 
 import {
   INDUSTRY_FOOD_PROCESSING_AND_DISTRIBUTION,
@@ -199,6 +243,7 @@ export default {
   mixins: [RegisteringInterests],
   components: {
     SForm,
+    SFormHidden,
     SFormInput,
     SFormCheckbox,
     SFormSelect,
@@ -216,6 +261,9 @@ export default {
       organizationType: null,
       industry: null,
       phoneNumber: null,
+      pin: null,
+      phoneNumberIsConfirmed: false,
+      validatePhoneModal: false,
       showPhoneNumber: null,
       showEmail: null,
       registeringInterests: [],
@@ -245,22 +293,28 @@ export default {
     };
   },
   computed: {
-    organizationTypeOtherSpecificationRules: function() {
+    organizationTypeOtherSpecificationRules: function () {
       return this.organizationType ? "required" : "";
     },
-    displayOrganizationTypeOtherSpecification: function() {
+    displayOrganizationTypeOtherSpecification: function () {
       return this.organizationType === ORGANIZATION_TYPE_OTHER;
     },
-    industryOtherSpecificationRules: function() {
+    industryOtherSpecificationRules: function () {
       return this.industry ? "required" : "";
     },
-    displayIndustryOtherSpecification: function() {
+    displayIndustryOtherSpecification: function () {
       return this.industry === INDUSTRY_OTHER;
     }
   },
+  watch: {
+    phoneNumber: function (newVal) {
+      if (newVal && this.phoneNumberIsConfirmed) {
+        this.phoneNumberIsConfirmed = false;
+      }
+    }
+  },
   methods: {
-    subscribeUser: async function() {
-
+    subscribeUser: async function () {
       let input = {
         email: this.email,
         password: this.password,
@@ -290,6 +344,17 @@ export default {
       }
 
       this.$emit("submitForm", input);
+    },
+    // TODO BE: Fonctionnement modal de validation du numéro de téléphone
+    validatePhoneNumber: function () {
+      if (this.pin === "123456") {
+        this.phoneNumberIsConfirmed = true;
+        this.validatePhoneModal = false;
+      }
+    },
+    resendCode: function () {
+      /* eslint-disable no-console */
+      console.log("Code ré-envoyé");
     }
   }
 };
