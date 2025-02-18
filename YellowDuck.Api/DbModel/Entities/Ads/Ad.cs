@@ -34,8 +34,10 @@ namespace YellowDuck.Api.DbModel.Entities.Ads
         // Price
         public double? RentPrice { get; set; }
         public bool RentPriceToBeDetermined { get; set; }
+        public PriceRangeRental RentPriceRange {  get; set; }
         public double? SalePrice { get; set; }
         public bool SalePriceToBeDetermined { get; set; }
+        public PriceRangeSale SalePriceRange { get; set; }
 
         // Rating
         public IList<AdRating> AdRatings { get; set; }

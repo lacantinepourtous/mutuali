@@ -89,6 +89,8 @@ namespace YellowDuck.Api.Requests.Commands.Mutations.Ads
                 IsPublish = true
             };
 
+            request.RentPriceRange.IfSet(v => ad.RentPriceRange = v);
+            request.SalePriceRange.IfSet(v => ad.SalePriceRange = v);
             request.Address.Value.Locality.IfSet(v => ad.Address.Locality = v);
             request.Address.Value.PostalCode.IfSet(v => ad.Address.PostalCode = v);
             request.Address.Value.Route.IfSet(v => ad.Address.Route = v);
@@ -250,6 +252,8 @@ namespace YellowDuck.Api.Requests.Commands.Mutations.Ads
             public bool SalePriceToBeDetermined { get; set; }
             public string RentPriceDescription { get; set; }
             public string SalePriceDescription { get; set; }
+            public Maybe<PriceRangeRental> RentPriceRange { get; set; }
+            public Maybe<PriceRangeSale> SalePriceRange { get; set; }
             public string DonationDescription { get; set; }
             public string TradeDescription { get; set; }
             public Maybe<List<DayOfWeek>> DayAvailability { get; set; }

@@ -635,5 +635,15 @@
   "select.certification-restaurant-cooking": "Permis cuisine de restaurant",
   "select.certification-c1": "Cuisine permis Type C1",
   "select.certification-haccp": "Certification HACCP (Hazard Analysis Critical Control Point)",
-  "select.certification-gfsi": "Certification GFSI (Global Food Safety Initiative)"
+  "select.certification-gfsi": "Certification GFSI (Global Food Safety Initiative)",
+  "label.infoIsTrue": "J’affirme que les informations déclarées dans l’annonce sont véridiques.",
+  "label.ad-rent-price-range": "Veuillez estimer la fourchette de prix demandée",
+  "placeholder.ad-rent-price-range": "Fourchette de prix",
+  "label.ad-sale-price-range": "Veuillez estimer la fourchette de prix demandée",
+  "placeholder.ad-sale-price-range": "Fourchette de prix",
+  "select.price-range-0-100": "0-100$",
+  "select.price-range-100-500": "100-500$",
+  "select.price-range-500-1000": "500-1000$",
+  "select.price-range-1000-2000": "1000-2000$",
+  "select.price-range-2000-or-more": "2000$ et plus"
 }

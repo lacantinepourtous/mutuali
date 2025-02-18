@@ -41,6 +41,8 @@ export async function createAd(input) {
     organization: input.organization
   };
 
+  addMaybeValue(input, mutationInput, "rentPriceRange");
+  addMaybeValue(input, mutationInput, "salePriceRange");
   addMaybeValue(input, mutationInput, "conditions");
   addMaybeValue(input, mutationInput, "description");
   addMaybeValue(input, mutationInput, "surfaceSize");
@@ -102,6 +104,8 @@ export async function updateAd(input) {
   addMaybeValue(input, mutationInput, "showAddress");
   addMaybeValue(input, mutationInput, "rentPriceToBeDetermined");
   addMaybeValue(input, mutationInput, "salePriceToBeDetermined");
+  addMaybeValue(input, mutationInput, "rentPriceRange");
+  addMaybeValue(input, mutationInput, "salePriceRange");
   addMaybeValue(input, mutationInput, "organization");
   addMaybeValue(input, mutationInput, "professionalKitchenEquipment");
   addMaybeValue(input, mutationInput, "deliveryTruckType");

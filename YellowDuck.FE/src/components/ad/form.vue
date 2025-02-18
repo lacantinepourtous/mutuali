@@ -55,8 +55,19 @@
           :label="$t('label.ad-rentPriceToBeDetermined')"
           name="rentPriceToBeDetermined"
         />
+        <s-form-select
+          v-if="form.rentPriceToBeDetermined"
+          v-model="form.rentPriceRange"
+          id="rentPriceRange"
+          :label="$t('label.ad-rent-price-range')"
+          name="rentPriceRange"
+          rules="required"
+          :placeholder="$t('placeholder.ad-rent-price-range')"
+          :options="rentalPriceRangeOptions"
+          required
+        />
         <s-form-input
-          v-if="!form.rentPriceToBeDetermined"
+          v-else
           v-model="form.rentPriceDescription"
           id="rentPriceDescription"
           :label="$t('label.ad-priceDescription')"
@@ -94,8 +105,19 @@
           :label="$t('label.ad-salePriceToBeDetermined')"
           name="salePriceToBeDetermined"
         />
+        <s-form-select
+          v-if="form.salePriceToBeDetermined"
+          v-model="form.salePriceRange"
+          id="salePriceRange"
+          :label="$t('label.ad-sale-price-range')"
+          name="salePriceRange"
+          rules="required"
+          :placeholder="$t('placeholder.ad-sale-price-range')"
+          :options="salePriceRangeOptions"
+          required
+        />
         <s-form-input
-          v-if="!form.salePriceToBeDetermined"
+          v-else
           v-model="form.salePriceDescription"
           id="salePriceDescription"
           :label="$t('label.ad-priceDescription')"
@@ -190,7 +212,7 @@
       </fieldset>
     </div>
 
-    <div class="section section--md mt-4 mb-5">
+    <div class="section section--md section--padding-x section--border-bottom my-4 pb-5 rm-child-margin">
       <h2 class="my-4">{{ $t("section-title.contact-details") }}</h2>
       <s-form-input
         v-model="form.organization"
@@ -223,6 +245,16 @@
       />
     </div>
 
+    <div class="section section--md mt-4 mb-5">
+      <s-form-checkbox
+        v-model="form.infoIsTrue"
+        id="infoIsTrue"
+        :label="$t('label.infoIsTrue')"
+        name="infoIsTrue"
+        :rules="{ required: { allowFalse: false } }"
+        required
+      />
+    </div>
     <div class="fab-container__fab">
       <div class="section section--md">
         <b-button :disabled="disabledBtn" type="submit" :variant="btnVariant" size="lg" block :aria-label="$t('sr.edit')">
@@ -262,6 +294,8 @@ import FormPartialStorageSpace from "@/components/ad/form-partial-storage-space"
 import FormPartialOther from "@/components/ad/form-partial-other";
 
 import { AdCategory } from "@/mixins/ad-category";
+import { AdSalePriceRange } from "@/mixins/ad-sale-price-range";
+import { AdRentalPriceRange } from "@/mixins/ad-rental-price-range";
 import { AvailabilityWeekday } from "@/mixins/availability-weekday";
 import { Certification } from "@/mixins/certification";
 
@@ -273,7 +307,7 @@ import {
 } from "@/consts/categories";
 
 export default {
-  mixins: [AdCategory, AvailabilityWeekday, Certification],
+  mixins: [AdCategory, AdSalePriceRange, AdRentalPriceRange, AvailabilityWeekday, Certification],
   props: {
     adId: {
       type: String,
@@ -330,6 +364,10 @@ export default {
       type: Boolean,
       default: false
     },
+    rentPriceRange: {
+      type: String,
+      default: ""
+    },
     rentPriceDescription: {
       type: String,
       default: ""
@@ -340,6 +378,10 @@ export default {
     salePriceToBeDetermined: {
       type: Boolean,
       default: false
+    },
+    salePriceRange: {
+      type: String,
+      default: ""
     },
     salePriceDescription: {
       type: String,
@@ -409,6 +451,10 @@ export default {
       type: Array,
       default: null
     },
+    infoIsTrue: {
+      type: Boolean,
+      default: false
+    },
     btnLabel: {
       type: String,
       required: true
@@ -447,9 +493,11 @@ export default {
         isAvailableForDonation: this.isAvailableForDonation,
         rentPrice: this.rentPrice,
         rentPriceToBeDetermined: this.rentPriceToBeDetermined,
+        rentPriceRange: this.rentPriceRange,
         rentPriceDescription: this.rentPriceDescription,
         salePrice: this.salePrice,
         salePriceToBeDetermined: this.salePriceToBeDetermined,
+        salePriceRange: this.salePriceRange,
         salePriceDescription: this.salePriceDescription,
         tradeDescription: this.tradeDescription,
         donationDescription: this.donationDescription,
@@ -466,13 +514,13 @@ export default {
         refrigerated: this.refrigerated,
         canSharedRoad: this.canSharedRoad,
         canHaveDriver: this.canHaveDriver,
-        certifications: this.certifications || []
+        certifications: this.certifications || [],
+        infoIsTrue: this.infoIsTrue
       },
       CATEGORY_PROFESSIONAL_KITCHEN,
       CATEGORY_DELIVERY_TRUCK,
       CATEGORY_STORAGE_SPACE,
       CATEGORY_OTHER
-
     };
   },
   components: {
@@ -578,9 +626,11 @@ export default {
         "isAvailableForDonation",
         "rentPrice",
         "rentPriceToBeDetermined",
+        "rentPriceRange",
         "rentPriceDescription",
         "salePrice",
         "salePriceToBeDetermined",
+        "salePriceRange",
         "salePriceDescription",
         "tradeDescription",
         "donationDescription",
@@ -598,11 +648,11 @@ export default {
         "refrigerated",
         "canSharedRoad",
         "canHaveDriver",
-        "certifications"
+        "certifications",
+        "infoIsTrue"
       ];
       for (let maybeEditedField of maybeEditedFields) {
         if (
-
           Array.isArray(this[maybeEditedField]) &&
           this[maybeEditedField].sort().join(",") === this.form[maybeEditedField].sort().join(",")
         ) {
