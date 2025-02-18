@@ -636,7 +636,7 @@
   "placeholder.ad-rent-price-range": "Fourchette de prix",
   "label.ad-sale-price-range": "Veuillez estimer la fourchette de prix demandée",
   "placeholder.ad-sale-price-range": "Fourchette de prix",
-  "select.price-range-0": "0$",
+  "select.price-range-0-100": "0-100$",
   "select.price-range-100-500": "100-500$",
   "select.price-range-500-1000": "500-1000$",
   "select.price-range-1000-2000": "1000-2000$",

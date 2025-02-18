@@ -59,8 +59,10 @@ namespace YellowDuck.Api.Requests.Commands.Mutations.Ads
             request.GalleryItems.IfSet(v => UpdateGalleryItems(ad, v.Value));
             request.RentPrice.IfSet(v => ad.RentPrice = v);
             request.RentPriceToBeDetermined.IfSet(v => ad.RentPriceToBeDetermined = v);
+            request.RentPriceRange.IfSet(v => ad.RentPriceRange = v);
             request.SalePrice.IfSet(v => ad.SalePrice = v);
             request.SalePriceToBeDetermined.IfSet(v => ad.SalePriceToBeDetermined = v);
+            request.SalePriceRange.IfSet(v => ad.SalePriceRange = v);
             request.Organization.IfSet(v => ad.Organization = v);
             request.DayAvailability.IfSet( v => UpdateDayAvailability(ad, v));
             request.EveningAvailability.IfSet(v => UpdateEveningAvailability(ad, v));
@@ -181,6 +183,8 @@ namespace YellowDuck.Api.Requests.Commands.Mutations.Ads
             public Maybe<double?> SalePrice { get; set; }
             public Maybe<bool> RentPriceToBeDetermined { get; set; }
             public Maybe<bool> SalePriceToBeDetermined { get; set; }
+            public Maybe<PriceRangeRental> RentPriceRange { get; set; }
+            public Maybe<PriceRangeSale> SalePriceRange { get; set; }
             public Maybe<string> Organization { get; set; }
             public Maybe<List<ProfessionalKitchenEquipment>> ProfessionalKitchenEquipment { get; set; }
             public Maybe<DeliveryTruckType> DeliveryTruckType { get; set; }

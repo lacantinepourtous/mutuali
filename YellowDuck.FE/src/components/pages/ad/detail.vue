@@ -79,12 +79,22 @@
         <h1 class="my-4">{{ ad.translationOrDefault.title }}</h1>
         <ul class="equipment-detail__types">
           <li v-if="adPriceDetails.isAvailableForRent">
-            <AdTypeCard :title="$t('label.forRent')" :price="adPriceDetails.rentPrice" :modality="adPriceDetails.rentPriceDescription">
+            <AdTypeCard
+              :title="$t('label.forRent')"
+              :price="adPriceDetails.rentPrice"
+              :modality="adPriceDetails.rentPriceDescription"
+              :footnote="adPriceDetails.rentPriceRange"
+            >
               <b-img :src="require('@/assets/icons/rent.svg')" alt="" height="30" block></b-img>
             </AdTypeCard>
           </li>
           <li v-if="adPriceDetails.isAvailableForSale">
-            <AdTypeCard :title="$t('label.forSale')" :price="adPriceDetails.salePrice" :modality="adPriceDetails.salePriceDescription">
+            <AdTypeCard
+              :title="$t('label.forSale')"
+              :price="adPriceDetails.salePrice"
+              :modality="adPriceDetails.salePriceDescription"
+              :footnote="adPriceDetails.salePriceRange"
+            >
               <b-img :src="require('@/assets/icons/sale.svg')" alt="" height="30" block></b-img>
             </AdTypeCard>
           </li>
@@ -456,6 +466,8 @@ query AdById($id: ID!, $language: ContentLanguage!) {
     salePrice
     rentPriceToBeDetermined
     salePriceToBeDetermined
+    rentPriceRange
+    salePriceRange
     averageRating
     organization
     refrigerated

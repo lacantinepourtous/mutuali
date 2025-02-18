@@ -63,7 +63,7 @@
           name="rentPriceRange"
           rules="required"
           :placeholder="$t('placeholder.ad-rent-price-range')"
-          :options="priceRangeOptions"
+          :options="rentalPriceRangeOptions"
           required
         />
         <s-form-input
@@ -113,7 +113,7 @@
           name="salePriceRange"
           rules="required"
           :placeholder="$t('placeholder.ad-sale-price-range')"
-          :options="priceRangeOptions"
+          :options="salePriceRangeOptions"
           required
         />
         <s-form-input
@@ -272,7 +272,8 @@ import FormPartialStorageSpace from "@/components/ad/form-partial-storage-space"
 import FormPartialOther from "@/components/ad/form-partial-other";
 
 import { AdCategory } from "@/mixins/ad-category";
-import { AdPriceRange } from "@/mixins/add-price-range";
+import { AdSalePriceRange } from "@/mixins/ad-sale-price-range";
+import { AdRentalPriceRange } from "@/mixins/ad-rental-price-range";
 import { AvailabilityWeekday } from "@/mixins/availability-weekday";
 
 import {
@@ -283,7 +284,7 @@ import {
 } from "@/consts/categories";
 
 export default {
-  mixins: [AdCategory, AdPriceRange, AvailabilityWeekday],
+  mixins: [AdCategory, AdSalePriceRange, AdRentalPriceRange, AvailabilityWeekday],
   props: {
     adId: {
       type: String,
