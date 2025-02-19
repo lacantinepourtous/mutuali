@@ -9,6 +9,7 @@
         <span v-if="price" class="type-card__price">{{ price }}</span>
         <span v-if="modality" class="type-card__modality">{{ modality }}</span>
         <span v-if="description" class="type-card__desc">{{ description }}</span>
+        <span v-if="footnote" class="type-card__footnote">{{ footnote }}</span>
       </div>
     </div>
   </div>
@@ -32,6 +33,10 @@ export default {
     description: {
       type: String,
       default: ""
+    },
+    footnote: {
+      type: String,
+      default: ""
     }
   }
 };
@@ -45,7 +50,7 @@ export default {
     border-radius: 12px;
     display: flex;
     column-gap: $spacer;
-    
+
     @include media-breakpoint-up(lg) {
       flex-direction: column;
       height: 100%;
@@ -79,6 +84,13 @@ export default {
     font-weight: 700;
     margin-right: 4px;
     display: inline-block;
+  }
+
+  &__footnote {
+    font-size: 12px;
+    color: $gray-700;
+    display: block;
+    margin-top: 4px;
   }
 
   &__icon {

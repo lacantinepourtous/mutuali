@@ -631,5 +631,14 @@
   "notification.conversation-no-dangerous-files": "Certain(s) fichier(s) sélectionné(s) ne sont pas autorisé(s). Il(s) ont été ignoré(s).",
   "notification.conversation-file-size-limit": "La taille maximale d'un message est de 100 Mo. Le(s) fichier(s) excédant cette taille ont été ignoré(s).",
   "use-of-masculine-notice": "L'utilisation du genre masculin a été adoptée afin de faciliter la lecture et n'a aucune intention discriminatoire.",
-  "label.infoIsTrue": "J’affirme que les informations déclarées dans l’annonce sont véridiques."
+  "label.infoIsTrue": "J’affirme que les informations déclarées dans l’annonce sont véridiques.",
+  "label.ad-rent-price-range": "Veuillez estimer la fourchette de prix demandée",
+  "placeholder.ad-rent-price-range": "Fourchette de prix",
+  "label.ad-sale-price-range": "Veuillez estimer la fourchette de prix demandée",
+  "placeholder.ad-sale-price-range": "Fourchette de prix",
+  "select.price-range-0-100": "0-100$",
+  "select.price-range-100-500": "100-500$",
+  "select.price-range-500-1000": "500-1000$",
+  "select.price-range-1000-2000": "1000-2000$",
+  "select.price-range-2000-or-more": "2000$ et plus"
 }

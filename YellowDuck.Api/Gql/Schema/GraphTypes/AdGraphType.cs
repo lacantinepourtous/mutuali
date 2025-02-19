@@ -44,10 +44,12 @@ namespace YellowDuck.Api.Gql.Schema.GraphTypes
         public Task<AdCategory> Category => WithData(x => x.Category);
 
         public Task<double?> RentPrice => WithData(x => x.RentPrice);
-
         public Task<bool> RentPriceToBeDetermined => WithData(x => x.RentPriceToBeDetermined);
+        public Task<PriceRangeRental> RentPriceRange => WithData(x => x.RentPriceRange);
+
         public Task<double?> SalePrice => WithData(x => x.SalePrice);
         public Task<bool> SalePriceToBeDetermined => WithData(x => x.SalePriceToBeDetermined);
+        public Task<PriceRangeSale> SalePriceRange => WithData(x => x.SalePriceRange);
 
         public Task<bool> ShowAddress => WithData(x => x.ShowAddress);
 

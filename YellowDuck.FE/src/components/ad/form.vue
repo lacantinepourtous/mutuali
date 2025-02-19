@@ -55,8 +55,19 @@
           :label="$t('label.ad-rentPriceToBeDetermined')"
           name="rentPriceToBeDetermined"
         />
+        <s-form-select
+          v-if="form.rentPriceToBeDetermined"
+          v-model="form.rentPriceRange"
+          id="rentPriceRange"
+          :label="$t('label.ad-rent-price-range')"
+          name="rentPriceRange"
+          rules="required"
+          :placeholder="$t('placeholder.ad-rent-price-range')"
+          :options="rentalPriceRangeOptions"
+          required
+        />
         <s-form-input
-          v-if="!form.rentPriceToBeDetermined"
+          v-else
           v-model="form.rentPriceDescription"
           id="rentPriceDescription"
           :label="$t('label.ad-priceDescription')"
@@ -94,8 +105,19 @@
           :label="$t('label.ad-salePriceToBeDetermined')"
           name="salePriceToBeDetermined"
         />
+        <s-form-select
+          v-if="form.salePriceToBeDetermined"
+          v-model="form.salePriceRange"
+          id="salePriceRange"
+          :label="$t('label.ad-sale-price-range')"
+          name="salePriceRange"
+          rules="required"
+          :placeholder="$t('placeholder.ad-sale-price-range')"
+          :options="salePriceRangeOptions"
+          required
+        />
         <s-form-input
-          v-if="!form.salePriceToBeDetermined"
+          v-else
           v-model="form.salePriceDescription"
           id="salePriceDescription"
           :label="$t('label.ad-priceDescription')"
@@ -260,6 +282,8 @@ import FormPartialStorageSpace from "@/components/ad/form-partial-storage-space"
 import FormPartialOther from "@/components/ad/form-partial-other";
 
 import { AdCategory } from "@/mixins/ad-category";
+import { AdSalePriceRange } from "@/mixins/ad-sale-price-range";
+import { AdRentalPriceRange } from "@/mixins/ad-rental-price-range";
 import { AvailabilityWeekday } from "@/mixins/availability-weekday";
 
 import {
@@ -270,7 +294,7 @@ import {
 } from "@/consts/categories";
 
 export default {
-  mixins: [AdCategory, AvailabilityWeekday],
+  mixins: [AdCategory, AdSalePriceRange, AdRentalPriceRange, AvailabilityWeekday],
   props: {
     adId: {
       type: String,
@@ -327,6 +351,10 @@ export default {
       type: Boolean,
       default: false
     },
+    rentPriceRange: {
+      type: String,
+      default: ""
+    },
     rentPriceDescription: {
       type: String,
       default: ""
@@ -337,6 +365,10 @@ export default {
     salePriceToBeDetermined: {
       type: Boolean,
       default: false
+    },
+    salePriceRange: {
+      type: String,
+      default: ""
     },
     salePriceDescription: {
       type: String,
@@ -444,9 +476,11 @@ export default {
         isAvailableForDonation: this.isAvailableForDonation,
         rentPrice: this.rentPrice,
         rentPriceToBeDetermined: this.rentPriceToBeDetermined,
+        rentPriceRange: this.rentPriceRange,
         rentPriceDescription: this.rentPriceDescription,
         salePrice: this.salePrice,
         salePriceToBeDetermined: this.salePriceToBeDetermined,
+        salePriceRange: this.salePriceRange,
         salePriceDescription: this.salePriceDescription,
         tradeDescription: this.tradeDescription,
         donationDescription: this.donationDescription,
@@ -574,9 +608,11 @@ export default {
         "isAvailableForDonation",
         "rentPrice",
         "rentPriceToBeDetermined",
+        "rentPriceRange",
         "rentPriceDescription",
         "salePrice",
         "salePriceToBeDetermined",
+        "salePriceRange",
         "salePriceDescription",
         "tradeDescription",
         "donationDescription",
