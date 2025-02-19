@@ -6,7 +6,7 @@
     :to="{ name: $consts.urls.URL_AD_DETAIL, params: { id: ad.id } }"
   >
     <div class="mutuali-ad-card__badge">
-      <ad-category-badge :category="adCategory" />
+      <ad-category-badge :category="adCategory" is-short />
     </div>
 
     <div class="mutuali-ad-card__pic">
