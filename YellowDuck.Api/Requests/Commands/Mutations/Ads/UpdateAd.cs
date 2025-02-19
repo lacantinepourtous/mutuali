@@ -72,6 +72,7 @@ namespace YellowDuck.Api.Requests.Commands.Mutations.Ads
             request.Refrigerated.IfSet(v => ad.Refrigerated = v);
             request.CanSharedRoad.IfSet(v => ad.CanSharedRoad = v);
             request.CanHaveDriver.IfSet(v => ad.CanHaveDriver = v);
+            request.Allergen.IfSet(v => UpdateAllergens(ad, v));
 
             await db.SaveChangesAsync(cancellationToken);
 
@@ -145,6 +146,13 @@ namespace YellowDuck.Api.Requests.Commands.Mutations.Ads
             professionalKitchenEquipments.ForEach(x => ad.ProfessionalKitchenEquipments.Add(new AdProfessionalKitchenEquipment() { ProfessionalKitchenEquipment = x }));
         }
 
+        private void UpdateAllergens(Ad ad, List<Allergen> allergens)
+        {
+            db.AdAllergens.RemoveRange(db.AdAllergens.Where(x => x.AdId == ad.Id));
+            ad.Allergens = new List<AdAllergen>();
+            allergens.ForEach(x => ad.Allergens.Add(new AdAllergen() { Allergen = x }));
+        }
+
         private async Task ValidateRequest(Input request)
         {
             try
@@ -199,6 +207,7 @@ namespace YellowDuck.Api.Requests.Commands.Mutations.Ads
             public Maybe<bool> Refrigerated { get; set; }
             public Maybe<bool> CanSharedRoad { get; set; }
             public Maybe<bool> CanHaveDriver { get; set; }
+            public Maybe<List<Allergen>> Allergen { get; set; }
         }
 
         [MutationPayload]

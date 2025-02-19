@@ -180,6 +180,16 @@
       <form-partial-professional-kitchen v-if="form.category === CATEGORY_PROFESSIONAL_KITCHEN" v-model="form" />
       <form-partial-storage-space v-if="form.category === CATEGORY_STORAGE_SPACE" v-model="form" />
       <form-partial-other v-if="form.category === CATEGORY_OTHER" v-model="form" />
+
+      <!-- TODO MUT-428 show for specific categories -->
+      <s-form-checkbox-group
+        v-model="form.allergen"
+        id="allergen"
+        :label="$t('label.ad-allergen')"
+        label-class="h2 mt-4 mb-2"
+        name="allergen"
+        :options="allergenOptions"
+      />
     </div>
 
     <div class="section section--md section--padding-x section--border-bottom my-4 pb-5 rm-child-margin">
@@ -298,6 +308,7 @@ import { AdSalePriceRange } from "@/mixins/ad-sale-price-range";
 import { AdRentalPriceRange } from "@/mixins/ad-rental-price-range";
 import { AvailabilityWeekday } from "@/mixins/availability-weekday";
 import { Certification } from "@/mixins/certification";
+import { Allergen } from "@/mixins/allergen";
 
 import {
   CATEGORY_PROFESSIONAL_KITCHEN,
@@ -307,7 +318,7 @@ import {
 } from "@/consts/categories";
 
 export default {
-  mixins: [AdCategory, AdSalePriceRange, AdRentalPriceRange, AvailabilityWeekday, Certification],
+  mixins: [AdCategory, AdSalePriceRange, AdRentalPriceRange, AvailabilityWeekday, Certification, Allergen],
   props: {
     adId: {
       type: String,
@@ -423,6 +434,10 @@ export default {
       type: String,
       default: ""
     },
+    allergen: {
+      type: Array,
+      default: null
+    },
     dayAvailability: {
       type: Array,
       default: null
@@ -509,6 +524,7 @@ export default {
         professionalKitchenEquipmentOther: this.professionalKitchenEquipmentOther,
         deliveryTruckType: this.deliveryTruckType,
         deliveryTruckTypeOther: this.deliveryTruckTypeOther,
+        allergen: this.allergen || [],
         dayAvailability: this.dayAvailability || [],
         eveningAvailability: this.eveningAvailability || [],
         refrigerated: this.refrigerated,
@@ -643,6 +659,7 @@ export default {
         "professionalKitchenEquipmentOther",
         "deliveryTruckType",
         "deliveryTruckTypeOther",
+        "allergen",
         "dayAvailability",
         "eveningAvailability",
         "refrigerated",

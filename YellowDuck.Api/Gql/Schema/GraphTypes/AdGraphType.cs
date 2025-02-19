@@ -80,6 +80,11 @@ namespace YellowDuck.Api.Gql.Schema.GraphTypes
         public Task<bool> CanSharedRoad => WithData(x => x.CanSharedRoad);
 
         public Task<bool> CanHaveDriver => WithData(x => x.CanHaveDriver);
+        public async Task<IEnumerable<Allergen>> Allergen(IAppUserContext ctx)
+        {
+            var allergens = await ctx.LoadAllergensByAdId(id);
+            return allergens.Select(x => x.Allergen).ToList();
+        }
 
         public async Task<IEnumerable<AdGalleryItemGraphType>> Gallery(IAppUserContext ctx)
         {
