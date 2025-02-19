@@ -57,6 +57,7 @@ export async function createAd(input) {
   addMaybeValue(input, mutationInput, "refrigerated");
   addMaybeValue(input, mutationInput, "canSharedRoad");
   addMaybeValue(input, mutationInput, "canHaveDriver");
+  addMaybeValue(input, mutationInput, "certification");
 
   let result = await Apollo.instance.defaultClient.mutate({
     mutation: CreateAd,
@@ -114,6 +115,7 @@ export async function updateAd(input) {
   addMaybeValue(input, mutationInput, "refrigerated");
   addMaybeValue(input, mutationInput, "canSharedRoad");
   addMaybeValue(input, mutationInput, "canHaveDriver");
+  addMaybeValue(input, mutationInput, "certification");
 
   if (Object.keys(mutationInput).length > 1) {
     let result = await Apollo.instance.defaultClient.mutate({

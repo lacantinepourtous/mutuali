@@ -43,6 +43,7 @@ namespace YellowDuck.Api.DbModel
         public DbSet<AdProfessionalKitchenEquipment> AdProfessionalKitchenEquipments { get; set; }
         public DbSet<AdDayAvailability> AdDayAvailabilityWeekdays { get; set; }
         public DbSet<AdEveningAvailability> AdEveningAvailabilityWeekdays { get; set; }
+        public DbSet<AdCertification> AdCertifications { get; set; }
         public DbSet<UserRating> UserRatings { get; set; }
         public DbSet<Alert> Alerts { get; set; }
         public DbSet<AlertAddress> AlertAddress { get; set; }
@@ -100,6 +101,7 @@ namespace YellowDuck.Api.DbModel
                 _.HasMany(x => x.ProfessionalKitchenEquipments).WithOne().HasForeignKey(x => x.AdId);
                 _.HasMany(x => x.DayAvailability).WithOne().HasForeignKey(x => x.AdId);
                 _.HasMany(x => x.EveningAvailability).WithOne().HasForeignKey(x => x.AdId);
+                _.HasMany(x => x.Certifications).WithOne().HasForeignKey(x => x.AdId);
                 _.HasOne(x => x.User).WithMany(x => x.Ads).HasForeignKey(x => x.UserId);
             });
 
@@ -151,6 +153,10 @@ namespace YellowDuck.Api.DbModel
 
             Configure<AdEveningAvailability>(_ => {
                 _.HasOne(x => x.Ad).WithMany(x => x.EveningAvailability).HasForeignKey(x => x.AdId);
+            });
+
+            Configure<AdCertification>(_ => {
+                _.HasOne(x => x.Ad).WithMany(x => x.Certifications).HasForeignKey(x => x.AdId);
             });
 
             Configure<Alert>(_ => {

@@ -63,6 +63,11 @@ namespace YellowDuck.Api.Gql.Schema.GraphTypes
             var eveningAvailability = await ctx.LoadEveningAvailabilityByAdId(id);
             return eveningAvailability.Select(x => x.Weekday).ToList();
         }
+        public async Task<IEnumerable<Certification>> Certification(IAppUserContext ctx)
+        {
+            var certifications = await ctx.LoadCertificationsByAdId(id);
+            return certifications.Select(x => x.Certification).ToList();
+        }
         public async Task<IEnumerable<ProfessionalKitchenEquipment>> ProfessionalKitchenEquipment(IAppUserContext ctx)
         {
             var professionalKitchenEquipments = await ctx.LoadProfessionalKitchenEquipmentsByAdId(id);

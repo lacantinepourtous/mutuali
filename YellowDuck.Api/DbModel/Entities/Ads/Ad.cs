@@ -19,6 +19,7 @@ namespace YellowDuck.Api.DbModel.Entities.Ads
         public string Organization { get; set; }
         public IList<AdDayAvailability> DayAvailability { get; set; }
         public IList<AdEveningAvailability> EveningAvailability { get; set; }
+        public IList<AdCertification> Certifications { get; set; }
 
         // Transaction Types
         public bool IsAvailableForRent { get; set; }

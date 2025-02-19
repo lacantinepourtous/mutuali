@@ -238,9 +238,9 @@
     <div class="section section--md section--padding-x section--border-bottom my-4 pb-5 rm-child-margin">
       <h2 class="my-4">{{ $t("section-title.certifications") }}</h2>
       <s-form-checkbox-group
-        v-model="form.certifications"
-        id="certifications"
-        name="certifications"
+        v-model="form.certification"
+        id="certification"
+        name="certification"
         :options="certificationOptions"
       />
     </div>
@@ -447,7 +447,7 @@ export default {
       type: String,
       default: ""
     },
-    certifications: {
+    certification: {
       type: Array,
       default: null
     },
@@ -514,7 +514,7 @@ export default {
         refrigerated: this.refrigerated,
         canSharedRoad: this.canSharedRoad,
         canHaveDriver: this.canHaveDriver,
-        certifications: this.certifications || [],
+        certification: this.certification || [],
         infoIsTrue: this.infoIsTrue
       },
       CATEGORY_PROFESSIONAL_KITCHEN,
@@ -648,7 +648,7 @@ export default {
         "refrigerated",
         "canSharedRoad",
         "canHaveDriver",
-        "certifications",
+        "certification",
         "infoIsTrue"
       ];
       for (let maybeEditedField of maybeEditedFields) {

@@ -1,4 +1,4 @@
-export const CERTIFICATION_RESTAURANT_COOKING = "certification-restaurant-cooking";
-export const CERTIFICATION_C1 = "certification-c1";
-export const CERTIFICATION_HACCP = "certification-haccp";
-export const CERTIFICATION_GFSI = "certification-gfsi";
+export const CERTIFICATION_RESTAURANT_KITCHEN = "RESTAURANT_KITCHEN";
+export const CERTIFICATION_C1_KITCHEN = "C1_KITCHEN";
+export const CERTIFICATION_HACCP = "HACCP";
+export const CERTIFICATION_GFSI = "GFSI";
