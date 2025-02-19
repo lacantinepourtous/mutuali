@@ -139,9 +139,9 @@
       <detail-partial-delivery-truck v-if="ad.category === CATEGORY_DELIVERY_TRUCK" :ad="ad" />
       <detail-partial-professional-kitchen v-if="ad.category === CATEGORY_PROFESSIONAL_KITCHEN" :ad="ad" />
       <detail-partial-storage-space v-if="ad.category === CATEGORY_STORAGE_SPACE" :ad="ad" />
-      <detail-partial-other v-if="ad.category === CATEGORY_OTHER" :ad="ad" />
+      <detail-partial-other v-if="isMiscCategory" :ad="ad" />
 
-      <div v-if="ad.allergen.length" class="section section--md section--border-top py-6">
+      <div v-if="isAllergenCategory && ad.allergen.length" class="section section--md section--border-top py-6">
         <h2 class="font-family-base font-weight-bold mb-4">{{ $t("label.ad-allergen") }}</h2>
         <div class="rm-child-margin">
           <ul>
@@ -234,6 +234,11 @@ import {
   CATEGORY_PROFESSIONAL_KITCHEN,
   CATEGORY_DELIVERY_TRUCK,
   CATEGORY_STORAGE_SPACE,
+  CATEGORY_PROFESSIONAL_COOKING_EQUIPMENT,
+  CATEGORY_PREP_EQUIPMENT,
+  CATEGORY_REFRIGERATION_EQUIPMENT,
+  CATEGORY_HEAVY_EQUIPMENT,
+  CATEGORY_SURPLUS,
   CATEGORY_OTHER
 } from "@/consts/categories";
 import { VUE_APP_MUTUALI_CONTACT_MAIL } from "@/helpers/env";
@@ -282,6 +287,11 @@ export default {
       CATEGORY_PROFESSIONAL_KITCHEN,
       CATEGORY_DELIVERY_TRUCK,
       CATEGORY_STORAGE_SPACE,
+      CATEGORY_PROFESSIONAL_COOKING_EQUIPMENT,
+      CATEGORY_PREP_EQUIPMENT,
+      CATEGORY_REFRIGERATION_EQUIPMENT,
+      CATEGORY_HEAVY_EQUIPMENT,
+      CATEGORY_SURPLUS,
       CATEGORY_OTHER
     };
   },
@@ -364,6 +374,27 @@ export default {
         }
       }
       return adAvailability;
+    },
+    isMiscCategory() {
+      const miscCategories = [
+        CATEGORY_OTHER,
+        CATEGORY_PROFESSIONAL_COOKING_EQUIPMENT,
+        CATEGORY_PREP_EQUIPMENT,
+        CATEGORY_REFRIGERATION_EQUIPMENT,
+        CATEGORY_HEAVY_EQUIPMENT,
+        CATEGORY_SURPLUS
+      ];
+      return miscCategories.includes(this.ad.category);
+    },
+    isAllergenCategory() {
+      const allergenCategories = [
+        CATEGORY_PROFESSIONAL_KITCHEN,
+        CATEGORY_PREP_EQUIPMENT,
+        CATEGORY_PROFESSIONAL_COOKING_EQUIPMENT,
+        CATEGORY_SURPLUS,
+        CATEGORY_DELIVERY_TRUCK
+      ];
+      return allergenCategories.includes(this.ad.category);
     }
   },
   methods: {
