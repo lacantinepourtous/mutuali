@@ -179,10 +179,10 @@
       <form-partial-delivery-truck v-if="form.category === CATEGORY_DELIVERY_TRUCK" v-model="form" />
       <form-partial-professional-kitchen v-if="form.category === CATEGORY_PROFESSIONAL_KITCHEN" v-model="form" />
       <form-partial-storage-space v-if="form.category === CATEGORY_STORAGE_SPACE" v-model="form" />
-      <form-partial-other v-if="form.category === CATEGORY_OTHER" v-model="form" />
+      <form-partial-other v-if="isMiscCategory" v-model="form" />
 
-      <!-- TODO MUT-428 show for specific categories -->
       <s-form-checkbox-group
+        v-if="isAllergenCategory"
         v-model="form.allergen"
         id="allergen"
         :label="$t('label.ad-allergen')"
@@ -246,11 +246,12 @@
     </div>
 
     <div class="section section--md section--padding-x section--border-bottom my-4 pb-5 rm-child-margin">
-      <h2 class="my-4">{{ $t("section-title.certifications") }}</h2>
       <s-form-checkbox-group
         v-model="form.certification"
         id="certification"
         name="certification"
+        :label="$t('section-title.certifications')"
+        label-class="h2 mb-4"
         :options="certificationOptions"
       />
     </div>
@@ -314,6 +315,11 @@ import {
   CATEGORY_PROFESSIONAL_KITCHEN,
   CATEGORY_DELIVERY_TRUCK,
   CATEGORY_STORAGE_SPACE,
+  CATEGORY_PROFESSIONAL_COOKING_EQUIPMENT,
+  CATEGORY_PREP_EQUIPMENT,
+  CATEGORY_REFRIGERATION_EQUIPMENT,
+  CATEGORY_HEAVY_EQUIPMENT,
+  CATEGORY_SURPLUS,
   CATEGORY_OTHER
 } from "@/consts/categories";
 
@@ -600,6 +606,27 @@ export default {
         this.form.isAvailableForTrade ||
         this.form.isAvailableForDonation
       );
+    },
+    isMiscCategory() {
+      const miscCategories = [
+        CATEGORY_OTHER,
+        CATEGORY_PROFESSIONAL_COOKING_EQUIPMENT,
+        CATEGORY_PREP_EQUIPMENT,
+        CATEGORY_REFRIGERATION_EQUIPMENT,
+        CATEGORY_HEAVY_EQUIPMENT,
+        CATEGORY_SURPLUS
+      ];
+      return miscCategories.includes(this.form.category);
+    },
+    isAllergenCategory() {
+      const allergenCategories = [
+        CATEGORY_PROFESSIONAL_KITCHEN,
+        CATEGORY_PREP_EQUIPMENT,
+        CATEGORY_PROFESSIONAL_COOKING_EQUIPMENT,
+        CATEGORY_SURPLUS,
+        CATEGORY_DELIVERY_TRUCK
+      ];
+      return allergenCategories.includes(this.form.category);
     }
   },
   methods: {

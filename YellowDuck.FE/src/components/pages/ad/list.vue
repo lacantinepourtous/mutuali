@@ -93,7 +93,13 @@
         <div class="section mt-3 mb-6">
           <div class="equipment-list__list-header mb-4">
             <div class="equipment-list__list-header-section mr-2">
-              <ad-category-badge v-if="filters.category" :category="filters.category" closable @close="filters.category = null" />
+              <ad-category-badge
+                v-if="filters.category"
+                :category="filters.category"
+                closable
+                is-short
+                @close="filters.category = null"
+              />
             </div>
 
             <div class="equipment-list__list-header-section ml-2">
@@ -274,6 +280,11 @@ import {
   CATEGORY_PROFESSIONAL_KITCHEN,
   CATEGORY_DELIVERY_TRUCK,
   CATEGORY_STORAGE_SPACE,
+  CATEGORY_PROFESSIONAL_COOKING_EQUIPMENT,
+  CATEGORY_PREP_EQUIPMENT,
+  CATEGORY_REFRIGERATION_EQUIPMENT,
+  CATEGORY_HEAVY_EQUIPMENT,
+  CATEGORY_SURPLUS,
   CATEGORY_OTHER
 } from "@/consts/categories";
 import { CONTENT_LANG_FR } from "@/consts/langs";
@@ -383,6 +394,11 @@ export default {
         category === CATEGORY_PROFESSIONAL_KITCHEN ||
         category === CATEGORY_DELIVERY_TRUCK ||
         category === CATEGORY_STORAGE_SPACE ||
+        category === CATEGORY_PROFESSIONAL_COOKING_EQUIPMENT ||
+        category === CATEGORY_PREP_EQUIPMENT ||
+        category === CATEGORY_REFRIGERATION_EQUIPMENT ||
+        category === CATEGORY_HEAVY_EQUIPMENT ||
+        category === CATEGORY_SURPLUS ||
         category === CATEGORY_OTHER
       ) {
         return category;
@@ -626,6 +642,14 @@ export default {
           text: this.$t("select.category-delivery-truck")
         },
         { value: CATEGORY_STORAGE_SPACE, text: this.$t("select.category-storage-space") },
+        {
+          value: CATEGORY_PROFESSIONAL_COOKING_EQUIPMENT,
+          text: this.$t("select.category-professional-cooking-equipment")
+        },
+        { value: CATEGORY_PREP_EQUIPMENT, text: this.$t("select.category-prep-equipment") },
+        { value: CATEGORY_REFRIGERATION_EQUIPMENT, text: this.$t("select.category-refrigeration-equipment") },
+        { value: CATEGORY_HEAVY_EQUIPMENT, text: this.$t("select.category-heavy-equipment") },
+        { value: CATEGORY_SURPLUS, text: this.$t("select.category-surplus") },
         { value: CATEGORY_OTHER, text: this.$t("select.category-other") }
       ],
       CARD_VIEW,
