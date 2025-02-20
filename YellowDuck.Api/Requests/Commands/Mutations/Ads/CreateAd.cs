@@ -128,6 +128,12 @@ namespace YellowDuck.Api.Requests.Commands.Mutations.Ads
                 v.ForEach(x => ad.EveningAvailability.Add(new AdEveningAvailability() { Weekday = x }));
             });
 
+            request.Certification.IfSet(v =>
+            {
+                ad.Certifications = new List<AdCertification>();
+                v.ForEach(x => ad.Certifications.Add(new AdCertification() { Certification = x }));
+            });
+
             request.ProfessionalKitchenEquipment.IfSet(v =>
             {
                 ad.ProfessionalKitchenEquipments = new List<AdProfessionalKitchenEquipment>();
@@ -258,6 +264,7 @@ namespace YellowDuck.Api.Requests.Commands.Mutations.Ads
             public string TradeDescription { get; set; }
             public Maybe<List<DayOfWeek>> DayAvailability { get; set; }
             public Maybe<List<DayOfWeek>> EveningAvailability { get; set; }
+            public Maybe<List<Certification>> Certification { get; set; }
             public Maybe<string> Conditions { get; set; }
             public Maybe<NonNull<string>> SurfaceDescription { get; set; }
             public Maybe<List<ProfessionalKitchenEquipment>> ProfessionalKitchenEquipment { get; set; }

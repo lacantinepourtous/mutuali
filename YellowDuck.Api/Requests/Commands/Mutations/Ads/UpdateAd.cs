@@ -66,6 +66,7 @@ namespace YellowDuck.Api.Requests.Commands.Mutations.Ads
             request.Organization.IfSet(v => ad.Organization = v);
             request.DayAvailability.IfSet( v => UpdateDayAvailability(ad, v));
             request.EveningAvailability.IfSet(v => UpdateEveningAvailability(ad, v));
+            request.Certification.IfSet(v => UpdateCertifications(ad, v));
             request.ProfessionalKitchenEquipment.IfSet(v => UpdateProfessionalKitchenEquipments(ad, v));
             request.DeliveryTruckType.IfSet(v => ad.DeliveryTruckType = v);
             request.Refrigerated.IfSet(v => ad.Refrigerated = v);
@@ -130,6 +131,12 @@ namespace YellowDuck.Api.Requests.Commands.Mutations.Ads
             ad.EveningAvailability = new List<AdEveningAvailability>();
             eveningAvailability.ForEach(x => ad.EveningAvailability.Add(new AdEveningAvailability() { Weekday = x }));
         }
+        private void UpdateCertifications(Ad ad, List<Certification> certifications)
+        {
+            db.AdCertifications.RemoveRange(db.AdCertifications.Where(x => x.AdId == ad.Id));
+            ad.Certifications = new List<AdCertification>();
+            certifications.ForEach(x => ad.Certifications.Add(new AdCertification() { Certification = x }));
+        }
 
         private void UpdateProfessionalKitchenEquipments(Ad ad, List<ProfessionalKitchenEquipment> professionalKitchenEquipments)
         {
@@ -186,6 +193,7 @@ namespace YellowDuck.Api.Requests.Commands.Mutations.Ads
             public Maybe<PriceRangeRental> RentPriceRange { get; set; }
             public Maybe<PriceRangeSale> SalePriceRange { get; set; }
             public Maybe<string> Organization { get; set; }
+            public Maybe<List<Certification>> Certification { get; set; }
             public Maybe<List<ProfessionalKitchenEquipment>> ProfessionalKitchenEquipment { get; set; }
             public Maybe<DeliveryTruckType> DeliveryTruckType { get; set; }
             public Maybe<bool> Refrigerated { get; set; }

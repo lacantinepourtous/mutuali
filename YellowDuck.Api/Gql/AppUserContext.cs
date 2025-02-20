@@ -84,6 +84,9 @@ namespace YellowDuck.Api.Gql
         public Task<IEnumerable<AdEveningAvailability>> LoadEveningAvailabilityByAdId(long id) =>
            loader.LoadCollection<GetAdEveningAvailabilityWeekdaysByAdId.Query, AdEveningAvailability, long>(id);
 
+        public Task<IEnumerable<AdCertification>> LoadCertificationsByAdId(long id) =>
+            loader.LoadCollection<GetAdCertificationsByAdId.Query, AdCertification, long>(id);
+
         public Task<IEnumerable<AdProfessionalKitchenEquipment>> LoadProfessionalKitchenEquipmentsByAdId(long id) =>
           loader.LoadCollection<GetAdProfessionalKitchenEquipmentsByAdId.Query, AdProfessionalKitchenEquipment, long>(id);
 

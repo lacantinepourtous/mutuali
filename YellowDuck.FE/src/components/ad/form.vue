@@ -234,6 +234,17 @@
       />
       <s-form-checkbox v-model="form.showAddress" id="showAddress" :label="$t('label.ad-showAddress')" name="showAddress" />
     </div>
+
+    <div class="section section--md section--padding-x section--border-bottom my-4 pb-5 rm-child-margin">
+      <h2 class="my-4">{{ $t("section-title.certifications") }}</h2>
+      <s-form-checkbox-group
+        v-model="form.certification"
+        id="certification"
+        name="certification"
+        :options="certificationOptions"
+      />
+    </div>
+
     <div class="section section--md mt-4 mb-5">
       <s-form-checkbox
         v-model="form.infoIsTrue"
@@ -271,6 +282,7 @@ import SForm from "@/components/form/s-form";
 import SFormInput from "@/components/form/s-form-input";
 import SFormHidden from "@/components/form/s-form-hidden";
 import SFormCheckbox from "@/components/form/s-form-checkbox";
+import SFormCheckboxGroup from "@/components/form/s-form-checkbox-group";
 import SFormSelect from "@/components/form/s-form-select";
 import SFormImage from "@/components/form/s-form-image";
 import SFormGoogleAutocomplete from "@/components/form/s-form-google-autocomplete";
@@ -285,6 +297,7 @@ import { AdCategory } from "@/mixins/ad-category";
 import { AdSalePriceRange } from "@/mixins/ad-sale-price-range";
 import { AdRentalPriceRange } from "@/mixins/ad-rental-price-range";
 import { AvailabilityWeekday } from "@/mixins/availability-weekday";
+import { Certification } from "@/mixins/certification";
 
 import {
   CATEGORY_PROFESSIONAL_KITCHEN,
@@ -294,7 +307,7 @@ import {
 } from "@/consts/categories";
 
 export default {
-  mixins: [AdCategory, AdSalePriceRange, AdRentalPriceRange, AvailabilityWeekday],
+  mixins: [AdCategory, AdSalePriceRange, AdRentalPriceRange, AvailabilityWeekday, Certification],
   props: {
     adId: {
       type: String,
@@ -434,6 +447,10 @@ export default {
       type: String,
       default: ""
     },
+    certification: {
+      type: Array,
+      default: null
+    },
     infoIsTrue: {
       type: Boolean,
       default: false
@@ -497,13 +514,13 @@ export default {
         refrigerated: this.refrigerated,
         canSharedRoad: this.canSharedRoad,
         canHaveDriver: this.canHaveDriver,
+        certification: this.certification || [],
         infoIsTrue: this.infoIsTrue
       },
       CATEGORY_PROFESSIONAL_KITCHEN,
       CATEGORY_DELIVERY_TRUCK,
       CATEGORY_STORAGE_SPACE,
       CATEGORY_OTHER
-
     };
   },
   components: {
@@ -511,6 +528,7 @@ export default {
     SFormInput,
     SFormHidden,
     SFormCheckbox,
+    SFormCheckboxGroup,
     SFormSelect,
     SFormImage,
     SFormGoogleAutocomplete,
@@ -630,11 +648,11 @@ export default {
         "refrigerated",
         "canSharedRoad",
         "canHaveDriver",
+        "certification",
         "infoIsTrue"
       ];
       for (let maybeEditedField of maybeEditedFields) {
         if (
-
           Array.isArray(this[maybeEditedField]) &&
           this[maybeEditedField].sort().join(",") === this.form[maybeEditedField].sort().join(",")
         ) {
