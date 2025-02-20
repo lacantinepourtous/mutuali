@@ -20,14 +20,24 @@
               <b-img :src="require('@/assets/icons/rent.svg')" alt="" height="16" block></b-img>
               <div class="equipment-snippet__types-text">
                 <div class="equipment-snippet__types-title">{{ $t("label.forRent") }}</div>
-                <div class="equipment-snippet__types-price">{{ priceDetails.rentPrice }}</div>
+                <div
+                  class="equipment-snippet__types-price"
+                  :class="{ 'equipment-snippet__types-price--sm': priceDetails.rentPriceToBeDetermined }"
+                >
+                  {{ priceDetails.rentPrice }}
+                </div>
               </div>
             </li>
             <li v-if="priceDetails.isAvailableForSale" class="equipment-snippet__types-item">
               <b-img :src="require('@/assets/icons/sale.svg')" alt="" height="16" block></b-img>
               <div class="equipment-snippet__types-text">
                 <div class="equipment-snippet__types-title">{{ $t("label.forSale") }}</div>
-                <div class="equipment-snippet__types-price">{{ priceDetails.salePrice }}</div>
+                <div
+                  class="equipment-snippet__types-price"
+                  :class="{ 'equipment-snippet__types-price--sm': priceDetails.salePriceToBeDetermined }"
+                >
+                  {{ priceDetails.salePrice }}
+                </div>
               </div>
             </li>
             <li v-if="priceDetails.isAvailableForTrade" class="equipment-snippet__types-item">
@@ -222,6 +232,12 @@ export default {
       text-wrap: nowrap;
       @include media-breakpoint-up(lg) {
         font-size: 14px;
+      }
+
+      &--sm {
+        font-size: 12px;
+        text-transform: none;
+        font-weight: 400;
       }
     }
   }

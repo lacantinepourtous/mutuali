@@ -82,6 +82,7 @@
             <AdTypeCard
               :title="$t('label.forRent')"
               :price="adPriceDetails.rentPrice"
+              :price-to-be-determined="adPriceDetails.rentPriceToBeDetermined"
               :modality="adPriceDetails.rentPriceDescription"
               :footnote="adPriceDetails.rentPriceRange"
             >
@@ -92,6 +93,7 @@
             <AdTypeCard
               :title="$t('label.forSale')"
               :price="adPriceDetails.salePrice"
+              :price-to-be-determined="adPriceDetails.salePriceToBeDetermined"
               :modality="adPriceDetails.salePriceDescription"
               :footnote="adPriceDetails.salePriceRange"
             >
