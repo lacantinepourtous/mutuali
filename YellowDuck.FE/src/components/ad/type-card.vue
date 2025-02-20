@@ -6,7 +6,7 @@
     <div class="type-card__bottom">
       <div class="type-card__title">{{ title }}</div>
       <div v-if="price || modality || description" class="type-card__text">
-        <span v-if="price" class="type-card__price">{{ price }}</span>
+        <span v-if="price" class="type-card__price" :class="{ 'type-card__price--sm': priceToBeDetermined }">{{ price }}</span>
         <span v-if="modality" class="type-card__modality">{{ modality }}</span>
         <span v-if="description" class="type-card__desc">{{ description }}</span>
         <span v-if="footnote" class="type-card__footnote">{{ footnote }}</span>
@@ -25,6 +25,10 @@ export default {
     price: {
       type: String,
       default: ""
+    },
+    priceToBeDetermined: {
+      type: Boolean,
+      default: false
     },
     modality: {
       type: String,
@@ -84,6 +88,12 @@ export default {
     font-weight: 700;
     margin-right: 4px;
     display: inline-block;
+
+    &--sm {
+      font-size: 14px;
+      color: $gray-700;
+      font-weight: 400;
+    }
   }
 
   &__footnote {
