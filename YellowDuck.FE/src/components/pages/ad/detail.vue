@@ -141,6 +141,17 @@
       <detail-partial-storage-space v-if="ad.category === CATEGORY_STORAGE_SPACE" :ad="ad" />
       <detail-partial-other v-if="ad.category === CATEGORY_OTHER" :ad="ad" />
 
+      <div v-if="ad.allergen.length" class="section section--md section--border-top py-6">
+        <h2 class="font-family-base font-weight-bold mb-4">{{ $t("label.ad-allergen") }}</h2>
+        <div class="rm-child-margin">
+          <ul>
+            <li v-for="allergen in ad.allergen" :key="allergen" class="mb-3">
+              {{ getAllergenLabel(allergen) }}
+            </li>
+          </ul>
+        </div>
+      </div>
+
       <div v-if="adAvailability.length" class="section section--md section--border-top py-6">
         <h2 class="font-family-base font-weight-bold mb-4">
           {{ $t("label.ad-availability") }}
@@ -231,6 +242,7 @@ import { unpublishAd, publishAd } from "@/services/ad";
 import { AvailabilityWeekday } from "@/mixins/availability-weekday";
 import { PriceDetails } from "@/mixins/price-details";
 import { Certification } from "@/mixins/certification";
+import { Allergen } from "@/mixins/allergen";
 
 import AdCategoryBadge from "@/components/ad/category-badge";
 import AdRatingCarousel from "@/components/ad/rating-carousel";
@@ -247,7 +259,7 @@ import DetailPartialStorageSpace from "@/components/ad/detail-partial-storage-sp
 import DetailPartialOther from "@/components/ad/detail-partial-other";
 
 export default {
-  mixins: [AvailabilityWeekday, PriceDetails, Certification],
+  mixins: [AvailabilityWeekday, PriceDetails, Certification, Allergen],
   components: {
     AdCategoryBadge,
     AdRatingCarousel,
@@ -491,6 +503,7 @@ query AdById($id: ID!, $language: ContentLanguage!) {
     dayAvailability
     eveningAvailability
     certification
+    allergen
   }
 }
 

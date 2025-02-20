@@ -43,6 +43,7 @@
         :canHaveDriver="ad.canHaveDriver"
         :canSharedRoad="ad.canSharedRoad"
         :certification="ad.certification"
+        :allergen="ad.allergen"
         @submitForm="editAd"
         :btnLabel="$t('btn.edit-ad')"
         :transferBtnLabel="$t('btn.transfer-ad')"
@@ -231,6 +232,7 @@ query AdById($id: ID!, $language: ContentLanguage!) {
     dayAvailability
     eveningAvailability
     certification
+    allergen
   }
 }
 </graphql>

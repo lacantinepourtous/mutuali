@@ -140,6 +140,12 @@ namespace YellowDuck.Api.Requests.Commands.Mutations.Ads
                 v.ForEach(x => ad.ProfessionalKitchenEquipments.Add(new AdProfessionalKitchenEquipment() { ProfessionalKitchenEquipment = x }));
             });
 
+            request.Allergen.IfSet(v =>
+            {
+                ad.Allergens = new List<AdAllergen>();
+                v.ForEach(x => ad.Allergens.Add(new AdAllergen() { Allergen = x }));
+            });
+
             var owner = await currentUserAccessor.GetCurrentUser();
             ad.UserId = owner.Id;
 
@@ -271,6 +277,7 @@ namespace YellowDuck.Api.Requests.Commands.Mutations.Ads
             public Maybe<NonNull<string>> ProfessionalKitchenEquipmentOther { get; set; }
             public Maybe<NonNull<string>> Equipment { get; set; }
             public Maybe<NonNull<string>> DeliveryTruckTypeOther { get; set; }
+            public Maybe<List<Allergen>> Allergen { get; set; }
             public NonNull<string> Organization { get; set; }
             public Maybe<string> SurfaceSize { get; set; }
             public Maybe<DeliveryTruckType> DeliveryTruckType { get; set; }

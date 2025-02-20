@@ -645,5 +645,17 @@
   "select.price-range-100-500": "100-500$",
   "select.price-range-500-1000": "500-1000$",
   "select.price-range-1000-2000": "1000-2000$",
-  "select.price-range-2000-or-more": "2000$ et plus"
+  "select.price-range-2000-or-more": "2000$ et plus",
+  "label.ad-allergen": "Allergènes",
+  "select.allergen-nuts": "Noix",
+  "select.allergen-peanuts": "Arachides",
+  "select.allergen-sesame": "Sésame",
+  "select.allergen-wheat": "Blé",
+  "select.allergen-gluten": "Gluten",
+  "select.allergen-sulphites": "Sulfites",
+  "select.allergen-eggs": "Oeufs",
+  "select.allergen-milk": "Lait",
+  "select.allergen-soy": "Soja",
+  "select.allergen-fish": "Poisson",
+  "select.allergen-mustard": "Moutarde"
 }
