@@ -654,15 +654,15 @@
   "select.price-range-1000-2000": "1000-2000$",
   "select.price-range-2000-or-more": "2000$ et plus",
   "label.ad-allergen": "Allergènes",
-  "select.allergen-nuts": "Noix",
+  "select.allergen-nuts": "Noix (amandes, noix du Brésil, noix de cajou, noisettes, noix de macadamia,  pacanes, pignons, pistaches et noix)",
   "select.allergen-peanuts": "Arachides",
   "select.allergen-sesame": "Sésame",
-  "select.allergen-wheat": "Blé",
+  "select.allergen-wheat": "Blé ou triticale",
   "select.allergen-gluten": "Gluten",
   "select.allergen-sulphites": "Sulfites",
   "select.allergen-eggs": "Oeufs",
   "select.allergen-milk": "Lait",
   "select.allergen-soy": "Soja",
-  "select.allergen-fish": "Poisson",
-  "select.allergen-mustard": "Moutarde"
+  "select.allergen-fish": "Crustacés, mollusques, poisson",
+  "select.allergen-mustard": "Graines de moutarde"
 }

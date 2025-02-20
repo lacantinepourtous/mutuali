@@ -656,15 +656,15 @@
   "select.price-range-1000-2000": "1000-2000$",
   "select.price-range-2000-or-more": "2000$ and more",
   "label.ad-allergen": "Allergens",
-  "select.allergen-nuts": "Nuts",
+  "select.allergen-nuts": "Nuts (almonds, brazil nuts, cashews, hazelnuts, macadamia nuts, pecans, pine nuts, pistachios and walnuts)",
   "select.allergen-peanuts": "Peanuts",
   "select.allergen-sesame": "Sesame",
-  "select.allergen-wheat": "Wheat",
+  "select.allergen-wheat": "Wheat or triticale",
   "select.allergen-gluten": "Gluten",
   "select.allergen-sulphites": "Sulphites",
   "select.allergen-eggs": "Eggs",
   "select.allergen-milk": "Milk",
   "select.allergen-soy": "Soy",
-  "select.allergen-fish": "Fish",
-  "select.allergen-mustard": "Mustard"
+  "select.allergen-fish": "Crustaceans, molluscs, fish",
+  "select.allergen-mustard": "Mustard seeds"
 }
