@@ -46,7 +46,7 @@ namespace YellowDuck.Api.Services.Twilio
 
             return token.ToJwt();
         }
-        
+
         public string GetAccountSid()
         {
             return configuration.GetValue<string>("twilio:sid");
@@ -62,6 +62,11 @@ namespace YellowDuck.Api.Services.Twilio
             return configuration.GetValue<string>("twilio:serviceSid");
         }
 
+        public string GetMessagingServiceSid()
+        {
+            return configuration.GetValue<string>("twilio:messagingServiceSid");
+        }
+
         public string GetApiKey()
         {
             return configuration.GetValue<string>("twilio:apiKey");
@@ -74,15 +79,24 @@ namespace YellowDuck.Api.Services.Twilio
 
         public async Task SendVerificationCode(string phoneNumber, string code)
         {
-            var message = await MessageResource.CreateAsync(
-                body: $"Votre code de vérification est : {code}",
-                from: new PhoneNumber(configuration.GetValue<string>("twilio:fromNumber")), // TODO - Ajouter la config.
-                to: new PhoneNumber(phoneNumber)
-            );
-
-            if (message.ErrorCode != null)
+            try
             {
-                throw new TwilioException(message.ErrorMessage);
+                var messageOptions = new CreateMessageOptions(new PhoneNumber($"+1{phoneNumber}"))
+                {   
+                    Body = $"Mutuali - Votre code de vérification est : {code}\n\nYour verification code is: {code}",
+                    MessagingServiceSid = GetMessagingServiceSid()
+                };
+
+                var message = await MessageResource.CreateAsync(messageOptions);
+
+                if (message.ErrorCode != null)
+                {
+                    throw new TwilioException(message.ErrorMessage);
+                }
+            }
+            catch (TwilioException ex)
+            {
+                throw;
             }
         }
     }

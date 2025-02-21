@@ -28,20 +28,8 @@ namespace YellowDuck.Api.Controllers
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
 
-            var phone = request.PhoneNumberOrEmail;
-            if (request.PhoneNumberOrEmail.Contains("@"))
-            {
-                var user = await _context.Users.Include(x => x.Profile).FirstOrDefaultAsync(x => x.Email == request.PhoneNumberOrEmail);
-                if (user == null)
-                {
-                    return BadRequest(new PhoneResponse
-                    {
-                        Success = false,
-                        MessageKey = "error.phone.email-not-found"
-                    });
-                }
-                phone = user.Profile.PhoneNumber;
-            }
+            var (phone, error) = await GetPhoneNumberFromEmailOrPhone(request.PhoneNumberOrEmail);
+            if (error != null) return error;
 
             var result = await _phoneVerificationService.CreateAndSendVerificationCode(phone);
 
@@ -59,20 +47,8 @@ namespace YellowDuck.Api.Controllers
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
 
-            var phone = request.PhoneNumberOrEmail;
-            if (request.PhoneNumberOrEmail.Contains("@"))
-            {
-                var user = await _context.Users.Include(x => x.Profile).FirstOrDefaultAsync(x => x.Email == request.PhoneNumberOrEmail);
-                if (user == null)
-                {
-                    return BadRequest(new PhoneResponse
-                    {
-                        Success = false,
-                        MessageKey = "error.phone.email-not-found"
-                    });
-                }
-                phone = user.Profile.PhoneNumber;
-            }
+            var (phone, error) = await GetPhoneNumberFromEmailOrPhone(request.PhoneNumberOrEmail);
+            if (error != null) return error;
 
             var verification = await _context.PhoneVerifications
                 .FirstOrDefaultAsync(x => x.PhoneNumber == phone && !x.IsVerified);
@@ -130,6 +106,27 @@ namespace YellowDuck.Api.Controllers
             });
 
             return Ok(new PhoneResponse { Success = true });
+        }
+
+        private async Task<(string phoneNumber, IActionResult error)> GetPhoneNumberFromEmailOrPhone(string phoneNumberOrEmail)
+        {
+            if (!phoneNumberOrEmail.Contains("@"))
+                return (phoneNumberOrEmail, null);
+
+            var user = await _context.Users
+                .Include(x => x.Profile)
+                .FirstOrDefaultAsync(x => x.Email == phoneNumberOrEmail);
+
+            if (user == null)
+            {
+                return (null, BadRequest(new PhoneResponse
+                {
+                    Success = false,
+                    MessageKey = "error.phone.email-not-found"
+                }));
+            }
+
+            return (user.Profile.PhoneNumber, null);
         }
 
         public class PhoneVerifyRequestRequest

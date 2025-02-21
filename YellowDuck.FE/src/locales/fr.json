@@ -648,5 +648,7 @@
   "error.phone.code-expired": "Le code a expiré, veuillez réessayer",
   "error.phone.too-many-attempts": "Trop de tentatives, veuillez réessayer plus tard",
   "error.phone.invalid-code": "Le code est invalide, veuillez réessayer",
-  "validator.length": "La longueur doit être de {length} caractères"
+  "validator.length": "La longueur doit être de {length} caractères",
+  "warnings.phone-verification-required": "Vous devez confirmer votre numéro de téléphone avant de pouvoir créer une annonce.",
+  "warnings.phone-verification-required.link": "Valider mon numéro"
 }

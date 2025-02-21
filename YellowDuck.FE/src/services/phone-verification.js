@@ -11,7 +11,7 @@ export default {
       headers: {
         'Content-Type': 'application/json'
       },
-      body: JSON.stringify({ PhoneNumberOrEmail })
+      body: JSON.stringify({ PhoneNumberOrEmail: this.cleanPhoneNumberOrEmail(PhoneNumberOrEmail) })
     });
 
     const responseJson = await response.json();
@@ -33,7 +33,7 @@ export default {
       headers: {
         'Content-Type': 'application/json'
       },
-      body: JSON.stringify({ PhoneNumberOrEmail, code })
+      body: JSON.stringify({ PhoneNumberOrEmail: this.cleanPhoneNumberOrEmail(PhoneNumberOrEmail), code })
     });
 
     const responseJson = await response.json();
@@ -48,6 +48,10 @@ export default {
     }
 
     return responseJson.success;
+  },
+  cleanPhoneNumberOrEmail: function(PhoneNumberOrEmail) {
+    const cleanedValue = PhoneNumberOrEmail.trim().replace(/\s/g, '');
+    return cleanedValue.includes('@') ? cleanedValue : cleanedValue.replace(/\D/g, '');
   }
 };
 

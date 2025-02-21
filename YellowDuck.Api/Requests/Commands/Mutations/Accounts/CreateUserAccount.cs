@@ -44,8 +44,10 @@ namespace YellowDuck.Api.Requests.Commands.Mutations.Accounts
 
         public async Task<Payload> Handle(Input request, CancellationToken cancellationToken)
         {
+            var cleanPhoneNumber = new string(request.PhoneNumber.Where(char.IsDigit).ToArray());
+            var phoneNumberVerification = db.PhoneVerifications.FirstOrDefault(x => x.PhoneNumber == cleanPhoneNumber && x.IsVerified)
+                ?? throw new Exception("Phone number is not verified.");
 
-            var phoneNumberVerification = db.PhoneVerifications.FirstOrDefault(x => x.PhoneNumber == request.PhoneNumber && x.IsVerified) ?? throw new Exception("Phone number is not verified.");
             var user = new AppUser(request.Email?.Trim())
             {
                 Type = UserType.User,

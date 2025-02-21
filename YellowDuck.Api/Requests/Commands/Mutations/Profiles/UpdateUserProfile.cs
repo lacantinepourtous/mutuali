@@ -36,7 +36,7 @@ namespace YellowDuck.Api.Requests.Commands.Mutations.Profiles
         {
             var userId = request.UserId.IdentifierForType<AppUser>();
             var profile = await GetProfileWithUser(userId, cancellationToken);
-        
+
 
             if (profile == null)
             {
@@ -51,8 +51,9 @@ namespace YellowDuck.Api.Requests.Commands.Mutations.Profiles
             // Si le numéro de téléphone est défini et différent de celui de l'utilisateur, vérifiez s'il est vérifié
             if (request.PhoneNumber.IsSet() && request.PhoneNumber.Value != profile.PhoneNumber)
             {
+                var cleanPhoneNumber = new string(request.PhoneNumber.Value.Value.Where(char.IsDigit).ToArray());
                 phoneNumberVerification = await DbContext.PhoneVerifications
-                    .FirstOrDefaultAsync(x => x.PhoneNumber == request.PhoneNumber.Value && x.IsVerified, cancellationToken) ?? throw new PhoneNumberNotVerifiedException();
+                    .FirstOrDefaultAsync(x => x.PhoneNumber == cleanPhoneNumber && x.IsVerified, cancellationToken) ?? throw new PhoneNumberNotVerifiedException();
                 profile.User.PhoneNumberConfirmed = true;
                 profile.User.TwoFactorEnabled = true;
             }

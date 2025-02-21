@@ -650,5 +650,7 @@
   "error.phone.code-expired": "The code has expired, please try again",
   "error.phone.too-many-attempts": "Too many attempts, please try again later",
   "error.phone.invalid-code": "The code is invalid, please try again",
-  "validator.length": "The length must be {length} characters"
+  "validator.length": "The length must be {length} characters",
+  "warnings.phone-verification-required": "You must confirm your phone number before you can create an ad.",
+  "warnings.phone-verification-required.link": "Validate my phone number"
 }

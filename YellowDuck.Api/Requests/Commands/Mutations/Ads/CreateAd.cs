@@ -48,6 +48,13 @@ namespace YellowDuck.Api.Requests.Commands.Mutations.Ads
             await ValidateRequest(request);
             var address = request.Address.Value;
 
+            var owner = await currentUserAccessor.GetCurrentUser();
+
+            if(owner.PhoneNumberConfirmed == false)
+            {
+                throw new Exception("Phone number is not confirmed");
+            }
+
             var ad = new Ad
             {
                 CreatedAtUTC = DateTime.UtcNow,
@@ -132,7 +139,6 @@ namespace YellowDuck.Api.Requests.Commands.Mutations.Ads
                 v.ForEach(x => ad.ProfessionalKitchenEquipments.Add(new AdProfessionalKitchenEquipment() { ProfessionalKitchenEquipment = x }));
             });
 
-            var owner = await currentUserAccessor.GetCurrentUser();
             ad.UserId = owner.Id;
 
             if(owner.Type == UserType.Admin)
