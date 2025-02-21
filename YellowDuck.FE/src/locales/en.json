@@ -642,9 +642,13 @@
   "confirm-phone.open-modal": "Validate my phone number",
   "confirm-phone.phone-number-confirmed": "Phone number validated.",
   "twofa.title": "Two-factor authentication",
-  "twofa.description": "Please enter the 6-digit verification code received via SMS to continue.",
-  "twofa.validate-btn": "Validate",
-  "twofa.resend-code-btn": "Resend code",
   "label.pin": "Verification code",
-  "description.pin": "Please enter the 6-digit verification code received via SMS."
+  "description.pin": "Please enter the 6-digit verification code received via SMS.",
+  "confirm-phone.invalid-code": "The verification code is invalid.",
+  "error.phone.wait-between-codes": "Please wait 30 seconds before requesting a new code",
+  "error.phone.no-verification": "No ongoing verification for this number",
+  "error.phone.code-expired": "The code has expired, please try again",
+  "error.phone.too-many-attempts": "Too many attempts, please try again later",
+  "error.phone.invalid-code": "The code is invalid, please try again",
+  "validator.length": "The length must be {length} characters"
 }

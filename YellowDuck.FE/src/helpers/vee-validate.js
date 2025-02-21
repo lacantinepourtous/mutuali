@@ -34,6 +34,15 @@ extend("image", {
   message: i18nHelpers.instance().t("validator.image")
 });
 
+extend("length", {
+  params: ["length"],
+  validate(value, { length }) {
+    const lengthNumber = parseInt(length, 10);
+    return value.length === lengthNumber;
+  },
+  message: (_, { length }) => i18nHelpers.instance().t("validator.length", { length })
+});
+
 extend("password", {
   validate(value) {
     return new RegExp("^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.{10,})").test(value);

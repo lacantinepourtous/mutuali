@@ -1,9 +1,13 @@
 ﻿using Microsoft.Extensions.Configuration;
 using NodaTime;
 using System.Collections.Generic;
+using Twilio.Rest.Api.V2010.Account;
+using System.Threading.Tasks;
 using Twilio;
 using Twilio.Jwt.AccessToken;
+using Twilio.Types;
 using YellowDuck.Api.DbModel.Entities;
+using Twilio.Exceptions;
 
 namespace YellowDuck.Api.Services.Twilio
 {
@@ -66,6 +70,20 @@ namespace YellowDuck.Api.Services.Twilio
         public string GetSecret()
         {
             return configuration.GetValue<string>("twilio:secret");
+        }
+
+        public async Task SendVerificationCode(string phoneNumber, string code)
+        {
+            var message = await MessageResource.CreateAsync(
+                body: $"Votre code de vérification est : {code}",
+                from: new PhoneNumber(configuration.GetValue<string>("twilio:fromNumber")), // TODO - Ajouter la config.
+                to: new PhoneNumber(phoneNumber)
+            );
+
+            if (message.ErrorCode != null)
+            {
+                throw new TwilioException(message.ErrorMessage);
+            }
         }
     }
 }

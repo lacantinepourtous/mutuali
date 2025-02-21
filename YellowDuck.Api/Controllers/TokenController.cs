@@ -15,12 +15,19 @@ using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using YellowDuck.Api.Requests.Commands.Mutations.Accounts;
+using System;
+using YellowDuck.Api.DbModel;
+using YellowDuck.Api.Services.Twilio;
+using static YellowDuck.Api.Controllers.PhoneController;
+using Microsoft.EntityFrameworkCore;
 
 namespace YellowDuck.Api.Controllers
 {
     [Route("token")]
     public class TokenController : ControllerBase
     {
+        private readonly AppDbContext context;
+        private readonly ITwilioService twilioService;
         private readonly IOptions<JwtOptions> jwtOptions;
         private readonly IOptions<JwtBearerOptions> jwtBearerOptions;
         private readonly UserManager<AppUser> userManager;
@@ -30,6 +37,8 @@ namespace YellowDuck.Api.Controllers
         private readonly IMediator mediator;
 
         public TokenController(
+            AppDbContext context,
+            ITwilioService twilioService,
             IOptions<JwtOptions> jwtOptions,
             IOptions<JwtBearerOptions> jwtBearerOptions,
             UserManager<AppUser> userManager,
@@ -38,6 +47,8 @@ namespace YellowDuck.Api.Controllers
             ILogger<TokenController> logger,
             IMediator mediator)
         {
+            this.context = context;
+            this.twilioService = twilioService;
             this.jwtOptions = jwtOptions;
             this.jwtBearerOptions = jwtBearerOptions;
             this.userManager = userManager;
@@ -72,6 +83,44 @@ namespace YellowDuck.Api.Controllers
                 await mediator.Send(input);
                 logger.LogWarning($"Login rejected for {request.Username} (email not confirmed)");
                 return BadRequest("Email not confirmed");
+            }
+
+            if (user.PhoneNumberConfirmed && user.TwoFactorEnabled)
+            {
+                // check if a cookie is set to bypass 2FA
+                var bypass2FA = Request.Cookies["bypass2FA"];
+                if (bypass2FA == null)
+                {
+                    // get PhoneNumber
+                    var profile = context.UserProfiles.FirstOrDefault(x => x.UserId == user.Id);
+
+                    var existingVerification = await context.PhoneVerifications.FirstOrDefaultAsync(x => x.PhoneNumber == profile.PhoneNumber);
+
+                    if (existingVerification != null)
+                    {
+                        context.PhoneVerifications.Remove(existingVerification);
+                    }
+
+
+                    // if not, send a 2FA code
+                    var code = PhoneVerification.GenerateCode();
+                    var verification = new PhoneVerification(profile.PhoneNumber, code);
+                    await context.PhoneVerifications.AddAsync(verification);
+                    await context.SaveChangesAsync();
+
+                    // Envoyer le SMS via Twilio
+                    try
+                    {
+                        await twilioService.SendVerificationCode(profile.PhoneNumber, code);
+                    }
+                    catch (Exception ex)
+                    {
+                        logger.LogError(ex, "Erreur lors de l'envoi du SMS");
+                        return BadRequest("Error sending SMS");
+                    }
+
+                    return Ok("2FA code sent");
+                }
             }
 
             var isLockedOut = await userManager.IsLockedOutAsync(user);

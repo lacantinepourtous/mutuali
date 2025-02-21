@@ -44,6 +44,8 @@ namespace YellowDuck.Api.Requests.Commands.Mutations.Accounts
 
         public async Task<Payload> Handle(Input request, CancellationToken cancellationToken)
         {
+
+            var phoneNumberVerification = db.PhoneVerifications.FirstOrDefault(x => x.PhoneNumber == request.PhoneNumber && x.IsVerified) ?? throw new Exception("Phone number is not verified.");
             var user = new AppUser(request.Email?.Trim())
             {
                 Type = UserType.User,
@@ -61,6 +63,8 @@ namespace YellowDuck.Api.Requests.Commands.Mutations.Accounts
                     ContactAuthorizationNews = request.ContactAuthorizationNews,
                     ContactAuthorizationSurveys = request.ContactAuthorizationSurveys
                 },
+                PhoneNumberConfirmed = true,
+                TwoFactorEnabled = true,
                 AcceptedTos = TosVersion.Latest,
                 TosAcceptationDate = DateTime.Now,
                 CreatedAtUtc = DateTime.UtcNow
@@ -87,6 +91,8 @@ namespace YellowDuck.Api.Requests.Commands.Mutations.Accounts
                 await userManager.AddClaimAsync(user, new Claim(AppClaimTypes.AlertOwner, Id.New<Alert>(alert.Id.ToString()).ToString()));
             }
 
+            // Remove phone number verification
+            db.PhoneVerifications.Remove(phoneNumberVerification);
 
             await db.SaveChangesAsync(cancellationToken);
 

@@ -2,7 +2,7 @@
   <div class="w-100">
     <div class="section section--sm">
       <h1 class="h2 my-4">{{ $t("page-title.login") }}</h1>
-      <s-form class="my-4" @submit="managePhoneNumberModal">
+      <s-form class="my-4" @submit="tryLogin">
         <s-form-input
           id="email"
           :label="$t('label.username')"
@@ -28,15 +28,12 @@
         }}</b-button>
       </s-form>
 
-      <b-modal v-model="validatePhoneModal" :title="$t('twofa.title')" hide-footer centered>
-        <p>{{ $t("twofa.description") }}</p>
-
-        <s-form class="my-4" @submit="validatePhoneNumber">
-          <s-form-input id="pin" :label="$t('label.pin')" name="pin" rules="required" v-model="pin" type="number" required />
-          <b-button type="submit" variant="primary" class="mr-2">{{ $t("twofa.validate-btn") }}</b-button>
-          <b-button @click="resendCode" variant="link">{{ $t("twofa.resend-code-btn") }}</b-button>
-        </s-form>
-      </b-modal>
+      <phone-verification-modal
+        v-model="validatePhoneModal"
+        :title="$t('twofa.title')"
+        :email="email"
+        @validation-success="onPhoneValidated"
+      />
     </div>
     <div class="section section--sm section--border-top">
       <div class="my-4">
@@ -54,16 +51,15 @@
 import SForm from "@/components/form/s-form";
 import SFormInput from "@/components/form/s-form-input";
 import AuthentificationService from "@/services/authentification";
+import PhoneVerificationModal from "@/components/phone-verification/phone-verification-modal";
 
 export default {
-  components: { SForm, SFormInput },
+  components: { SForm, SFormInput, PhoneVerificationModal },
   data() {
     return {
       email: this.$router.currentRoute.query.email || "",
       password: "",
-      phoneNumberIsValid: false,
-      validatePhoneModal: false,
-      pin: ""
+      validatePhoneModal: false
     };
   },
   computed: {
@@ -72,23 +68,18 @@ export default {
     }
   },
   methods: {
-    // TODO: Fonctionnement 2FA
-    managePhoneNumberModal: function () {
-      if (this.phoneNumberIsValid) {
-        this.login();
-      } else {
+    tryLogin: async function () {
+      const loginResponse = await this.login();
+      if (loginResponse.success && loginResponse.twoFaRequired) {
         this.validatePhoneModal = true;
       }
     },
-    validatePhoneNumber: async function () {
-      if (this.pin === "123456") {
-        this.phoneNumberIsValid = true;
-        this.validatePhoneModal = false;
-        this.login();
-      }
+    onPhoneValidated() {
+      this.validatePhoneModal = false;
+      this.login();
     },
     login: async function () {
-      await AuthentificationService.login(this.email, this.password);
+      return await AuthentificationService.login(this.email, this.password);
     }
   }
 };

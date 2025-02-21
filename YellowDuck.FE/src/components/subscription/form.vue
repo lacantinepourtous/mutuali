@@ -122,7 +122,7 @@
     <div class="d-flex flex-wrap align-items-center mt-n3">
       <b-button
         class="mr-3 my-1"
-        :disabled="!phoneNumber || phoneNumberIsConfirmed"
+        :disabled="!isValidPhoneNumber || phoneNumberIsConfirmed"
         variant="primary"
         type="button"
         @click="validatePhoneModal = true"
@@ -143,24 +143,12 @@
       rules="isValidPhoneNumber"
     />
 
-    <b-modal v-model="validatePhoneModal" :title="$t('confirm-phone.title')" hide-footer centered>
-      <p>{{ $t("confirm-phone.description") }}</p>
-
-      <s-form class="my-4" @submit="validatePhoneNumber">
-        <s-form-input
-          id="pin"
-          :label="$t('label.pin')"
-          :description="$t('description.pin')"
-          name="pin"
-          rules="required"
-          v-model="pin"
-          type="number"
-          required
-        />
-        <b-button type="submit" variant="primary" class="mr-2">{{ $t("confirm-phone.validate-btn") }}</b-button>
-        <b-button @click="resendCode" variant="link">{{ $t("confirm-phone.resend-code-btn") }}</b-button>
-      </s-form>
-    </b-modal>
+    <phone-verification-modal
+      v-model="validatePhoneModal"
+      :phone-number="phoneNumber"
+      :title="$t('confirm-phone.title')"
+      @validation-success="onPhoneValidated"
+    />
 
     <s-form-checkbox
       v-model="showPhoneNumber"
@@ -239,6 +227,8 @@ import {
   INDUSTRY_OTHER
 } from "@/consts/industry";
 
+import PhoneVerificationModal from "@/components/phone-verification/phone-verification-modal";
+
 export default {
   mixins: [RegisteringInterests],
   components: {
@@ -247,7 +237,8 @@ export default {
     SFormInput,
     SFormCheckbox,
     SFormSelect,
-    SFormCheckboxGroup
+    SFormCheckboxGroup,
+    PhoneVerificationModal
   },
   data() {
     return {
@@ -304,6 +295,9 @@ export default {
     },
     displayIndustryOtherSpecification: function () {
       return this.industry === INDUSTRY_OTHER;
+    },
+    isValidPhoneNumber() {
+      return this.phoneNumber && this.phoneNumber.replace(/\D/g, "").length === 10;
     }
   },
   watch: {
@@ -345,17 +339,15 @@ export default {
 
       this.$emit("submitForm", input);
     },
-    // TODO BE: Fonctionnement modal de validation du numéro de téléphone
-    validatePhoneNumber: function () {
-      if (this.pin === "123456") {
-        this.phoneNumberIsConfirmed = true;
-        this.validatePhoneModal = false;
-      }
-    },
-    resendCode: function () {
-      /* eslint-disable no-console */
-      console.log("Code ré-envoyé");
+    onPhoneValidated() {
+      this.phoneNumberIsConfirmed = true;
     }
   }
 };
 </script>
+
+<style scoped>
+.text-muted {
+  cursor: not-allowed;
+}
+</style>
