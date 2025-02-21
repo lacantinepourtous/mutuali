@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using YellowDuck.Api.DbModel;
 
 namespace YellowDuck.Api.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250219144510_AddCertificationsTable")]
+    partial class AddCertificationsTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -291,26 +293,6 @@ namespace YellowDuck.Api.Migrations
                         .IsUnique();
 
                     b.ToTable("AdAddress");
-                });
-
-            modelBuilder.Entity("YellowDuck.Api.DbModel.Entities.Ads.AdAllergen", b =>
-                {
-                    b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<long>("AdId")
-                        .HasColumnType("bigint");
-
-                    b.Property<int>("Allergen")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("AdId");
-
-                    b.ToTable("AdAllergens");
                 });
 
             modelBuilder.Entity("YellowDuck.Api.DbModel.Entities.Ads.AdCertification", b =>
@@ -880,40 +862,6 @@ namespace YellowDuck.Api.Migrations
                     b.ToTable("StripeAccounts");
                 });
 
-            modelBuilder.Entity("YellowDuck.Api.DbModel.Entities.PhoneVerification", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<int>("AttemptCount")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime>("ExpirationTime")
-                        .HasColumnType("datetime2");
-
-                    b.Property<bool>("IsVerified")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("PhoneNumber")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<string>("VerificationCodeHash")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("PhoneNumber")
-                        .IsUnique()
-                        .HasFilter("[PhoneNumber] IS NOT NULL");
-
-                    b.ToTable("PhoneVerifications");
-                });
-
             modelBuilder.Entity("YellowDuck.Api.DbModel.Entities.Profiles.UserProfile", b =>
                 {
                     b.Property<long>("Id")
@@ -1143,17 +1091,6 @@ namespace YellowDuck.Api.Migrations
                     b.Navigation("Address");
 
                     b.Navigation("User");
-                });
-
-            modelBuilder.Entity("YellowDuck.Api.DbModel.Entities.Ads.AdAllergen", b =>
-                {
-                    b.HasOne("YellowDuck.Api.DbModel.Entities.Ads.Ad", "Ad")
-                        .WithMany("Allergens")
-                        .HasForeignKey("AdId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Ad");
                 });
 
             modelBuilder.Entity("YellowDuck.Api.DbModel.Entities.Ads.AdCertification", b =>
@@ -1410,8 +1347,6 @@ namespace YellowDuck.Api.Migrations
             modelBuilder.Entity("YellowDuck.Api.DbModel.Entities.Ads.Ad", b =>
                 {
                     b.Navigation("AdRatings");
-
-                    b.Navigation("Allergens");
 
                     b.Navigation("Certifications");
 

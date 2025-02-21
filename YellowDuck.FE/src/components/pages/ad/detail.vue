@@ -79,12 +79,24 @@
         <h1 class="my-4">{{ ad.translationOrDefault.title }}</h1>
         <ul class="equipment-detail__types">
           <li v-if="adPriceDetails.isAvailableForRent">
-            <AdTypeCard :title="$t('label.forRent')" :price="adPriceDetails.rentPrice" :modality="adPriceDetails.rentPriceDescription">
+            <AdTypeCard
+              :title="$t('label.forRent')"
+              :price="adPriceDetails.rentPrice"
+              :price-to-be-determined="adPriceDetails.rentPriceToBeDetermined"
+              :modality="adPriceDetails.rentPriceDescription"
+              :footnote="adPriceDetails.rentPriceRange"
+            >
               <b-img :src="require('@/assets/icons/rent.svg')" alt="" height="30" block></b-img>
             </AdTypeCard>
           </li>
           <li v-if="adPriceDetails.isAvailableForSale">
-            <AdTypeCard :title="$t('label.forSale')" :price="adPriceDetails.salePrice" :modality="adPriceDetails.salePriceDescription">
+            <AdTypeCard
+              :title="$t('label.forSale')"
+              :price="adPriceDetails.salePrice"
+              :price-to-be-determined="adPriceDetails.salePriceToBeDetermined"
+              :modality="adPriceDetails.salePriceDescription"
+              :footnote="adPriceDetails.salePriceRange"
+            >
               <b-img :src="require('@/assets/icons/sale.svg')" alt="" height="30" block></b-img>
             </AdTypeCard>
           </li>
@@ -129,7 +141,18 @@
       <detail-partial-delivery-truck v-if="ad.category === CATEGORY_DELIVERY_TRUCK" :ad="ad" />
       <detail-partial-professional-kitchen v-if="ad.category === CATEGORY_PROFESSIONAL_KITCHEN" :ad="ad" />
       <detail-partial-storage-space v-if="ad.category === CATEGORY_STORAGE_SPACE" :ad="ad" />
-      <detail-partial-other v-if="ad.category === CATEGORY_OTHER" :ad="ad" />
+      <detail-partial-other v-if="isMiscCategory" :ad="ad" />
+
+      <div v-if="isAllergenCategory && ad.allergen.length" class="section section--md section--border-top py-6">
+        <h2 class="font-family-base font-weight-bold mb-4">{{ $t("label.ad-allergen") }}</h2>
+        <div class="rm-child-margin">
+          <ul>
+            <li v-for="allergen in ad.allergen" :key="allergen" class="mb-3">
+              {{ getAllergenLabel(allergen) }}
+            </li>
+          </ul>
+        </div>
+      </div>
 
       <div v-if="adAvailability.length" class="section section--md section--border-top py-6">
         <h2 class="font-family-base font-weight-bold mb-4">
@@ -143,6 +166,18 @@
             <template v-if="weekdayAvailability.availability.evening">{{ $t("label.ad-eveningAvailability") }}</template>
           </li>
         </ul>
+      </div>
+
+      <div v-if="ad.certification.length" class="section section--md section--border-top py-6">
+        <h2 class="font-family-base font-weight-bold mb-4">{{ $t("section-title.certifications") }}</h2>
+        <div class="rm-child-margin">
+          <ul class="equipment-detail__certifications-list">
+            <li v-for="certification in ad.certification" :key="certification" class="equipment-detail__certifications-item">
+              <b-img :src="require('@/assets/icons/checkmark-badge.svg')" alt="" height="20" block></b-img>
+              {{ getCertificationLabel(certification) }}
+            </li>
+          </ul>
+        </div>
       </div>
 
       <div v-if="ad.averageRating > 0" class="section section--md section--border-top my-4">
@@ -201,6 +236,11 @@ import {
   CATEGORY_PROFESSIONAL_KITCHEN,
   CATEGORY_DELIVERY_TRUCK,
   CATEGORY_STORAGE_SPACE,
+  CATEGORY_PROFESSIONAL_COOKING_EQUIPMENT,
+  CATEGORY_PREP_EQUIPMENT,
+  CATEGORY_REFRIGERATION_EQUIPMENT,
+  CATEGORY_HEAVY_EQUIPMENT,
+  CATEGORY_SURPLUS,
   CATEGORY_OTHER
 } from "@/consts/categories";
 import { VUE_APP_MUTUALI_CONTACT_MAIL } from "@/helpers/env";
@@ -208,6 +248,8 @@ import { VUE_APP_MUTUALI_CONTACT_MAIL } from "@/helpers/env";
 import { unpublishAd, publishAd } from "@/services/ad";
 import { AvailabilityWeekday } from "@/mixins/availability-weekday";
 import { PriceDetails } from "@/mixins/price-details";
+import { Certification } from "@/mixins/certification";
+import { Allergen } from "@/mixins/allergen";
 
 import AdCategoryBadge from "@/components/ad/category-badge";
 import AdRatingCarousel from "@/components/ad/rating-carousel";
@@ -224,7 +266,7 @@ import DetailPartialStorageSpace from "@/components/ad/detail-partial-storage-sp
 import DetailPartialOther from "@/components/ad/detail-partial-other";
 
 export default {
-  mixins: [AvailabilityWeekday, PriceDetails],
+  mixins: [AvailabilityWeekday, PriceDetails, Certification, Allergen],
   components: {
     AdCategoryBadge,
     AdRatingCarousel,
@@ -247,6 +289,11 @@ export default {
       CATEGORY_PROFESSIONAL_KITCHEN,
       CATEGORY_DELIVERY_TRUCK,
       CATEGORY_STORAGE_SPACE,
+      CATEGORY_PROFESSIONAL_COOKING_EQUIPMENT,
+      CATEGORY_PREP_EQUIPMENT,
+      CATEGORY_REFRIGERATION_EQUIPMENT,
+      CATEGORY_HEAVY_EQUIPMENT,
+      CATEGORY_SURPLUS,
       CATEGORY_OTHER
     };
   },
@@ -329,6 +376,27 @@ export default {
         }
       }
       return adAvailability;
+    },
+    isMiscCategory() {
+      const miscCategories = [
+        CATEGORY_OTHER,
+        CATEGORY_PROFESSIONAL_COOKING_EQUIPMENT,
+        CATEGORY_PREP_EQUIPMENT,
+        CATEGORY_REFRIGERATION_EQUIPMENT,
+        CATEGORY_HEAVY_EQUIPMENT,
+        CATEGORY_SURPLUS
+      ];
+      return miscCategories.includes(this.ad.category);
+    },
+    isAllergenCategory() {
+      const allergenCategories = [
+        CATEGORY_PROFESSIONAL_KITCHEN,
+        CATEGORY_PREP_EQUIPMENT,
+        CATEGORY_PROFESSIONAL_COOKING_EQUIPMENT,
+        CATEGORY_SURPLUS,
+        CATEGORY_DELIVERY_TRUCK
+      ];
+      return allergenCategories.includes(this.ad.category);
     }
   },
   methods: {
@@ -456,6 +524,8 @@ query AdById($id: ID!, $language: ContentLanguage!) {
     salePrice
     rentPriceToBeDetermined
     salePriceToBeDetermined
+    rentPriceRange
+    salePriceRange
     averageRating
     organization
     refrigerated
@@ -465,6 +535,8 @@ query AdById($id: ID!, $language: ContentLanguage!) {
     deliveryTruckType
     dayAvailability
     eveningAvailability
+    certification
+    allergen
   }
 }
 
@@ -575,6 +647,25 @@ query LocalUser {
         flex: 1 1 0;
         margin-bottom: 0;
       }
+    }
+  }
+
+  &__certifications {
+    &-list {
+      list-style-type: none;
+      padding-left: 0;
+      display: flex;
+      flex-wrap: wrap;
+      gap: $spacer / 2;
+    }
+
+    &-item {
+      display: flex;
+      align-items: center;
+      column-gap: $spacer / 2;
+      padding: $spacer / 4 $spacer / 2;
+      border: 1px solid $gray-300;
+      border-radius: 8px;
     }
   }
 }

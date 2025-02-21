@@ -23,9 +23,11 @@
         :rent-price="ad.rentPrice"
         :rentPriceToBeDetermined="ad.rentPriceToBeDetermined"
         :rentPriceDescription="ad.translationOrDefault.rentPriceDescription"
+        :rentPriceRange="ad.rentPriceRange"
         :sale-price="ad.rentPrice"
         :salePriceToBeDetermined="ad.salePriceToBeDetermined"
         :salePriceDescription="ad.translationOrDefault.saleDescription"
+        :salePriceRange="ad.salePriceRange"
         :tradeDescription="ad.translationOrDefault.tradeDescription"
         :donationDescription="ad.translationOrDefault.donationDescription"
         :conditions="ad.translationOrDefault.conditions"
@@ -42,6 +44,8 @@
         :refrigerated="ad.refrigerated"
         :canHaveDriver="ad.canHaveDriver"
         :canSharedRoad="ad.canSharedRoad"
+        :certification="ad.certification"
+        :allergen="ad.allergen"
         @submitForm="editAd"
         :btnLabel="$t('btn.edit-ad')"
         :transferBtnLabel="$t('btn.transfer-ad')"
@@ -219,8 +223,10 @@ query AdById($id: ID!, $language: ContentLanguage!) {
     }
     rentPrice
     rentPriceToBeDetermined
+    rentPriceRange
     salePrice
     salePriceToBeDetermined
+    salePriceRange
     organization
     refrigerated
     canSharedRoad
@@ -229,6 +235,8 @@ query AdById($id: ID!, $language: ContentLanguage!) {
     deliveryTruckType
     dayAvailability
     eveningAvailability
+    certification
+    allergen
   }
 }
 </graphql>

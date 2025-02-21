@@ -39,7 +39,6 @@ namespace YellowDuck.Api.Gql.Schema.GraphTypes
 
         public Task<string> OrganizationName => WithData(x => x.OrganizationName);
 
-        [ApplyPolicy(AuthorizationPolicies.ManageUser)]
         public Task<string> OrganizationNEQ => WithData(x => x.OrganizationNEQ);
 
         public Task<OrganizationType> OrganizationType => WithData(x => x.OrganizationType);

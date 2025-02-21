@@ -44,10 +44,12 @@ namespace YellowDuck.Api.Gql.Schema.GraphTypes
         public Task<AdCategory> Category => WithData(x => x.Category);
 
         public Task<double?> RentPrice => WithData(x => x.RentPrice);
-
         public Task<bool> RentPriceToBeDetermined => WithData(x => x.RentPriceToBeDetermined);
+        public Task<PriceRangeRental> RentPriceRange => WithData(x => x.RentPriceRange);
+
         public Task<double?> SalePrice => WithData(x => x.SalePrice);
         public Task<bool> SalePriceToBeDetermined => WithData(x => x.SalePriceToBeDetermined);
+        public Task<PriceRangeSale> SalePriceRange => WithData(x => x.SalePriceRange);
 
         public Task<bool> ShowAddress => WithData(x => x.ShowAddress);
 
@@ -61,6 +63,11 @@ namespace YellowDuck.Api.Gql.Schema.GraphTypes
             var eveningAvailability = await ctx.LoadEveningAvailabilityByAdId(id);
             return eveningAvailability.Select(x => x.Weekday).ToList();
         }
+        public async Task<IEnumerable<Certification>> Certification(IAppUserContext ctx)
+        {
+            var certifications = await ctx.LoadCertificationsByAdId(id);
+            return certifications.Select(x => x.Certification).ToList();
+        }
         public async Task<IEnumerable<ProfessionalKitchenEquipment>> ProfessionalKitchenEquipment(IAppUserContext ctx)
         {
             var professionalKitchenEquipments = await ctx.LoadProfessionalKitchenEquipmentsByAdId(id);
@@ -73,6 +80,11 @@ namespace YellowDuck.Api.Gql.Schema.GraphTypes
         public Task<bool> CanSharedRoad => WithData(x => x.CanSharedRoad);
 
         public Task<bool> CanHaveDriver => WithData(x => x.CanHaveDriver);
+        public async Task<IEnumerable<Allergen>> Allergen(IAppUserContext ctx)
+        {
+            var allergens = await ctx.LoadAllergensByAdId(id);
+            return allergens.Select(x => x.Allergen).ToList();
+        }
 
         public async Task<IEnumerable<AdGalleryItemGraphType>> Gallery(IAppUserContext ctx)
         {

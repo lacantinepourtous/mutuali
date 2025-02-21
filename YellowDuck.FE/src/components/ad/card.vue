@@ -6,7 +6,7 @@
     :to="{ name: $consts.urls.URL_AD_DETAIL, params: { id: ad.id } }"
   >
     <div class="mutuali-ad-card__badge">
-      <ad-category-badge :category="adCategory" />
+      <ad-category-badge :category="adCategory" is-short />
     </div>
 
     <div class="mutuali-ad-card__pic">
@@ -49,14 +49,24 @@
           <b-img :src="require('@/assets/icons/rent.svg')" alt="" height="16" block></b-img>
           <div class="mutuali-ad-card__types-text">
             <div class="mutuali-ad-card__types-title">{{ $t("label.forRent") }}</div>
-            <div class="mutuali-ad-card__types-price">{{ adPriceDetails.rentPrice }}</div>
+            <div
+              class="mutuali-ad-card__types-price"
+              :class="{ 'mutuali-ad-card__types-price--sm': adPriceDetails.rentPriceToBeDetermined }"
+            >
+              {{ adPriceDetails.rentPrice }}
+            </div>
           </div>
         </li>
         <li v-if="adPriceDetails.isAvailableForSale" class="mutuali-ad-card__types-item">
           <b-img :src="require('@/assets/icons/sale.svg')" alt="" height="16" block></b-img>
           <div class="mutuali-ad-card__types-text">
             <div class="mutuali-ad-card__types-title">{{ $t("label.forSale") }}</div>
-            <div class="mutuali-ad-card__types-price">{{ adPriceDetails.salePrice }}</div>
+            <div
+              class="mutuali-ad-card__types-price"
+              :class="{ 'mutuali-ad-card__types-price--sm': adPriceDetails.salePriceToBeDetermined }"
+            >
+              {{ adPriceDetails.salePrice }}
+            </div>
           </div>
         </li>
         <li v-if="adPriceDetails.isAvailableForTrade" class="mutuali-ad-card__types-item">
@@ -266,6 +276,12 @@ export default {
       text-wrap: nowrap;
       @include media-breakpoint-up(lg) {
         font-size: 14px;
+      }
+
+      &--sm {
+        font-size: 12px;
+        text-transform: none;
+        font-weight: 400;
       }
     }
   }

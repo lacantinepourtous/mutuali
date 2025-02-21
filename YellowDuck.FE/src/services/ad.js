@@ -41,6 +41,8 @@ export async function createAd(input) {
     organization: input.organization
   };
 
+  addMaybeValue(input, mutationInput, "rentPriceRange");
+  addMaybeValue(input, mutationInput, "salePriceRange");
   addMaybeValue(input, mutationInput, "conditions");
   addMaybeValue(input, mutationInput, "description");
   addMaybeValue(input, mutationInput, "surfaceSize");
@@ -55,6 +57,8 @@ export async function createAd(input) {
   addMaybeValue(input, mutationInput, "refrigerated");
   addMaybeValue(input, mutationInput, "canSharedRoad");
   addMaybeValue(input, mutationInput, "canHaveDriver");
+  addMaybeValue(input, mutationInput, "certification");
+  addMaybeValue(input, mutationInput, "allergen");
 
   let result = await Apollo.instance.defaultClient.mutate({
     mutation: CreateAd,
@@ -102,6 +106,8 @@ export async function updateAd(input) {
   addMaybeValue(input, mutationInput, "showAddress");
   addMaybeValue(input, mutationInput, "rentPriceToBeDetermined");
   addMaybeValue(input, mutationInput, "salePriceToBeDetermined");
+  addMaybeValue(input, mutationInput, "rentPriceRange");
+  addMaybeValue(input, mutationInput, "salePriceRange");
   addMaybeValue(input, mutationInput, "organization");
   addMaybeValue(input, mutationInput, "professionalKitchenEquipment");
   addMaybeValue(input, mutationInput, "deliveryTruckType");
@@ -110,6 +116,8 @@ export async function updateAd(input) {
   addMaybeValue(input, mutationInput, "refrigerated");
   addMaybeValue(input, mutationInput, "canSharedRoad");
   addMaybeValue(input, mutationInput, "canHaveDriver");
+  addMaybeValue(input, mutationInput, "certification");
+  addMaybeValue(input, mutationInput, "allergen");
 
   if (Object.keys(mutationInput).length > 1) {
     let result = await Apollo.instance.defaultClient.mutate({

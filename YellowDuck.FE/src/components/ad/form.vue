@@ -55,8 +55,19 @@
           :label="$t('label.ad-rentPriceToBeDetermined')"
           name="rentPriceToBeDetermined"
         />
+        <s-form-select
+          v-if="form.rentPriceToBeDetermined"
+          v-model="form.rentPriceRange"
+          id="rentPriceRange"
+          :label="$t('label.ad-rent-price-range')"
+          name="rentPriceRange"
+          rules="required"
+          :placeholder="$t('placeholder.ad-rent-price-range')"
+          :options="rentalPriceRangeOptions"
+          required
+        />
         <s-form-input
-          v-if="!form.rentPriceToBeDetermined"
+          v-else
           v-model="form.rentPriceDescription"
           id="rentPriceDescription"
           :label="$t('label.ad-priceDescription')"
@@ -94,8 +105,19 @@
           :label="$t('label.ad-salePriceToBeDetermined')"
           name="salePriceToBeDetermined"
         />
+        <s-form-select
+          v-if="form.salePriceToBeDetermined"
+          v-model="form.salePriceRange"
+          id="salePriceRange"
+          :label="$t('label.ad-sale-price-range')"
+          name="salePriceRange"
+          rules="required"
+          :placeholder="$t('placeholder.ad-sale-price-range')"
+          :options="salePriceRangeOptions"
+          required
+        />
         <s-form-input
-          v-if="!form.salePriceToBeDetermined"
+          v-else
           v-model="form.salePriceDescription"
           id="salePriceDescription"
           :label="$t('label.ad-priceDescription')"
@@ -157,7 +179,17 @@
       <form-partial-delivery-truck v-if="form.category === CATEGORY_DELIVERY_TRUCK" v-model="form" />
       <form-partial-professional-kitchen v-if="form.category === CATEGORY_PROFESSIONAL_KITCHEN" v-model="form" />
       <form-partial-storage-space v-if="form.category === CATEGORY_STORAGE_SPACE" v-model="form" />
-      <form-partial-other v-if="form.category === CATEGORY_OTHER" v-model="form" />
+      <form-partial-other v-if="isMiscCategory" v-model="form" />
+
+      <s-form-checkbox-group
+        v-if="isAllergenCategory"
+        v-model="form.allergen"
+        id="allergen"
+        :label="$t('label.ad-allergen')"
+        label-class="h2 mt-4 mb-2"
+        name="allergen"
+        :options="allergenOptions"
+      />
     </div>
 
     <div class="section section--md section--padding-x section--border-bottom my-4 pb-5 rm-child-margin">
@@ -212,6 +244,18 @@
       />
       <s-form-checkbox v-model="form.showAddress" id="showAddress" :label="$t('label.ad-showAddress')" name="showAddress" />
     </div>
+
+    <div class="section section--md section--padding-x section--border-bottom my-4 pb-5 rm-child-margin">
+      <s-form-checkbox-group
+        v-model="form.certification"
+        id="certification"
+        name="certification"
+        :label="$t('section-title.certifications')"
+        label-class="h2 mb-4"
+        :options="certificationOptions"
+      />
+    </div>
+
     <div class="section section--md mt-4 mb-5">
       <s-form-checkbox
         v-model="form.infoIsTrue"
@@ -249,6 +293,7 @@ import SForm from "@/components/form/s-form";
 import SFormInput from "@/components/form/s-form-input";
 import SFormHidden from "@/components/form/s-form-hidden";
 import SFormCheckbox from "@/components/form/s-form-checkbox";
+import SFormCheckboxGroup from "@/components/form/s-form-checkbox-group";
 import SFormSelect from "@/components/form/s-form-select";
 import SFormImage from "@/components/form/s-form-image";
 import SFormGoogleAutocomplete from "@/components/form/s-form-google-autocomplete";
@@ -260,17 +305,26 @@ import FormPartialStorageSpace from "@/components/ad/form-partial-storage-space"
 import FormPartialOther from "@/components/ad/form-partial-other";
 
 import { AdCategory } from "@/mixins/ad-category";
+import { AdSalePriceRange } from "@/mixins/ad-sale-price-range";
+import { AdRentalPriceRange } from "@/mixins/ad-rental-price-range";
 import { AvailabilityWeekday } from "@/mixins/availability-weekday";
+import { Certification } from "@/mixins/certification";
+import { Allergen } from "@/mixins/allergen";
 
 import {
   CATEGORY_PROFESSIONAL_KITCHEN,
   CATEGORY_DELIVERY_TRUCK,
   CATEGORY_STORAGE_SPACE,
+  CATEGORY_PROFESSIONAL_COOKING_EQUIPMENT,
+  CATEGORY_PREP_EQUIPMENT,
+  CATEGORY_REFRIGERATION_EQUIPMENT,
+  CATEGORY_HEAVY_EQUIPMENT,
+  CATEGORY_SURPLUS,
   CATEGORY_OTHER
 } from "@/consts/categories";
 
 export default {
-  mixins: [AdCategory, AvailabilityWeekday],
+  mixins: [AdCategory, AdSalePriceRange, AdRentalPriceRange, AvailabilityWeekday, Certification, Allergen],
   props: {
     adId: {
       type: String,
@@ -327,6 +381,10 @@ export default {
       type: Boolean,
       default: false
     },
+    rentPriceRange: {
+      type: String,
+      default: ""
+    },
     rentPriceDescription: {
       type: String,
       default: ""
@@ -337,6 +395,10 @@ export default {
     salePriceToBeDetermined: {
       type: Boolean,
       default: false
+    },
+    salePriceRange: {
+      type: String,
+      default: ""
     },
     salePriceDescription: {
       type: String,
@@ -378,6 +440,10 @@ export default {
       type: String,
       default: ""
     },
+    allergen: {
+      type: Array,
+      default: null
+    },
     dayAvailability: {
       type: Array,
       default: null
@@ -401,6 +467,10 @@ export default {
     conditions: {
       type: String,
       default: ""
+    },
+    certification: {
+      type: Array,
+      default: null
     },
     infoIsTrue: {
       type: Boolean,
@@ -444,9 +514,11 @@ export default {
         isAvailableForDonation: this.isAvailableForDonation,
         rentPrice: this.rentPrice,
         rentPriceToBeDetermined: this.rentPriceToBeDetermined,
+        rentPriceRange: this.rentPriceRange,
         rentPriceDescription: this.rentPriceDescription,
         salePrice: this.salePrice,
         salePriceToBeDetermined: this.salePriceToBeDetermined,
+        salePriceRange: this.salePriceRange,
         salePriceDescription: this.salePriceDescription,
         tradeDescription: this.tradeDescription,
         donationDescription: this.donationDescription,
@@ -458,18 +530,19 @@ export default {
         professionalKitchenEquipmentOther: this.professionalKitchenEquipmentOther,
         deliveryTruckType: this.deliveryTruckType,
         deliveryTruckTypeOther: this.deliveryTruckTypeOther,
+        allergen: this.allergen || [],
         dayAvailability: this.dayAvailability || [],
         eveningAvailability: this.eveningAvailability || [],
         refrigerated: this.refrigerated,
         canSharedRoad: this.canSharedRoad,
         canHaveDriver: this.canHaveDriver,
+        certification: this.certification || [],
         infoIsTrue: this.infoIsTrue
       },
       CATEGORY_PROFESSIONAL_KITCHEN,
       CATEGORY_DELIVERY_TRUCK,
       CATEGORY_STORAGE_SPACE,
       CATEGORY_OTHER
-
     };
   },
   components: {
@@ -477,6 +550,7 @@ export default {
     SFormInput,
     SFormHidden,
     SFormCheckbox,
+    SFormCheckboxGroup,
     SFormSelect,
     SFormImage,
     SFormGoogleAutocomplete,
@@ -532,6 +606,27 @@ export default {
         this.form.isAvailableForTrade ||
         this.form.isAvailableForDonation
       );
+    },
+    isMiscCategory() {
+      const miscCategories = [
+        CATEGORY_OTHER,
+        CATEGORY_PROFESSIONAL_COOKING_EQUIPMENT,
+        CATEGORY_PREP_EQUIPMENT,
+        CATEGORY_REFRIGERATION_EQUIPMENT,
+        CATEGORY_HEAVY_EQUIPMENT,
+        CATEGORY_SURPLUS
+      ];
+      return miscCategories.includes(this.form.category);
+    },
+    isAllergenCategory() {
+      const allergenCategories = [
+        CATEGORY_PROFESSIONAL_KITCHEN,
+        CATEGORY_PREP_EQUIPMENT,
+        CATEGORY_PROFESSIONAL_COOKING_EQUIPMENT,
+        CATEGORY_SURPLUS,
+        CATEGORY_DELIVERY_TRUCK
+      ];
+      return allergenCategories.includes(this.form.category);
     }
   },
   methods: {
@@ -574,9 +669,11 @@ export default {
         "isAvailableForDonation",
         "rentPrice",
         "rentPriceToBeDetermined",
+        "rentPriceRange",
         "rentPriceDescription",
         "salePrice",
         "salePriceToBeDetermined",
+        "salePriceRange",
         "salePriceDescription",
         "tradeDescription",
         "donationDescription",
@@ -589,16 +686,17 @@ export default {
         "professionalKitchenEquipmentOther",
         "deliveryTruckType",
         "deliveryTruckTypeOther",
+        "allergen",
         "dayAvailability",
         "eveningAvailability",
         "refrigerated",
         "canSharedRoad",
         "canHaveDriver",
+        "certification",
         "infoIsTrue"
       ];
       for (let maybeEditedField of maybeEditedFields) {
         if (
-
           Array.isArray(this[maybeEditedField]) &&
           this[maybeEditedField].sort().join(",") === this.form[maybeEditedField].sort().join(",")
         ) {

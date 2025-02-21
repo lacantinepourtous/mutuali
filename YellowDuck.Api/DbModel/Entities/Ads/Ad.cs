@@ -19,6 +19,7 @@ namespace YellowDuck.Api.DbModel.Entities.Ads
         public string Organization { get; set; }
         public IList<AdDayAvailability> DayAvailability { get; set; }
         public IList<AdEveningAvailability> EveningAvailability { get; set; }
+        public IList<AdCertification> Certifications { get; set; }
 
         // Transaction Types
         public bool IsAvailableForRent { get; set; }
@@ -34,8 +35,10 @@ namespace YellowDuck.Api.DbModel.Entities.Ads
         // Price
         public double? RentPrice { get; set; }
         public bool RentPriceToBeDetermined { get; set; }
+        public PriceRangeRental RentPriceRange {  get; set; }
         public double? SalePrice { get; set; }
         public bool SalePriceToBeDetermined { get; set; }
+        public PriceRangeSale SalePriceRange { get; set; }
 
         // Rating
         public IList<AdRating> AdRatings { get; set; }
@@ -48,6 +51,8 @@ namespace YellowDuck.Api.DbModel.Entities.Ads
         public bool Refrigerated { get; set; }
         public bool CanSharedRoad { get; set; }
         public bool CanHaveDriver { get; set; }
+
+        public IList<AdAllergen> Allergens { get; set; }
 
         public bool IsPublish { get; set; }
         public bool IsAdminOnly { get; set; }

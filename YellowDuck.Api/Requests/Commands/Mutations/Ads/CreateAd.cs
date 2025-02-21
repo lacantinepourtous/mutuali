@@ -50,7 +50,7 @@ namespace YellowDuck.Api.Requests.Commands.Mutations.Ads
 
             var owner = await currentUserAccessor.GetCurrentUser();
 
-            if(owner.PhoneNumberConfirmed == false)
+            if (owner.PhoneNumberConfirmed == false)
             {
                 throw new Exception("Phone number is not confirmed");
             }
@@ -96,6 +96,8 @@ namespace YellowDuck.Api.Requests.Commands.Mutations.Ads
                 IsPublish = true
             };
 
+            request.RentPriceRange.IfSet(v => ad.RentPriceRange = v);
+            request.SalePriceRange.IfSet(v => ad.SalePriceRange = v);
             request.Address.Value.Locality.IfSet(v => ad.Address.Locality = v);
             request.Address.Value.PostalCode.IfSet(v => ad.Address.PostalCode = v);
             request.Address.Value.Route.IfSet(v => ad.Address.Route = v);
@@ -133,15 +135,27 @@ namespace YellowDuck.Api.Requests.Commands.Mutations.Ads
                 v.ForEach(x => ad.EveningAvailability.Add(new AdEveningAvailability() { Weekday = x }));
             });
 
+            request.Certification.IfSet(v =>
+            {
+                ad.Certifications = new List<AdCertification>();
+                v.ForEach(x => ad.Certifications.Add(new AdCertification() { Certification = x }));
+            });
+
             request.ProfessionalKitchenEquipment.IfSet(v =>
             {
                 ad.ProfessionalKitchenEquipments = new List<AdProfessionalKitchenEquipment>();
                 v.ForEach(x => ad.ProfessionalKitchenEquipments.Add(new AdProfessionalKitchenEquipment() { ProfessionalKitchenEquipment = x }));
             });
 
+            request.Allergen.IfSet(v =>
+            {
+                ad.Allergens = new List<AdAllergen>();
+                v.ForEach(x => ad.Allergens.Add(new AdAllergen() { Allergen = x }));
+            });
+
             ad.UserId = owner.Id;
 
-            if(owner.Type == UserType.Admin)
+            if (owner.Type == UserType.Admin)
             {
                 ad.IsAdminOnly = true;
             }
@@ -172,7 +186,7 @@ namespace YellowDuck.Api.Requests.Commands.Mutations.Ads
                     }
                 }
             }
-            catch 
+            catch
             {
                 throw new ImageNotFoundException("GalleryItems");
             }
@@ -233,7 +247,7 @@ namespace YellowDuck.Api.Requests.Commands.Mutations.Ads
                         break;
                     }
             }
-           
+
         }
 
         [MutationInput]
@@ -256,16 +270,20 @@ namespace YellowDuck.Api.Requests.Commands.Mutations.Ads
             public bool SalePriceToBeDetermined { get; set; }
             public string RentPriceDescription { get; set; }
             public string SalePriceDescription { get; set; }
+            public Maybe<PriceRangeRental> RentPriceRange { get; set; }
+            public Maybe<PriceRangeSale> SalePriceRange { get; set; }
             public string DonationDescription { get; set; }
             public string TradeDescription { get; set; }
             public Maybe<List<DayOfWeek>> DayAvailability { get; set; }
             public Maybe<List<DayOfWeek>> EveningAvailability { get; set; }
+            public Maybe<List<Certification>> Certification { get; set; }
             public Maybe<string> Conditions { get; set; }
             public Maybe<NonNull<string>> SurfaceDescription { get; set; }
             public Maybe<List<ProfessionalKitchenEquipment>> ProfessionalKitchenEquipment { get; set; }
             public Maybe<NonNull<string>> ProfessionalKitchenEquipmentOther { get; set; }
             public Maybe<NonNull<string>> Equipment { get; set; }
             public Maybe<NonNull<string>> DeliveryTruckTypeOther { get; set; }
+            public Maybe<List<Allergen>> Allergen { get; set; }
             public NonNull<string> Organization { get; set; }
             public Maybe<string> SurfaceSize { get; set; }
             public Maybe<DeliveryTruckType> DeliveryTruckType { get; set; }

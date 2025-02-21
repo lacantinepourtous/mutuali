@@ -59,16 +59,20 @@ namespace YellowDuck.Api.Requests.Commands.Mutations.Ads
             request.GalleryItems.IfSet(v => UpdateGalleryItems(ad, v.Value));
             request.RentPrice.IfSet(v => ad.RentPrice = v);
             request.RentPriceToBeDetermined.IfSet(v => ad.RentPriceToBeDetermined = v);
+            request.RentPriceRange.IfSet(v => ad.RentPriceRange = v);
             request.SalePrice.IfSet(v => ad.SalePrice = v);
             request.SalePriceToBeDetermined.IfSet(v => ad.SalePriceToBeDetermined = v);
+            request.SalePriceRange.IfSet(v => ad.SalePriceRange = v);
             request.Organization.IfSet(v => ad.Organization = v);
             request.DayAvailability.IfSet( v => UpdateDayAvailability(ad, v));
             request.EveningAvailability.IfSet(v => UpdateEveningAvailability(ad, v));
+            request.Certification.IfSet(v => UpdateCertifications(ad, v));
             request.ProfessionalKitchenEquipment.IfSet(v => UpdateProfessionalKitchenEquipments(ad, v));
             request.DeliveryTruckType.IfSet(v => ad.DeliveryTruckType = v);
             request.Refrigerated.IfSet(v => ad.Refrigerated = v);
             request.CanSharedRoad.IfSet(v => ad.CanSharedRoad = v);
             request.CanHaveDriver.IfSet(v => ad.CanHaveDriver = v);
+            request.Allergen.IfSet(v => UpdateAllergens(ad, v));
 
             await db.SaveChangesAsync(cancellationToken);
 
@@ -128,12 +132,25 @@ namespace YellowDuck.Api.Requests.Commands.Mutations.Ads
             ad.EveningAvailability = new List<AdEveningAvailability>();
             eveningAvailability.ForEach(x => ad.EveningAvailability.Add(new AdEveningAvailability() { Weekday = x }));
         }
+        private void UpdateCertifications(Ad ad, List<Certification> certifications)
+        {
+            db.AdCertifications.RemoveRange(db.AdCertifications.Where(x => x.AdId == ad.Id));
+            ad.Certifications = new List<AdCertification>();
+            certifications.ForEach(x => ad.Certifications.Add(new AdCertification() { Certification = x }));
+        }
 
         private void UpdateProfessionalKitchenEquipments(Ad ad, List<ProfessionalKitchenEquipment> professionalKitchenEquipments)
         {
             db.AdProfessionalKitchenEquipments.RemoveRange(db.AdProfessionalKitchenEquipments.Where(x => x.AdId == ad.Id));
             ad.ProfessionalKitchenEquipments = new List<AdProfessionalKitchenEquipment>();
             professionalKitchenEquipments.ForEach(x => ad.ProfessionalKitchenEquipments.Add(new AdProfessionalKitchenEquipment() { ProfessionalKitchenEquipment = x }));
+        }
+
+        private void UpdateAllergens(Ad ad, List<Allergen> allergens)
+        {
+            db.AdAllergens.RemoveRange(db.AdAllergens.Where(x => x.AdId == ad.Id));
+            ad.Allergens = new List<AdAllergen>();
+            allergens.ForEach(x => ad.Allergens.Add(new AdAllergen() { Allergen = x }));
         }
 
         private async Task ValidateRequest(Input request)
@@ -181,12 +198,16 @@ namespace YellowDuck.Api.Requests.Commands.Mutations.Ads
             public Maybe<double?> SalePrice { get; set; }
             public Maybe<bool> RentPriceToBeDetermined { get; set; }
             public Maybe<bool> SalePriceToBeDetermined { get; set; }
+            public Maybe<PriceRangeRental> RentPriceRange { get; set; }
+            public Maybe<PriceRangeSale> SalePriceRange { get; set; }
             public Maybe<string> Organization { get; set; }
+            public Maybe<List<Certification>> Certification { get; set; }
             public Maybe<List<ProfessionalKitchenEquipment>> ProfessionalKitchenEquipment { get; set; }
             public Maybe<DeliveryTruckType> DeliveryTruckType { get; set; }
             public Maybe<bool> Refrigerated { get; set; }
             public Maybe<bool> CanSharedRoad { get; set; }
             public Maybe<bool> CanHaveDriver { get; set; }
+            public Maybe<List<Allergen>> Allergen { get; set; }
         }
 
         [MutationPayload]
