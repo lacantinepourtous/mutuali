@@ -1,35 +1,26 @@
-﻿using YellowDuck.Api.DbModel.Entities;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
+﻿using Microsoft.AspNetCore.Mvc;
 using System.ComponentModel.DataAnnotations;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using System;
 using YellowDuck.Api.DbModel;
-using YellowDuck.Api.Services.Twilio;
 using Microsoft.AspNetCore.Http;
+using YellowDuck.Api.Services.Phone;
 
 namespace YellowDuck.Api.Controllers
 {
     [Route("phone")]
     public class PhoneController : ControllerBase
     {
-        private readonly UserManager<AppUser> userManager;
-        private readonly ILogger<TokenController> logger;
         private readonly AppDbContext _context;
-        private readonly ITwilioService _twilioService;
+        private readonly IPhoneVerificationService _phoneVerificationService;
 
         public PhoneController(
-            UserManager<AppUser> userManager,
-            ILogger<TokenController> logger,
             AppDbContext context,
-            ITwilioService twilioService)
+            IPhoneVerificationService phoneVerificationService)
         {
-            this.userManager = userManager; // TODO retiré si pas utilisé
-            this.logger = logger;
             _context = context;
-            _twilioService = twilioService;
+            _phoneVerificationService = phoneVerificationService;
         }
 
         [HttpPost("verify-request")]
@@ -52,45 +43,15 @@ namespace YellowDuck.Api.Controllers
                 phone = user.Profile.PhoneNumber;
             }
 
-            var existingVerification = await _context.PhoneVerifications
-                .FirstOrDefaultAsync(x => x.PhoneNumber == phone);
+            var result = await _phoneVerificationService.CreateAndSendVerificationCode(phone);
 
-            if (existingVerification != null)
-            {
-                var timeSinceCreation = DateTime.UtcNow - existingVerification.CreatedAt;
-                if (timeSinceCreation.TotalSeconds < 30)
-                {
-                    return BadRequest(new PhoneResponse
-                    {
-                        Success = false,
-                        MessageKey = "error.phone.wait-between-codes"
-                    });
-                }
-                _context.PhoneVerifications.Remove(existingVerification);
-            }
-
-            // Créer une nouvelle vérification
-            var code = PhoneVerification.GenerateCode();
-            var verification = new PhoneVerification(phone, code);
-            await _context.PhoneVerifications.AddAsync(verification);
-            await _context.SaveChangesAsync();
-
-            // Envoyer le SMS via Twilio
-            try
-            {
-                await _twilioService.SendVerificationCode(phone, code);
-            }
-            catch (Exception ex)
-            {
-                logger.LogError(ex, "Erreur lors de l'envoi du SMS");
-                return StatusCode(500, new PhoneResponse
+            return result.Success
+                ? Ok(new PhoneResponse { Success = true })
+                : BadRequest(new PhoneResponse
                 {
                     Success = false,
-                    MessageKey = "error.phone.sms-failed"
+                    MessageKey = $"error.phone.{result.ErrorCode}"
                 });
-            }
-
-            return Ok(new PhoneResponse { Success = true });
         }
 
         [HttpPost("verify")]

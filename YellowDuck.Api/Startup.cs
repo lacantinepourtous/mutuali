@@ -52,6 +52,7 @@ using Sentry;
 using YellowDuck.Api.DbModel.Entities.Profiles;
 using YellowDuck.Api.Services.Stripe;
 using YellowDuck.Api.DbModel.Entities.Ads;
+using YellowDuck.Api.Services.Phone;
 
 namespace YellowDuck.Api
 {
@@ -179,6 +180,8 @@ namespace YellowDuck.Api
 
             // Stripe
             AddStripeServices(services);
+
+            services.AddScoped<IPhoneVerificationService, PhoneVerificationService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

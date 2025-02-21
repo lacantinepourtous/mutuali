@@ -10,6 +10,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Xunit;
 using static YellowDuck.Api.Requests.Commands.Mutations.Accounts.CreateUserAccount;
+using YellowDuck.Api.DbModel.Entities;
 
 namespace YellowDuck.ApiTests.Requests.Commands.Mutations.Accounts
 {
@@ -39,6 +40,8 @@ namespace YellowDuck.ApiTests.Requests.Commands.Mutations.Accounts
         [Fact]
         public async Task CreatesTheAccount()
         {
+            DbContext.PhoneVerifications.Add(new PhoneVerification() { PhoneNumber = PhoneNumber, IsVerified = true });
+            await DbContext.SaveChangesAsync();
             var input = new Input
             {
                 Email = Email,
@@ -76,6 +79,8 @@ namespace YellowDuck.ApiTests.Requests.Commands.Mutations.Accounts
         [Fact]
         public async Task SendsConfirmationEmail()
         {
+            DbContext.PhoneVerifications.Add(new PhoneVerification() { PhoneNumber = PhoneNumber, IsVerified = true });
+            await DbContext.SaveChangesAsync();
             var input = new Input
             {
                 Email = Email,
