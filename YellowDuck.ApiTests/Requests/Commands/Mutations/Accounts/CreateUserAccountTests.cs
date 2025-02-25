@@ -11,6 +11,7 @@ using System.Threading.Tasks;
 using Xunit;
 using static YellowDuck.Api.Requests.Commands.Mutations.Accounts.CreateUserAccount;
 using YellowDuck.Api.DbModel.Entities;
+using System;
 
 namespace YellowDuck.ApiTests.Requests.Commands.Mutations.Accounts
 {
@@ -26,7 +27,7 @@ namespace YellowDuck.ApiTests.Requests.Commands.Mutations.Accounts
         private const string OrganizationName = "Example Inc.";
         private const string OrganizationNEQ = "0000000000";
         private const string PostalCode = "G1K 0H1";
-        private const string PhoneNumber = "514 555-1234";
+        private const string PhoneNumber = "5145551234";
         private const bool ShowPhoneNumber = true;
         private const bool ShowEmail = false;
 
@@ -99,6 +100,30 @@ namespace YellowDuck.ApiTests.Requests.Commands.Mutations.Accounts
             await handler.Handle(input, CancellationToken.None);
 
             mailer.Verify(x => x.Send(It.IsAny<ConfirmEmailEmail>()));
+        }
+
+        [Fact]
+        public async Task ThrowsWhenPhoneNumberNotVerified()
+        {
+            var input = new Input
+            {
+                Email = Email,
+                Password = Password,
+                FirstName = FirstName,
+                LastName = LastName,
+                OrganizationName = OrganizationName,
+                OrganizationNEQ = OrganizationNEQ,
+                OrganizationType = OrganizationType.NonProfit,
+                Industry = Industry.HealthAndSocialServices,
+                PhoneNumber = PhoneNumber,
+                ShowPhoneNumber = ShowPhoneNumber,
+                ShowEmail = ShowEmail
+            };
+
+            await handler.Invoking(x => x.Handle(input, CancellationToken.None))
+                .Should()
+                .ThrowAsync<Exception>()
+                .WithMessage("Phone number is not verified.");
         }
     }
 }
