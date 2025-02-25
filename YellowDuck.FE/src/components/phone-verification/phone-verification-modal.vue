@@ -78,7 +78,7 @@ export default {
       }, 1000);
     },
     async validatePhoneNumber() {
-      const success = await PhoneVerificationService.verifyValidationCode(this.phoneNumber || this.email, this.pin);
+      const success = await PhoneVerificationService.verifyValidationCode(this.phoneNumber, this.email, this.pin);
       if (success) {
         this.$emit("validation-success");
         this.showModal = false;

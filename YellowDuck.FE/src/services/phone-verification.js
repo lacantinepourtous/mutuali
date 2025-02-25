@@ -27,13 +27,25 @@ export default {
 
     return responseJson.success;
   },
-  verifyValidationCode: async function(PhoneNumberOrEmail, code) {
+  verifyValidationCode: async function(phone, email, code) {
+    var body = {
+      code: code
+    }
+
+    if (phone) {
+      body.phone = this.cleanPhoneNumberOrEmail(phone);
+    }
+
+    if (email) {
+      body.email = this.cleanPhoneNumberOrEmail(email);
+    }
+
     const response = await fetch(`${VUE_APP_ROOT_API}/phone/verify`, {
       method: "POST",
       headers: {
         'Content-Type': 'application/json'
       },
-      body: JSON.stringify({ PhoneNumberOrEmail: this.cleanPhoneNumberOrEmail(PhoneNumberOrEmail), code })
+      body: JSON.stringify(body)
     });
 
     const responseJson = await response.json();

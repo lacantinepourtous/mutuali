@@ -2,6 +2,7 @@
 using YellowDuck.Api.EmailTemplates.Models;
 using YellowDuck.Api.Requests.Commands.Mutations.Accounts;
 using YellowDuck.Api.Services.Mailer;
+using YellowDuck.Api.Services.Phone;
 using FluentAssertions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging.Abstractions;
@@ -19,6 +20,7 @@ namespace YellowDuck.ApiTests.Requests.Commands.Mutations.Accounts
     {
         private readonly CreateUserAccount handler;
         private readonly Mock<IMailer> mailer;
+        private readonly Mock<IPhoneVerificationService> phoneVerificationService;
 
         private const string Email = "test@example.com";
         private const string Password = "1234aAuuuu";
@@ -35,7 +37,14 @@ namespace YellowDuck.ApiTests.Requests.Commands.Mutations.Accounts
         public CreateUserAccountTest()
         {
             mailer = new Mock<IMailer>();
-            handler = new CreateUserAccount(UserManager, DbContext, mailer.Object, NullLogger<CreateUserAccount>.Instance, HttpContextAccessor);
+            phoneVerificationService = new Mock<IPhoneVerificationService>();
+            handler = new CreateUserAccount(
+                UserManager,
+                DbContext,
+                mailer.Object,
+                NullLogger<CreateUserAccount>.Instance,
+                HttpContextAccessor,
+                phoneVerificationService.Object);
         }
 
         [Fact]

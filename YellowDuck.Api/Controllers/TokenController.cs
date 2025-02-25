@@ -16,8 +16,8 @@ using System.Security.Claims;
 using System.Threading.Tasks;
 using YellowDuck.Api.Requests.Commands.Mutations.Accounts;
 using YellowDuck.Api.DbModel;
-using YellowDuck.Api.Services.Twilio;
 using YellowDuck.Api.Services.Phone;
+using System;
 
 namespace YellowDuck.Api.Controllers
 {
@@ -85,9 +85,20 @@ namespace YellowDuck.Api.Controllers
 
             if (user.PhoneNumberConfirmed && user.TwoFactorEnabled)
             {
-                var bypass2FA = Request.Cookies["bypass2FA"];
-                if (bypass2FA == null)
+                var bypass2FAToken = Request.Cookies["bypass2FA"];
+                if (bypass2FAToken == null ||
+                    user.Bypass2FAToken != bypass2FAToken ||
+                    !user.Bypass2FAExpirationUtc.HasValue ||
+                    user.Bypass2FAExpirationUtc.Value < DateTime.UtcNow)
                 {
+                    // Si le token est expiré, on le nettoie
+                    if (user.Bypass2FAExpirationUtc.HasValue && user.Bypass2FAExpirationUtc.Value < DateTime.UtcNow)
+                    {
+                        user.Bypass2FAToken = null;
+                        user.Bypass2FAExpirationUtc = null;
+                        await context.SaveChangesAsync();
+                    }
+
                     var profile = context.UserProfiles.FirstOrDefault(x => x.UserId == user.Id);
 
                     var result = await _phoneVerificationService.CreateAndSendVerificationCode(

@@ -110,6 +110,7 @@
 
       <phone-verification-modal
         v-model="validatePhoneModal"
+        :email="userProfile.user.email"
         :phone-number="form.phoneNumber"
         :title="$t('confirm-phone.title')"
         @validation-success="onPhoneValidated"
@@ -322,6 +323,7 @@ query UserProfileById($id: ID!) {
     showEmail
     user {
       phoneNumberConfirmed
+      email
     }
   }
 }

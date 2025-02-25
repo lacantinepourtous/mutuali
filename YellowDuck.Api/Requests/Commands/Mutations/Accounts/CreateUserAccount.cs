@@ -22,6 +22,7 @@ using Microsoft.EntityFrameworkCore;
 using System.Security.Claims;
 using YellowDuck.Api.Constants;
 using YellowDuck.Api.DbModel.Entities.Alerts;
+using YellowDuck.Api.Services.Phone;
 
 namespace YellowDuck.Api.Requests.Commands.Mutations.Accounts
 {
@@ -32,14 +33,22 @@ namespace YellowDuck.Api.Requests.Commands.Mutations.Accounts
         private readonly IMailer mailer;
         private readonly ILogger<CreateUserAccount> logger;
         private readonly IHttpContextAccessor httpContextAccessor;
+        private readonly IPhoneVerificationService phoneVerificationService;
 
-        public CreateUserAccount(UserManager<AppUser> userManager, AppDbContext db, IMailer mailer, ILogger<CreateUserAccount> logger, IHttpContextAccessor httpContextAccessor)
+        public CreateUserAccount(
+            UserManager<AppUser> userManager,
+            AppDbContext db,
+            IMailer mailer,
+            ILogger<CreateUserAccount> logger,
+            IHttpContextAccessor httpContextAccessor,
+            IPhoneVerificationService phoneVerificationService)
         {
             this.httpContextAccessor = httpContextAccessor;
             this.userManager = userManager;
             this.db = db;
             this.mailer = mailer;
             this.logger = logger;
+            this.phoneVerificationService = phoneVerificationService;
         }
 
         public async Task<Payload> Handle(Input request, CancellationToken cancellationToken)
@@ -97,6 +106,10 @@ namespace YellowDuck.Api.Requests.Commands.Mutations.Accounts
             db.PhoneVerifications.Remove(phoneNumberVerification);
 
             await db.SaveChangesAsync(cancellationToken);
+
+            // Set bypass2FA cookie since phone is already verified
+            var isLocalhost = httpContextAccessor.HttpContext.Request.Host.Host.Contains("localhost");
+            await phoneVerificationService.SetBypass2FATokenForUser(user, httpContextAccessor.HttpContext.Response, isLocalhost);
 
             await mailer.Send(new ConfirmEmailEmail(request.Email, confirmToken, request.ReturnPath));
 

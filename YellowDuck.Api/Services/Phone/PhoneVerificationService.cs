@@ -2,10 +2,10 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Threading.Tasks;
-using YellowDuck.Api.Controllers;
 using YellowDuck.Api.DbModel;
 using YellowDuck.Api.DbModel.Entities;
 using YellowDuck.Api.Services.Twilio;
+using Microsoft.AspNetCore.Http;
 
 namespace YellowDuck.Api.Services.Phone
 {
@@ -48,16 +48,36 @@ namespace YellowDuck.Api.Services.Phone
       await _context.PhoneVerifications.AddAsync(verification);
       await _context.SaveChangesAsync();
 
-            try
-            {
-                await _twilioService.SendVerificationCode(phoneNumber, code);
-                return VerificationResult.Succeeded();
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Erreur lors de l'envoi du SMS");
-                return VerificationResult.Succeeded();
-            }
+      try
+      {
+        await _twilioService.SendVerificationCode(phoneNumber, code);
+        return VerificationResult.Succeeded();
+      }
+      catch (Exception ex)
+      {
+        _logger.LogError(ex, "Erreur lors de l'envoi du SMS");
+        return VerificationResult.Succeeded();
+      }
+    }
+
+    public async Task SetBypass2FATokenForUser(AppUser user, HttpResponse response, bool isLocalhost)
+    {
+      var (token, expirationUtc) = PhoneVerification.GenerateBypass2FAToken();
+
+      user.Bypass2FAToken = token;
+      user.Bypass2FAExpirationUtc = expirationUtc;
+
+      await _context.SaveChangesAsync();
+
+      var cookieOptions = new CookieOptions
+      {
+        HttpOnly = true,
+        Secure = !isLocalhost,
+        SameSite = SameSiteMode.Strict,
+        Expires = expirationUtc
+      };
+
+      response.Cookies.Append("bypass2FA", token, cookieOptions);
     }
   }
 }

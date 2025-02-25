@@ -4,7 +4,6 @@ using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using System;
 using YellowDuck.Api.DbModel;
-using Microsoft.AspNetCore.Http;
 using YellowDuck.Api.Services.Phone;
 
 namespace YellowDuck.Api.Controllers
@@ -47,7 +46,7 @@ namespace YellowDuck.Api.Controllers
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
 
-            var (phone, error) = await GetPhoneNumberFromEmailOrPhone(request.PhoneNumberOrEmail);
+            var (phone, error) = await GetPhoneNumberFromEmailOrPhone(request.Phone ?? request.Email);
             if (error != null) return error;
 
             var verification = await _context.PhoneVerifications
@@ -97,13 +96,18 @@ namespace YellowDuck.Api.Controllers
 
             // Code valide
             verification.IsVerified = true;
-            await _context.SaveChangesAsync();
 
-            Response.Cookies.Append("bypass2FA", "true", new CookieOptions
+            // Générer un token unique pour le bypass2FA
+            var user = await _context.Users
+                .FirstOrDefaultAsync(x => x.Email == request.Email);
+
+            if (user != null)
             {
-                HttpOnly = true,
-                Expires = DateTime.UtcNow.AddDays(15)
-            });
+                var isLocalhost = Request.Host.Host.Contains("localhost");
+                await _phoneVerificationService.SetBypass2FATokenForUser(user, Response, isLocalhost);
+            }
+
+            await _context.SaveChangesAsync();
 
             return Ok(new PhoneResponse { Success = true });
         }
@@ -139,7 +143,8 @@ namespace YellowDuck.Api.Controllers
         {
             [Required]
             public string Code { get; set; }
-            public string PhoneNumberOrEmail { get; set; }
+            public string Phone { get; set; }
+            public string Email { get; set; }
         }
 
         public class PhoneResponse

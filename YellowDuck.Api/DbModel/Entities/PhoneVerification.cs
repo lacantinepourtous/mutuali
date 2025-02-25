@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Security.Cryptography;
 
 namespace YellowDuck.Api.DbModel.Entities
 {
@@ -25,6 +26,17 @@ namespace YellowDuck.Api.DbModel.Entities
             return random.Next(100000, 999999).ToString();
         }
 
-
+        public static (string token, DateTime expirationUtc) GenerateBypass2FAToken()
+        {
+            var tokenBytes = new byte[32];
+            using (var rng = new RNGCryptoServiceProvider())
+            {
+                rng.GetBytes(tokenBytes);
+            }
+            return (
+                Convert.ToBase64String(tokenBytes),
+                DateTime.UtcNow.AddDays(15)
+            );
+        }
     }
 }
