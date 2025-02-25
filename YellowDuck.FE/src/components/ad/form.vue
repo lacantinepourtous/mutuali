@@ -192,34 +192,21 @@
       />
     </div>
 
-    <div class="section section--md section--padding-x section--border-bottom my-4 pb-5 rm-child-margin">
-      <fieldset id="availabilitiesFieldset" aria-labelledby="availabilitiesFieldset__legend">
-        <legend id="availabilitiesFieldset__legend" class="h2 mt-4 mb-3">{{ $t("label.availability") }}</legend>
-        <b-row>
-          <b-col>
-            <s-form-availability
-              v-model="form.dayAvailability"
-              id="dayAvailability"
-              :label="$t('label.ad-dayAvailability')"
-              :specify-label="$t('label.ad-dayAvailability.specify')"
-              :specify-label-sr-only="true"
-              name="dayAvailability"
-              :options="availabilityWeekdayOptions"
-            />
-          </b-col>
-          <b-col>
-            <s-form-availability
-              v-model="form.eveningAvailability"
-              id="eveningAvailability"
-              :label="$t('label.ad-eveningAvailability')"
-              :specify-label="$t('label.ad-eveningAvailability.specify')"
-              :specify-label-sr-only="true"
-              name="eveningAvailability"
-              :options="availabilityWeekdayOptions"
-            />
-          </b-col>
-        </b-row>
-      </fieldset>
+    <!-- Availability Section -->
+    <div
+      v-if="form.isAvailableForRent"
+      class="section section--md section--padding-x section--border-bottom my-4 pb-5 rm-child-margin"
+    >
+      <h2 class="my-4">{{ $t("section-title.availability") }}</h2>
+      <s-form-availability
+        id="availability"
+        :legend="$t('label.ad-availability')"
+        :day-availability="dayAvailability"
+        :evening-availability="eveningAvailability"
+        :all-selected="!adId"
+        @update:dayAvailability="(v) => (form.dayAvailability = v)"
+        @update:eveningAvailability="(v) => (form.eveningAvailability = v)"
+      />
     </div>
 
     <div class="section section--md section--padding-x section--border-bottom my-4 pb-5 rm-child-margin">

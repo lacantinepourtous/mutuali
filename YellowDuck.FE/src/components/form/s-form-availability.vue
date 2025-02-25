@@ -1,104 +1,183 @@
 <template>
-  <div class="form-availability mt-2 rm-child-margin">
-    <s-field labelClass="label" :id="id" :inputId="`input-show-${name}`" :name="name" :rules="rules" margin="none" class="mt-2">
-      <b-form-checkbox :id="`input-show-${name}`" v-model="computedShown" :required="required">
-        <span v-html="label" />
-      </b-form-checkbox>
-    </s-field>
-    <s-field
-      margin="none"
-      class="mb-4"
-      :id="`${id}-items`"
-      :name="`${name}-items`"
-      :label="specifyLabel"
-      :label-class="specifyLabelSrOnly ? 'sr-only' : ''"
-      v-slot="{ sState }"
-      v-if="computedShown"
-      :rules="{ required: required }"
-    >
-      <b-form-checkbox-group
-        class="items"
-        :id="`input-${name}-items`"
-        v-model="computedValue"
-        :required="required"
-        :options="options"
-        :state="sState"
-        stacked
-      >
-      </b-form-checkbox-group>
-    </s-field>
-  </div>
+  <fieldset class="form-availability" :id="id" :aria-labelledby="`${id}__legend`">
+    <legend :id="`${id}__legend`" :class="legendClass || 'font-bold h6 mt-4 mb-3'">{{ legend }}</legend>
+    <div class="form-availability__all">
+      <s-field labelClass="label" :id="`${id}-all`" :name="`${id}-all`" margin="none" class="mt-2">
+        <b-form-checkbox
+          :id="`input-${id}-all`"
+          @input="(v) => updateAllAvailability(v)"
+          :checked="allSelectedState"
+          :indeterminate="indeterminateState"
+        >
+          {{ $t("label.ad-allAvailabilities") }}
+        </b-form-checkbox>
+      </s-field>
+    </div>
+    <ul class="form-availability__list">
+      <li v-for="day in availabilityWeekdayOptions" :key="day.value" class="form-availability__item">
+        <b-form-checkbox
+          labelClass="label"
+          class="form-availability__day"
+          :id="`input-${id}-${day.text}`"
+          :checked="tempDayAvailability.includes(day.value) || tempEveningAvailability.includes(day.value)"
+          stacked
+          @input="(v) => toggleDay(v, day.value)"
+        >
+          {{ day.text }}
+        </b-form-checkbox>
+        <b-form-checkbox
+          :id="`input-${id}-${day.text}-day`"
+          :checked="tempDayAvailability.includes(day.value) && activeDays.includes(day.value)"
+          :disabled="!activeDays.includes(day.value)"
+          @input="(v) => updateSingleAvailability(DAY, day.value, v)"
+        >
+          {{ $t("label.ad-dayAvailability") }}
+        </b-form-checkbox>
+        <b-form-checkbox
+          :id="`input-${id}-${day.text}-evening`"
+          :checked="tempEveningAvailability.includes(day.value) && activeDays.includes(day.value)"
+          :disabled="!activeDays.includes(day.value)"
+          @input="(v) => updateSingleAvailability(EVENING, day.value, v)"
+        >
+          {{ $t("label.ad-eveningAvailability") }}
+        </b-form-checkbox>
+      </li>
+    </ul>
+  </fieldset>
 </template>
 
 <script>
 import SField from "@/components/form/s-field";
+import { AvailabilityWeekday } from "@/mixins/availability-weekday";
+import { DAY, EVENING } from "@/consts/periods";
 
 export default {
+  mixins: [AvailabilityWeekday],
   props: {
     id: String,
+    legend: String,
+    legendClass: String,
     label: String,
-    specifyLabel: String,
-    specifyLabelSrOnly: Boolean,
     name: String,
     rules: {
       type: [String, Object]
     },
-    options: {
-      type: Array,
-      default() {
-        return null;
-      }
-    },
-    value: Array,
+    dayAvailability: Array,
+    eveningAvailability: Array,
     required: Boolean,
-    preSelected: Boolean
+    allSelected: Boolean
   },
   components: {
     SField
   },
   computed: {
-    computedValue: {
-      get() {
-        return this.value || [];
-      },
-      set(val) {
-        this.$emit("input", val);
-      }
+    indeterminateState() {
+      return (
+        (this.tempDayAvailability.length !== this.availabilityWeekdayOptions.length && this.tempDayAvailability.length > 0) ||
+        (this.tempEveningAvailability.length !== this.availabilityWeekdayOptions.length &&
+          this.tempEveningAvailability.length > 0)
+      );
     },
-    computedShown: {
-      get() {
-        return this.shown || this.computedValue.length > 0;
-      },
-      set(val) {
-        this.shown = val;
-      }
+    allSelectedState() {
+      return (
+        this.tempDayAvailability.length === this.availabilityWeekdayOptions.length &&
+        this.tempEveningAvailability.length === this.availabilityWeekdayOptions.length
+      );
     }
   },
-  data: function() {
+  data() {
     return {
-      shown: Array.isArray(this.value) ? this.value.length > 0 : false
+      tempDayAvailability: this.dayAvailability ? [...this.dayAvailability] : [],
+      tempEveningAvailability: this.eveningAvailability ? [...this.eveningAvailability] : [],
+      activeDays: [...new Set([...(this.dayAvailability || []), ...(this.eveningAvailability || [])])],
+      DAY,
+      EVENING
     };
   },
-  watch: {
-    shown() {
-      if (this.shown && this.preSelected) {
-        this.computedValue = this.options.map((x) => x.value);
-      } else {
-        this.computedValue = [];
+  methods: {
+    updateSingleAvailability(period, day, val) {
+      if (period === DAY) {
+        if (val && this.tempDayAvailability.includes(day)) return;
+        if (val) {
+          this.tempDayAvailability.push(day);
+        } else {
+          this.tempDayAvailability = this.tempDayAvailability.filter((x) => x !== day);
+        }
+        this.$emit("update:dayAvailability", this.tempDayAvailability);
+      } else if (period === EVENING) {
+        if (val && this.tempEveningAvailability.includes(day)) return;
+        if (val) {
+          this.tempEveningAvailability.push(day);
+        } else {
+          this.tempEveningAvailability = this.tempEveningAvailability.filter((x) => x !== day);
+        }
+        this.$emit("update:eveningAvailability", this.tempEveningAvailability);
       }
+    },
+    updateAllAvailability(allSelected) {
+      if (allSelected) {
+        this.activeDays = this.availabilityWeekdayOptions.map((x) => x.value);
+        this.tempDayAvailability = this.availabilityWeekdayOptions.map((x) => x.value);
+        this.tempEveningAvailability = this.availabilityWeekdayOptions.map((x) => x.value);
+      } else {
+        this.tempDayAvailability = [];
+        this.tempEveningAvailability = [];
+        this.activeDays = [];
+      }
+      this.$emit("update:dayAvailability", this.tempDayAvailability);
+      this.$emit("update:eveningAvailability", this.tempEveningAvailability);
+    },
+    toggleDay(val, day) {
+      if (val) {
+        if (!this.tempDayAvailability.includes(day)) {
+          this.tempDayAvailability.push(day);
+        }
+        if (!this.tempEveningAvailability.includes(day)) {
+          this.tempEveningAvailability.push(day);
+        }
+        if (!this.activeDays.includes(day)) {
+          this.activeDays.push(day);
+        }
+      } else {
+        this.tempDayAvailability = this.tempDayAvailability.filter((x) => x !== day);
+        this.tempEveningAvailability = this.tempEveningAvailability.filter((x) => x !== day);
+        this.activeDays = this.activeDays.filter((x) => x !== day);
+      }
+      this.$emit("update:dayAvailability", this.tempDayAvailability);
+      this.$emit("update:eveningAvailability", this.tempEveningAvailability);
+    }
+  },
+  mounted() {
+    if (this.allSelected) {
+      this.updateAllAvailability(true);
     }
   }
 };
 </script>
+
 <style lang="scss">
 .form-availability {
-  .items {
-    margin-top: $spacer / 1.5;
-    border-left: 3px solid $yellow;
-    padding-left: $spacer;
-    .custom-checkbox:not(:last-child) {
-      margin-bottom: $spacer * 0.5;
-    }
+  &__all {
+    border-bottom: 1px solid $black;
+    padding-bottom: $spacer / 2;
+    margin-bottom: $spacer / 2;
+  }
+
+  &__list {
+    list-style: none;
+    padding-left: 0;
+  }
+
+  &__item {
+    display: flex;
+    gap: $spacer;
+    border-bottom: 1px solid $border-color;
+    padding-bottom: $spacer / 2;
+    margin-bottom: $spacer / 2;
+  }
+
+  &__day {
+    margin-right: auto;
   }
 }
 </style>
