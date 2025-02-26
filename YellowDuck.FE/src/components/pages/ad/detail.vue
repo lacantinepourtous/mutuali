@@ -156,16 +156,9 @@
 
       <div v-if="adAvailability.length" class="section section--md section--border-top py-6">
         <h2 class="font-family-base font-weight-bold mb-4">
-          {{ $t("label.ad-availability") }}
+          {{ $t("label.availability") }}
         </h2>
-        <ul>
-          <li v-for="weekdayAvailability in adAvailability" :key="weekdayAvailability.key" class="mb-3">
-            <strong> {{ weekdayAvailability.weekday }} </strong><br />
-            <template v-if="weekdayAvailability.availability.day">{{ $t("label.ad-dayAvailability") }}</template>
-            <template v-if="weekdayAvailability.availability.day && weekdayAvailability.availability.evening"> • </template>
-            <template v-if="weekdayAvailability.availability.evening">{{ $t("label.ad-eveningAvailability") }}</template>
-          </li>
-        </ul>
+        <detail-calendar :availability="adAvailability" />
       </div>
 
       <div v-if="ad.certification.length" class="section section--md section--border-top py-6">
@@ -264,6 +257,7 @@ import DetailPartialDeliveryTruck from "@/components/ad/detail-partial-delivery-
 import DetailPartialProfessionalKitchen from "@/components/ad/detail-partial-professional-kitchen";
 import DetailPartialStorageSpace from "@/components/ad/detail-partial-storage-space";
 import DetailPartialOther from "@/components/ad/detail-partial-other";
+import DetailCalendar from "@/components/ad/detail-calendar";
 
 export default {
   mixins: [AvailabilityWeekday, PriceDetails, Certification, Allergen],
@@ -280,7 +274,8 @@ export default {
     DetailPartialDeliveryTruck,
     DetailPartialProfessionalKitchen,
     DetailPartialStorageSpace,
-    DetailPartialOther
+    DetailPartialOther,
+    DetailCalendar
   },
   data() {
     return {

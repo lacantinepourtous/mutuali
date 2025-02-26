@@ -5,9 +5,7 @@ import { LANG_FR, LANG_EN } from "@/consts/langs";
 import { FORMAT_MONTH_YEAR } from "@/consts/formats";
 import { LOCAL_STORAGE_LOCALE } from "@/consts/local-storage";
 
-import {
-  VUE_APP_I18N_FALLBACK_LOCALE
-} from "@/helpers/env";
+import { VUE_APP_I18N_FALLBACK_LOCALE } from "@/helpers/env";
 
 import advancedFormat from "dayjs/plugin/advancedFormat";
 import dayjs from "dayjs";
@@ -19,9 +17,9 @@ let initialLocale = null;
 
 // First check in querystring
 const params = new Proxy(new URLSearchParams(window.location.search), {
-  get: (searchParams, prop) => searchParams.get(prop),
+  get: (searchParams, prop) => searchParams.get(prop)
 });
-if(supportedLocales.includes(params.lang)) {
+if (supportedLocales.includes(params.lang)) {
   initialLocale = params.lang;
 }
 // After check in localstorage
@@ -62,7 +60,7 @@ function setLang(lang) {
 }
 
 const i18n = {
-  instance: function() {
+  instance: function () {
     return instanceI18n;
   },
   locale: () => {
@@ -82,7 +80,11 @@ const i18n = {
   getLocalizedDateDiff: (startDate, endDate, format) => {
     return dayjs(endDate).diff(dayjs(startDate), format);
   },
-  isLangValid: (lang) => supportedLocales.includes(lang)
+  isLangValid: (lang) => supportedLocales.includes(lang),
+  dayjs: dayjs
 };
+
+// Set default locale
+dayjs.locale(i18n.locale());
 
 export default i18n;

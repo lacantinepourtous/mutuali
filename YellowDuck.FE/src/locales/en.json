@@ -668,5 +668,18 @@
   "select.allergen-milk": "Milk",
   "select.allergen-soy": "Soy",
   "select.allergen-fish": "Crustaceans, molluscs, fish",
-  "select.allergen-mustard": "Mustard seeds"
+  "select.allergen-mustard": "Mustard seeds",
+  "calendar.labelPrevDecade": "Previous decade",
+  "calendar.labelPrevYear": "Previous year",
+  "calendar.labelPrevMonth": "Previous month",
+  "calendar.labelCurrentMonth": "Current month",
+  "calendar.labelNextMonth": "Next month",
+  "calendar.labelNextYear": "Next year",
+  "calendar.labelNextDecade": "Next decade",
+  "calendar.labelToday": "Today",
+  "calendar.labelSelected": "Selected date",
+  "calendar.labelNoDateSelected": "No date selected",
+  "calendar.labelCalendar": "Calendar",
+  "calendar.labelNav": "Calendar navigation",
+  "calendar.labelHelp": "Navigate the calendar using the direction keys"
 }

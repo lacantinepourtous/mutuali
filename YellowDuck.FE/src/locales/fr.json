@@ -666,5 +666,18 @@
   "select.allergen-milk": "Lait",
   "select.allergen-soy": "Soja",
   "select.allergen-fish": "Crustacés, mollusques, poisson",
-  "select.allergen-mustard": "Graines de moutarde"
+  "select.allergen-mustard": "Graines de moutarde",
+  "calendar.labelPrevDecade": "Décennie précédente",
+  "calendar.labelPrevYear": "Année précédente",
+  "calendar.labelPrevMonth": "Mois précédent",
+  "calendar.labelCurrentMonth": "Mois en cours",
+  "calendar.labelNextMonth": "Mois suivant",
+  "calendar.labelNextYear": "Année suivante",
+  "calendar.labelNextDecade": "Décennie suivante",
+  "calendar.labelToday": "Aujourd’hui",
+  "calendar.labelSelected": "Date sélectionnée",
+  "calendar.labelNoDateSelected": "Aucune date sélectionnée",
+  "calendar.labelCalendar": "Calendrier",
+  "calendar.labelNav": "Navigation du calendrier",
+  "calendar.labelHelp": "Naviguer dans le calendrier avec les touches de direction"
 }
