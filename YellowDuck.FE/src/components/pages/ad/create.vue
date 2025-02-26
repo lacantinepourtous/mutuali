@@ -7,7 +7,15 @@
       <div class="section section--md section--padding-x section--border-bottom my-4">
         <h1 class="my-4">{{ $t("page-title.create-ad") }}</h1>
       </div>
-      <ad-form @submitForm="createAd" :disabledBtn="isSubmitted" :btnLabel="$t('btn.create-ad')" />
+
+      <div v-if="!phoneNumberConfirmed" class="alert alert-warning mx-4">
+        {{ $t("warnings.phone-verification-required") }}
+        <router-link :to="{ name: $consts.urls.URL_PROFILE_EDIT, query: { action: 'validate-phone' } }">
+          {{ $t("warnings.phone-verification-required.link") }}
+        </router-link>
+      </div>
+
+      <ad-form @submitForm="createAd" :disabledBtn="isSubmitted || !phoneNumberConfirmed" :btnLabel="$t('btn.create-ad')" />
     </template>
 
     <form-complete
@@ -40,6 +48,7 @@ export default {
       adCreated: false,
       adCreatedId: "",
       isSubmitted: false,
+      phoneNumberConfirmed: true,
       formCompleteCtas: [
         {
           action: () => this.$router.push({ name: URL_AD_DETAIL, params: { id: this.adCreatedId } }),
@@ -56,6 +65,18 @@ export default {
       }
     };
   },
+  apollo: {
+    me: {
+      query() {
+        return this.$options.query.Me;
+      },
+      result({ data }) {
+        if (data && data.me) {
+          this.phoneNumberConfirmed = data.me.phoneNumberConfirmed;
+        }
+      }
+    }
+  },
   methods: {
     createAd: async function (input) {
       this.isSubmitted = true;
@@ -71,3 +92,12 @@ export default {
   }
 };
 </script>
+
+<graphql>
+  query Me {
+    me {
+      id
+      phoneNumberConfirmed
+    }
+  }
+  </graphql>

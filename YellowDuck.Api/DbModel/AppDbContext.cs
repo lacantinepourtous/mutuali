@@ -35,6 +35,7 @@ namespace YellowDuck.Api.DbModel
 
         public DbSet<UserProfile> UserProfiles { get; set; }
         public DbSet<UserProfileRegisteringInterest> UserProfileRegisteringInterest { get; set; }
+        public DbSet<PhoneVerification> PhoneVerifications { get; set; }
         public DbSet<Ad> Ads { get; set; }
         public DbSet<AdTranslation> AdTranslations { get; set; }
         public DbSet<AdAddress> AdAddress { get; set; }
@@ -93,6 +94,10 @@ namespace YellowDuck.Api.DbModel
 
             Configure<UserProfileRegisteringInterest>(_ => {
                 _.HasOne(x => x.UserProfile).WithMany(x => x.RegisteringInterests).HasForeignKey(x => x.UserProfileId);
+            });
+
+            Configure<PhoneVerification>(_ => {
+                _.HasIndex(x => new { x.PhoneNumber }).IsUnique();
             });
 
             Configure<Ad>(_ => {

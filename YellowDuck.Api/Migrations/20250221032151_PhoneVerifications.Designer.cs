@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using YellowDuck.Api.DbModel;
 
 namespace YellowDuck.Api.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250221032151_PhoneVerifications")]
+    partial class PhoneVerifications
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -220,17 +222,11 @@ namespace YellowDuck.Api.Migrations
                     b.Property<double?>("RentPrice")
                         .HasColumnType("float");
 
-                    b.Property<int>("RentPriceRange")
-                        .HasColumnType("int");
-
                     b.Property<bool>("RentPriceToBeDetermined")
                         .HasColumnType("bit");
 
                     b.Property<double?>("SalePrice")
                         .HasColumnType("float");
-
-                    b.Property<int>("SalePriceRange")
-                        .HasColumnType("int");
 
                     b.Property<bool>("SalePriceToBeDetermined")
                         .HasColumnType("bit");
@@ -291,46 +287,6 @@ namespace YellowDuck.Api.Migrations
                         .IsUnique();
 
                     b.ToTable("AdAddress");
-                });
-
-            modelBuilder.Entity("YellowDuck.Api.DbModel.Entities.Ads.AdAllergen", b =>
-                {
-                    b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<long>("AdId")
-                        .HasColumnType("bigint");
-
-                    b.Property<int>("Allergen")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("AdId");
-
-                    b.ToTable("AdAllergens");
-                });
-
-            modelBuilder.Entity("YellowDuck.Api.DbModel.Entities.Ads.AdCertification", b =>
-                {
-                    b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<long>("AdId")
-                        .HasColumnType("bigint");
-
-                    b.Property<int>("Certification")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("AdId");
-
-                    b.ToTable("AdCertifications");
                 });
 
             modelBuilder.Entity("YellowDuck.Api.DbModel.Entities.Ads.AdDayAvailability", b =>
@@ -602,12 +558,6 @@ namespace YellowDuck.Api.Migrations
 
                     b.Property<int>("AccessFailedCount")
                         .HasColumnType("int");
-
-                    b.Property<DateTime?>("Bypass2FAExpirationUtc")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Bypass2FAToken")
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken()
@@ -1151,28 +1101,6 @@ namespace YellowDuck.Api.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("YellowDuck.Api.DbModel.Entities.Ads.AdAllergen", b =>
-                {
-                    b.HasOne("YellowDuck.Api.DbModel.Entities.Ads.Ad", "Ad")
-                        .WithMany("Allergens")
-                        .HasForeignKey("AdId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Ad");
-                });
-
-            modelBuilder.Entity("YellowDuck.Api.DbModel.Entities.Ads.AdCertification", b =>
-                {
-                    b.HasOne("YellowDuck.Api.DbModel.Entities.Ads.Ad", "Ad")
-                        .WithMany("Certifications")
-                        .HasForeignKey("AdId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Ad");
-                });
-
             modelBuilder.Entity("YellowDuck.Api.DbModel.Entities.Ads.AdDayAvailability", b =>
                 {
                     b.HasOne("YellowDuck.Api.DbModel.Entities.Ads.Ad", "Ad")
@@ -1416,10 +1344,6 @@ namespace YellowDuck.Api.Migrations
             modelBuilder.Entity("YellowDuck.Api.DbModel.Entities.Ads.Ad", b =>
                 {
                     b.Navigation("AdRatings");
-
-                    b.Navigation("Allergens");
-
-                    b.Navigation("Certifications");
 
                     b.Navigation("DayAvailability");
 

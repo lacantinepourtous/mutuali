@@ -117,7 +117,39 @@
       rules="required"
       :placeholder="$t('placeholder.phoneNumber')"
       required
+      @change="phoneNumberIsConfirmed = false"
     />
+    <div class="d-flex flex-wrap align-items-center mt-n3">
+      <b-button
+        class="mr-3 my-1"
+        :disabled="!isValidPhoneNumber || phoneNumberIsConfirmed"
+        variant="primary"
+        type="button"
+        @click="validatePhoneModal = true"
+        >{{ $t("confirm-phone.open-modal") }}</b-button
+      >
+      <div class="d-flex align-items-center">
+        <b-icon v-if="phoneNumberIsConfirmed" icon="check-circle" variant="success"></b-icon>
+        <p v-if="phoneNumberIsConfirmed" class="mb-0 ml-2 text-success">{{ $t("confirm-phone.phone-number-confirmed") }}</p>
+      </div>
+    </div>
+
+    <s-form-hidden
+      v-if="phoneNumber"
+      class="mt-n1"
+      :value="phoneNumberIsConfirmed ? 1 : null"
+      id="phoneNumberIsConfirmed"
+      name="phoneNumberIsConfirmed"
+      rules="isValidPhoneNumber"
+    />
+
+    <phone-verification-modal
+      v-model="validatePhoneModal"
+      :phone-number="phoneNumber"
+      :title="$t('confirm-phone.title')"
+      @validation-success="onPhoneValidated"
+    />
+
     <s-form-checkbox
       v-model="showPhoneNumber"
       id="showPhoneNumber"
@@ -170,6 +202,7 @@
 
 <script>
 import SForm from "@/components/form/s-form";
+import SFormHidden from "@/components/form/s-form-hidden";
 import SFormInput from "@/components/form/s-form-input";
 import SFormCheckbox from "@/components/form/s-form-checkbox";
 import SFormSelect from "@/components/form/s-form-select";
@@ -184,7 +217,6 @@ import {
   ORGANIZATION_TYPE_OTHER
 } from "@/consts/organization-type";
 
-
 import {
   INDUSTRY_FOOD_PROCESSING_AND_DISTRIBUTION,
   INDUSTRY_CATERING,
@@ -195,14 +227,18 @@ import {
   INDUSTRY_OTHER
 } from "@/consts/industry";
 
+import PhoneVerificationModal from "@/components/phone-verification/phone-verification-modal";
+
 export default {
   mixins: [RegisteringInterests],
   components: {
     SForm,
+    SFormHidden,
     SFormInput,
     SFormCheckbox,
     SFormSelect,
-    SFormCheckboxGroup
+    SFormCheckboxGroup,
+    PhoneVerificationModal
   },
   data() {
     return {
@@ -216,6 +252,9 @@ export default {
       organizationType: null,
       industry: null,
       phoneNumber: null,
+      pin: null,
+      phoneNumberIsConfirmed: false,
+      validatePhoneModal: false,
       showPhoneNumber: null,
       showEmail: null,
       registeringInterests: [],
@@ -245,22 +284,31 @@ export default {
     };
   },
   computed: {
-    organizationTypeOtherSpecificationRules: function() {
+    organizationTypeOtherSpecificationRules: function () {
       return this.organizationType ? "required" : "";
     },
-    displayOrganizationTypeOtherSpecification: function() {
+    displayOrganizationTypeOtherSpecification: function () {
       return this.organizationType === ORGANIZATION_TYPE_OTHER;
     },
-    industryOtherSpecificationRules: function() {
+    industryOtherSpecificationRules: function () {
       return this.industry ? "required" : "";
     },
-    displayIndustryOtherSpecification: function() {
+    displayIndustryOtherSpecification: function () {
       return this.industry === INDUSTRY_OTHER;
+    },
+    isValidPhoneNumber() {
+      return this.phoneNumber && this.phoneNumber.replace(/\D/g, "").length === 10;
+    }
+  },
+  watch: {
+    phoneNumber: function (newVal) {
+      if (newVal && this.phoneNumberIsConfirmed) {
+        this.phoneNumberIsConfirmed = false;
+      }
     }
   },
   methods: {
-    subscribeUser: async function() {
-
+    subscribeUser: async function () {
       let input = {
         email: this.email,
         password: this.password,
@@ -290,7 +338,16 @@ export default {
       }
 
       this.$emit("submitForm", input);
+    },
+    onPhoneValidated() {
+      this.phoneNumberIsConfirmed = true;
     }
   }
 };
 </script>
+
+<style scoped>
+.text-muted {
+  cursor: not-allowed;
+}
+</style>
