@@ -88,7 +88,7 @@
             </span>
           </span>
           <b-button variant="dark" size="sm" @click="removeDate(selectedDate.date)">
-            <b-icon icon="x" />
+            <b-icon icon="x" :aria-label="$t('btn.remove-date')" />
           </b-button>
         </li>
       </ul>

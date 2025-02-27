@@ -701,5 +701,6 @@
   "calendar.labelHelp": "Navigate the calendar using the direction keys",
   "aria-label.calendar-choose-period": "Choose a period for the selected date",
   "label.calendar-instruction": "Select a date and a period",
-  "label.calendar-selection": "Selected date(s)"
+  "label.calendar-selection": "Selected date(s)",
+  "btn.remove-date": "Remove this date"
 }

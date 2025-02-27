@@ -699,5 +699,6 @@
   "calendar.labelHelp": "Naviguer dans le calendrier avec les touches de direction",
   "aria-label.calendar-choose-period": "Choisissez une période pour la date sélectionnée",
   "label.calendar-instruction": "Sélectionner une date et une période",
-  "label.calendar-selection": "Date(s) sélectionnée(s)"
+  "label.calendar-selection": "Date(s) sélectionnée(s)",
+  "btn.remove-date": "Retirer cette date"
 }
