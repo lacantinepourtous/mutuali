@@ -1,6 +1,6 @@
 <template>
   <fieldset class="form-availability" :id="id" :aria-labelledby="`${id}__legend`">
-    <legend :id="`${id}__legend`" :class="legendClass || 'font-bold h6 mt-4 mb-3'">{{ legend }}</legend>
+    <legend :id="`${id}__legend`" :class="legendClass || 'font-weight-bold h6 mt-4 mb-3'">{{ legend }}</legend>
     <div class="form-availability__all">
       <s-field labelClass="label" :id="`${id}-all`" :name="`${id}-all`" margin="none" class="mt-2">
         <b-form-checkbox

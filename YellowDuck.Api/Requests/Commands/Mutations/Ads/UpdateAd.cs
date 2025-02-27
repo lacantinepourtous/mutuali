@@ -66,6 +66,7 @@ namespace YellowDuck.Api.Requests.Commands.Mutations.Ads
             request.Organization.IfSet(v => ad.Organization = v);
             request.DayAvailability.IfSet( v => UpdateDayAvailability(ad, v));
             request.EveningAvailability.IfSet(v => UpdateEveningAvailability(ad, v));
+            request.AvailabilityRestriction.IfSet(v => UpdateAvailabilityRestriction(ad, v));
             request.Certification.IfSet(v => UpdateCertifications(ad, v));
             request.ProfessionalKitchenEquipment.IfSet(v => UpdateProfessionalKitchenEquipments(ad, v));
             request.DeliveryTruckType.IfSet(v => ad.DeliveryTruckType = v);
@@ -132,6 +133,21 @@ namespace YellowDuck.Api.Requests.Commands.Mutations.Ads
             ad.EveningAvailability = new List<AdEveningAvailability>();
             eveningAvailability.ForEach(x => ad.EveningAvailability.Add(new AdEveningAvailability() { Weekday = x }));
         }
+
+        private void UpdateAvailabilityRestriction(Ad ad, List<AvailabilityRestrictionInput> availabilityRestrictions)
+        {
+            db.AdAvailabilityRestrictions.RemoveRange(db.AdAvailabilityRestrictions.Where(x => x.AdId == ad.Id));
+            ad.AvailabilityRestrictions = new List<AdAvailabilityRestriction>();
+
+            availabilityRestrictions.ForEach(x => ad.AvailabilityRestrictions.Add(new AdAvailabilityRestriction()
+                {
+                    Day = x.Day,
+                    Evening = x.Evening,
+                    StartDate = x.StartDate,
+                }
+            ));
+        }
+
         private void UpdateCertifications(Ad ad, List<Certification> certifications)
         {
             db.AdCertifications.RemoveRange(db.AdCertifications.Where(x => x.AdId == ad.Id));
@@ -194,6 +210,7 @@ namespace YellowDuck.Api.Requests.Commands.Mutations.Ads
             public Maybe<bool> ShowAddress { get; set; }
             public Maybe<List<DayOfWeek>> DayAvailability { get; set; }
             public Maybe<List<DayOfWeek>> EveningAvailability { get; set; }
+            public Maybe<List<AvailabilityRestrictionInput>> AvailabilityRestriction { get; set; }
             public Maybe<double?> RentPrice { get; set; }
             public Maybe<double?> SalePrice { get; set; }
             public Maybe<bool> RentPriceToBeDetermined { get; set; }
@@ -235,6 +252,14 @@ namespace YellowDuck.Api.Requests.Commands.Mutations.Ads
         {
             public string Src { get; set; }
             public string Alt { get; set; }
+        }
+
+        [InputType]
+        public class AvailabilityRestrictionInput
+        {
+            public bool Day {  get; set; }
+            public bool Evening { get; set; }
+            public DateTime StartDate { get; set; }
         }
 
         public abstract class EditAdException : RequestValidationException { }

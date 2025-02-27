@@ -207,6 +207,11 @@
         @update:dayAvailability="(v) => (form.dayAvailability = v)"
         @update:eveningAvailability="(v) => (form.eveningAvailability = v)"
       />
+
+      <availability-restrictions
+        :initial-availability-restrictions="availabilityRestriction"
+        @update="(v) => (form.availabilityRestriction = v)"
+      />
     </div>
 
     <div class="section section--md section--padding-x section--border-bottom my-4 pb-5 rm-child-margin">
@@ -290,6 +295,8 @@ import FormPartialDeliveryTruck from "@/components/ad/form-partial-delivery-truc
 import FormPartialProfessionalKitchen from "@/components/ad/form-partial-professional-kitchen";
 import FormPartialStorageSpace from "@/components/ad/form-partial-storage-space";
 import FormPartialOther from "@/components/ad/form-partial-other";
+
+import AvailabilityRestrictions from "@/components/ad/availability-restrictions";
 
 import { AdCategory } from "@/mixins/ad-category";
 import { AdSalePriceRange } from "@/mixins/ad-sale-price-range";
@@ -439,6 +446,10 @@ export default {
       type: Array,
       default: null
     },
+    availabilityRestriction: {
+      type: Array,
+      default: null
+    },
     refrigerated: {
       type: Boolean,
       default: false
@@ -520,6 +531,7 @@ export default {
         allergen: this.allergen || [],
         dayAvailability: this.dayAvailability || [],
         eveningAvailability: this.eveningAvailability || [],
+        availabilityRestriction: this.availabilityRestriction || [],
         refrigerated: this.refrigerated,
         canSharedRoad: this.canSharedRoad,
         canHaveDriver: this.canHaveDriver,
@@ -545,7 +557,8 @@ export default {
     FormPartialDeliveryTruck,
     FormPartialProfessionalKitchen,
     FormPartialStorageSpace,
-    FormPartialOther
+    FormPartialOther,
+    AvailabilityRestrictions
   },
   watch: {
     "form.rentPriceToBeDetermined"() {
@@ -583,6 +596,10 @@ export default {
       if (!value) {
         this.form.donationDescription = "";
       }
+    },
+    "form.availabilityRestriction"(value) {
+      // eslint-disable-next-line no-console
+      console.log("form.availabilityRestriction", value);
     }
   },
   computed: {
@@ -676,6 +693,7 @@ export default {
         "allergen",
         "dayAvailability",
         "eveningAvailability",
+        "availabilityRestriction",
         "refrigerated",
         "canSharedRoad",
         "canHaveDriver",
@@ -685,8 +703,17 @@ export default {
       for (let maybeEditedField of maybeEditedFields) {
         if (
           Array.isArray(this[maybeEditedField]) &&
-          this[maybeEditedField].sort().join(",") === this.form[maybeEditedField].sort().join(",")
+          this[maybeEditedField]
+            .sort()
+            .map((item) => JSON.stringify(item))
+            .join(",") ===
+            this.form[maybeEditedField]
+              .sort()
+              .map((item) => JSON.stringify(item))
+              .join(",")
         ) {
+          // eslint-disable-next-line no-console
+          console.log("same", this.availabilityRestriction, this.form.availabilityRestriction);
           continue;
         }
         if (this[maybeEditedField] === this.form[maybeEditedField]) continue;

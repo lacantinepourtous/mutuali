@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -7,20 +8,20 @@ using YellowDuck.Api.DbModel.Entities.Ads;
 
 namespace YellowDuck.Api.Requests.Queries.Ads
 {
-    public class GetAdAvailabilityRestrictionsByAdId : BatchCollectionQuery<GetAdAvailabilityRestrictionsByAdId.Query, long, AdAvailabilityRestriction>
+    public class GetAdDayAvailabilityWeekdaysByAdId : BatchCollectionQuery<GetAdDayAvailabilityWeekdaysByAdId.Query, long, AdDayAvailability>
     {
         private readonly AppDbContext db;
 
         public class Query : BaseQuery { }
 
-        public GetAdAvailabilityRestrictionsByAdId(AppDbContext db)
+        public GetAdDayAvailabilityWeekdaysByAdId(AppDbContext db)
         {
             this.db = db;
         }
 
-        public override async Task<ILookup<long, AdAvailabilityRestriction>> Handle(Query request, CancellationToken cancellationToken)
+        public override async Task<ILookup<long, AdDayAvailability>> Handle(Query request, CancellationToken cancellationToken)
         {
-            var results = await db.AdAvailabilityRestrictions
+            var results = await db.AdDayAvailabilityWeekdays
                 .Where(x => request.Ids.Contains(x.AdId))
                 .ToListAsync(cancellationToken);
 
