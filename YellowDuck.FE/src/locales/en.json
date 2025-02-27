@@ -314,6 +314,7 @@
   "placeholder.postalCode": "Ex: A1B 2C3",
   "validator.postalCode": "Please provide a valid postal code.",
   "btn.create-conversation-auto-message": "Hello, your ad interests me",
+  "btn.create-conversation-auto-message-with-dates": "Hello, your ad interests me. Would the equipment be available on the following dates: {dates}?",
   "text.initial-conversation-body": "This is the start of your conversation with {name}. You can initiate the reservation by sending your first message. Here is a pre-written message.",
   "btn.landing-connect": " Log in",
   "btn.landing-create-account": "Create my account",
@@ -697,5 +698,8 @@
   "calendar.labelNoDateSelected": "No date selected",
   "calendar.labelCalendar": "Calendar",
   "calendar.labelNav": "Calendar navigation",
-  "calendar.labelHelp": "Navigate the calendar using the direction keys"
+  "calendar.labelHelp": "Navigate the calendar using the direction keys",
+  "aria-label.calendar-choose-period": "Choose a period for the selected date",
+  "label.calendar-instruction": "Select a date and a period",
+  "label.calendar-selection": "Selected date(s)"
 }

@@ -52,7 +52,7 @@
             variant="link"
             class="conversation-bubble__link-btn p-0 text-left text-white font-weight-bold text-decoration-underline"
           >
-            {{ $t("btn.create-conversation-auto-message") }}
+            {{ autoMessage || $t("btn.create-conversation-auto-message") }}
           </b-button>
         </span>
       </p>
@@ -69,7 +69,6 @@
     </b-modal>
   </div>
 </template>
-
 
 <script>
 import linkifyHtml from "linkifyjs/html";
@@ -110,6 +109,11 @@ export default {
       }
     },
     contractId: {
+      type: String,
+      required: false,
+      default: ""
+    },
+    autoMessage: {
       type: String,
       required: false,
       default: ""

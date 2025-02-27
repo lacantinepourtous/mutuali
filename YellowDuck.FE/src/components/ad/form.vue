@@ -596,10 +596,6 @@ export default {
       if (!value) {
         this.form.donationDescription = "";
       }
-    },
-    "form.availabilityRestriction"(value) {
-      // eslint-disable-next-line no-console
-      console.log("form.availabilityRestriction", value);
     }
   },
   computed: {
@@ -712,8 +708,6 @@ export default {
               .map((item) => JSON.stringify(item))
               .join(",")
         ) {
-          // eslint-disable-next-line no-console
-          console.log("same", this.availabilityRestriction, this.form.availabilityRestriction);
           continue;
         }
         if (this[maybeEditedField] === this.form[maybeEditedField]) continue;

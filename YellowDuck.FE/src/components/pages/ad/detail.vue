@@ -158,7 +158,12 @@
         <h2 class="font-family-base font-weight-bold mb-4">
           {{ $t("label.availability") }}
         </h2>
-        <detail-calendar :availability="adAvailability" />
+        <detail-calendar
+          :availability="adAvailability"
+          :restrictions="ad.availabilityRestriction"
+          :view-only="isAdOwnByCurrentUser"
+          @update-conversation-message="(v) => (conversationMessage = v)"
+        />
       </div>
 
       <div v-if="ad.certification.length" class="section section--md section--border-top py-6">
@@ -281,6 +286,7 @@ export default {
     return {
       displayMap: false,
       haveJustUnpublish: false,
+      conversationMessage: "",
       CATEGORY_PROFESSIONAL_KITCHEN,
       CATEGORY_DELIVERY_TRUCK,
       CATEGORY_STORAGE_SPACE,
@@ -398,7 +404,10 @@ export default {
     contactUser() {
       let routeData = this.$router.resolve({
         name: URL_CREATE_CONVERSATION,
-        params: { adId: this.adId }
+        params: { adId: this.adId },
+        query: {
+          message: this.conversationMessage
+        }
       });
       window.open(routeData.href, "_blank");
     },
@@ -530,6 +539,12 @@ query AdById($id: ID!, $language: ContentLanguage!) {
     deliveryTruckType
     dayAvailability
     eveningAvailability
+    availabilityRestriction {
+      id
+      startDate
+      day
+      evening
+    }
     certification
     allergen
   }

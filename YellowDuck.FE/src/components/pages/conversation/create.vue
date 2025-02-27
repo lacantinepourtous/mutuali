@@ -24,6 +24,7 @@
             :is-system="true"
             :attributes="conversationInitialAttributes"
             :date-updated="new Date(Date.now())"
+            :auto-message="autoMessage"
             @createConversation="createConversationWithAutoMessage"
           />
         </div>
@@ -83,7 +84,7 @@ export default {
       }
     },
     createConversationWithAutoMessage: async function () {
-      this.createConversation(this.$t("btn.create-conversation-auto-message"));
+      this.createConversation(this.autoMessage);
     }
   },
   computed: {
@@ -110,6 +111,9 @@ export default {
     },
     conversationInitialBody: function () {
       return this.$t("text.initial-conversation-body", { name: this.otherParticipantName });
+    },
+    autoMessage: function () {
+      return this.$route.query.message;
     }
   },
   apollo: {

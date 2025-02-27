@@ -25,10 +25,20 @@ export default {
       dateMonthYear: (datetime) => {
         return i18n.dayjs(datetime).format(FORMAT_MONTH_YEAR);
       },
+      // French version of the day is separated from the date to capitalize the first letter of the day
       dateDay(datetime) {
         const locale = i18n.locale() === "fr" ? "fr-CA" : "en-CA";
         if (locale === "fr-CA") {
           return i18n.dayjs(datetime).format("dddd");
+        } else {
+          return null;
+        }
+      },
+      // French version of the day is separated from the date to capitalize the first letter of the day
+      dateShortDay(datetime) {
+        const locale = i18n.locale() === "fr" ? "fr-CA" : "en-CA";
+        if (locale === "fr-CA") {
+          return i18n.dayjs(datetime).format("ddd");
         } else {
           return null;
         }
@@ -39,6 +49,14 @@ export default {
           return i18n.dayjs(datetime).format("D MMMM YYYY");
         } else {
           return i18n.dayjs(datetime).format("dddd, MMMM D, YYYY");
+        }
+      },
+      dateShort(datetime) {
+        const locale = i18n.locale() === "fr" ? "fr-CA" : "en-CA";
+        if (locale === "fr-CA") {
+          return i18n.dayjs(datetime).format("D MMM");
+        } else {
+          return i18n.dayjs(datetime).format("ddd, MMM D");
         }
       },
       dateDiff: (startDate, endDate, format) => {
