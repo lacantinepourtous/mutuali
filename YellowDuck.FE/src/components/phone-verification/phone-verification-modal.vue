@@ -1,7 +1,7 @@
 <template>
   <b-modal v-model="showModal" :title="title" hide-footer centered @hidden="resetPinCode">
     <p>{{ $t("confirm-phone.description") }}</p>
-    <p v-if="validationError" class="text-danger">{{ $t("confirm-phone.invalid-code") }}</p>
+    <p v-if="validationErrorMessage" class="text-danger">{{ validationErrorMessage }}</p>
 
     <s-form class="my-4" @submit="validatePhoneNumber">
       <s-form-input
@@ -48,7 +48,7 @@ export default {
       pin: null,
       resendCountdown: 30,
       resendTimer: null,
-      validationError: false
+      validationErrorMessage: null
     };
   },
   computed: {
@@ -64,7 +64,7 @@ export default {
   methods: {
     resetPinCode() {
       this.pin = null;
-      this.validationError = false;
+      this.validationErrorMessage = null;
     },
     startResendCountdown() {
       this.resendCountdown = 30;
@@ -78,18 +78,22 @@ export default {
       }, 1000);
     },
     async validatePhoneNumber() {
-      const success = await PhoneVerificationService.verifyValidationCode(this.phoneNumber, this.email, this.pin);
-      if (success) {
+      const result = await PhoneVerificationService.verifyValidationCode(this.phoneNumber, this.email, this.pin);
+      if (result.success) {
         this.$emit("validation-success");
         this.showModal = false;
-        this.validationError = false;
+        this.validationErrorMessage = null;
       } else {
-        this.validationError = true;
+        this.validationErrorMessage = result.message;
       }
     },
     async resendCode() {
       if (this.resendCountdown > 0) return;
-      await PhoneVerificationService.sendValidationCode(this.phoneNumber || this.email);
+      const result = await PhoneVerificationService.sendValidationCode(this.phoneNumber || this.email);
+      if (!result.success) {
+        this.validationErrorMessage = result.message;
+        return;
+      }
       this.resetPinCode();
       this.startResendCountdown();
     }
@@ -103,7 +107,11 @@ export default {
         if (newValue) {
           if (this.phoneNumber) {
             // Envoyer le code de validation lors de l'ouverture de la modal
-            await PhoneVerificationService.sendValidationCode(this.phoneNumber);
+            const result = await PhoneVerificationService.sendValidationCode(this.phoneNumber);
+            if (!result.success) {
+              this.validationErrorMessage = result.message;
+              return;
+            }
           }
           this.startResendCountdown();
         }

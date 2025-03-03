@@ -1,4 +1,3 @@
-import NotificationService from "@/services/notification";
 import i18nHelpers from "@/helpers/i18n";
 import { VUE_APP_ROOT_API } from "@/helpers/env";
 
@@ -17,15 +16,23 @@ export default {
     const responseJson = await response.json();
 
     if (!responseJson.success) {
-      NotificationService.showError(i18nHelpers.instance().t(responseJson.messageKey));
-      return false;
+      return {
+        success: false,
+        message: i18nHelpers.instance().t(responseJson.messageKey)
+      };
     }
 
     if (!response.ok && response.status !== 400) {
-      throw new Error(i18nHelpers.instance().t("error.unexpected"));
+      return {
+        success: false,
+        message: i18nHelpers.instance().t("error.unexpected")
+      };
     }
 
-    return responseJson.success;
+    return {
+      success: true,
+      message: null
+    };
   },
   verifyValidationCode: async function(phone, email, code) {
     var body = {
@@ -51,15 +58,23 @@ export default {
     const responseJson = await response.json();
 
     if (!responseJson.success) {
-      NotificationService.showError(i18nHelpers.instance().t(responseJson.messageKey));
-      return false;
+      return {
+        success: false,
+        message: i18nHelpers.instance().t(responseJson.messageKey)
+      };
     }
 
     if (!response.ok && response.status !== 400) {
-      throw new Error(i18nHelpers.instance().t("error.unexpected"));
+      return {
+        success: false,
+        message: i18nHelpers.instance().t("error.unexpected")
+      };
     }
 
-    return responseJson.success;
+    return {
+      success: true,
+      message: null
+    };
   },
   cleanPhoneNumberOrEmail: function(PhoneNumberOrEmail) {
     const cleanedValue = PhoneNumberOrEmail.trim().replace(/\s/g, '');
