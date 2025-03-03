@@ -54,6 +54,7 @@ export async function createAd(input) {
   addMaybeValue(input, mutationInput, "deliveryTruckTypeOther");
   addMaybeValue(input, mutationInput, "dayAvailability");
   addMaybeValue(input, mutationInput, "eveningAvailability");
+  addMaybeValue(input, mutationInput, "availabilityRestriction");
   addMaybeValue(input, mutationInput, "refrigerated");
   addMaybeValue(input, mutationInput, "canSharedRoad");
   addMaybeValue(input, mutationInput, "canHaveDriver");
@@ -113,6 +114,7 @@ export async function updateAd(input) {
   addMaybeValue(input, mutationInput, "deliveryTruckType");
   addMaybeValue(input, mutationInput, "dayAvailability");
   addMaybeValue(input, mutationInput, "eveningAvailability");
+  addMaybeValue(input, mutationInput, "availabilityRestriction");
   addMaybeValue(input, mutationInput, "refrigerated");
   addMaybeValue(input, mutationInput, "canSharedRoad");
   addMaybeValue(input, mutationInput, "canHaveDriver");

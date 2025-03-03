@@ -192,34 +192,26 @@
       />
     </div>
 
-    <div class="section section--md section--padding-x section--border-bottom my-4 pb-5 rm-child-margin">
-      <fieldset id="availabilitiesFieldset" aria-labelledby="availabilitiesFieldset__legend">
-        <legend id="availabilitiesFieldset__legend" class="h2 mt-4 mb-3">{{ $t("label.availability") }}</legend>
-        <b-row>
-          <b-col>
-            <s-form-availability
-              v-model="form.dayAvailability"
-              id="dayAvailability"
-              :label="$t('label.ad-dayAvailability')"
-              :specify-label="$t('label.ad-dayAvailability.specify')"
-              :specify-label-sr-only="true"
-              name="dayAvailability"
-              :options="availabilityWeekdayOptions"
-            />
-          </b-col>
-          <b-col>
-            <s-form-availability
-              v-model="form.eveningAvailability"
-              id="eveningAvailability"
-              :label="$t('label.ad-eveningAvailability')"
-              :specify-label="$t('label.ad-eveningAvailability.specify')"
-              :specify-label-sr-only="true"
-              name="eveningAvailability"
-              :options="availabilityWeekdayOptions"
-            />
-          </b-col>
-        </b-row>
-      </fieldset>
+    <!-- Availability Section -->
+    <div
+      v-if="form.isAvailableForRent"
+      class="section section--md section--padding-x section--border-bottom my-4 pb-5 rm-child-margin"
+    >
+      <h2 class="my-4">{{ $t("section-title.availability") }}</h2>
+      <s-form-availability
+        id="availability"
+        :legend="$t('label.ad-availability')"
+        :day-availability="dayAvailability"
+        :evening-availability="eveningAvailability"
+        :all-selected="!adId"
+        @update:dayAvailability="(v) => (form.dayAvailability = v)"
+        @update:eveningAvailability="(v) => (form.eveningAvailability = v)"
+      />
+
+      <availability-restrictions
+        :initial-availability-restrictions="availabilityRestriction"
+        @update="(v) => (form.availabilityRestriction = v)"
+      />
     </div>
 
     <div class="section section--md section--padding-x section--border-bottom my-4 pb-5 rm-child-margin">
@@ -303,6 +295,8 @@ import FormPartialDeliveryTruck from "@/components/ad/form-partial-delivery-truc
 import FormPartialProfessionalKitchen from "@/components/ad/form-partial-professional-kitchen";
 import FormPartialStorageSpace from "@/components/ad/form-partial-storage-space";
 import FormPartialOther from "@/components/ad/form-partial-other";
+
+import AvailabilityRestrictions from "@/components/ad/availability-restrictions";
 
 import { AdCategory } from "@/mixins/ad-category";
 import { AdSalePriceRange } from "@/mixins/ad-sale-price-range";
@@ -452,6 +446,10 @@ export default {
       type: Array,
       default: null
     },
+    availabilityRestriction: {
+      type: Array,
+      default: null
+    },
     refrigerated: {
       type: Boolean,
       default: false
@@ -533,6 +531,7 @@ export default {
         allergen: this.allergen || [],
         dayAvailability: this.dayAvailability || [],
         eveningAvailability: this.eveningAvailability || [],
+        availabilityRestriction: this.availabilityRestriction || [],
         refrigerated: this.refrigerated,
         canSharedRoad: this.canSharedRoad,
         canHaveDriver: this.canHaveDriver,
@@ -558,7 +557,8 @@ export default {
     FormPartialDeliveryTruck,
     FormPartialProfessionalKitchen,
     FormPartialStorageSpace,
-    FormPartialOther
+    FormPartialOther,
+    AvailabilityRestrictions
   },
   watch: {
     "form.rentPriceToBeDetermined"() {
@@ -689,6 +689,7 @@ export default {
         "allergen",
         "dayAvailability",
         "eveningAvailability",
+        "availabilityRestriction",
         "refrigerated",
         "canSharedRoad",
         "canHaveDriver",
@@ -698,7 +699,14 @@ export default {
       for (let maybeEditedField of maybeEditedFields) {
         if (
           Array.isArray(this[maybeEditedField]) &&
-          this[maybeEditedField].sort().join(",") === this.form[maybeEditedField].sort().join(",")
+          this[maybeEditedField]
+            .sort()
+            .map((item) => JSON.stringify(item))
+            .join(",") ===
+            this.form[maybeEditedField]
+              .sort()
+              .map((item) => JSON.stringify(item))
+              .join(",")
         ) {
           continue;
         }

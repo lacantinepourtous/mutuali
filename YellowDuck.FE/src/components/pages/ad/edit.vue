@@ -41,6 +41,7 @@
         :deliveryTruckTypeOther="ad.translationOrDefault.deliveryTruckTypeOther"
         :dayAvailability="ad.dayAvailability"
         :eveningAvailability="ad.eveningAvailability"
+        :availabilityRestriction="ad.availabilityRestriction"
         :refrigerated="ad.refrigerated"
         :canHaveDriver="ad.canHaveDriver"
         :canSharedRoad="ad.canSharedRoad"
@@ -235,6 +236,12 @@ query AdById($id: ID!, $language: ContentLanguage!) {
     deliveryTruckType
     dayAvailability
     eveningAvailability
+    availabilityRestriction {
+      id
+      startDate
+      day
+      evening
+    }
     certification
     allergen
   }

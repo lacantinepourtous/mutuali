@@ -135,6 +135,16 @@ namespace YellowDuck.Api.Requests.Commands.Mutations.Ads
                 v.ForEach(x => ad.EveningAvailability.Add(new AdEveningAvailability() { Weekday = x }));
             });
 
+            request.AvailabilityRestriction.IfSet(v =>
+            {
+                ad.AvailabilityRestrictions = new List<AdAvailabilityRestriction>();
+                v.ForEach(x => ad.AvailabilityRestrictions.Add(new AdAvailabilityRestriction() { 
+                    Day = x.Day,
+                    Evening = x.Evening,
+                    StartDate = x.StartDate,
+                }));
+            });
+
             request.Certification.IfSet(v =>
             {
                 ad.Certifications = new List<AdCertification>();
@@ -276,6 +286,7 @@ namespace YellowDuck.Api.Requests.Commands.Mutations.Ads
             public string TradeDescription { get; set; }
             public Maybe<List<DayOfWeek>> DayAvailability { get; set; }
             public Maybe<List<DayOfWeek>> EveningAvailability { get; set; }
+            public Maybe<List<AvailabilityRestrictionInput>> AvailabilityRestriction { get; set; }
             public Maybe<List<Certification>> Certification { get; set; }
             public Maybe<string> Conditions { get; set; }
             public Maybe<NonNull<string>> SurfaceDescription { get; set; }
@@ -317,6 +328,14 @@ namespace YellowDuck.Api.Requests.Commands.Mutations.Ads
         {
             public string Src { get; set; }
             public string Alt { get; set; }
+        }
+
+        [InputType]
+        public class AvailabilityRestrictionInput
+        {
+            public bool Day { get; set; }
+            public bool Evening { get; set; }
+            public DateTime StartDate { get; set; }
         }
 
         public abstract class CreateAdException : RequestValidationException { }

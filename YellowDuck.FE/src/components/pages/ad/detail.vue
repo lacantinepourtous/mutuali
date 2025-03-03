@@ -156,16 +156,14 @@
 
       <div v-if="adAvailability.length" class="section section--md section--border-top py-6">
         <h2 class="font-family-base font-weight-bold mb-4">
-          {{ $t("label.ad-availability") }}
+          {{ $t("label.availability") }}
         </h2>
-        <ul>
-          <li v-for="weekdayAvailability in adAvailability" :key="weekdayAvailability.key" class="mb-3">
-            <strong> {{ weekdayAvailability.weekday }} </strong><br />
-            <template v-if="weekdayAvailability.availability.day">{{ $t("label.ad-dayAvailability") }}</template>
-            <template v-if="weekdayAvailability.availability.day && weekdayAvailability.availability.evening"> • </template>
-            <template v-if="weekdayAvailability.availability.evening">{{ $t("label.ad-eveningAvailability") }}</template>
-          </li>
-        </ul>
+        <detail-calendar
+          :availability="adAvailability"
+          :restrictions="ad.availabilityRestriction"
+          :view-only="isAdOwnByCurrentUser"
+          @update-conversation-message="(v) => (conversationMessage = v)"
+        />
       </div>
 
       <div v-if="ad.certification.length" class="section section--md section--border-top py-6">
@@ -264,6 +262,7 @@ import DetailPartialDeliveryTruck from "@/components/ad/detail-partial-delivery-
 import DetailPartialProfessionalKitchen from "@/components/ad/detail-partial-professional-kitchen";
 import DetailPartialStorageSpace from "@/components/ad/detail-partial-storage-space";
 import DetailPartialOther from "@/components/ad/detail-partial-other";
+import DetailCalendar from "@/components/ad/detail-calendar";
 
 export default {
   mixins: [AvailabilityWeekday, PriceDetails, Certification, Allergen],
@@ -280,12 +279,14 @@ export default {
     DetailPartialDeliveryTruck,
     DetailPartialProfessionalKitchen,
     DetailPartialStorageSpace,
-    DetailPartialOther
+    DetailPartialOther,
+    DetailCalendar
   },
   data() {
     return {
       displayMap: false,
       haveJustUnpublish: false,
+      conversationMessage: "",
       CATEGORY_PROFESSIONAL_KITCHEN,
       CATEGORY_DELIVERY_TRUCK,
       CATEGORY_STORAGE_SPACE,
@@ -403,7 +404,10 @@ export default {
     contactUser() {
       let routeData = this.$router.resolve({
         name: URL_CREATE_CONVERSATION,
-        params: { adId: this.adId }
+        params: { adId: this.adId },
+        query: {
+          message: this.conversationMessage
+        }
       });
       window.open(routeData.href, "_blank");
     },
@@ -535,6 +539,12 @@ query AdById($id: ID!, $language: ContentLanguage!) {
     deliveryTruckType
     dayAvailability
     eveningAvailability
+    availabilityRestriction {
+      id
+      startDate
+      day
+      evening
+    }
     certification
     allergen
   }

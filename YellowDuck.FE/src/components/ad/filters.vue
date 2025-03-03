@@ -63,39 +63,15 @@
         </div>
 
         <div class="search-filters__col">
-          <fieldset id="availabilitiesFieldset" aria-labelledby="availabilitiesFieldset__legend">
-            <legend id="availabilitiesFieldset__legend" class="label my-0">
-              {{ $t("label.availability") }}
-            </legend>
-            <b-row>
-              <b-col>
-                <s-form-availability
-                  :value="filters.dayAvailability"
-                  @input="(value) => updateFilters('dayAvailability', value)"
-                  id="dayAvailability"
-                  :label="$t('label.ad-dayAvailability')"
-                  :specify-label="$t('label.ad-dayAvailability.specify')"
-                  :specify-label-sr-only="true"
-                  name="dayAvailability"
-                  :options="availabilityWeekdayOptions"
-                  :pre-selected="true"
-                />
-              </b-col>
-              <b-col>
-                <s-form-availability
-                  :value="filters.eveningAvailability"
-                  @input="(value) => updateFilters('eveningAvailability', value)"
-                  id="eveningAvailability"
-                  :label="$t('label.ad-eveningAvailability')"
-                  :specify-label="$t('label.ad-dayAvailability.specify')"
-                  :specify-label-sr-only="true"
-                  name="eveningAvailability"
-                  :options="availabilityWeekdayOptions"
-                  :pre-selected="true"
-                />
-              </b-col>
-            </b-row>
-          </fieldset>
+          <s-form-availability
+            id="availability"
+            :legend="$t('label.availability')"
+            legend-class="label mb-0"
+            :day-availability="filters.dayAvailability"
+            :evening-availability="filters.eveningAvailability"
+            @update:dayAvailability="(v) => updateFilters('dayAvailability', v)"
+            @update:eveningAvailability="(v) => updateFilters('eveningAvailability', v)"
+          />
         </div>
       </div>
     </div>
