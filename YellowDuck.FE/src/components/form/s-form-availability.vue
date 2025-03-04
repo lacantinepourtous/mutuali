@@ -19,7 +19,7 @@
           labelClass="label"
           class="form-availability__day"
           :id="`input-${id}-${day.text}`"
-          :checked="tempDayAvailability.includes(day.value) || tempEveningAvailability.includes(day.value)"
+          :checked="activeDays.includes(day.value)"
           stacked
           @input="(v) => toggleDay(v, day.value)"
         >
@@ -119,7 +119,7 @@ export default {
         this.activeDays = this.availabilityWeekdayOptions.map((x) => x.value);
         this.tempDayAvailability = this.availabilityWeekdayOptions.map((x) => x.value);
         this.tempEveningAvailability = this.availabilityWeekdayOptions.map((x) => x.value);
-      } else {
+      } else if (!this.indeterminateState) {
         this.tempDayAvailability = [];
         this.tempEveningAvailability = [];
         this.activeDays = [];

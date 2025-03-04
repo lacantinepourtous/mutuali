@@ -48,7 +48,7 @@
         :certification="ad.certification"
         :allergen="ad.allergen"
         @submitForm="editAd"
-        :btnLabel="$t('btn.edit-ad')"
+        :btnLabel="$t('btn.edit-ad-save')"
         :transferBtnLabel="$t('btn.transfer-ad')"
         :canTransfer="isAdmin"
         :disabledBtn="isSubmitted"

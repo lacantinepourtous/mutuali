@@ -57,7 +57,13 @@
           :options="periodOptions"
           rules="required:true"
         />
-        <s-form-datepicker v-model="form.date" :label="$t('modal.availability-restriction.label-date')" rules="required" />
+        <s-form-datepicker
+          v-model="form.date"
+          id="availability-restriction-date"
+          name="availability-restriction-date"
+          :label="$t('modal.availability-restriction.label-date')"
+          rules="required"
+        />
         <div class="restrictions__modal-footer">
           <b-button type="button" variant="outline-primary" @click="clearForm()">
             {{ $t("modal.availability-restriction.label-cancel") }}

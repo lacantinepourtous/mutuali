@@ -154,7 +154,7 @@
         </div>
       </div>
 
-      <div v-if="adAvailability.length" class="section section--md section--border-top py-6">
+      <div v-if="adAvailability.length && ad.isAvailableForRent" class="section section--md section--border-top py-6">
         <h2 class="font-family-base font-weight-bold mb-4">
           {{ $t("label.availability") }}
         </h2>
