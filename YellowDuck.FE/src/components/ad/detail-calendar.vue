@@ -1,6 +1,14 @@
 <template>
   <div class="availability">
     <p v-if="!viewOnly" class="font-weight-bold">{{ $t("label.calendar-instruction") }}</p>
+    <div class="availability__legend-container">
+      <p class="availability__legend-title" id="calendar-legend-title">{{ $t("calendar.legend") }}</p>
+      <ul class="list-unstyled availability__legend" aria-labelledby="calendar-legend-title">
+        <li class="availability__legend-item availability__legend-item--day">{{ $t("label.ad-dayAvailability") }}</li>
+        <li class="availability__legend-item availability__legend-item--evening">{{ $t("label.ad-eveningAvailability") }}</li>
+      </ul>
+    </div>
+
     <div class="availability__grid">
       <div class="availability__calendar">
         <b-calendar
@@ -287,6 +295,58 @@ export default {
     }
   }
 
+  &__legend-container {
+    display: inline-flex;
+    align-items: center;
+    gap: $spacer;
+    border: 1px solid $gray-300;
+    background-color: $green-lighter;
+    border-radius: $border-radius;
+    padding: 0 $spacer / 2;
+    margin-bottom: $spacer / 2;
+  }
+
+  &__legend-title {
+    font-size: 14px;
+    font-weight: 600;
+    margin-bottom: 0;
+  }
+
+  &__legend {
+    display: flex;
+    gap: $spacer;
+    margin-bottom: 0;
+  }
+
+  &__legend-item {
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    column-gap: $spacer / 3;
+
+    &:before {
+      content: "";
+      display: block;
+      width: 6px;
+      height: 6px;
+      border-radius: 100%;
+      position: relative;
+      top: 1px;
+    }
+
+    &--day {
+      &:before {
+        background-color: $yellow;
+      }
+    }
+
+    &--evening {
+      &:before {
+        background-color: $green;
+      }
+    }
+  }
+
   &__calendar {
     .available-day,
     .available-evening {
@@ -299,12 +359,15 @@ export default {
         position: absolute;
         bottom: 10px;
         left: 50%;
+        pointer-events: none;
+        text-indent: -9999px;
+        overflow: hidden;
       }
     }
 
     .available-day {
       &:before {
-        content: "";
+        content: "Jour / Day";
         background-color: $yellow;
         transform: translate(-50%, 0);
       }
@@ -312,7 +375,7 @@ export default {
 
     .available-evening {
       &:after {
-        content: "";
+        content: "Soir / Evening";
         background-color: $green;
         transform: translate(-50%, 0);
       }
