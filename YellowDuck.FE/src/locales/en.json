@@ -129,6 +129,7 @@
   "page-title.create-ad": "Create an ad",
   "btn.close": "Close",
   "btn.edit-ad": "Edit ad",
+  "btn.edit-ad-save": "Save",
   "page-title.edit-ad": "Edit ad",
   "btn.edit-ad-address": "Edit address",
   "description.contract-date": "From {startDate} to {endDate}",

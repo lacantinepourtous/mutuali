@@ -129,6 +129,7 @@
   "page-title.create-ad": "Création d’une annonce",
   "btn.close": "Fermer",
   "btn.edit-ad": "Modifier l’annonce",
+  "btn.edit-ad-save": "Sauvegarder",
   "page-title.edit-ad": "Modifier mon annonce",
   "btn.edit-ad-address": "Modifier l’adresse",
   "description.contract-date": "Du {startDate} au {endDate}",
