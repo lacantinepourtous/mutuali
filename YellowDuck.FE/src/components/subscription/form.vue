@@ -63,6 +63,7 @@
     <s-form-input
       id="organizationNEQ"
       :label="$t('label.organizationNEQ')"
+      :description="$t('description.organizationNEQ')"
       name="organizationNEQ"
       rules="required|isNEQ"
       v-model="organizationNEQ"
