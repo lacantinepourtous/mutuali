@@ -30,8 +30,6 @@ export async function createAd(input) {
     galleryItems,
     address,
     showAddress: typeof input.showAddress === "boolean" ? input.showAddress : false,
-    rentPrice: input.rentPrice,
-    salePrice: input.salePrice,
     rentPriceToBeDetermined: typeof input.rentPriceToBeDetermined === "boolean" ? input.rentPriceToBeDetermined : false,
     salePriceToBeDetermined: typeof input.salePriceToBeDetermined === "boolean" ? input.salePriceToBeDetermined : false,
     rentPriceDescription: input.rentPriceDescription,
@@ -41,6 +39,8 @@ export async function createAd(input) {
     organization: input.organization
   };
 
+  addMaybeValue(input, mutationInput, "rentPrice");
+  addMaybeValue(input, mutationInput, "salePrice");
   addMaybeValue(input, mutationInput, "rentPriceRange");
   addMaybeValue(input, mutationInput, "salePriceRange");
   addMaybeValue(input, mutationInput, "conditions");
