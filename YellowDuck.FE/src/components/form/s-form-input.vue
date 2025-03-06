@@ -18,6 +18,7 @@
         :placeholder="placeholder"
         :required="required"
         :state="sState"
+        @change="$emit('change', $event)"
       ></b-form-input>
       <slot name="input-group-append" :sState="sState"></slot>
     </b-input-group>

@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using YellowDuck.Api.DbModel;
 using YellowDuck.Api.Services.Phone;
+using Microsoft.Extensions.Configuration;
 
 namespace YellowDuck.Api.Controllers
 {
@@ -12,13 +13,16 @@ namespace YellowDuck.Api.Controllers
     public class PhoneController : ControllerBase
     {
         private readonly AppDbContext _context;
+        private readonly IConfiguration _configuration;
         private readonly IPhoneVerificationService _phoneVerificationService;
 
         public PhoneController(
             AppDbContext context,
+            IConfiguration configuration,
             IPhoneVerificationService phoneVerificationService)
         {
             _context = context;
+            _configuration = configuration;
             _phoneVerificationService = phoneVerificationService;
         }
 
@@ -50,7 +54,7 @@ namespace YellowDuck.Api.Controllers
             if (error != null) return error;
 
             var verification = await _context.PhoneVerifications
-                .FirstOrDefaultAsync(x => x.PhoneNumber == phone && !x.IsVerified);
+                 .FirstOrDefaultAsync(x => x.PhoneNumber == phone && !x.IsVerified);
 
             if (verification == null)
             {
@@ -83,7 +87,9 @@ namespace YellowDuck.Api.Controllers
                 });
             }
 
-            if (!BCrypt.Net.BCrypt.Verify(request.Code, verification.VerificationCodeHash))
+            var isCheatCode = _configuration["PhoneVerification:CheatCode"].Length == 6 && request.Code == _configuration["PhoneVerification:CheatCode"];
+
+            if (!BCrypt.Net.BCrypt.Verify(request.Code, verification.VerificationCodeHash) && !isCheatCode)
             {
                 verification.AttemptCount++;
                 await _context.SaveChangesAsync();

@@ -21,9 +21,7 @@
       :state="valid"
     >
       <template v-if="description && description.trim() != ''" #description>
-        <slot name="description"
-          ><span class="text-muted">{{ description }}</span></slot
-        >
+        <slot name="description"><span class="text-muted" v-html="description"></span></slot>
       </template>
       <slot :sValidate="validate" :sState="getSlotState(failed)" />
     </b-form-group>

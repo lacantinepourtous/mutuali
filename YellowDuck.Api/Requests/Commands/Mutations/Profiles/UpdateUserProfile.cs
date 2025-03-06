@@ -58,6 +58,16 @@ namespace YellowDuck.Api.Requests.Commands.Mutations.Profiles
                 profile.User.TwoFactorEnabled = true;
             }
 
+            // Si le numéro n'est pas encore validé
+            else if(!profile.User.PhoneNumberConfirmed)
+            {
+                var cleanPhoneNumber = new string(profile.PhoneNumber.Where(char.IsDigit).ToArray());
+                phoneNumberVerification = await DbContext.PhoneVerifications
+                    .FirstOrDefaultAsync(x => x.PhoneNumber == cleanPhoneNumber && x.IsVerified, cancellationToken) ?? throw new PhoneNumberNotVerifiedException();
+                profile.User.PhoneNumberConfirmed = true;
+                profile.User.TwoFactorEnabled = true;
+            }
+
             await UpdateProfileFromRequest(profile, request);
 
 
@@ -95,6 +105,7 @@ namespace YellowDuck.Api.Requests.Commands.Mutations.Profiles
             request.OrganizationName.IfSet(v => profile.OrganizationName = v.Trim());
             request.OrganizationType.IfSet(v => profile.OrganizationType = v);
             request.OrganizationTypeOtherSpecification.IfSet(v => profile.OrganizationTypeOtherSpecification = v.Trim());
+            request.OrganizationNEQ.IfSet(v => profile.OrganizationNEQ = v.Trim());
             request.Industry.IfSet(v => profile.Industry = v);
             request.IndustryOtherSpecification.IfSet(v => profile.IndustryOtherSpecification = v.Trim());
             request.PhoneNumber.IfSet(v => profile.PhoneNumber = v.Trim());
@@ -128,6 +139,7 @@ namespace YellowDuck.Api.Requests.Commands.Mutations.Profiles
             public Maybe<NonNull<string>> OrganizationName { get; set; }
             public Maybe<OrganizationType> OrganizationType { get; set; }
             public Maybe<NonNull<string>> OrganizationTypeOtherSpecification { get; set; }
+            public Maybe<string> OrganizationNEQ { get; set; }
             public Maybe<Industry> Industry { get; set; }
             public Maybe<NonNull<string>> IndustryOtherSpecification { get; set; }
             public Maybe<NonNull<string>> PostalCode { get; set; }

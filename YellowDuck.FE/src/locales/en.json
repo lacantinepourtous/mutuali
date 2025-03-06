@@ -187,7 +187,7 @@
   "form-complete.edit-contract.description": "The modified contract is now available for {user}. You can edit and resubmit it as long as payment has not been made.",
   "label.organizationName": "Organization name",
   "label.organizationNEQ": "Québec Enterprise Number (NEQ)",
-  "description.organizationNEQ": "The NEQ is a 10-digit code.",
+  "description.organizationNEQ": "The NEQ is a 10-digit code. Find it <a href=\"https://www.quebec.ca/en/businesses-and-self-employed-workers/find-information-about-enterprise/search-enterprise-register/find-an-enterprise\" target=\"_blank\">on this website</a>.",
   "label.address": "Address",
   "placeholder.organizationName": "Ex: CIBÎM",
   "placeholder.address": "6450 Ave Christophe-Colomb",

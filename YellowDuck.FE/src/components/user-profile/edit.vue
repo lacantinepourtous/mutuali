@@ -36,6 +36,7 @@
         :label="$t('label.organizationNEQ')"
         name="organizationNEQ"
         rules="required"
+        :description="$t('description.organizationNEQ')"
         v-model="form.organizationNEQ"
         type="text"
         required
@@ -88,7 +89,6 @@
         rules="required"
         :placeholder="$t('placeholder.phoneNumber')"
         required
-        @change="phoneNumberIsConfirmed = false"
       />
       <div class="d-flex flex-wrap align-items-center mt-n3">
         <b-button
@@ -109,6 +109,7 @@
       </div>
 
       <phone-verification-modal
+        v-if="userProfile && userProfile.user"
         v-model="validatePhoneModal"
         :email="userProfile.user.email"
         :phone-number="form.phoneNumber"
@@ -301,6 +302,17 @@ export default {
         if (profile && profile.user.phoneNumberConfirmed) {
           this.phoneNumberIsConfirmed = true;
         }
+      }
+    },
+    "form.phoneNumber": {
+      handler(newPhoneNumber) {
+        if (!this.userProfile) return;
+
+        // Ne garder que les chiffres pour la comparaison
+        const cleanNewNumber = newPhoneNumber ? newPhoneNumber.replace(/\D/g, "") : "";
+        const cleanProfileNumber = this.userProfile.phoneNumber ? this.userProfile.phoneNumber.replace(/\D/g, "") : "";
+
+        this.phoneNumberIsConfirmed = cleanNewNumber === cleanProfileNumber;
       }
     }
   }
