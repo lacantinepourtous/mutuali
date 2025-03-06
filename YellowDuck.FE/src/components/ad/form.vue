@@ -258,24 +258,23 @@
         required
       />
     </div>
-    <div class="fab-container__fab">
-      <div class="section section--md">
-        <b-button :disabled="disabledBtn" type="submit" :variant="btnVariant" size="lg" block :aria-label="$t('sr.edit')">
-          <b-icon icon="pencil" class="mr-2" aria-hidden="true"></b-icon>{{ btnLabel }}
-        </b-button>
-        <b-button
-          v-if="canTransfer"
-          :disabled="disabledBtn"
-          type="button"
-          :to="{ name: $consts.urls.URL_AD_TRANSFER, params: { id: this.adId } }"
-          variant="secondary"
-          size="lg"
-          block
-          :aria-label="$t('sr.transfer')"
-        >
-          <b-icon icon="arrow-right" class="mr-2" aria-hidden="true"></b-icon>{{ transferBtnLabel }}
-        </b-button>
-      </div>
+
+    <div class="section section--md my-5">
+      <b-button :disabled="disabledBtn" type="submit" :variant="btnVariant" size="lg" block :aria-label="$t('sr.edit')">
+        <b-icon icon="pencil" class="mr-2" aria-hidden="true"></b-icon>{{ btnLabel }}
+      </b-button>
+      <b-button
+        v-if="canTransfer"
+        :disabled="disabledBtn"
+        type="button"
+        :to="{ name: $consts.urls.URL_AD_TRANSFER, params: { id: this.adId } }"
+        variant="secondary"
+        size="lg"
+        block
+        :aria-label="$t('sr.transfer')"
+      >
+        <b-icon icon="arrow-right" class="mr-2" aria-hidden="true"></b-icon>{{ transferBtnLabel }}
+      </b-button>
     </div>
   </s-form>
 </template>
