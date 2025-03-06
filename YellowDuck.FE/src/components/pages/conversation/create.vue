@@ -9,8 +9,7 @@
           :id="adId"
           :title="adTitle"
           :image="adImage"
-          :price="adPrice"
-          :priceDescription="adPriceDescription"
+          :price-details="getPriceDetailsFromAd(ad)"
           :organization="adOrganization"
           snippet-is-link
         />
@@ -25,6 +24,7 @@
             :is-system="true"
             :attributes="conversationInitialAttributes"
             :date-updated="new Date(Date.now())"
+            :auto-message="autoMessage"
             @createConversation="createConversationWithAutoMessage"
           />
         </div>
@@ -52,12 +52,15 @@ import { URL_CONVERSATION_DETAIL } from "@/consts/urls";
 import { CONTENT_LANG_FR } from "@/consts/langs";
 import { CREATE_CONVERSATION } from "@/consts/message-actions";
 
+import { PriceDetails } from "@/mixins/price-details";
+
 export default {
   data() {
     return {
       creatingConversation: false
     };
   },
+  mixins: [PriceDetails],
   components: {
     ConversationBubble,
     AdSnippet,
@@ -72,13 +75,16 @@ export default {
         let result = await ConversationService.createConversation(this.adId);
         let conversation = result.data.createConversation.conversation;
 
-        await TwilioService.addMessageToConversation(conversation.sid, message);
+        await TwilioService.addMessageToConversation({
+          sid: conversation.sid,
+          body: message
+        });
 
         this.$router.replace({ name: URL_CONVERSATION_DETAIL, params: { id: conversation.id } });
       }
     },
     createConversationWithAutoMessage: async function () {
-      this.createConversation(this.$t("btn.create-conversation-auto-message"));
+      this.createConversation(this.autoMessage);
     }
   },
   computed: {
@@ -91,14 +97,8 @@ export default {
     adImage: function () {
       return this.ad.gallery[0];
     },
-    adPrice: function () {
-      return this.ad.priceToBeDetermined ? this.$t("price.toBeDetermined") : this.$format.formatMoney(this.ad.price);
-    },
     adOrganization: function () {
       return this.ad.organization;
-    },
-    adPriceDescription: function () {
-      return this.ad.priceToBeDetermined ? "" : this.ad.translationOrDefault.priceDescription;
     },
     otherParticipantId: function () {
       return this.ad.user.profile.id;
@@ -111,6 +111,9 @@ export default {
     },
     conversationInitialBody: function () {
       return this.$t("text.initial-conversation-body", { name: this.otherParticipantName });
+    },
+    autoMessage: function () {
+      return this.$route.query.message;
     }
   },
   apollo: {
@@ -133,10 +136,17 @@ export default {
 query AdById($id: ID!, $language: ContentLanguage!) {
   ad(id: $id) {
     id
+    isAvailableForRent
+    isAvailableForSale
+    isAvailableForTrade
+    isAvailableForDonation
     translationOrDefault(language: $language) {
       id
       title
-      priceDescription
+      rentPriceDescription
+      salePriceDescription
+      tradeDescription
+      donationDescription
       conditions
     }
     gallery {
@@ -153,8 +163,10 @@ query AdById($id: ID!, $language: ContentLanguage!) {
         }
       }
     }
-    price
-    priceToBeDetermined
+    rentPrice
+    salePrice
+    rentPriceToBeDetermined
+    salePriceToBeDetermined
     organization
   }
 }

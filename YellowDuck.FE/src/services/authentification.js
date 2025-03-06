@@ -57,15 +57,21 @@ export default {
       });
     } catch (error) {
       NotificationService.showError(i18nHelpers.instance().t("error.unexpected"));
-      return;
+      return { success: false };
     }
 
     let result = await response.json();
     if (response.status === 200) {
+      if (result === "2FA code sent") {
+        return { success: true, twoFaRequired: true };
+      }
+      
       await setUser(result.token, result.refreshToken);
 
       let path = router.currentRoute.query.returnPath || { name: URL_ROOT };
       router.push(path);
+      
+      return { success: true, twoFaRequired: false };
     } else if (result === "Email not confirmed") {
       NotificationService.showError(i18nHelpers.instance().t("notification.login-email-not-confirmed", { email: username }));
     } else if (result === "User is locked out") {
@@ -73,6 +79,7 @@ export default {
     } else {
       NotificationService.showError(i18nHelpers.instance().t("notification.login-error"));
     }
+    return { success: false };
   },
   renewToken: async function() {
     if (localStorage.getItem(LOCAL_STORAGE_RENEWTOKEN_STATUS)) {

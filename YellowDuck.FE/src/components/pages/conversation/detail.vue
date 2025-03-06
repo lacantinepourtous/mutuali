@@ -30,6 +30,7 @@
             v-for="message in day.messages"
             :key="message.sid"
             :body="message.body"
+            :medias="message.attachedMedia"
             :contract-id="contractId"
             :attributes="message.attributes"
             :date-updated="message.dateUpdated"
@@ -158,9 +159,9 @@ export default {
     refreshMessages: async function () {
       await TwilioService.setAllMessagesReadOnConversation(this.conversationSid);
       let messages = await TwilioService.getConversationMessages(this.conversationSid);
-      this.messagesByDay = this.getMessagesByDay(messages);
+      this.messagesByDay = await this.getMessagesByDay(messages);
     },
-    getMessagesByDay: function (messages) {
+    getMessagesByDay: async function (messages) {
       let result = [];
       let currentDate = null;
       let day = null;
@@ -177,7 +178,9 @@ export default {
           day = { date: currentDate, messages: [] };
           result.push(day);
         }
-
+        for (let media of message.attachedMedia) {
+          media.temporaryUrl = await media.getContentTemporaryUrl();
+        }
         day.messages.push(message);
       }
 

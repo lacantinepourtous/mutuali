@@ -124,7 +124,7 @@ export default {
     };
   },
   computed: {
-    contractVerificationDescription: function() {
+    contractVerificationDescription: function () {
       switch (this.adCategory) {
         case CATEGORY_PROFESSIONAL_KITCHEN: {
           return this.$t("contract-form.verify-before-accept-and-pay.kitchen");
@@ -142,79 +142,79 @@ export default {
 
       return "";
     },
-    canEditContract: function() {
+    canEditContract: function () {
       return this.isAdOwnByCurrentUser && this.contract.status === CONTRACT_STATUS_SUBMITTED;
     },
-    canPayContract: function() {
+    canPayContract: function () {
       return this.contract.status === CONTRACT_STATUS_SUBMITTED;
     },
-    isAdOwnByCurrentUser: function() {
+    isAdOwnByCurrentUser: function () {
       return this.me ? this.owner.id === this.me.id : false;
     },
-    haveFiles: function() {
+    haveFiles: function () {
       return this.contractFiles.length > 0;
     },
-    contractId: function() {
+    contractId: function () {
       return this.$route.params.id.split("-").last();
     },
-    adId: function() {
+    adId: function () {
       return this.contract.conversation.ad.id;
     },
-    adTitle: function() {
+    adTitle: function () {
       return this.contract.conversation.ad.translationOrDefault.title;
     },
-    adOrganization: function() {
+    adOrganization: function () {
       return this.contract.conversation.ad.organization;
     },
-    adImage: function() {
+    adImage: function () {
       return this.contract.conversation.ad.gallery[0];
     },
-    adPrice: function() {
+    adPrice: function () {
       return this.$format.formatMoney(this.contract.conversation.ad.price);
     },
-    adCategory: function() {
+    adCategory: function () {
       return this.contract.conversation.ad.category;
     },
-    adPriceDescription: function() {
+    adPriceDescription: function () {
       return this.contract.conversation.ad.translationOrDefault.priceDescription;
     },
-    contractStartDate: function() {
+    contractStartDate: function () {
       return i18nHelpers.getLocalizedDate(this.contract.startDate, SHORT_DAY_MONTH_YEAR);
     },
-    contractEndDate: function() {
+    contractEndDate: function () {
       return i18nHelpers.getLocalizedDate(this.contract.endDate, SHORT_DAY_MONTH_YEAR);
     },
-    contractDatePrecision: function() {
+    contractDatePrecision: function () {
       return this.contract.datePrecision;
     },
-    contractTerms: function() {
+    contractTerms: function () {
       return this.contract.terms;
     },
-    contractPrice: function() {
+    contractPrice: function () {
       return this.$format.formatMoney(this.contract.price);
     },
-    contractFiles: function() {
+    contractFiles: function () {
       return this.contract.files;
     },
-    owner: function() {
+    owner: function () {
       return this.contract.owner;
     },
-    ownerOrganizationName: function() {
+    ownerOrganizationName: function () {
       return this.owner !== null ? this.owner.profile.organizationName : "";
     },
-    ownerName: function() {
+    ownerName: function () {
       return this.owner !== null ? this.owner.profile.publicName : "";
     },
-    tenant: function() {
+    tenant: function () {
       return this.contract.tenant;
     },
-    tenantName: function() {
+    tenantName: function () {
       return this.tenant !== null ? this.tenant.profile.publicName : "";
     },
-    tenantOrganizationName: function() {
+    tenantOrganizationName: function () {
       return this.owner !== null ? this.tenant.profile.organizationName : "";
     },
-    conversationId: function() {
+    conversationId: function () {
       return this.contract.conversation.id;
     }
   },
@@ -252,12 +252,22 @@ query ContractById($id: ID!, $language: ContentLanguage!) {
           src
           alt
         }
-        price
+        isAvailableForRent
+        isAvailableForSale
+        isAvailableForTrade
+        isAvailableForDonation
+        rentPrice
+        salePrice
+        rentPriceToBeDetermined
+        salePriceToBeDetermined
         category
         translationOrDefault(language: $language) {
           id
           title
-          priceDescription
+          rentPriceDescription
+          salePriceDescription
+          tradeDescription
+          donationDescription
         }
         organization
       }

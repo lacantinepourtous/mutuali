@@ -55,9 +55,22 @@ async function getConversationUnreadMessagesCount(sid) {
   return unreadMessagesCount;
 }
 
-async function addMessageToConversation(sid, body) {
+async function addMessageToConversation({ sid, body, medias }) {
   let conversation = await getConversationBySid(sid);
-  await conversation.sendMessage(body);
+  let message = conversation.prepareMessage().setBody(body);
+
+  if (medias) {
+    if (!Array.isArray(medias)) {
+      medias = [medias];
+    }
+
+    for (let media of medias) {
+      if (!media) continue;
+      message.addMedia(media);
+    }
+  }
+
+  await message.build().send();
 }
 
 async function getConversationMessages(sid) {
@@ -143,7 +156,7 @@ async function initTwilioClient() {
   if (!twilioClient) {
     let token = await getTwilioToken();
     twilioClient = await Promise.race([
-      ConversationsClient.create(token),
+      new ConversationsClient(token),
       new Promise((resolve) => {
         setTimeout(resolve, 2500, null);
       })

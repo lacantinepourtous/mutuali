@@ -46,5 +46,8 @@ namespace YellowDuck.Api.DbModel.Entities
         public DateTime TosAcceptationDate { get; set; }
         public bool FirstLoginModalClosed { get; set; }
         public DateTime CreatedAtUtc { get; set; }
+
+        public string Bypass2FAToken { get; set; }
+        public DateTime? Bypass2FAExpirationUtc { get; set; }
     }
 }

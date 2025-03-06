@@ -22,6 +22,7 @@ using Microsoft.EntityFrameworkCore;
 using System.Security.Claims;
 using YellowDuck.Api.Constants;
 using YellowDuck.Api.DbModel.Entities.Alerts;
+using YellowDuck.Api.Services.Phone;
 
 namespace YellowDuck.Api.Requests.Commands.Mutations.Accounts
 {
@@ -32,18 +33,30 @@ namespace YellowDuck.Api.Requests.Commands.Mutations.Accounts
         private readonly IMailer mailer;
         private readonly ILogger<CreateUserAccount> logger;
         private readonly IHttpContextAccessor httpContextAccessor;
+        private readonly IPhoneVerificationService phoneVerificationService;
 
-        public CreateUserAccount(UserManager<AppUser> userManager, AppDbContext db, IMailer mailer, ILogger<CreateUserAccount> logger, IHttpContextAccessor httpContextAccessor)
+        public CreateUserAccount(
+            UserManager<AppUser> userManager,
+            AppDbContext db,
+            IMailer mailer,
+            ILogger<CreateUserAccount> logger,
+            IHttpContextAccessor httpContextAccessor,
+            IPhoneVerificationService phoneVerificationService)
         {
             this.httpContextAccessor = httpContextAccessor;
             this.userManager = userManager;
             this.db = db;
             this.mailer = mailer;
             this.logger = logger;
+            this.phoneVerificationService = phoneVerificationService;
         }
 
         public async Task<Payload> Handle(Input request, CancellationToken cancellationToken)
         {
+            var cleanPhoneNumber = new string(request.PhoneNumber.Where(char.IsDigit).ToArray());
+            var phoneNumberVerification = db.PhoneVerifications.FirstOrDefault(x => x.PhoneNumber == cleanPhoneNumber && x.IsVerified)
+                ?? throw new Exception("Phone number is not verified.");
+
             var user = new AppUser(request.Email?.Trim())
             {
                 Type = UserType.User,
@@ -52,6 +65,7 @@ namespace YellowDuck.Api.Requests.Commands.Mutations.Accounts
                     FirstName = request.FirstName,
                     LastName = request.LastName,
                     OrganizationName = request.OrganizationName,
+                    OrganizationNEQ = request.OrganizationNEQ,
                     OrganizationType = request.OrganizationType,
                     Industry = request.Industry,
                     PhoneNumber = request.PhoneNumber,
@@ -60,6 +74,8 @@ namespace YellowDuck.Api.Requests.Commands.Mutations.Accounts
                     ContactAuthorizationNews = request.ContactAuthorizationNews,
                     ContactAuthorizationSurveys = request.ContactAuthorizationSurveys
                 },
+                PhoneNumberConfirmed = true,
+                TwoFactorEnabled = true,
                 AcceptedTos = TosVersion.Latest,
                 TosAcceptationDate = DateTime.Now,
                 CreatedAtUtc = DateTime.UtcNow
@@ -86,8 +102,14 @@ namespace YellowDuck.Api.Requests.Commands.Mutations.Accounts
                 await userManager.AddClaimAsync(user, new Claim(AppClaimTypes.AlertOwner, Id.New<Alert>(alert.Id.ToString()).ToString()));
             }
 
+            // Remove phone number verification
+            db.PhoneVerifications.Remove(phoneNumberVerification);
 
             await db.SaveChangesAsync(cancellationToken);
+
+            // Set bypass2FA cookie since phone is already verified
+            var isLocalhost = httpContextAccessor.HttpContext.Request.Host.Host.Contains("localhost");
+            await phoneVerificationService.SetBypass2FATokenForUser(user, httpContextAccessor.HttpContext.Response, isLocalhost);
 
             await mailer.Send(new ConfirmEmailEmail(request.Email, confirmToken, request.ReturnPath));
 
@@ -107,6 +129,7 @@ namespace YellowDuck.Api.Requests.Commands.Mutations.Accounts
             public string FirstName { get; set; }
             public string LastName { get; set; }
             public string OrganizationName { get; set; }
+            public string OrganizationNEQ { get; set; }
             public OrganizationType OrganizationType { get; set; }
             public Maybe<NonNull<string>> OrganizationTypeOtherSpecification { get; set; }
             public Industry Industry { get; set; }

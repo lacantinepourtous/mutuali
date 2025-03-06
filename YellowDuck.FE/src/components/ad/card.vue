@@ -6,7 +6,7 @@
     :to="{ name: $consts.urls.URL_AD_DETAIL, params: { id: ad.id } }"
   >
     <div class="mutuali-ad-card__badge">
-      <ad-category-badge :category="adCategory" />
+      <ad-category-badge :category="adCategory" is-short />
     </div>
 
     <div class="mutuali-ad-card__pic">
@@ -43,21 +43,58 @@
         </template>
       </p>
       <p class="mutuali-ad-card__title font-weight-bold">{{ adTitle }}</p>
-      <p v-if="showPrice" class="mutuali-ad-card__footer mb-0 small text-decoration-none">
-        <span class="font-weight-bolder">{{ adPrice }}</span>
-        {{ adPriceDescription }}
-      </p>
+
+      <ul class="mutuali-ad-card__types">
+        <li v-if="adPriceDetails.isAvailableForRent" class="mutuali-ad-card__types-item">
+          <b-img :src="require('@/assets/icons/rent.svg')" alt="" height="16" block></b-img>
+          <div class="mutuali-ad-card__types-text">
+            <div class="mutuali-ad-card__types-title">{{ $t("label.forRent") }}</div>
+            <div
+              class="mutuali-ad-card__types-price"
+              :class="{ 'mutuali-ad-card__types-price--sm': adPriceDetails.rentPriceToBeDetermined }"
+            >
+              {{ adPriceDetails.rentPrice }}
+            </div>
+          </div>
+        </li>
+        <li v-if="adPriceDetails.isAvailableForSale" class="mutuali-ad-card__types-item">
+          <b-img :src="require('@/assets/icons/sale.svg')" alt="" height="16" block></b-img>
+          <div class="mutuali-ad-card__types-text">
+            <div class="mutuali-ad-card__types-title">{{ $t("label.forSale") }}</div>
+            <div
+              class="mutuali-ad-card__types-price"
+              :class="{ 'mutuali-ad-card__types-price--sm': adPriceDetails.salePriceToBeDetermined }"
+            >
+              {{ adPriceDetails.salePrice }}
+            </div>
+          </div>
+        </li>
+        <li v-if="adPriceDetails.isAvailableForTrade" class="mutuali-ad-card__types-item">
+          <b-img :src="require('@/assets/icons/trade.svg')" alt="" height="16" block></b-img>
+          <div class="mutuali-ad-card__types-text">
+            <div class="mutuali-ad-card__types-title">{{ $t("label.forTrade") }}</div>
+          </div>
+        </li>
+        <li v-if="adPriceDetails.isAvailableForDonation" class="mutuali-ad-card__types-item">
+          <b-img :src="require('@/assets/icons/donation.svg')" alt="" height="16" block></b-img>
+          <div class="mutuali-ad-card__types-text">
+            <div class="mutuali-ad-card__types-title">{{ $t("label.forDonation") }}</div>
+          </div>
+        </li>
+      </ul>
     </div>
   </router-link>
 </template>
 
 <script>
 import AdCategoryBadge from "@/components/ad/category-badge";
+import { PriceDetails } from "@/mixins/price-details";
 
 export default {
   components: {
     AdCategoryBadge
   },
+  mixins: [PriceDetails],
   props: {
     ad: {
       type: Object,
@@ -83,12 +120,6 @@ export default {
     adGallery: function () {
       return this.ad.gallery;
     },
-    adPrice: function () {
-      return this.ad.priceToBeDetermined ? this.$t("price.toBeDetermined") : this.$format.formatMoney(this.ad.price);
-    },
-    adPriceDescription: function () {
-      return this.ad.priceToBeDetermined ? "" : this.ad.translationOrDefault.priceDescription;
-    },
     adOrganization: function () {
       return this.ad.organization;
     },
@@ -97,6 +128,9 @@ export default {
     },
     adIsAdminOnly: function () {
       return this.ad.isAdminOnly;
+    },
+    adPriceDetails: function () {
+      return this.getPriceDetailsFromAd(this.ad);
     }
   }
 };
@@ -209,6 +243,47 @@ export default {
   &__circle {
     position: relative;
     top: 1px;
+  }
+
+  &__types {
+    display: flex;
+    flex-wrap: wrap;
+    row-gap: $spacer / 1.5;
+    column-gap: $spacer;
+    list-style-type: none;
+    padding-left: 0;
+    margin: $spacer 0 0;
+
+    &-item {
+      display: flex;
+      flex: 1 1 0;
+      column-gap: $spacer / 2;
+      text-transform: uppercase;
+      font-weight: 700;
+      color: $gray-700;
+      line-height: 1.4;
+    }
+
+    &-title {
+      font-size: 10px;
+      @include media-breakpoint-up(lg) {
+        font-size: 12px;
+      }
+    }
+
+    &-price {
+      font-size: 13px;
+      text-wrap: nowrap;
+      @include media-breakpoint-up(lg) {
+        font-size: 14px;
+      }
+
+      &--sm {
+        font-size: 12px;
+        text-transform: none;
+        font-weight: 400;
+      }
+    }
   }
 }
 </style>

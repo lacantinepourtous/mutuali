@@ -17,8 +17,7 @@
           :title="ad.translationOrDefault.title"
           titleTag="h3"
           :image="ad.gallery[0]"
-          :price="adPrice(ad)"
-          :priceDescription="ad.translationOrDefault.priceDescription"
+          :price-details="getPriceDetailsFromAd(ad)"
           :organization="ad.organization"
           sectionWidth="sm"
           smallTitle
@@ -41,8 +40,7 @@
           :id="ad.id"
           :title="ad.translationOrDefault.title"
           :image="ad.gallery[0]"
-          :price="adPrice(ad)"
-          :priceDescription="adPriceDescription(ad)"
+          :price-details="getPriceDetailsFromAd(ad)"
           :organization="ad.organization"
           sectionWidth="sm"
           smallTitle
@@ -63,9 +61,10 @@ import AdNoContent from "@/components/ad/no-content.vue";
 import AdSnippet from "@/components/ad/snippet.vue";
 import { CONTENT_LANG_FR } from "@/consts/langs";
 import { RatingsCriterias } from "@/mixins/ratings-criterias";
+import { PriceDetails } from "@/mixins/price-details";
 
 export default {
-  mixins: [RatingsCriterias],
+  mixins: [RatingsCriterias, PriceDetails],
   components: {
     AdNoContent,
     AdSnippet
@@ -85,14 +84,6 @@ export default {
     },
     ads: function () {
       return this.userProfile.user ? this.userProfile.user.ads : [];
-    }
-  },
-  methods: {
-    adPrice: function (ad) {
-      return ad.priceToBeDetermined ? this.$t("price.toBeDetermined") : this.$format.formatMoney(ad.price);
-    },
-    adPriceDescription: function (ad) {
-      return ad.priceToBeDetermined ? "" : ad.translationOrDefault.priceDescription;
     }
   },
   apollo: {
@@ -136,17 +127,26 @@ query UserProfileById($id: ID!, $language: ContentLanguage!) {
         id
         isPublish
         isAdminOnly
+        isAvailableForRent
+        isAvailableForSale
+        isAvailableForTrade
+        isAvailableForDonation
         gallery {
           id
           src
           alt
         }
-        price
-        priceToBeDetermined
+        rentPrice
+        rentPriceToBeDetermined
+        salePrice
+        salePriceToBeDetermined
         translationOrDefault(language: $language) {
           id
           title
-          priceDescription
+          rentPriceDescription
+          salePriceDescription
+          tradeDescription
+          donationDescription
         }
         organization
       }

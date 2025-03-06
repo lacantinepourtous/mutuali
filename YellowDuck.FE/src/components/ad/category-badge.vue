@@ -1,6 +1,6 @@
 <template>
   <b-badge class="custom-badge text-white py-1" variant="info" pill>
-    <span class="custom-badge__label">{{ getCategoryLabel(category) }}</span>
+    <span class="custom-badge__label">{{ isShort ? getCategoryShortLabel(category) : getCategoryLabel(category) }}</span>
     <b-button v-if="closable" class="custom-badge__dismiss-btn h-extend-cursor-area" @click="$emit('close')">
       <span class="sr-only">{{ dismissLabel }}</span>
       <svg
@@ -28,7 +28,8 @@ export default {
   props: {
     category: String,
     closable: Boolean,
-    dismissLabel: String
+    dismissLabel: String,
+    isShort: Boolean
   }
 };
 </script>
@@ -46,6 +47,7 @@ export default {
     overflow: hidden;
     white-space: nowrap;
     max-width: 100%;
+    padding-bottom: 2px;
   }
 
   &__dismiss-btn {

@@ -63,39 +63,15 @@
         </div>
 
         <div class="search-filters__col">
-          <fieldset id="availabilitiesFieldset" aria-labelledby="availabilitiesFieldset__legend">
-            <legend id="availabilitiesFieldset__legend" class="label my-0">
-              {{ $t("label.availability") }}
-            </legend>
-            <b-row>
-              <b-col>
-                <s-form-availability
-                  :value="filters.dayAvailability"
-                  @input="(value) => updateFilters('dayAvailability', value)"
-                  id="dayAvailability"
-                  :label="$t('label.ad-dayAvailability')"
-                  :specify-label="$t('label.ad-dayAvailability.specify')"
-                  :specify-label-sr-only="true"
-                  name="dayAvailability"
-                  :options="availabilityWeekdayOptions"
-                  :pre-selected="true"
-                />
-              </b-col>
-              <b-col>
-                <s-form-availability
-                  :value="filters.eveningAvailability"
-                  @input="(value) => updateFilters('eveningAvailability', value)"
-                  id="eveningAvailability"
-                  :label="$t('label.ad-eveningAvailability')"
-                  :specify-label="$t('label.ad-dayAvailability.specify')"
-                  :specify-label-sr-only="true"
-                  name="eveningAvailability"
-                  :options="availabilityWeekdayOptions"
-                  :pre-selected="true"
-                />
-              </b-col>
-            </b-row>
-          </fieldset>
+          <s-form-availability
+            id="availability"
+            :legend="$t('label.availability')"
+            legend-class="label mb-0"
+            :day-availability="filters.dayAvailability"
+            :evening-availability="filters.eveningAvailability"
+            @update:dayAvailability="(v) => updateFilters('dayAvailability', v)"
+            @update:eveningAvailability="(v) => updateFilters('eveningAvailability', v)"
+          />
         </div>
       </div>
     </div>
@@ -119,6 +95,11 @@ import {
   CATEGORY_PROFESSIONAL_KITCHEN,
   CATEGORY_DELIVERY_TRUCK,
   CATEGORY_STORAGE_SPACE,
+  CATEGORY_PROFESSIONAL_COOKING_EQUIPMENT,
+  CATEGORY_PREP_EQUIPMENT,
+  CATEGORY_REFRIGERATION_EQUIPMENT,
+  CATEGORY_HEAVY_EQUIPMENT,
+  CATEGORY_SURPLUS,
   CATEGORY_OTHER
 } from "@/consts/categories";
 
@@ -180,6 +161,11 @@ export default {
           text: this.$t("select.category-delivery-truck")
         },
         { value: CATEGORY_STORAGE_SPACE, text: this.$t("select.category-storage-space") },
+        { value: CATEGORY_PROFESSIONAL_COOKING_EQUIPMENT, text: this.$t("select.category-professional-cooking-equipment") },
+        { value: CATEGORY_PREP_EQUIPMENT, text: this.$t("select.category-prep-equipment") },
+        { value: CATEGORY_REFRIGERATION_EQUIPMENT, text: this.$t("select.category-refrigeration-equipment") },
+        { value: CATEGORY_HEAVY_EQUIPMENT, text: this.$t("select.category-heavy-equipment") },
+        { value: CATEGORY_SURPLUS, text: this.$t("select.category-surplus") },
         { value: CATEGORY_OTHER, text: this.$t("select.category-other") }
       ],
       CATEGORY_PROFESSIONAL_KITCHEN,

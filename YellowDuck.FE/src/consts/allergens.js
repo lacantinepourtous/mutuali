@@ -1,0 +1,11 @@
+export const ALLERGEN_NUTS = "NUTS";
+export const ALLERGEN_PEANUTS = "PEANUTS";
+export const ALLERGEN_SESAME = "SESAME";
+export const ALLERGEN_WHEAT = "WHEAT";
+export const ALLERGEN_GLUTEN = "GLUTEN";
+export const ALLERGEN_SULPHITES = "SULPHITES";
+export const ALLERGEN_EGGS = "EGGS";
+export const ALLERGEN_MILK = "MILK";
+export const ALLERGEN_SOY = "SOY";
+export const ALLERGEN_FISH = "FISH";
+export const ALLERGEN_MUSTARD = "MUSTARD";

@@ -196,19 +196,43 @@ namespace YellowDuck.Api.Migrations
                     b.Property<bool>("IsAdminOnly")
                         .HasColumnType("bit");
 
+                    b.Property<bool>("IsAvailableForDonation")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsAvailableForRent")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsAvailableForSale")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsAvailableForTrade")
+                        .HasColumnType("bit");
+
                     b.Property<bool>("IsPublish")
                         .HasColumnType("bit");
 
                     b.Property<string>("Organization")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<double?>("Price")
-                        .HasColumnType("float");
-
-                    b.Property<bool>("PriceToBeDetermined")
+                    b.Property<bool>("Refrigerated")
                         .HasColumnType("bit");
 
-                    b.Property<bool>("Refrigerated")
+                    b.Property<double?>("RentPrice")
+                        .HasColumnType("float");
+
+                    b.Property<int>("RentPriceRange")
+                        .HasColumnType("int");
+
+                    b.Property<bool>("RentPriceToBeDetermined")
+                        .HasColumnType("bit");
+
+                    b.Property<double?>("SalePrice")
+                        .HasColumnType("float");
+
+                    b.Property<int>("SalePriceRange")
+                        .HasColumnType("int");
+
+                    b.Property<bool>("SalePriceToBeDetermined")
                         .HasColumnType("bit");
 
                     b.Property<bool>("ShowAddress")
@@ -267,6 +291,72 @@ namespace YellowDuck.Api.Migrations
                         .IsUnique();
 
                     b.ToTable("AdAddress");
+                });
+
+            modelBuilder.Entity("YellowDuck.Api.DbModel.Entities.Ads.AdAllergen", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<long>("AdId")
+                        .HasColumnType("bigint");
+
+                    b.Property<int>("Allergen")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AdId");
+
+                    b.ToTable("AdAllergens");
+                });
+
+            modelBuilder.Entity("YellowDuck.Api.DbModel.Entities.Ads.AdAvailabilityRestriction", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<long>("AdId")
+                        .HasColumnType("bigint");
+
+                    b.Property<bool>("Day")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("Evening")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTime>("StartDate")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AdId");
+
+                    b.ToTable("AdAvailabilityRestrictions");
+                });
+
+            modelBuilder.Entity("YellowDuck.Api.DbModel.Entities.Ads.AdCertification", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<long>("AdId")
+                        .HasColumnType("bigint");
+
+                    b.Property<int>("Certification")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AdId");
+
+                    b.ToTable("AdCertifications");
                 });
 
             modelBuilder.Entity("YellowDuck.Api.DbModel.Entities.Ads.AdDayAvailability", b =>
@@ -371,16 +461,22 @@ namespace YellowDuck.Api.Migrations
                     b.Property<string>("Description")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("DonationDescription")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("Equipment")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("Language")
                         .HasColumnType("int");
 
-                    b.Property<string>("PriceDescription")
+                    b.Property<string>("ProfessionalKitchenEquipmentOther")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("ProfessionalKitchenEquipmentOther")
+                    b.Property<string>("RentPriceDescription")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("SalePriceDescription")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("SurfaceDescription")
@@ -390,6 +486,9 @@ namespace YellowDuck.Api.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Title")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("TradeDescription")
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
@@ -530,6 +629,12 @@ namespace YellowDuck.Api.Migrations
                     b.Property<int>("AccessFailedCount")
                         .HasColumnType("int");
 
+                    b.Property<DateTime?>("Bypass2FAExpirationUtc")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Bypass2FAToken")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken()
                         .HasColumnType("nvarchar(max)");
@@ -575,9 +680,6 @@ namespace YellowDuck.Api.Migrations
 
                     b.Property<DateTime>("TosAcceptationDate")
                         .HasColumnType("datetime2");
-
-                    b.Property<string>("TosAcceptationIpAddress")
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("TwoFactorEnabled")
                         .HasColumnType("bit");
@@ -810,6 +912,40 @@ namespace YellowDuck.Api.Migrations
                     b.ToTable("StripeAccounts");
                 });
 
+            modelBuilder.Entity("YellowDuck.Api.DbModel.Entities.PhoneVerification", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int>("AttemptCount")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("ExpirationTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("IsVerified")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("PhoneNumber")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("VerificationCodeHash")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("PhoneNumber")
+                        .IsUnique()
+                        .HasFilter("[PhoneNumber] IS NOT NULL");
+
+                    b.ToTable("PhoneVerifications");
+                });
+
             modelBuilder.Entity("YellowDuck.Api.DbModel.Entities.Profiles.UserProfile", b =>
                 {
                     b.Property<long>("Id")
@@ -833,6 +969,9 @@ namespace YellowDuck.Api.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("LastName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("OrganizationNEQ")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("OrganizationName")
@@ -1036,6 +1175,39 @@ namespace YellowDuck.Api.Migrations
                     b.Navigation("Address");
 
                     b.Navigation("User");
+                });
+
+            modelBuilder.Entity("YellowDuck.Api.DbModel.Entities.Ads.AdAllergen", b =>
+                {
+                    b.HasOne("YellowDuck.Api.DbModel.Entities.Ads.Ad", "Ad")
+                        .WithMany("Allergens")
+                        .HasForeignKey("AdId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Ad");
+                });
+
+            modelBuilder.Entity("YellowDuck.Api.DbModel.Entities.Ads.AdAvailabilityRestriction", b =>
+                {
+                    b.HasOne("YellowDuck.Api.DbModel.Entities.Ads.Ad", "Ad")
+                        .WithMany("AvailabilityRestrictions")
+                        .HasForeignKey("AdId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Ad");
+                });
+
+            modelBuilder.Entity("YellowDuck.Api.DbModel.Entities.Ads.AdCertification", b =>
+                {
+                    b.HasOne("YellowDuck.Api.DbModel.Entities.Ads.Ad", "Ad")
+                        .WithMany("Certifications")
+                        .HasForeignKey("AdId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Ad");
                 });
 
             modelBuilder.Entity("YellowDuck.Api.DbModel.Entities.Ads.AdDayAvailability", b =>
@@ -1281,6 +1453,12 @@ namespace YellowDuck.Api.Migrations
             modelBuilder.Entity("YellowDuck.Api.DbModel.Entities.Ads.Ad", b =>
                 {
                     b.Navigation("AdRatings");
+
+                    b.Navigation("Allergens");
+
+                    b.Navigation("AvailabilityRestrictions");
+
+                    b.Navigation("Certifications");
 
                     b.Navigation("DayAvailability");
 

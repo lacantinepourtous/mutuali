@@ -122,7 +122,8 @@ namespace YellowDuck.ApiTests
                 {
                     LastName = "Test",
                     FirstName = "Example"
-                }
+                },
+                PhoneNumberConfirmed = true
             };
 
             UserManager.CreateAsync(user).Result.AssertSuccess();

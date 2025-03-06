@@ -40,7 +40,10 @@ namespace YellowDuck.Api.Requests.Commands.Mutations.Ads
 
             request.Title.IfSet(v => translation.Title = v);
             request.Description.IfSet(v => translation.Description = v);
-            request.PriceDescription.IfSet(v => translation.PriceDescription = v);
+            request.RentPriceDescription.IfSet(v => translation.RentPriceDescription = v);
+            request.SalePriceDescription.IfSet(v => translation.SalePriceDescription = v);
+            request.TradeDescription.IfSet(v => translation.TradeDescription = v);
+            request.DonationDescription.IfSet(v => translation.DonationDescription = v);
             request.Conditions.IfSet(v => translation.Conditions = v);
             request.DeliveryTruckTypeOther.IfSet(v => translation.DeliveryTruckTypeOther = v);
             request.Equipment.IfSet(v => translation.Equipment = v);
@@ -60,7 +63,7 @@ namespace YellowDuck.Api.Requests.Commands.Mutations.Ads
 
         private void ValidateRequest(Input request)
         {
-            if (!request.Title.IsSet() && !request.Description.IsSet() && !request.PriceDescription.IsSet() && !request.Conditions.IsSet() && !request.SurfaceDescription.IsSet() && !request.Equipment.IsSet() && !request.SurfaceSize.IsSet() && !request.ProfessionalKitchenEquipmentOther.IsSet() && !request.DeliveryTruckTypeOther.IsSet())
+            if (!request.Title.IsSet() && !request.Description.IsSet() && !request.RentPriceDescription.IsSet() && !request.SalePriceDescription.IsSet() && !request.DonationDescription.IsSet() && !request.TradeDescription.IsSet() && !request.Conditions.IsSet() && !request.SurfaceDescription.IsSet() && !request.Equipment.IsSet() && !request.SurfaceSize.IsSet() && !request.ProfessionalKitchenEquipmentOther.IsSet() && !request.DeliveryTruckTypeOther.IsSet())
             {
                 throw new NothingToUpdateException();
             }
@@ -81,11 +84,35 @@ namespace YellowDuck.Api.Requests.Commands.Mutations.Ads
                 }
             }
 
-            if (request.PriceDescription.IsSet())
+            if (request.RentPriceDescription.IsSet() && request.IsAvailableForRent.IsSet() && request.IsAvailableForRent.Value)
             {
-                if (request.PriceDescription.Value == "" && (!request.PriceToBeDetermined.IsSet() || !request.PriceToBeDetermined.Value))
+                if (request.RentPriceDescription.Value == "" && (!request.RentPriceToBeDetermined.IsSet() || !request.RentPriceToBeDetermined.Value))
                 {
-                    throw new EmptyPriceDescriptionException();
+                    throw new EmptyRentPriceDescriptionException();
+                }
+            }
+
+            if (request.SalePriceDescription.IsSet() && request.IsAvailableForSale.IsSet() && request.IsAvailableForSale.Value)
+            {
+                if (request.SalePriceDescription.Value == "" && (!request.SalePriceToBeDetermined.IsSet() || !request.SalePriceToBeDetermined.Value))
+                {
+                    throw new EmptySalePriceDescriptionException();
+                }
+            }
+
+            if (request.DonationDescription.IsSet() && request.IsAvailableForDonation.IsSet() && request.IsAvailableForDonation.Value)
+            {
+                if (request.DonationDescription.Value == "")
+                {
+                    throw new EmptyDonationDescriptionException();
+                }
+            }
+
+            if (request.TradeDescription.IsSet() && request.IsAvailableForTrade.IsSet() && request.IsAvailableForTrade.Value)
+            {
+                if (request.TradeDescription.Value == "")
+                {
+                    throw new EmptyTradeDescriptionException();
                 }
             }
 
@@ -146,14 +173,22 @@ namespace YellowDuck.Api.Requests.Commands.Mutations.Ads
 
             public Maybe<NonNull<string>> Title { get; set; }
             public Maybe<NonNull<string>> Description { get; set; }
-            public Maybe<NonNull<string>> PriceDescription { get; set; }
+            public Maybe<NonNull<string>> RentPriceDescription { get; set; }
+            public Maybe<NonNull<string>> SalePriceDescription { get; set; }
+            public Maybe<NonNull<string>> DonationDescription { get; set; }
+            public Maybe<NonNull<string>> TradeDescription { get; set; }
             public Maybe<NonNull<string>> Conditions { get; set; }
             public Maybe<NonNull<string>> SurfaceDescription { get; set; }
             public Maybe<NonNull<string>> ProfessionalKitchenEquipmentOther { get; set; }
             public Maybe<NonNull<string>> Equipment { get; set; }
             public Maybe<NonNull<string>> SurfaceSize { get; set; }
             public Maybe<NonNull<string>> DeliveryTruckTypeOther { get; set; }
-            public Maybe<bool> PriceToBeDetermined { get; set; }
+            public Maybe<bool> RentPriceToBeDetermined { get; set; }
+            public Maybe<bool> SalePriceToBeDetermined { get; set; }
+            public Maybe<bool> IsAvailableForRent { get; set; }
+            public Maybe<bool> IsAvailableForSale { get; set; }
+            public Maybe<bool> IsAvailableForTrade { get; set; }
+            public Maybe<bool> IsAvailableForDonation { get; set; }
 
         }
 
@@ -183,7 +218,13 @@ namespace YellowDuck.Api.Requests.Commands.Mutations.Ads
         public class NothingToUpdateException : UpdateAdTranslationException { }
         public class EmptyTitleException : UpdateAdTranslationException { }
         public class EmptyDescriptionException : UpdateAdTranslationException { }
-        public class EmptyPriceDescriptionException : UpdateAdTranslationException { }
+        public class EmptyRentPriceDescriptionException : UpdateAdTranslationException { }
+        public class EmptySalePriceDescriptionException : UpdateAdTranslationException { }
+
+        public class EmptyDonationDescriptionException : UpdateAdTranslationException { }
+
+        public class EmptyTradeDescriptionException : UpdateAdTranslationException { }
+
         public class EmptyConditionsException : UpdateAdTranslationException { }
         public class EmptySurfaceDescriptionException : UpdateAdTranslationException { }
         public class EmptyProfessionalKitchenEquipmentOtherException : UpdateAdTranslationException { }

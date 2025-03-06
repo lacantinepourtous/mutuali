@@ -52,6 +52,7 @@ using Sentry;
 using YellowDuck.Api.DbModel.Entities.Profiles;
 using YellowDuck.Api.Services.Stripe;
 using YellowDuck.Api.DbModel.Entities.Ads;
+using YellowDuck.Api.Services.Phone;
 
 namespace YellowDuck.Api
 {
@@ -179,6 +180,8 @@ namespace YellowDuck.Api
 
             // Stripe
             AddStripeServices(services);
+
+            services.AddScoped<IPhoneVerificationService, PhoneVerificationService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -376,7 +379,8 @@ namespace YellowDuck.Api
                 FirstName = "Ubert",
                 LastName = "Example",
                 OrganizationName = "Example Inc.",
-                OrganizationType = OrganizationType.NonProfitOrganizations,
+                OrganizationNEQ = "0000000000",
+                OrganizationType = OrganizationType.NonProfit,
                 Industry = Industry.HealthAndSocialServices,
                 PhoneNumber = "514 555-1234",
                 ShowEmail = true,
@@ -391,7 +395,8 @@ namespace YellowDuck.Api
                 FirstName = "Uguette",
                 LastName = "Example",
                 OrganizationName = "Example Inc.",
-                OrganizationType = OrganizationType.PrivateCompany,
+                OrganizationNEQ = "0000000000",
+                OrganizationType = OrganizationType.AgricultureOrganizations,
                 Industry = Industry.Catering,
                 PhoneNumber = "514 555-1234",
                 ShowEmail = false,
@@ -406,7 +411,8 @@ namespace YellowDuck.Api
                 FirstName = "Alain",
                 LastName = "Example",
                 OrganizationName = "Example Inc.",
-                OrganizationType = OrganizationType.PublicSector,
+                OrganizationNEQ = "0000000000",
+                OrganizationType = OrganizationType.FoodProcessingOrganizations,
                 Industry = Industry.EducationAndTeaching,
                 PhoneNumber = "514 555-1234",
                 ShowEmail = true,
@@ -421,7 +427,8 @@ namespace YellowDuck.Api
                 FirstName = "Aline",
                 LastName = "Example",
                 OrganizationName = "Example Inc.",
-                OrganizationType = OrganizationType.NonProfitOrganizations,
+                OrganizationNEQ = "0000000000",
+                OrganizationType = OrganizationType.NonProfit,
                 Industry = Industry.FoodProcessingAndDistribution,
                 PhoneNumber = "514 555-1234",
                 ShowEmail = false,

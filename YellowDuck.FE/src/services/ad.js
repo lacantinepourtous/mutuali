@@ -22,16 +22,27 @@ export async function createAd(input) {
   let mutationInput = {
     title: input.title,
     category: input.category,
+    isAvailableForRent: typeof input.isAvailableForRent === "boolean" ? input.isAvailableForRent : false,
+    isAvailableForSale: typeof input.isAvailableForSale === "boolean" ? input.isAvailableForSale : false,
+    isAvailableForDonation: typeof input.isAvailableForDonation === "boolean" ? input.isAvailableForDonation : false,
+    isAvailableForTrade: typeof input.isAvailableForTrade === "boolean" ? input.isAvailableForTrade : false,
     language: CONTENT_LANG_FR,
     galleryItems,
     address,
     showAddress: typeof input.showAddress === "boolean" ? input.showAddress : false,
-    price: input.price,
-    priceToBeDetermined: typeof input.priceToBeDetermined === "boolean" ? input.priceToBeDetermined : false,
-    priceDescription: input.priceDescription,
+    rentPriceToBeDetermined: typeof input.rentPriceToBeDetermined === "boolean" ? input.rentPriceToBeDetermined : false,
+    rentPrice: input.rentPrice,
+    salePriceToBeDetermined: typeof input.salePriceToBeDetermined === "boolean" ? input.salePriceToBeDetermined : false,
+    salePrice: input.salePrice,
+    rentPriceDescription: input.rentPriceDescription,
+    salePriceDescription: input.salePriceDescription,
+    donationDescription: input.donationDescription,
+    tradeDescription: input.tradeDescription,
     organization: input.organization
   };
 
+  addMaybeValue(input, mutationInput, "rentPriceRange");
+  addMaybeValue(input, mutationInput, "salePriceRange");
   addMaybeValue(input, mutationInput, "conditions");
   addMaybeValue(input, mutationInput, "description");
   addMaybeValue(input, mutationInput, "surfaceSize");
@@ -43,9 +54,12 @@ export async function createAd(input) {
   addMaybeValue(input, mutationInput, "deliveryTruckTypeOther");
   addMaybeValue(input, mutationInput, "dayAvailability");
   addMaybeValue(input, mutationInput, "eveningAvailability");
+  addMaybeValue(input, mutationInput, "availabilityRestriction");
   addMaybeValue(input, mutationInput, "refrigerated");
   addMaybeValue(input, mutationInput, "canSharedRoad");
   addMaybeValue(input, mutationInput, "canHaveDriver");
+  addMaybeValue(input, mutationInput, "certification");
+  addMaybeValue(input, mutationInput, "allergen");
 
   let result = await Apollo.instance.defaultClient.mutate({
     mutation: CreateAd,
@@ -63,7 +77,10 @@ export async function updateAd(input) {
   if (
     "title" in input ||
     "description" in input ||
-    "priceDescription" in input ||
+    "rentPriceDescription" in input ||
+    "salePriceDescription" in input ||
+    "donationDescription" in input ||
+    "tradeDescription" in input ||
     "conditions" in input ||
     "professionalKitchenEquipmentOther" in input ||
     "deliveryTruckTypeOther" in input ||
@@ -79,19 +96,30 @@ export async function updateAd(input) {
   };
 
   addMaybeValue(input, mutationInput, "category");
+  addMaybeValue(input, mutationInput, "isAvailableForRent");
+  addMaybeValue(input, mutationInput, "isAvailableForSale");
+  addMaybeValue(input, mutationInput, "isAvailableForDonation");
+  addMaybeValue(input, mutationInput, "isAvailableForTrade");
   await addMaybeValue(input, mutationInput, "address", getAddressFromGooglePlace);
   await addMaybeValue(input, mutationInput, "galleryItems", GetGalleryItems);
-  addMaybeValue(input, mutationInput, "price");
+  addMaybeValue(input, mutationInput, "rentPrice");
+  addMaybeValue(input, mutationInput, "salePrice");
   addMaybeValue(input, mutationInput, "showAddress");
-  addMaybeValue(input, mutationInput, "priceToBeDetermined");
+  addMaybeValue(input, mutationInput, "rentPriceToBeDetermined");
+  addMaybeValue(input, mutationInput, "salePriceToBeDetermined");
+  addMaybeValue(input, mutationInput, "rentPriceRange");
+  addMaybeValue(input, mutationInput, "salePriceRange");
   addMaybeValue(input, mutationInput, "organization");
   addMaybeValue(input, mutationInput, "professionalKitchenEquipment");
   addMaybeValue(input, mutationInput, "deliveryTruckType");
   addMaybeValue(input, mutationInput, "dayAvailability");
   addMaybeValue(input, mutationInput, "eveningAvailability");
+  addMaybeValue(input, mutationInput, "availabilityRestriction");
   addMaybeValue(input, mutationInput, "refrigerated");
   addMaybeValue(input, mutationInput, "canSharedRoad");
   addMaybeValue(input, mutationInput, "canHaveDriver");
+  addMaybeValue(input, mutationInput, "certification");
+  addMaybeValue(input, mutationInput, "allergen");
 
   if (Object.keys(mutationInput).length > 1) {
     let result = await Apollo.instance.defaultClient.mutate({
@@ -154,14 +182,22 @@ async function updateAdTranslation(input) {
 
   addMaybeValue(input, mutationInput, "description");
   addMaybeValue(input, mutationInput, "title");
-  addMaybeValue(input, mutationInput, "priceDescription");
+  addMaybeValue(input, mutationInput, "rentPriceDescription");
+  addMaybeValue(input, mutationInput, "salePriceDescription");
+  addMaybeValue(input, mutationInput, "donationDescription");
+  addMaybeValue(input, mutationInput, "tradeDescription");
   addMaybeValue(input, mutationInput, "conditions");
-  addMaybeValue(input, mutationInput, "priceToBeDetermined");
+  addMaybeValue(input, mutationInput, "rentPriceToBeDetermined");
+  addMaybeValue(input, mutationInput, "salePriceToBeDetermined");
   addMaybeValue(input, mutationInput, "equipment");
   addMaybeValue(input, mutationInput, "surfaceSize");
   addMaybeValue(input, mutationInput, "surfaceDescription");
   addMaybeValue(input, mutationInput, "professionalKitchenEquipmentOther");
   addMaybeValue(input, mutationInput, "deliveryTruckTypeOther");
+  addMaybeValue(input, mutationInput, "isAvailableForRent");
+  addMaybeValue(input, mutationInput, "isAvailableForSale");
+  addMaybeValue(input, mutationInput, "isAvailableForDonation");
+  addMaybeValue(input, mutationInput, "isAvailableForTrade");
 
   let result = await Apollo.instance.defaultClient.mutate({
     mutation: UpdateAdTranslation,

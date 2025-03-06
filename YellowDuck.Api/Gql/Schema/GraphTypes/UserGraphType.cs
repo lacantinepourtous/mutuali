@@ -23,6 +23,7 @@ namespace YellowDuck.Api.Gql.Schema.GraphTypes
         public Task<NonNull<string>> Email => WithDataNonNull(x => x.Email);
         public Task<UserType> Type => WithData(x => x.Type);
         public Task<bool> IsConfirmed => WithData(x => x.EmailConfirmed);
+        public Task<bool> PhoneNumberConfirmed => WithData(x => x.PhoneNumberConfirmed);
 
         public UserGraphType(IAppUserContext ctx, string userId) : base(() => ctx.LoadUser(userId))
         {

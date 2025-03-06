@@ -18,7 +18,10 @@ namespace YellowDuck.Api.Gql.Schema.GraphTypes
         public Task<ContentLanguage> Language => WithData(x => x.Language);
         public Task<string> Title => WithData(x => x.Title);
         public Task<string> Description => WithData(x => x.Description);
-        public Task<string> PriceDescription => WithData(x => x.PriceDescription);
+        public Task<string> RentPriceDescription => WithData(x => x.RentPriceDescription);
+        public Task<string> SalePriceDescription => WithData(x => x.SalePriceDescription);
+        public Task<string> DonationDescription => WithData(x => x.DonationDescription);
+        public Task<string> TradeDescription => WithData(x => x.TradeDescription);
         public Task<string> Conditions => WithData(x => x.Conditions);
         public Task<string> SurfaceDescription => WithData(x => x.SurfaceDescription);
         public Task<string> ProfessionalKitchenEquipmentOther => WithData(x => x.ProfessionalKitchenEquipmentOther);

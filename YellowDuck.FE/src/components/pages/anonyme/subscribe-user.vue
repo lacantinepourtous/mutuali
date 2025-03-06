@@ -5,6 +5,7 @@
     </portal>
     <div v-if="!userCreated" class="section section--sm">
       <h1 class="my-4">{{ $t("page-title.create-user") }}</h1>
+      <p class="mb-4 small">{{ $t("use-of-masculine-notice") }}</p>
       <subscribe-user-form class="my-4" @submitForm="subscribeUser" />
     </div>
     <form-complete

@@ -31,6 +31,16 @@
         :placeholder="$t('placeholder.organizationName')"
         required
       />
+      <s-form-input
+        id="organizationNEQ"
+        :label="$t('label.organizationNEQ')"
+        name="organizationNEQ"
+        rules="required"
+        :description="$t('description.organizationNEQ')"
+        v-model="form.organizationNEQ"
+        type="text"
+        required
+      />
       <s-form-select
         v-model="form.organizationType"
         id="organizationType"
@@ -80,6 +90,41 @@
         :placeholder="$t('placeholder.phoneNumber')"
         required
       />
+      <div class="d-flex flex-wrap align-items-center mt-n3">
+        <b-button
+          class="mr-3 my-1"
+          :disabled="!isValidPhoneNumber || phoneNumberIsConfirmed"
+          variant="primary"
+          type="button"
+          @click="validatePhoneModal = true"
+          >{{ $t("confirm-phone.open-modal") }}</b-button
+        >
+
+        <div class="d-flex align-items-center">
+          <b-icon v-if="phoneNumberIsConfirmed" icon="check-circle" variant="success"></b-icon>
+          <p v-if="phoneNumberIsConfirmed" class="mb-0 ml-2 text-success">
+            {{ $t("confirm-phone.phone-number-confirmed") }}
+          </p>
+        </div>
+      </div>
+
+      <phone-verification-modal
+        v-if="userProfile && userProfile.user"
+        v-model="validatePhoneModal"
+        :email="userProfile.user.email"
+        :phone-number="form.phoneNumber"
+        :title="$t('confirm-phone.title')"
+        @validation-success="onPhoneValidated"
+      />
+
+      <s-form-hidden
+        v-if="form.phoneNumber"
+        class="mt-n1"
+        :value="phoneNumberIsConfirmed ? 1 : null"
+        id="phoneNumberIsConfirmed"
+        name="phoneNumberIsConfirmed"
+        rules="isValidPhoneNumber"
+      />
       <s-form-checkbox
         v-model="form.showPhoneNumber"
         id="showPhoneNumber"
@@ -97,11 +142,14 @@ import SForm from "@/components/form/s-form";
 import SFormInput from "@/components/form/s-form-input";
 import SFormSelect from "@/components/form/s-form-select";
 import SFormCheckbox from "@/components/form/s-form-checkbox";
+import SFormHidden from "@/components/form/s-form-hidden";
+import PhoneVerificationModal from "@/components/phone-verification/phone-verification-modal";
 
 import {
-  ORGANIZATION_TYPE_NON_PROFIT_ORGANIZATIONS,
-  ORGANIZATION_TYPE_PRIVATE_COMPANY,
-  ORGANIZATION_TYPE_PUBLIC_SECTOR,
+  ORGANIZATION_TYPE_NON_PROFIT,
+  ORGANIZATION_TYPE_FOOD_PROCESSING,
+  ORGANIZATION_TYPE_AGRICULTURE,
+  ORGANIZATION_TYPE_SOCIAL_ECONOMY,
   ORGANIZATION_TYPE_OTHER
 } from "@/consts/organization-type";
 
@@ -120,7 +168,9 @@ export default {
     SForm,
     SFormInput,
     SFormSelect,
-    SFormCheckbox
+    SFormCheckbox,
+    SFormHidden,
+    PhoneVerificationModal
   },
   data() {
     return {
@@ -128,6 +178,7 @@ export default {
         firstName: "",
         lastName: "",
         organizationName: "",
+        organizationNEQ: "",
         organizationType: null,
         organizationTypeOtherSpecification: "",
         industry: null,
@@ -137,9 +188,10 @@ export default {
         showEmail: null
       },
       organizationTypeOptions: [
-        { value: ORGANIZATION_TYPE_NON_PROFIT_ORGANIZATIONS, text: this.$t("select.non-profit-organizations") },
-        { value: ORGANIZATION_TYPE_PRIVATE_COMPANY, text: this.$t("select.private-company") },
-        { value: ORGANIZATION_TYPE_PUBLIC_SECTOR, text: this.$t("select.public-sector") },
+        { value: ORGANIZATION_TYPE_SOCIAL_ECONOMY, text: this.$t("select.social-economy-organizations") },
+        { value: ORGANIZATION_TYPE_FOOD_PROCESSING, text: this.$t("select.food-processing-organizations") },
+        { value: ORGANIZATION_TYPE_AGRICULTURE, text: this.$t("select.agriculture-organizations") },
+        { value: ORGANIZATION_TYPE_NON_PROFIT, text: this.$t("select.non-profit-organizations") },
         { value: ORGANIZATION_TYPE_OTHER, text: this.$t("select.other") }
       ],
       industryOptions: [
@@ -150,7 +202,9 @@ export default {
         { value: INDUSTRY_HEALTH_AND_SOCIAL_SERVICES, text: this.$t("select.industry-health-and-social-services") },
         { value: INDUSTRY_TRANSPORT, text: this.$t("select.industry-transport") },
         { value: INDUSTRY_OTHER, text: this.$t("select.other") }
-      ]
+      ],
+      validatePhoneModal: false,
+      phoneNumberIsConfirmed: false
     };
   },
   props: {
@@ -188,21 +242,24 @@ export default {
     }
   },
   computed: {
-    organizationTypeOtherSpecificationRules: function() {
+    organizationTypeOtherSpecificationRules: function () {
       return this.form.organizationType ? "required" : "";
     },
-    displayOrganizationTypeOtherSpecification: function() {
+    displayOrganizationTypeOtherSpecification: function () {
       return this.form.organizationType === ORGANIZATION_TYPE_OTHER;
     },
-    industryOtherSpecificationRules: function() {
+    industryOtherSpecificationRules: function () {
       return this.form.industry ? "required" : "";
     },
-    displayIndustryOtherSpecification: function() {
+    displayIndustryOtherSpecification: function () {
       return this.form.industry === INDUSTRY_OTHER;
+    },
+    isValidPhoneNumber() {
+      return this.form.phoneNumber && this.form.phoneNumber.replace(/\D/g, "").length === 10;
     }
   },
   methods: {
-    saveProfile: async function() {
+    saveProfile: async function () {
       let input = {
         userId: this.userId
       };
@@ -212,6 +269,7 @@ export default {
       if (this.userType === this.$consts.enums.USER_TYPE_USER) {
         maybeEditedFields.push(
           "organizationName",
+          "organizationNEQ",
           "organizationType",
           "organizationTypeOtherSpecification",
           "industry",
@@ -229,6 +287,33 @@ export default {
       }
 
       this.$emit("submitForm", input);
+    },
+    onPhoneValidated() {
+      this.phoneNumberIsConfirmed = true;
+    }
+  },
+  watch: {
+    userProfile: {
+      immediate: true,
+      handler(profile) {
+        if (profile && this.$route.query.action === "validate-phone") {
+          this.validatePhoneModal = true;
+        }
+        if (profile && profile.user.phoneNumberConfirmed) {
+          this.phoneNumberIsConfirmed = true;
+        }
+      }
+    },
+    "form.phoneNumber": {
+      handler(newPhoneNumber) {
+        if (!this.userProfile) return;
+
+        // Ne garder que les chiffres pour la comparaison
+        const cleanNewNumber = newPhoneNumber ? newPhoneNumber.replace(/\D/g, "") : "";
+        const cleanProfileNumber = this.userProfile.phoneNumber ? this.userProfile.phoneNumber.replace(/\D/g, "") : "";
+
+        this.phoneNumberIsConfirmed = cleanNewNumber === cleanProfileNumber;
+      }
     }
   }
 };
@@ -240,6 +325,7 @@ query UserProfileById($id: ID!) {
     firstName
     lastName
     organizationName
+    organizationNEQ
     organizationType
     organizationTypeOtherSpecification
     industry
@@ -247,6 +333,10 @@ query UserProfileById($id: ID!) {
     phoneNumber
     showPhoneNumber
     showEmail
+    user {
+      phoneNumberConfirmed
+      email
+    }
   }
 }
 </graphql>

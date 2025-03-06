@@ -1,4 +1,5 @@
-﻿using YellowDuck.Api.DbModel.Entities;
+﻿using System.Threading.Tasks;
+using YellowDuck.Api.DbModel.Entities;
 
 namespace YellowDuck.Api.Services.Twilio
 {
@@ -10,5 +11,6 @@ namespace YellowDuck.Api.Services.Twilio
         string GetChatServiceSid();
         string GetApiKey();
         string GetSecret();
+        Task SendVerificationCode(string phoneNumber, string code);
     }
 }

@@ -14,8 +14,13 @@ namespace YellowDuck.Api.DbModel.Entities.Ads
         // General
         public string Title { get; set; }
         public string Description { get; set; }
-        public string PriceDescription { get; set; }
         public string Conditions { get; set; }
+
+        // Transaction types descriptions
+        public string RentPriceDescription { get; set; }
+        public string SalePriceDescription { get; set; }
+        public string DonationDescription { get; set; }
+        public string TradeDescription { get; set; }
 
         // Professionnal Kitchen
         public string SurfaceDescription { get; set; }

@@ -15,12 +15,16 @@ using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using YellowDuck.Api.Requests.Commands.Mutations.Accounts;
+using YellowDuck.Api.DbModel;
+using YellowDuck.Api.Services.Phone;
+using System;
 
 namespace YellowDuck.Api.Controllers
 {
     [Route("token")]
     public class TokenController : ControllerBase
     {
+        private readonly AppDbContext context;
         private readonly IOptions<JwtOptions> jwtOptions;
         private readonly IOptions<JwtBearerOptions> jwtBearerOptions;
         private readonly UserManager<AppUser> userManager;
@@ -28,16 +32,20 @@ namespace YellowDuck.Api.Controllers
         private readonly IClock clock;
         private readonly ILogger<TokenController> logger;
         private readonly IMediator mediator;
+        private readonly IPhoneVerificationService _phoneVerificationService;
 
         public TokenController(
+            AppDbContext context,
             IOptions<JwtOptions> jwtOptions,
             IOptions<JwtBearerOptions> jwtBearerOptions,
             UserManager<AppUser> userManager,
             IUserClaimsPrincipalFactory<AppUser> claimsPrincipalFactory,
             IClock clock,
             ILogger<TokenController> logger,
-            IMediator mediator)
+            IMediator mediator,
+            IPhoneVerificationService phoneVerificationService)
         {
+            this.context = context;
             this.jwtOptions = jwtOptions;
             this.jwtBearerOptions = jwtBearerOptions;
             this.userManager = userManager;
@@ -45,6 +53,7 @@ namespace YellowDuck.Api.Controllers
             this.clock = clock;
             this.logger = logger;
             this.mediator = mediator;
+            _phoneVerificationService = phoneVerificationService;
         }
 
         [HttpPost("login")]
@@ -72,6 +81,38 @@ namespace YellowDuck.Api.Controllers
                 await mediator.Send(input);
                 logger.LogWarning($"Login rejected for {request.Username} (email not confirmed)");
                 return BadRequest("Email not confirmed");
+            }
+
+            if (user.PhoneNumberConfirmed && user.TwoFactorEnabled)
+            {
+                var bypass2FAToken = Request.Cookies["bypass2FA"];
+                if (bypass2FAToken == null ||
+                    user.Bypass2FAToken != bypass2FAToken ||
+                    !user.Bypass2FAExpirationUtc.HasValue ||
+                    user.Bypass2FAExpirationUtc.Value < DateTime.UtcNow)
+                {
+                    // Si le token est expiré, on le nettoie
+                    if (user.Bypass2FAExpirationUtc.HasValue && user.Bypass2FAExpirationUtc.Value < DateTime.UtcNow)
+                    {
+                        user.Bypass2FAToken = null;
+                        user.Bypass2FAExpirationUtc = null;
+                        await context.SaveChangesAsync();
+                    }
+
+                    var profile = context.UserProfiles.FirstOrDefault(x => x.UserId == user.Id);
+
+                    var result = await _phoneVerificationService.CreateAndSendVerificationCode(
+                        profile.PhoneNumber,
+                        enforceDelayBetweenCodes: false
+                    );
+
+                    if (!result.Success)
+                    {
+                        return BadRequest("Error sending SMS");
+                    }
+
+                    return Ok("2FA code sent");
+                }
             }
 
             var isLockedOut = await userManager.IsLockedOutAsync(user);
