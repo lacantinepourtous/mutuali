@@ -49,7 +49,7 @@ namespace YellowDuck.Api.Requests.Commands.Mutations.Profiles
             }
             PhoneVerification phoneNumberVerification = null;
             // Si le numéro de téléphone est défini et différent de celui de l'utilisateur, vérifiez s'il est vérifié
-            if (request.PhoneNumber.IsSet() && request.PhoneNumber.Value != profile.PhoneNumber)
+            if (request.PhoneNumber.IsSet() && (profile.PhoneNumber == null || request.PhoneNumber.Value != profile.PhoneNumber))
             {
                 var cleanPhoneNumber = new string(request.PhoneNumber.Value.Value.Where(char.IsDigit).ToArray());
                 phoneNumberVerification = await DbContext.PhoneVerifications
@@ -62,7 +62,7 @@ namespace YellowDuck.Api.Requests.Commands.Mutations.Profiles
             else if(!profile.User.PhoneNumberConfirmed)
             {
                 var phoneNumber = request.PhoneNumber?.Value.Value ?? profile.PhoneNumber;
-                var cleanPhoneNumber = new string(profile.PhoneNumber.Where(char.IsDigit).ToArray());
+                var cleanPhoneNumber = new string(phoneNumber.Where(char.IsDigit).ToArray());
                 phoneNumberVerification = await DbContext.PhoneVerifications
                     .FirstOrDefaultAsync(x => x.PhoneNumber == cleanPhoneNumber && x.IsVerified, cancellationToken) ?? throw new PhoneNumberNotVerifiedException();
                 profile.User.PhoneNumberConfirmed = true;
