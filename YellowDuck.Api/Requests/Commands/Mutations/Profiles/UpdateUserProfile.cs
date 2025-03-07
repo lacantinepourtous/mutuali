@@ -61,6 +61,7 @@ namespace YellowDuck.Api.Requests.Commands.Mutations.Profiles
             // Si le numéro n'est pas encore validé
             else if(!profile.User.PhoneNumberConfirmed)
             {
+                var phoneNumber = request.PhoneNumber?.Value.Value ?? profile.PhoneNumber;
                 var cleanPhoneNumber = new string(profile.PhoneNumber.Where(char.IsDigit).ToArray());
                 phoneNumberVerification = await DbContext.PhoneVerifications
                     .FirstOrDefaultAsync(x => x.PhoneNumber == cleanPhoneNumber && x.IsVerified, cancellationToken) ?? throw new PhoneNumberNotVerifiedException();
