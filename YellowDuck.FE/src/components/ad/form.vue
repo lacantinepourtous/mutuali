@@ -237,17 +237,6 @@
       <s-form-checkbox v-model="form.showAddress" id="showAddress" :label="$t('label.ad-showAddress')" name="showAddress" />
     </div>
 
-    <div class="section section--md section--padding-x section--border-bottom my-4 pb-5 rm-child-margin">
-      <s-form-checkbox-group
-        v-model="form.certification"
-        id="certification"
-        name="certification"
-        :label="$t('section-title.certifications')"
-        label-class="h2 mb-4"
-        :options="certificationOptions"
-      />
-    </div>
-
     <div class="section section--md mt-4 mb-5">
       <s-form-checkbox
         v-model="form.infoIsTrue"
@@ -301,7 +290,6 @@ import { AdCategory } from "@/mixins/ad-category";
 import { AdSalePriceRange } from "@/mixins/ad-sale-price-range";
 import { AdRentalPriceRange } from "@/mixins/ad-rental-price-range";
 import { AvailabilityWeekday } from "@/mixins/availability-weekday";
-import { Certification } from "@/mixins/certification";
 import { Allergen } from "@/mixins/allergen";
 
 import {
@@ -317,7 +305,7 @@ import {
 } from "@/consts/categories";
 
 export default {
-  mixins: [AdCategory, AdSalePriceRange, AdRentalPriceRange, AvailabilityWeekday, Certification, Allergen],
+  mixins: [AdCategory, AdSalePriceRange, AdRentalPriceRange, AvailabilityWeekday, Allergen],
   props: {
     adId: {
       type: String,

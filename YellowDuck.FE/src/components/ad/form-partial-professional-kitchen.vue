@@ -45,6 +45,15 @@
       :placeholder="$t('placeholder.ad-professionalKitchenEquipmentOther')"
       required
     />
+    <s-form-checkbox-group
+      v-model="form.certification"
+      id="certification"
+      name="certification"
+      :label="$t('section-title.certifications')"
+      label-class="h2 mt-4 mb-2"
+      :options="certificationOptions"
+      @input="$emit('input', value)"
+    />
   </div>
 </template>
 
@@ -54,9 +63,10 @@ import SFormInput from "@/components/form/s-form-input";
 import SFormCheckboxGroup from "@/components/form/s-form-checkbox-group";
 import { ProfessionalKitchenEquipment } from "@/mixins/professional-kitchen-equipment";
 import { PROFESSIONAL_KITCHEN_EQUIPMENT_OTHER } from "@/consts/professional-kitchen-equipment";
+import { Certification } from "@/mixins/certification";
 
 export default {
-  mixins: [ProfessionalKitchenEquipment],
+  mixins: [ProfessionalKitchenEquipment, Certification],
   props: {
     value: {
       type: Object,
@@ -66,7 +76,8 @@ export default {
           description: "",
           conditions: "",
           professionalKitchenEquipment: [],
-          professionalKitchenEquipmentOther: ""
+          professionalKitchenEquipmentOther: "",
+          certification: []
         };
       }
     }

@@ -30,15 +30,27 @@
         </ul>
       </div>
     </div>
+    <div v-if="ad.certification.length" class="section section--md section--border-top py-6">
+      <h2 class="font-family-base font-weight-bold mb-4">{{ $t("section-title.certifications") }}</h2>
+      <div class="rm-child-margin">
+        <ul class="equipment-detail__certifications-list">
+          <li v-for="certification in ad.certification" :key="certification" class="equipment-detail__certifications-item">
+            <b-img :src="require('@/assets/icons/checkmark-badge.svg')" alt="" height="20" block></b-img>
+            {{ getCertificationLabel(certification) }}
+          </li>
+        </ul>
+      </div>
+    </div>
   </div>
 </template>
 
 <script>
 import { ProfessionalKitchenEquipment } from "@/mixins/professional-kitchen-equipment";
 import { PROFESSIONAL_KITCHEN_EQUIPMENT_OTHER } from "@/consts/professional-kitchen-equipment";
+import { Certification } from "@/mixins/certification";
 
 export default {
-  mixins: [ProfessionalKitchenEquipment],
+  mixins: [ProfessionalKitchenEquipment, Certification],
   props: {
     ad: {
       type: Object,
@@ -50,12 +62,13 @@ export default {
             conditions: "",
             professionalKitchenEquipmentOther: ""
           },
-          professionalKitchenEquipment: null
+          professionalKitchenEquipment: null,
+          certification: null
         };
       }
     }
   },
-  data: function() {
+  data: function () {
     return {
       PROFESSIONAL_KITCHEN_EQUIPMENT_OTHER
     };
@@ -70,3 +83,26 @@ export default {
   }
 };
 </script>
+
+<style lang="scss">
+.equipment-detail {
+  &__certifications {
+    &-list {
+      list-style-type: none;
+      padding-left: 0;
+      display: flex;
+      flex-wrap: wrap;
+      gap: $spacer / 2;
+    }
+
+    &-item {
+      display: flex;
+      align-items: center;
+      column-gap: $spacer / 2;
+      padding: $spacer / 4 $spacer / 2;
+      border: 1px solid $gray-300;
+      border-radius: 8px;
+    }
+  }
+}
+</style>
