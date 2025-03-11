@@ -143,17 +143,6 @@
       <detail-partial-storage-space v-if="ad.category === CATEGORY_STORAGE_SPACE" :ad="ad" />
       <detail-partial-other v-if="isMiscCategory" :ad="ad" />
 
-      <div v-if="isAllergenCategory && ad.allergen.length" class="section section--md section--border-top py-6">
-        <h2 class="font-family-base font-weight-bold mb-4">{{ $t("label.ad-allergen") }}</h2>
-        <div class="rm-child-margin">
-          <ul>
-            <li v-for="allergen in ad.allergen" :key="allergen" class="mb-3">
-              {{ getAllergenLabel(allergen) }}
-            </li>
-          </ul>
-        </div>
-      </div>
-
       <div v-if="adAvailability.length && ad.isAvailableForRent" class="section section--md section--border-top py-6">
         <h2 class="font-family-base font-weight-bold mb-4">
           {{ $t("label.availability") }}
@@ -234,7 +223,6 @@ import { VUE_APP_MUTUALI_CONTACT_MAIL } from "@/helpers/env";
 import { unpublishAd, publishAd } from "@/services/ad";
 import { AvailabilityWeekday } from "@/mixins/availability-weekday";
 import { PriceDetails } from "@/mixins/price-details";
-import { Allergen } from "@/mixins/allergen";
 
 import AdCategoryBadge from "@/components/ad/category-badge";
 import AdRatingCarousel from "@/components/ad/rating-carousel";
@@ -252,7 +240,7 @@ import DetailPartialOther from "@/components/ad/detail-partial-other";
 import DetailCalendar from "@/components/ad/detail-calendar";
 
 export default {
-  mixins: [AvailabilityWeekday, PriceDetails, Allergen],
+  mixins: [AvailabilityWeekday, PriceDetails],
   components: {
     AdCategoryBadge,
     AdRatingCarousel,
@@ -375,16 +363,6 @@ export default {
         CATEGORY_SURPLUS
       ];
       return miscCategories.includes(this.ad.category);
-    },
-    isAllergenCategory() {
-      const allergenCategories = [
-        CATEGORY_PROFESSIONAL_KITCHEN,
-        CATEGORY_PREP_EQUIPMENT,
-        CATEGORY_PROFESSIONAL_COOKING_EQUIPMENT,
-        CATEGORY_SURPLUS,
-        CATEGORY_DELIVERY_TRUCK
-      ];
-      return allergenCategories.includes(this.ad.category);
     }
   },
   methods: {

@@ -41,16 +41,27 @@
         </ul>
       </div>
     </div>
+    <div v-if="ad.allergen.length" class="section section--md section--border-top py-6">
+      <h2 class="font-family-base font-weight-bold mb-4">{{ $t("label.ad-allergen") }}</h2>
+      <div class="rm-child-margin">
+        <ul>
+          <li v-for="allergen in ad.allergen" :key="allergen" class="mb-3">
+            {{ getAllergenLabel(allergen) }}
+          </li>
+        </ul>
+      </div>
+    </div>
   </div>
 </template>
 
 <script>
 import { ProfessionalKitchenEquipment } from "@/mixins/professional-kitchen-equipment";
 import { PROFESSIONAL_KITCHEN_EQUIPMENT_OTHER } from "@/consts/professional-kitchen-equipment";
+import { Allergen } from "@/mixins/allergen";
 import { Certification } from "@/mixins/certification";
 
 export default {
-  mixins: [ProfessionalKitchenEquipment, Certification],
+  mixins: [ProfessionalKitchenEquipment, Certification, Allergen],
   props: {
     ad: {
       type: Object,

@@ -180,16 +180,6 @@
       <form-partial-professional-kitchen v-if="form.category === CATEGORY_PROFESSIONAL_KITCHEN" v-model="form" />
       <form-partial-storage-space v-if="form.category === CATEGORY_STORAGE_SPACE" v-model="form" />
       <form-partial-other v-if="isMiscCategory" v-model="form" />
-
-      <s-form-checkbox-group
-        v-if="isAllergenCategory"
-        v-model="form.allergen"
-        id="allergen"
-        :label="$t('label.ad-allergen')"
-        label-class="h2 mt-4 mb-2"
-        name="allergen"
-        :options="allergenOptions"
-      />
     </div>
 
     <!-- Availability Section -->
@@ -273,7 +263,6 @@ import SForm from "@/components/form/s-form";
 import SFormInput from "@/components/form/s-form-input";
 import SFormHidden from "@/components/form/s-form-hidden";
 import SFormCheckbox from "@/components/form/s-form-checkbox";
-import SFormCheckboxGroup from "@/components/form/s-form-checkbox-group";
 import SFormSelect from "@/components/form/s-form-select";
 import SFormImage from "@/components/form/s-form-image";
 import SFormGoogleAutocomplete from "@/components/form/s-form-google-autocomplete";
@@ -290,7 +279,6 @@ import { AdCategory } from "@/mixins/ad-category";
 import { AdSalePriceRange } from "@/mixins/ad-sale-price-range";
 import { AdRentalPriceRange } from "@/mixins/ad-rental-price-range";
 import { AvailabilityWeekday } from "@/mixins/availability-weekday";
-import { Allergen } from "@/mixins/allergen";
 
 import {
   CATEGORY_PROFESSIONAL_KITCHEN,
@@ -305,7 +293,7 @@ import {
 } from "@/consts/categories";
 
 export default {
-  mixins: [AdCategory, AdSalePriceRange, AdRentalPriceRange, AvailabilityWeekday, Allergen],
+  mixins: [AdCategory, AdSalePriceRange, AdRentalPriceRange, AvailabilityWeekday],
   props: {
     adId: {
       type: String,
@@ -536,7 +524,6 @@ export default {
     SFormInput,
     SFormHidden,
     SFormCheckbox,
-    SFormCheckboxGroup,
     SFormSelect,
     SFormImage,
     SFormGoogleAutocomplete,
@@ -604,16 +591,6 @@ export default {
         CATEGORY_SURPLUS
       ];
       return miscCategories.includes(this.form.category);
-    },
-    isAllergenCategory() {
-      const allergenCategories = [
-        CATEGORY_PROFESSIONAL_KITCHEN,
-        CATEGORY_PREP_EQUIPMENT,
-        CATEGORY_PROFESSIONAL_COOKING_EQUIPMENT,
-        CATEGORY_SURPLUS,
-        CATEGORY_DELIVERY_TRUCK
-      ];
-      return allergenCategories.includes(this.form.category);
     }
   },
   methods: {
