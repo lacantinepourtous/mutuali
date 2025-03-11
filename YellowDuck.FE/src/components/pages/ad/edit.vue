@@ -2,7 +2,7 @@
   <div class="fab-container">
     <template v-if="!adEdited">
       <portal :to="$consts.enums.PORTAL_HEADER">
-        <nav-close :to="{ name: $consts.urls.URL_AD_DETAIL, params: { id: this.adId } }"></nav-close>
+        <nav-close :to="{ name: $consts.urls.URL_AD_DETAIL, params: { id: adId } }"></nav-close>
       </portal>
       <div class="section section--md section--padding-x section--border-bottom my-4">
         <h1 class="my-4">{{ $t("page-title.edit-ad") }}</h1>
@@ -10,31 +10,45 @@
       <ad-form
         v-if="ad"
         :adId="adId"
-        :title="adTitle"
-        :description="adDescription"
-        :category="adCategory"
-        :images="adImages"
-        :address="adAddress"
-        :show-address="adShowAddress"
-        :price="adPrice"
-        :priceToBeDetermined="adPriceToBeDetermined"
-        :priceDescription="adPriceDescription"
-        :conditions="adConditions"
-        :organization="adOrganization"
-        :surfaceSize="adSurfaceSize"
-        :equipment="adEquipment"
-        :surfaceDescription="adSurfaceDescription"
-        :professionalKitchenEquipment="adProfessionalKitchenEquipment"
-        :professionalKitchenEquipmentOther="adProfessionalKitchenEquipmentOther"
-        :deliveryTruckType="adDeliveryTruckType"
-        :deliveryTruckTypeOther="adDeliveryTruckTypeOther"
-        :dayAvailability="adDayAvailability"
-        :eveningAvailability="adEveningAvailability"
-        :refrigerated="adRefrigerated"
-        :canHaveDriver="adCanHaveDriver"
-        :canSharedRoad="adCanSharedRoad"
+        :title="ad.translationOrDefault.title"
+        :description="ad.translationOrDefault.description"
+        :category="ad.category"
+        :is-available-for-sale="ad.isAvailableForSale"
+        :is-available-for-rent="ad.isAvailableForRent"
+        :is-available-for-trade="ad.isAvailableForTrade"
+        :is-available-for-donation="ad.isAvailableForDonation"
+        :images="ad.gallery"
+        :address="ad.address"
+        :show-address="ad.showAddress"
+        :rent-price="ad.rentPrice"
+        :rentPriceToBeDetermined="ad.rentPriceToBeDetermined"
+        :rentPriceDescription="ad.translationOrDefault.rentPriceDescription"
+        :rentPriceRange="ad.rentPriceRange"
+        :sale-price="ad.salePrice"
+        :salePriceToBeDetermined="ad.salePriceToBeDetermined"
+        :salePriceDescription="ad.translationOrDefault.salePriceDescription"
+        :salePriceRange="ad.salePriceRange"
+        :tradeDescription="ad.translationOrDefault.tradeDescription"
+        :donationDescription="ad.translationOrDefault.donationDescription"
+        :conditions="ad.translationOrDefault.conditions"
+        :organization="ad.organization"
+        :surfaceSize="ad.translationOrDefault.surfaceSize"
+        :equipment="ad.translationOrDefault.equipment"
+        :surfaceDescription="ad.translationOrDefault.surfaceDescription"
+        :professionalKitchenEquipment="ad.professionalKitchenEquipment"
+        :professionalKitchenEquipmentOther="ad.translationOrDefault.professionalKitchenEquipmentOther"
+        :deliveryTruckType="ad.deliveryTruckType"
+        :deliveryTruckTypeOther="ad.translationOrDefault.deliveryTruckTypeOther"
+        :dayAvailability="ad.dayAvailability"
+        :eveningAvailability="ad.eveningAvailability"
+        :availabilityRestriction="ad.availabilityRestriction"
+        :refrigerated="ad.refrigerated"
+        :canHaveDriver="ad.canHaveDriver"
+        :canSharedRoad="ad.canSharedRoad"
+        :certification="ad.certification"
+        :allergen="ad.allergen"
         @submitForm="editAd"
-        :btnLabel="$t('btn.edit-ad')"
+        :btnLabel="$t('btn.edit-ad-save')"
         :transferBtnLabel="$t('btn.transfer-ad')"
         :canTransfer="isAdmin"
         :disabledBtn="isSubmitted"
@@ -132,81 +146,12 @@ export default {
     isAdmin() {
       return !this.me || this.me.type === this.$consts.enums.USER_TYPE_ADMIN;
     },
-    adId: function () {
+    adId() {
       return this.$route.params.id.split("-").last();
-    },
-    adTitle: function () {
-      return this.ad.translationOrDefault.title;
-    },
-    adDescription: function () {
-      return this.ad.translationOrDefault.description;
-    },
-    adCategory: function () {
-      return this.ad.category;
-    },
-    adAddress: function () {
-      return this.ad.address;
-    },
-    adShowAddress: function () {
-      return this.ad.showAddress;
-    },
-    adImages: function () {
-      return this.ad.gallery;
-    },
-    adPrice: function () {
-      return this.ad.price;
-    },
-    adPriceToBeDetermined: function () {
-      return this.ad.priceToBeDetermined;
-    },
-    adPriceDescription: function () {
-      return this.ad.translationOrDefault.priceDescription;
-    },
-    adConditions: function () {
-      return this.ad.translationOrDefault.conditions;
-    },
-    adOrganization: function () {
-      return this.ad.organization;
-    },
-    adSurfaceSize: function () {
-      return this.ad.translationOrDefault.surfaceSize;
-    },
-    adEquipment: function () {
-      return this.ad.translationOrDefault.equipment;
-    },
-    adSurfaceDescription: function () {
-      return this.ad.translationOrDefault.surfaceDescription;
-    },
-    adProfessionalKitchenEquipmentOther: function () {
-      return this.ad.translationOrDefault.professionalKitchenEquipmentOther;
-    },
-    adDeliveryTruckTypeOther: function () {
-      return this.ad.translationOrDefault.deliveryTruckTypeOther;
-    },
-    adProfessionalKitchenEquipment: function () {
-      return this.ad.professionalKitchenEquipment;
-    },
-    adDeliveryTruckType: function () {
-      return this.ad.deliveryTruckType;
-    },
-    adDayAvailability: function () {
-      return this.ad.dayAvailability;
-    },
-    adEveningAvailability: function () {
-      return this.ad.eveningAvailability;
-    },
-    adRefrigerated: function () {
-      return this.ad.refrigerated;
-    },
-    adCanHaveDriver: function () {
-      return this.ad.canHaveDriver;
-    },
-    adCanSharedRoad: function () {
-      return this.ad.canSharedRoad;
     }
   },
   methods: {
-    editAd: async function (input) {
+    async editAd(input) {
       if (input && Object.keys(input).length === 0 && input.constructor === Object) {
         NotificationService.showInfo(this.$t("notification.edit-ad-empty"));
       } else {
@@ -239,12 +184,19 @@ query LocalUser {
 query AdById($id: ID!, $language: ContentLanguage!) {
   ad(id: $id) {
     id
+    isAvailableForSale
+    isAvailableForRent
+    isAvailableForTrade
+    isAvailableForDonation
     translationOrDefault(language: $language) {
       id
       language
       title
       description
-      priceDescription
+      rentPriceDescription
+      salePriceDescription
+      tradeDescription
+      donationDescription
       conditions
       equipment
       surfaceSize
@@ -270,8 +222,12 @@ query AdById($id: ID!, $language: ContentLanguage!) {
       src
       alt
     }
-    price
-    priceToBeDetermined
+    rentPrice
+    rentPriceToBeDetermined
+    rentPriceRange
+    salePrice
+    salePriceToBeDetermined
+    salePriceRange
     organization
     refrigerated
     canSharedRoad
@@ -280,6 +236,14 @@ query AdById($id: ID!, $language: ContentLanguage!) {
     deliveryTruckType
     dayAvailability
     eveningAvailability
+    availabilityRestriction {
+      id
+      startDate
+      day
+      evening
+    }
+    certification
+    allergen
   }
 }
 </graphql>

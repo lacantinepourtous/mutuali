@@ -21,36 +21,147 @@
         :options="categoryOptions"
         required
       />
-      <s-form-input
-        v-if="!form.priceToBeDetermined"
-        v-model="form.price"
-        id="price"
-        type="number"
-        :label="$t('label.ad-price')"
-        name="price"
-        rules="requiredNumeric"
-        :placeholder="$t('placeholder.ad-price')"
-        required
-        append="$"
-      />
-      <s-form-checkbox
-        v-model="form.priceToBeDetermined"
-        id="priceToBeDetermined"
-        :label="$t('label.ad-priceToBeDetermined')"
-        name="priceToBeDetermined"
-      />
-      <s-form-input
-        v-if="!form.priceToBeDetermined"
-        v-model="form.priceDescription"
-        id="priceDescription"
-        :label="$t('label.ad-priceDescription')"
-        name="priceDescription"
-        rules="required"
-        :placeholder="$t('placeholder.ad-priceDescription')"
-        required
-      />
-    </div>
 
+      <s-form-hidden
+        :value="hasAtLeastOneTransactionType ? 1 : 0"
+        id="hasAtLeastOneTransactionType"
+        name="hasAtLeastOneTransactionType"
+      />
+
+      <!-- Rent Section -->
+      <s-form-checkbox
+        v-model="form.isAvailableForRent"
+        id="isAvailableForRent"
+        :label="$t('label.isAvailableForRent')"
+        name="isAvailableForRent"
+        rules="atLeastOneChecked:@hasAtLeastOneTransactionType"
+      />
+      <div v-if="form.isAvailableForRent" class="sub-section">
+        <s-form-input
+          v-if="!form.rentPriceToBeDetermined"
+          v-model="form.rentPrice"
+          id="rentPrice"
+          type="number"
+          :label="$t('label.ad-rent-price')"
+          name="rentPrice"
+          rules="requiredNumeric"
+          :placeholder="$t('placeholder.ad-rent-price')"
+          required
+          append="$"
+        />
+        <s-form-checkbox
+          v-model="form.rentPriceToBeDetermined"
+          id="rentPriceToBeDetermined"
+          :label="$t('label.ad-rentPriceToBeDetermined')"
+          name="rentPriceToBeDetermined"
+        />
+        <s-form-select
+          v-if="form.rentPriceToBeDetermined"
+          v-model="form.rentPriceRange"
+          id="rentPriceRange"
+          :label="$t('label.ad-rent-price-range')"
+          name="rentPriceRange"
+          rules="required"
+          :placeholder="$t('placeholder.ad-rent-price-range')"
+          :options="rentalPriceRangeOptions"
+          required
+        />
+        <s-form-input
+          v-else
+          v-model="form.rentPriceDescription"
+          id="rentPriceDescription"
+          :label="$t('label.ad-priceDescription')"
+          name="rentPriceDescription"
+          rules="required"
+          :placeholder="$t('placeholder.ad-priceDescription')"
+          required
+        />
+      </div>
+
+      <!-- Sale Section -->
+      <s-form-checkbox
+        v-model="form.isAvailableForSale"
+        id="isAvailableForSale"
+        :label="$t('label.isAvailableForSale')"
+        name="isAvailableForSale"
+        rules="atLeastOneChecked:@hasAtLeastOneTransactionType"
+      />
+      <div v-if="form.isAvailableForSale" class="sub-section">
+        <s-form-input
+          v-if="!form.salePriceToBeDetermined"
+          v-model="form.salePrice"
+          id="salePrice"
+          type="number"
+          :label="$t('label.ad-sale-price')"
+          name="salePrice"
+          rules="requiredNumeric"
+          :placeholder="$t('placeholder.ad-sale-price')"
+          required
+          append="$"
+        />
+        <s-form-checkbox
+          v-model="form.salePriceToBeDetermined"
+          id="salePriceToBeDetermined"
+          :label="$t('label.ad-salePriceToBeDetermined')"
+          name="salePriceToBeDetermined"
+        />
+        <s-form-select
+          v-if="form.salePriceToBeDetermined"
+          v-model="form.salePriceRange"
+          id="salePriceRange"
+          :label="$t('label.ad-sale-price-range')"
+          name="salePriceRange"
+          rules="required"
+          :placeholder="$t('placeholder.ad-sale-price-range')"
+          :options="salePriceRangeOptions"
+          required
+        />
+        <s-form-input
+          v-else
+          v-model="form.salePriceDescription"
+          id="salePriceDescription"
+          :label="$t('label.ad-priceDescription')"
+          name="salePriceDescription"
+          :placeholder="$t('placeholder.ad-priceDescription')"
+        />
+      </div>
+
+      <!-- Trade Section -->
+      <s-form-checkbox
+        v-model="form.isAvailableForTrade"
+        id="isAvailableForTrade"
+        :label="$t('label.isAvailableForTrade')"
+        name="isAvailableForTrade"
+        rules="atLeastOneChecked:@hasAtLeastOneTransactionType"
+      />
+      <div v-if="form.isAvailableForTrade" class="sub-section">
+        <s-form-input
+          v-model="form.tradeDescription"
+          id="tradeDescription"
+          :label="$t('label.ad-tradeDescription')"
+          name="tradeDescription"
+          :placeholder="$t('placeholder.ad-tradeDescription')"
+        />
+      </div>
+
+      <!-- Donation Section -->
+      <s-form-checkbox
+        v-model="form.isAvailableForDonation"
+        id="isAvailableForDonation"
+        :label="$t('label.isAvailableForDonation')"
+        name="isAvailableForDonation"
+        rules="atLeastOneChecked:@hasAtLeastOneTransactionType"
+      />
+      <div v-if="form.isAvailableForDonation" class="sub-section">
+        <s-form-input
+          v-model="form.donationDescription"
+          id="donationDescription"
+          :label="$t('label.ad-donationDescription')"
+          name="donationDescription"
+          :placeholder="$t('placeholder.ad-donationDescription')"
+        />
+      </div>
+    </div>
     <div class="section section--md section--padding-x section--border-bottom my-4 pb-5 rm-child-margin">
       <h2 class="my-4">{{ $t("section-title.description") }}</h2>
       <s-form-image
@@ -68,40 +179,32 @@
       <form-partial-delivery-truck v-if="form.category === CATEGORY_DELIVERY_TRUCK" v-model="form" />
       <form-partial-professional-kitchen v-if="form.category === CATEGORY_PROFESSIONAL_KITCHEN" v-model="form" />
       <form-partial-storage-space v-if="form.category === CATEGORY_STORAGE_SPACE" v-model="form" />
-      <form-partial-other v-if="form.category === CATEGORY_OTHER" v-model="form" />
+      <form-partial-other v-if="isMiscCategory" v-model="form" />
+    </div>
+
+    <!-- Availability Section -->
+    <div
+      v-if="form.isAvailableForRent"
+      class="section section--md section--padding-x section--border-bottom my-4 pb-5 rm-child-margin"
+    >
+      <h2 class="my-4">{{ $t("section-title.availability") }}</h2>
+      <s-form-availability
+        id="availability"
+        :legend="$t('label.ad-availability')"
+        :day-availability="dayAvailability"
+        :evening-availability="eveningAvailability"
+        :all-selected="!adId"
+        @update:dayAvailability="(v) => (form.dayAvailability = v)"
+        @update:eveningAvailability="(v) => (form.eveningAvailability = v)"
+      />
+
+      <availability-restrictions
+        :initial-availability-restrictions="availabilityRestriction"
+        @update="(v) => (form.availabilityRestriction = v)"
+      />
     </div>
 
     <div class="section section--md section--padding-x section--border-bottom my-4 pb-5 rm-child-margin">
-      <fieldset id="availabilitiesFieldset" aria-labelledby="availabilitiesFieldset__legend">
-        <legend id="availabilitiesFieldset__legend" class="h2 mt-4 mb-3">{{ $t("label.availability") }}</legend>
-        <b-row>
-          <b-col>
-            <s-form-availability
-              v-model="form.dayAvailability"
-              id="dayAvailability"
-              :label="$t('label.ad-dayAvailability')"
-              :specify-label="$t('label.ad-dayAvailability.specify')"
-              :specify-label-sr-only="true"
-              name="dayAvailability"
-              :options="availabilityWeekdayOptions"
-            />
-          </b-col>
-          <b-col>
-            <s-form-availability
-              v-model="form.eveningAvailability"
-              id="eveningAvailability"
-              :label="$t('label.ad-eveningAvailability')"
-              :specify-label="$t('label.ad-eveningAvailability.specify')"
-              :specify-label-sr-only="true"
-              name="eveningAvailability"
-              :options="availabilityWeekdayOptions"
-            />
-          </b-col>
-        </b-row>
-      </fieldset>
-    </div>
-
-    <div class="section section--md mt-4 mb-5">
       <h2 class="my-4">{{ $t("section-title.contact-details") }}</h2>
       <s-form-input
         v-model="form.organization"
@@ -123,24 +226,34 @@
       />
       <s-form-checkbox v-model="form.showAddress" id="showAddress" :label="$t('label.ad-showAddress')" name="showAddress" />
     </div>
-    <div class="fab-container__fab">
-      <div class="section section--md">
-        <b-button :disabled="disabledBtn" type="submit" :variant="btnVariant" size="lg" block :aria-label="$t('sr.edit')">
-          <b-icon icon="pencil" class="mr-2" aria-hidden="true"></b-icon>{{ btnLabel }}
-        </b-button>
-        <b-button
-          v-if="canTransfer"
-          :disabled="disabledBtn"
-          type="button"
-          :to="{ name: $consts.urls.URL_AD_TRANSFER, params: { id: this.adId } }"
-          variant="secondary"
-          size="lg"
-          block
-          :aria-label="$t('sr.transfer')"
-        >
-          <b-icon icon="arrow-right" class="mr-2" aria-hidden="true"></b-icon>{{ transferBtnLabel }}
-        </b-button>
-      </div>
+
+    <div class="section section--md mt-4 mb-5">
+      <s-form-checkbox
+        v-model="form.infoIsTrue"
+        id="infoIsTrue"
+        :label="$t('label.infoIsTrue')"
+        name="infoIsTrue"
+        :rules="{ required: { allowFalse: false } }"
+        required
+      />
+    </div>
+
+    <div class="section section--md my-5">
+      <b-button :disabled="disabledBtn" type="submit" :variant="btnVariant" size="lg" block :aria-label="$t('sr.edit')">
+        <b-icon icon="pencil" class="mr-2" aria-hidden="true"></b-icon>{{ btnLabel }}
+      </b-button>
+      <b-button
+        v-if="canTransfer"
+        :disabled="disabledBtn"
+        type="button"
+        :to="{ name: $consts.urls.URL_AD_TRANSFER, params: { id: this.adId } }"
+        variant="secondary"
+        size="lg"
+        block
+        :aria-label="$t('sr.transfer')"
+      >
+        <b-icon icon="arrow-right" class="mr-2" aria-hidden="true"></b-icon>{{ transferBtnLabel }}
+      </b-button>
     </div>
   </s-form>
 </template>
@@ -148,6 +261,7 @@
 <script>
 import SForm from "@/components/form/s-form";
 import SFormInput from "@/components/form/s-form-input";
+import SFormHidden from "@/components/form/s-form-hidden";
 import SFormCheckbox from "@/components/form/s-form-checkbox";
 import SFormSelect from "@/components/form/s-form-select";
 import SFormImage from "@/components/form/s-form-image";
@@ -159,18 +273,27 @@ import FormPartialProfessionalKitchen from "@/components/ad/form-partial-profess
 import FormPartialStorageSpace from "@/components/ad/form-partial-storage-space";
 import FormPartialOther from "@/components/ad/form-partial-other";
 
+import AvailabilityRestrictions from "@/components/ad/availability-restrictions";
+
 import { AdCategory } from "@/mixins/ad-category";
+import { AdSalePriceRange } from "@/mixins/ad-sale-price-range";
+import { AdRentalPriceRange } from "@/mixins/ad-rental-price-range";
 import { AvailabilityWeekday } from "@/mixins/availability-weekday";
 
 import {
   CATEGORY_PROFESSIONAL_KITCHEN,
   CATEGORY_DELIVERY_TRUCK,
   CATEGORY_STORAGE_SPACE,
+  CATEGORY_PROFESSIONAL_COOKING_EQUIPMENT,
+  CATEGORY_PREP_EQUIPMENT,
+  CATEGORY_REFRIGERATION_EQUIPMENT,
+  CATEGORY_HEAVY_EQUIPMENT,
+  CATEGORY_SURPLUS,
   CATEGORY_OTHER
 } from "@/consts/categories";
 
 export default {
-  mixins: [AdCategory, AvailabilityWeekday],
+  mixins: [AdCategory, AdSalePriceRange, AdRentalPriceRange, AvailabilityWeekday],
   props: {
     adId: {
       type: String,
@@ -204,14 +327,57 @@ export default {
       type: Boolean,
       default: false
     },
-    price: {
-      type: Number
-    },
-    priceToBeDetermined: {
+    isAvailableForRent: {
       type: Boolean,
       default: false
     },
-    priceDescription: {
+    isAvailableForSale: {
+      type: Boolean,
+      default: false
+    },
+    isAvailableForTrade: {
+      type: Boolean,
+      default: false
+    },
+    isAvailableForDonation: {
+      type: Boolean,
+      default: false
+    },
+    rentPrice: {
+      type: Number
+    },
+    rentPriceToBeDetermined: {
+      type: Boolean,
+      default: false
+    },
+    rentPriceRange: {
+      type: String,
+      default: ""
+    },
+    rentPriceDescription: {
+      type: String,
+      default: ""
+    },
+    salePrice: {
+      type: Number
+    },
+    salePriceToBeDetermined: {
+      type: Boolean,
+      default: false
+    },
+    salePriceRange: {
+      type: String,
+      default: ""
+    },
+    salePriceDescription: {
+      type: String,
+      default: ""
+    },
+    tradeDescription: {
+      type: String,
+      default: ""
+    },
+    donationDescription: {
       type: String,
       default: ""
     },
@@ -243,11 +409,19 @@ export default {
       type: String,
       default: ""
     },
+    allergen: {
+      type: Array,
+      default: null
+    },
     dayAvailability: {
       type: Array,
       default: null
     },
     eveningAvailability: {
+      type: Array,
+      default: null
+    },
+    availabilityRestriction: {
       type: Array,
       default: null
     },
@@ -266,6 +440,14 @@ export default {
     conditions: {
       type: String,
       default: ""
+    },
+    certification: {
+      type: Array,
+      default: null
+    },
+    infoIsTrue: {
+      type: Boolean,
+      default: false
     },
     btnLabel: {
       type: String,
@@ -299,9 +481,20 @@ export default {
         images: this.images || [],
         address: this.address,
         showAddress: this.showAddress,
-        price: this.price,
-        priceToBeDetermined: this.priceToBeDetermined,
-        priceDescription: this.priceDescription,
+        isAvailableForRent: this.isAvailableForRent,
+        isAvailableForSale: this.isAvailableForSale,
+        isAvailableForTrade: this.isAvailableForTrade,
+        isAvailableForDonation: this.isAvailableForDonation,
+        rentPrice: this.rentPrice,
+        rentPriceToBeDetermined: this.rentPriceToBeDetermined,
+        rentPriceRange: this.rentPriceRange,
+        rentPriceDescription: this.rentPriceDescription,
+        salePrice: this.salePrice,
+        salePriceToBeDetermined: this.salePriceToBeDetermined,
+        salePriceRange: this.salePriceRange,
+        salePriceDescription: this.salePriceDescription,
+        tradeDescription: this.tradeDescription,
+        donationDescription: this.donationDescription,
         conditions: this.conditions,
         surfaceSize: this.surfaceSize,
         equipment: this.equipment,
@@ -310,11 +503,15 @@ export default {
         professionalKitchenEquipmentOther: this.professionalKitchenEquipmentOther,
         deliveryTruckType: this.deliveryTruckType,
         deliveryTruckTypeOther: this.deliveryTruckTypeOther,
+        allergen: this.allergen || [],
         dayAvailability: this.dayAvailability || [],
         eveningAvailability: this.eveningAvailability || [],
+        availabilityRestriction: this.availabilityRestriction || [],
         refrigerated: this.refrigerated,
         canSharedRoad: this.canSharedRoad,
-        canHaveDriver: this.canHaveDriver
+        canHaveDriver: this.canHaveDriver,
+        certification: this.certification || [],
+        infoIsTrue: this.infoIsTrue
       },
       CATEGORY_PROFESSIONAL_KITCHEN,
       CATEGORY_DELIVERY_TRUCK,
@@ -325,6 +522,7 @@ export default {
   components: {
     SForm,
     SFormInput,
+    SFormHidden,
     SFormCheckbox,
     SFormSelect,
     SFormImage,
@@ -333,14 +531,66 @@ export default {
     FormPartialDeliveryTruck,
     FormPartialProfessionalKitchen,
     FormPartialStorageSpace,
-    FormPartialOther
+    FormPartialOther,
+    AvailabilityRestrictions
   },
   watch: {
-    "form.priceToBeDetermined"() {
-      if (this.form.priceToBeDetermined) {
-        this.form.price = null;
-        this.form.priceDescription = "";
+    "form.rentPriceToBeDetermined"() {
+      if (this.form.rentPriceToBeDetermined) {
+        this.form.rentPrice = null;
+        this.form.rentPriceDescription = "";
       }
+    },
+    "form.salePriceToBeDetermined"() {
+      if (this.form.salePriceToBeDetermined) {
+        this.form.salePrice = null;
+        this.form.salePriceDescription = "";
+      }
+    },
+    "form.isAvailableForRent"(value) {
+      if (!value) {
+        this.form.rentPrice = null;
+        this.form.rentPriceToBeDetermined = false;
+        this.form.rentPriceDescription = "";
+      }
+    },
+    "form.isAvailableForSale"(value) {
+      if (!value) {
+        this.form.salePrice = null;
+        this.form.salePriceToBeDetermined = false;
+        this.form.salePriceDescription = "";
+      }
+    },
+    "form.isAvailableForTrade"(value) {
+      if (!value) {
+        this.form.tradeDescription = "";
+      }
+    },
+    "form.isAvailableForDonation"(value) {
+      if (!value) {
+        this.form.donationDescription = "";
+      }
+    }
+  },
+  computed: {
+    hasAtLeastOneTransactionType() {
+      return (
+        this.form.isAvailableForRent ||
+        this.form.isAvailableForSale ||
+        this.form.isAvailableForTrade ||
+        this.form.isAvailableForDonation
+      );
+    },
+    isMiscCategory() {
+      const miscCategories = [
+        CATEGORY_OTHER,
+        CATEGORY_PROFESSIONAL_COOKING_EQUIPMENT,
+        CATEGORY_PREP_EQUIPMENT,
+        CATEGORY_REFRIGERATION_EQUIPMENT,
+        CATEGORY_HEAVY_EQUIPMENT,
+        CATEGORY_SURPLUS
+      ];
+      return miscCategories.includes(this.form.category);
     }
   },
   methods: {
@@ -377,9 +627,20 @@ export default {
         "description",
         "address",
         "showAddress",
-        "price",
-        "priceToBeDetermined",
-        "priceDescription",
+        "isAvailableForRent",
+        "isAvailableForSale",
+        "isAvailableForTrade",
+        "isAvailableForDonation",
+        "rentPrice",
+        "rentPriceToBeDetermined",
+        "rentPriceRange",
+        "rentPriceDescription",
+        "salePrice",
+        "salePriceToBeDetermined",
+        "salePriceRange",
+        "salePriceDescription",
+        "tradeDescription",
+        "donationDescription",
         "conditions",
         "organization",
         "surfaceSize",
@@ -389,16 +650,27 @@ export default {
         "professionalKitchenEquipmentOther",
         "deliveryTruckType",
         "deliveryTruckTypeOther",
+        "allergen",
         "dayAvailability",
         "eveningAvailability",
+        "availabilityRestriction",
         "refrigerated",
         "canSharedRoad",
-        "canHaveDriver"
+        "canHaveDriver",
+        "certification",
+        "infoIsTrue"
       ];
       for (let maybeEditedField of maybeEditedFields) {
         if (
           Array.isArray(this[maybeEditedField]) &&
-          this[maybeEditedField].sort().join(",") === this.form[maybeEditedField].sort().join(",")
+          this[maybeEditedField]
+            .sort()
+            .map((item) => JSON.stringify(item))
+            .join(",") ===
+            this.form[maybeEditedField]
+              .sort()
+              .map((item) => JSON.stringify(item))
+              .join(",")
         ) {
           continue;
         }
@@ -431,6 +703,13 @@ export default {
     @include media-breakpoint-down(lg) {
       font-size: calc(1.325rem + 0.9vw);
     }
+  }
+
+  .sub-section {
+    margin-top: $spacer / -2;
+    margin-bottom: $spacer * 2;
+    border-left: 3px solid $yellow;
+    padding-left: $spacer * 1.25;
   }
 }
 </style>

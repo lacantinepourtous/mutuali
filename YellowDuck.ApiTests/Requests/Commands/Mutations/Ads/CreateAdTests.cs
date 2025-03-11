@@ -151,7 +151,7 @@ namespace YellowDuck.ApiTests.Requests.Commands.Mutations.Ads
                     PostalCode = "G1K-0H1".NonNull(),
                     Raw = "{raw object}"
                 }.NonNull(),
-                ShowAddress= true
+                ShowAddress = true
             };
 
             var result = await handler.Handle(input, CancellationToken.None);
@@ -171,7 +171,7 @@ namespace YellowDuck.ApiTests.Requests.Commands.Mutations.Ads
                 Category = AdCategory.DeliveryTruck,
                 DeliveryTruckType = DeliveryTruckType.Van,
                 Language = ContentLanguage.French,
-                GalleryItems = (new List<CreateAd.GalleryItemInput>() { new CreateAd.GalleryItemInput{ Src = "test.png", Alt = "Texte" }  }).NonNull(),
+                GalleryItems = (new List<CreateAd.GalleryItemInput>() { new CreateAd.GalleryItemInput { Src = "test.png", Alt = "Texte" } }).NonNull(),
                 Address = new CreateAd.AddressInput()
                 {
                     StreetNumber = "123".NonNull(),
@@ -252,6 +252,45 @@ namespace YellowDuck.ApiTests.Requests.Commands.Mutations.Ads
 
             await F(() => handler.Handle(input, CancellationToken.None))
                 .Should().ThrowAsync<CreateAd.AddressInvalidException>();
+        }
+
+        [Fact]
+        public async Task ThrowsWhenPhoneNumberNotConfirmed()
+        {
+            try
+            {
+                user.PhoneNumberConfirmed = false;
+                await DbContext.SaveChangesAsync();
+
+                var input = new CreateAd.Input
+                {
+                    Title = "Test ad",
+                    Category = AdCategory.DeliveryTruck,
+                    DeliveryTruckType = DeliveryTruckType.Van,
+                    Language = ContentLanguage.French,
+                    Address = new CreateAd.AddressInput()
+                    {
+                        StreetNumber = "123".NonNull(),
+                        Route = "Example route".NonNull(),
+                        Latitude = 46.8214225354811,
+                        Longitude = -71.23779832297491,
+                        Locality = "Québec".NonNull(),
+                        PostalCode = "G1K-0H1".NonNull(),
+                        Raw = "{raw object}"
+                    }.NonNull(),
+                    ShowAddress = true
+                };
+
+                await handler.Invoking(x => x.Handle(input, CancellationToken.None))
+                    .Should()
+                    .ThrowAsync<Exception>()
+                    .WithMessage("Phone number is not confirmed");
+            }
+            finally
+            {
+                user.PhoneNumberConfirmed = true;
+                await DbContext.SaveChangesAsync();
+            }
         }
     }
 }

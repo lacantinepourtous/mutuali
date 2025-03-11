@@ -35,6 +35,7 @@ namespace YellowDuck.Api.DbModel
 
         public DbSet<UserProfile> UserProfiles { get; set; }
         public DbSet<UserProfileRegisteringInterest> UserProfileRegisteringInterest { get; set; }
+        public DbSet<PhoneVerification> PhoneVerifications { get; set; }
         public DbSet<Ad> Ads { get; set; }
         public DbSet<AdTranslation> AdTranslations { get; set; }
         public DbSet<AdAddress> AdAddress { get; set; }
@@ -43,6 +44,9 @@ namespace YellowDuck.Api.DbModel
         public DbSet<AdProfessionalKitchenEquipment> AdProfessionalKitchenEquipments { get; set; }
         public DbSet<AdDayAvailability> AdDayAvailabilityWeekdays { get; set; }
         public DbSet<AdEveningAvailability> AdEveningAvailabilityWeekdays { get; set; }
+        public DbSet<AdAvailabilityRestriction> AdAvailabilityRestrictions { get; set; }
+        public DbSet<AdCertification> AdCertifications { get; set; }
+        public DbSet<AdAllergen> AdAllergens { get; set; }
         public DbSet<UserRating> UserRatings { get; set; }
         public DbSet<Alert> Alerts { get; set; }
         public DbSet<AlertAddress> AlertAddress { get; set; }
@@ -93,6 +97,10 @@ namespace YellowDuck.Api.DbModel
                 _.HasOne(x => x.UserProfile).WithMany(x => x.RegisteringInterests).HasForeignKey(x => x.UserProfileId);
             });
 
+            Configure<PhoneVerification>(_ => {
+                _.HasIndex(x => new { x.PhoneNumber }).IsUnique();
+            });
+
             Configure<Ad>(_ => {
                 _.HasMany(x => x.Gallery).WithOne().HasForeignKey(x => x.AdId);
                 _.HasMany(x => x.Translations).WithOne(x => x.Ad).HasForeignKey(x => x.AdId);
@@ -100,6 +108,9 @@ namespace YellowDuck.Api.DbModel
                 _.HasMany(x => x.ProfessionalKitchenEquipments).WithOne().HasForeignKey(x => x.AdId);
                 _.HasMany(x => x.DayAvailability).WithOne().HasForeignKey(x => x.AdId);
                 _.HasMany(x => x.EveningAvailability).WithOne().HasForeignKey(x => x.AdId);
+                _.HasMany(x => x.AvailabilityRestrictions).WithOne().HasForeignKey(x => x.AdId);
+                _.HasMany(x => x.Certifications).WithOne().HasForeignKey(x => x.AdId);
+                _.HasMany(x => x.Allergens).WithOne().HasForeignKey(x => x.AdId);
                 _.HasOne(x => x.User).WithMany(x => x.Ads).HasForeignKey(x => x.UserId);
             });
 
@@ -151,6 +162,18 @@ namespace YellowDuck.Api.DbModel
 
             Configure<AdEveningAvailability>(_ => {
                 _.HasOne(x => x.Ad).WithMany(x => x.EveningAvailability).HasForeignKey(x => x.AdId);
+            });
+
+            Configure<AdAvailabilityRestriction>(_ => {
+                _.HasOne(x => x.Ad).WithMany(x => x.AvailabilityRestrictions).HasForeignKey(x => x.AdId);
+            });
+
+            Configure<AdCertification>(_ => {
+                _.HasOne(x => x.Ad).WithMany(x => x.Certifications).HasForeignKey(x => x.AdId);
+            });
+
+            Configure<AdAllergen>(_ => {
+                _.HasOne(x => x.Ad).WithMany(x => x.Allergens).HasForeignKey(x => x.AdId);
             });
 
             Configure<Alert>(_ => {

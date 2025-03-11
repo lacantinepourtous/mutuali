@@ -19,6 +19,14 @@ namespace YellowDuck.Api.DbModel.Entities.Ads
         public string Organization { get; set; }
         public IList<AdDayAvailability> DayAvailability { get; set; }
         public IList<AdEveningAvailability> EveningAvailability { get; set; }
+        public IList<AdAvailabilityRestriction> AvailabilityRestrictions { get; set; }
+        public IList<AdCertification> Certifications { get; set; }
+
+        // Transaction Types
+        public bool IsAvailableForRent { get; set; }
+        public bool IsAvailableForSale { get; set; }
+        public bool IsAvailableForDonation { get; set; }
+        public bool IsAvailableForTrade { get; set; }
 
         // Address
         public long AddressId { get; set; }
@@ -26,8 +34,14 @@ namespace YellowDuck.Api.DbModel.Entities.Ads
         public bool ShowAddress { get; set; }
 
         // Price
-        public double? Price { get; set; }
-        public bool PriceToBeDetermined { get; set; }
+        public double? RentPrice { get; set; }
+        public bool RentPriceToBeDetermined { get; set; }
+        public PriceRangeRental RentPriceRange {  get; set; }
+        public double? SalePrice { get; set; }
+        public bool SalePriceToBeDetermined { get; set; }
+        public PriceRangeSale SalePriceRange { get; set; }
+
+        // Rating
         public IList<AdRating> AdRatings { get; set; }
 
         // Professional Kitchen
@@ -38,6 +52,8 @@ namespace YellowDuck.Api.DbModel.Entities.Ads
         public bool Refrigerated { get; set; }
         public bool CanSharedRoad { get; set; }
         public bool CanHaveDriver { get; set; }
+
+        public IList<AdAllergen> Allergens { get; set; }
 
         public bool IsPublish { get; set; }
         public bool IsAdminOnly { get; set; }

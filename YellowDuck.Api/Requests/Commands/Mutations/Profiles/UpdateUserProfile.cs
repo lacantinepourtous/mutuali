@@ -37,20 +37,49 @@ namespace YellowDuck.Api.Requests.Commands.Mutations.Profiles
             var userId = request.UserId.IdentifierForType<AppUser>();
             var profile = await GetProfileWithUser(userId, cancellationToken);
 
+
             if (profile == null)
             {
                 var user = await DbContext.Users
-                    .Include(x => x.Profile)
-                    .FirstOrDefaultAsync(x => x.Id == userId, cancellationToken);
-
+                   .Include(x => x.Profile)
+                   .FirstOrDefaultAsync(x => x.Id == userId, cancellationToken);
                 if (user == null) throw new UserNotFoundException();
 
                 user.Profile = profile = CreateDefaultProfile(user);
             }
+            PhoneVerification phoneNumberVerification = null;
+            // Si le numéro de téléphone est défini et différent de celui de l'utilisateur, vérifiez s'il est vérifié
+            if (request.PhoneNumber.IsSet() && (profile.PhoneNumber == null || request.PhoneNumber.Value != profile.PhoneNumber))
+            {
+                var cleanPhoneNumber = new string(request.PhoneNumber.Value.Value.Where(char.IsDigit).ToArray());
+                phoneNumberVerification = await DbContext.PhoneVerifications
+                    .FirstOrDefaultAsync(x => x.PhoneNumber == cleanPhoneNumber && x.IsVerified, cancellationToken) ?? throw new PhoneNumberNotVerifiedException();
+                profile.User.PhoneNumberConfirmed = true;
+                profile.User.TwoFactorEnabled = true;
+            }
+
+            // Si le numéro n'est pas encore validé
+            else if(!profile.User.PhoneNumberConfirmed)
+            {
+                var phoneNumber = request.PhoneNumber?.Value.Value ?? profile.PhoneNumber;
+                var cleanPhoneNumber = new string(phoneNumber.Where(char.IsDigit).ToArray());
+                phoneNumberVerification = await DbContext.PhoneVerifications
+                    .FirstOrDefaultAsync(x => x.PhoneNumber == cleanPhoneNumber && x.IsVerified, cancellationToken) ?? throw new PhoneNumberNotVerifiedException();
+                profile.User.PhoneNumberConfirmed = true;
+                profile.User.TwoFactorEnabled = true;
+            }
 
             await UpdateProfileFromRequest(profile, request);
 
+
             await DbContext.SaveChangesAsync(cancellationToken);
+
+            // En deux temps pour éviter de revalider le # si une erreur arrive lors de la sauvegarde du profil
+            if (phoneNumberVerification != null)
+            {
+                DbContext.PhoneVerifications.Remove(phoneNumberVerification);
+                await DbContext.SaveChangesAsync(cancellationToken);
+            }
 
             logger.LogInformation($"User profile {userId} updated ({typeof(UserProfile).Name})");
 
@@ -77,6 +106,7 @@ namespace YellowDuck.Api.Requests.Commands.Mutations.Profiles
             request.OrganizationName.IfSet(v => profile.OrganizationName = v.Trim());
             request.OrganizationType.IfSet(v => profile.OrganizationType = v);
             request.OrganizationTypeOtherSpecification.IfSet(v => profile.OrganizationTypeOtherSpecification = v.Trim());
+            request.OrganizationNEQ.IfSet(v => profile.OrganizationNEQ = v.Trim());
             request.Industry.IfSet(v => profile.Industry = v);
             request.IndustryOtherSpecification.IfSet(v => profile.IndustryOtherSpecification = v.Trim());
             request.PhoneNumber.IfSet(v => profile.PhoneNumber = v.Trim());
@@ -97,6 +127,7 @@ namespace YellowDuck.Api.Requests.Commands.Mutations.Profiles
         }
 
         public abstract class UpdateProfileException : RequestValidationException { }
+        public class PhoneNumberNotVerifiedException : UpdateProfileException { }
         public class UserNotFoundException : UpdateProfileException { }
 
         [MutationInput]
@@ -109,6 +140,7 @@ namespace YellowDuck.Api.Requests.Commands.Mutations.Profiles
             public Maybe<NonNull<string>> OrganizationName { get; set; }
             public Maybe<OrganizationType> OrganizationType { get; set; }
             public Maybe<NonNull<string>> OrganizationTypeOtherSpecification { get; set; }
+            public Maybe<string> OrganizationNEQ { get; set; }
             public Maybe<Industry> Industry { get; set; }
             public Maybe<NonNull<string>> IndustryOtherSpecification { get; set; }
             public Maybe<NonNull<string>> PostalCode { get; set; }

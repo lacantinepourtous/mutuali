@@ -12,6 +12,9 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Mvc;
 using System.IdentityModel.Tokens.Jwt;
 using YellowDuck.Api.Requests.Commands;
+using Moq;
+using YellowDuck.Api.Services.Phone;
+using YellowDuck.Api.DbModel;
 
 namespace YellowDuck.ApiTests.Controllers
 {
@@ -28,16 +31,18 @@ namespace YellowDuck.ApiTests.Controllers
         {
             SetupRequestHandler(new CreateRefreshToken(UserManager));
             controller = new TokenController(
-                new OptionsWrapper<JwtOptions>(new JwtOptions()),
-                new OptionsWrapper<JwtBearerOptions>(new JwtBearerOptions()),
-                UserManager,
-                new UserClaimsPrincipalFactory<AppUser>(UserManager, new OptionsWrapper<IdentityOptions>(UserManager.Options)),
-                Clock,
-                Logger<TokenController>(),
-                Mediator);
+                context: Mock.Of<AppDbContext>(),
+                jwtOptions: new OptionsWrapper<JwtOptions>(new JwtOptions()),
+                jwtBearerOptions: new OptionsWrapper<JwtBearerOptions>(new JwtBearerOptions()),
+                userManager: UserManager,
+                claimsPrincipalFactory: new UserClaimsPrincipalFactory<AppUser>(UserManager, new OptionsWrapper<IdentityOptions>(UserManager.Options)),
+                clock: Clock,
+                logger: Logger<TokenController>(),
+                mediator: Mediator,
+                phoneVerificationService: Mock.Of<IPhoneVerificationService>());
 
-           user = AddUser(Username, UserType.User, Password);
-           user.EmailConfirmed = true;
+            user = AddUser(Username, UserType.User, Password);
+            user.EmailConfirmed = true;
         }
 
         [Fact]
@@ -258,8 +263,6 @@ namespace YellowDuck.ApiTests.Controllers
 
             _ = response.Should().BeOfType<BadRequestObjectResult>();
         }
-
-
 
         private static void VerifyTokenResponse(IActionResult response)
         {

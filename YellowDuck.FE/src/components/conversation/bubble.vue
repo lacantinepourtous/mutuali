@@ -8,7 +8,22 @@
     }"
   >
     <div class="conversation-bubble__top" :class="{ 'conversation-bubble__top--system green': isSystem }">
-      <p class="small mb-1" v-html="bodyWithLink"></p>
+      <div v-if="files.length > 0" class="files-container">
+        <div v-for="(file, index) in files" :key="index" class="file-preview">
+          <button v-if="file.isImage" class="file-preview-btn" @click="openImageModal(file)">
+            <span class="sr-only">{{ $t("sr.open") }}</span>
+            <img :src="file.url" :alt="file.name" class="file-thumb" />
+          </button>
+          <div v-else class="file-info" @click="openFileInNewTab(file)">
+            <div class="file-placeholder">
+              <small>{{ file.type }}</small>
+              <br />
+              {{ file.name }}
+            </div>
+          </div>
+        </div>
+      </div>
+      <p v-if="bodyWithLink" class="small mb-1" v-html="bodyWithLink"></p>
     </div>
 
     <div class="conversation-bubble__bottom" :class="{ 'conversation-bubble__bottom--system green-lighter': isSystem }">
@@ -37,7 +52,7 @@
             variant="link"
             class="conversation-bubble__link-btn p-0 text-left text-white font-weight-bold text-decoration-underline"
           >
-            {{ $t("btn.create-conversation-auto-message") }}
+            {{ autoMessage || $t("btn.create-conversation-auto-message") }}
           </b-button>
         </span>
       </p>
@@ -46,6 +61,12 @@
         {{ messageDate }}
       </p>
     </div>
+
+    <b-modal v-model="showImageModal" size="lg" hide-footer>
+      <div class="d-flex justify-content-center align-items-center">
+        <img :src="selectedImage" class="img-fluid" />
+      </div>
+    </b-modal>
   </div>
 </template>
 
@@ -60,6 +81,13 @@ export default {
     body: {
       type: String,
       required: true
+    },
+    medias: {
+      type: Array,
+      required: false,
+      default() {
+        return [];
+      }
     },
     dateUpdated: {
       type: Date,
@@ -84,11 +112,18 @@ export default {
       type: String,
       required: false,
       default: ""
+    },
+    autoMessage: {
+      type: String,
+      required: false,
+      default: ""
     }
   },
   data() {
     return {
-      handledActions: [RATING_REQUEST, CONTRACT_CREATED, CONTRACT_UPDATED, CREATE_CONVERSATION]
+      handledActions: [RATING_REQUEST, CONTRACT_CREATED, CONTRACT_UPDATED, CREATE_CONVERSATION],
+      showImageModal: false,
+      selectedImage: ""
     };
   },
   computed: {
@@ -118,6 +153,17 @@ export default {
         this.$emit("loadContractId");
       }
       return result;
+    },
+    files: function () {
+      return this.medias.map((media) => {
+        return {
+          isImage: media.state.contentType.startsWith("image/"),
+          url: media.temporaryUrl,
+          name: media.state.filename,
+          type: media.state.contentType.split("/").last(),
+          twilioMedia: media
+        };
+      });
     }
   },
   methods: {
@@ -126,6 +172,15 @@ export default {
     },
     onCreateConversation: function () {
       this.$emit("createConversation");
+    },
+    async openFileInNewTab(file) {
+      var url = await file.twilioMedia.getContentTemporaryUrl();
+      window.open(url, "_blank");
+    },
+    async openImageModal(file) {
+      var url = await file.twilioMedia.getContentTemporaryUrl();
+      this.selectedImage = url;
+      this.showImageModal = true;
     }
   }
 };
@@ -160,6 +215,12 @@ export default {
   &--create {
     margin-top: auto;
     margin-bottom: 0;
+  }
+
+  &--current {
+    .files-container {
+      justify-content: flex-end;
+    }
   }
 
   &:not(&--current) {
@@ -203,5 +264,52 @@ export default {
   &__icon {
     width: 20px;
   }
+}
+
+.files-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  padding-bottom: 15px;
+}
+
+.file-preview {
+  position: relative;
+  cursor: pointer;
+
+  &:hover {
+    opacity: 0.8;
+  }
+}
+
+.file-preview-btn {
+  padding: 0;
+  border: 0;
+  box-shadow: none;
+}
+
+.file-thumb,
+.file-info {
+  width: 100px;
+  height: 100px;
+  object-fit: cover;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  transition: transform 0.3s ease;
+
+  &:hover {
+    transform: scale(1.1);
+  }
+}
+
+.file-info {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #f0f0f0;
+  text-align: center;
+  font-size: 12px;
+  padding: 10px;
+  overflow: hidden;
 }
 </style>

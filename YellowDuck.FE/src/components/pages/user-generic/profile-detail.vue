@@ -71,8 +71,7 @@
             :title="ad.translationOrDefault.title"
             titleTag="h3"
             :image="ad.gallery[0]"
-            :price="adPrice(ad)"
-            :priceDescription="adPriceDescription(ad)"
+            :price-details="getPriceDetailsFromAd(ad)"
             :organization="ad.organization"
             sectionWidth="sm"
             smallTitle
@@ -113,13 +112,14 @@ import UserProfileSnippet from "@/components/user-profile/snippet";
 import AdSnippet from "@/components/ad/snippet.vue";
 import AdNoContent from "@/components/ad/no-content.vue";
 import { RatingsCriterias } from "@/mixins/ratings-criterias";
+import { PriceDetails } from "@/mixins/price-details";
 
 import { CONTENT_LANG_FR } from "@/consts/langs";
 import { URL_USER_PROFILE_DETAIL } from "@/consts/urls";
 import { VUE_APP_MUTUALI_CONTACT_MAIL } from "@/helpers/env";
 
 export default {
-  mixins: [RatingsCriterias],
+  mixins: [RatingsCriterias, PriceDetails],
   components: {
     /* Disable for Pilote version */
     /*RatingCard*/
@@ -171,12 +171,6 @@ export default {
       const diff = now.diff(date, "M");
       if (diff < 12) return this.$tc("from-now.month", diff);
       return this.$tc("from-now.year", Math.floor(diff / 12));
-    },
-    adPrice: function (ad) {
-      return ad.priceToBeDetermined ? this.$t("price.toBeDetermined") : this.$format.formatMoney(ad.price);
-    },
-    adPriceDescription: function (ad) {
-      return ad.priceToBeDetermined ? "" : ad.translationOrDefault.priceDescription;
     }
   },
   apollo: {
@@ -219,17 +213,26 @@ query UserProfileById($id: ID!, $language: ContentLanguage!) {
       ads {
         id
         isPublish
+        isAvailableForRent
+        isAvailableForSale
+        isAvailableForTrade
+        isAvailableForDonation
         gallery {
           id
           src
           alt
         }
-        price
-        priceToBeDetermined
+        rentPrice
+        rentPriceToBeDetermined
+        salePrice
+        salePriceToBeDetermined
         translationOrDefault(language: $language) {
           id
           title
-          priceDescription
+          rentPriceDescription
+          salePriceDescription
+          tradeDescription
+          donationDescription
         }
         organization
       }

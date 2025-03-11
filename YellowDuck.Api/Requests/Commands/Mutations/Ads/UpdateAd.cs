@@ -48,21 +48,32 @@ namespace YellowDuck.Api.Requests.Commands.Mutations.Ads
 
             if (ad == null) throw new AdNotFoundException();
             if(ad.Category == AdCategory.ProfessionalKitchen) ValidateProfessionalKitchenRequest(request);
-
+            
             request.Category.IfSet(v => ad.Category = v);
+            request.IsAvailableForRent.IfSet(v => ad.IsAvailableForRent = v);
+            request.IsAvailableForSale.IfSet(v => ad.IsAvailableForSale = v);
+            request.IsAvailableForDonation.IfSet(v => ad.IsAvailableForDonation = v);
+            request.IsAvailableForTrade.IfSet(v => ad.IsAvailableForTrade = v);
             request.Address.IfSet(v => UpdateAddress(ad.Address, v));
             request.ShowAddress.IfSet(v => ad.ShowAddress = v);
             request.GalleryItems.IfSet(v => UpdateGalleryItems(ad, v.Value));
-            request.Price.IfSet(v => ad.Price = v);
-            request.PriceToBeDetermined.IfSet(v => ad.PriceToBeDetermined = v);
+            request.RentPrice.IfSet(v => ad.RentPrice = v);
+            request.RentPriceToBeDetermined.IfSet(v => ad.RentPriceToBeDetermined = v);
+            request.RentPriceRange.IfSet(v => ad.RentPriceRange = v);
+            request.SalePrice.IfSet(v => ad.SalePrice = v);
+            request.SalePriceToBeDetermined.IfSet(v => ad.SalePriceToBeDetermined = v);
+            request.SalePriceRange.IfSet(v => ad.SalePriceRange = v);
             request.Organization.IfSet(v => ad.Organization = v);
             request.DayAvailability.IfSet( v => UpdateDayAvailability(ad, v));
             request.EveningAvailability.IfSet(v => UpdateEveningAvailability(ad, v));
+            request.AvailabilityRestriction.IfSet(v => UpdateAvailabilityRestriction(ad, v));
+            request.Certification.IfSet(v => UpdateCertifications(ad, v));
             request.ProfessionalKitchenEquipment.IfSet(v => UpdateProfessionalKitchenEquipments(ad, v));
             request.DeliveryTruckType.IfSet(v => ad.DeliveryTruckType = v);
             request.Refrigerated.IfSet(v => ad.Refrigerated = v);
             request.CanSharedRoad.IfSet(v => ad.CanSharedRoad = v);
             request.CanHaveDriver.IfSet(v => ad.CanHaveDriver = v);
+            request.Allergen.IfSet(v => UpdateAllergens(ad, v));
 
             await db.SaveChangesAsync(cancellationToken);
 
@@ -123,11 +134,39 @@ namespace YellowDuck.Api.Requests.Commands.Mutations.Ads
             eveningAvailability.ForEach(x => ad.EveningAvailability.Add(new AdEveningAvailability() { Weekday = x }));
         }
 
+        private void UpdateAvailabilityRestriction(Ad ad, List<AvailabilityRestrictionInput> availabilityRestrictions)
+        {
+            db.AdAvailabilityRestrictions.RemoveRange(db.AdAvailabilityRestrictions.Where(x => x.AdId == ad.Id));
+            ad.AvailabilityRestrictions = new List<AdAvailabilityRestriction>();
+
+            availabilityRestrictions.ForEach(x => ad.AvailabilityRestrictions.Add(new AdAvailabilityRestriction()
+                {
+                    Day = x.Day,
+                    Evening = x.Evening,
+                    StartDate = x.StartDate,
+                }
+            ));
+        }
+
+        private void UpdateCertifications(Ad ad, List<Certification> certifications)
+        {
+            db.AdCertifications.RemoveRange(db.AdCertifications.Where(x => x.AdId == ad.Id));
+            ad.Certifications = new List<AdCertification>();
+            certifications.ForEach(x => ad.Certifications.Add(new AdCertification() { Certification = x }));
+        }
+
         private void UpdateProfessionalKitchenEquipments(Ad ad, List<ProfessionalKitchenEquipment> professionalKitchenEquipments)
         {
             db.AdProfessionalKitchenEquipments.RemoveRange(db.AdProfessionalKitchenEquipments.Where(x => x.AdId == ad.Id));
             ad.ProfessionalKitchenEquipments = new List<AdProfessionalKitchenEquipment>();
             professionalKitchenEquipments.ForEach(x => ad.ProfessionalKitchenEquipments.Add(new AdProfessionalKitchenEquipment() { ProfessionalKitchenEquipment = x }));
+        }
+
+        private void UpdateAllergens(Ad ad, List<Allergen> allergens)
+        {
+            db.AdAllergens.RemoveRange(db.AdAllergens.Where(x => x.AdId == ad.Id));
+            ad.Allergens = new List<AdAllergen>();
+            allergens.ForEach(x => ad.Allergens.Add(new AdAllergen() { Allergen = x }));
         }
 
         private async Task ValidateRequest(Input request)
@@ -162,19 +201,30 @@ namespace YellowDuck.Api.Requests.Commands.Mutations.Ads
         {
             public Id AdId { get; set; }
             public Maybe<AdCategory> Category { get; set; }
+            public Maybe<bool> IsAvailableForRent { get; set; }
+            public Maybe<bool> IsAvailableForSale { get; set; }
+            public Maybe<bool> IsAvailableForDonation { get; set; }
+            public Maybe<bool> IsAvailableForTrade { get; set; }
             public Maybe<NonNull<List<GalleryItemInput>>> GalleryItems { get; set; }
             public Maybe<AddressInput> Address { get; set; }
             public Maybe<bool> ShowAddress { get; set; }
             public Maybe<List<DayOfWeek>> DayAvailability { get; set; }
             public Maybe<List<DayOfWeek>> EveningAvailability { get; set; }
-            public Maybe<double?> Price { get; set; }
-            public Maybe<bool> PriceToBeDetermined { get; set; }
+            public Maybe<List<AvailabilityRestrictionInput>> AvailabilityRestriction { get; set; }
+            public Maybe<double?> RentPrice { get; set; }
+            public Maybe<double?> SalePrice { get; set; }
+            public Maybe<bool> RentPriceToBeDetermined { get; set; }
+            public Maybe<bool> SalePriceToBeDetermined { get; set; }
+            public Maybe<PriceRangeRental> RentPriceRange { get; set; }
+            public Maybe<PriceRangeSale> SalePriceRange { get; set; }
             public Maybe<string> Organization { get; set; }
+            public Maybe<List<Certification>> Certification { get; set; }
             public Maybe<List<ProfessionalKitchenEquipment>> ProfessionalKitchenEquipment { get; set; }
             public Maybe<DeliveryTruckType> DeliveryTruckType { get; set; }
             public Maybe<bool> Refrigerated { get; set; }
             public Maybe<bool> CanSharedRoad { get; set; }
             public Maybe<bool> CanHaveDriver { get; set; }
+            public Maybe<List<Allergen>> Allergen { get; set; }
         }
 
         [MutationPayload]
@@ -202,6 +252,14 @@ namespace YellowDuck.Api.Requests.Commands.Mutations.Ads
         {
             public string Src { get; set; }
             public string Alt { get; set; }
+        }
+
+        [InputType]
+        public class AvailabilityRestrictionInput
+        {
+            public bool Day {  get; set; }
+            public bool Evening { get; set; }
+            public DateTime StartDate { get; set; }
         }
 
         public abstract class EditAdException : RequestValidationException { }

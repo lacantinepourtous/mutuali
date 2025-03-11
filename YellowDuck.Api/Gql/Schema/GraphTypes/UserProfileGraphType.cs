@@ -5,6 +5,8 @@ using System.Threading.Tasks;
 using YellowDuck.Api.DbModel.Enums;
 using System.Collections.Generic;
 using System.Linq;
+using YellowDuck.Api.Authorization;
+using YellowDuck.Api.Constants;
 
 namespace YellowDuck.Api.Gql.Schema.GraphTypes
 {
@@ -36,6 +38,9 @@ namespace YellowDuck.Api.Gql.Schema.GraphTypes
         public Task<string> PublicName => WithData(x => x.PublicName);
 
         public Task<string> OrganizationName => WithData(x => x.OrganizationName);
+
+        public Task<string> OrganizationNEQ => WithData(x => x.OrganizationNEQ);
+
         public Task<OrganizationType> OrganizationType => WithData(x => x.OrganizationType);
         public Task<string> OrganizationTypeOtherSpecification => WithData(x => x.OrganizationTypeOtherSpecification);
         public Task<Industry> Industry => WithData(x => x.Industry);
