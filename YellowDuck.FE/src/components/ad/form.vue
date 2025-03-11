@@ -180,16 +180,6 @@
       <form-partial-professional-kitchen v-if="form.category === CATEGORY_PROFESSIONAL_KITCHEN" v-model="form" />
       <form-partial-storage-space v-if="form.category === CATEGORY_STORAGE_SPACE" v-model="form" />
       <form-partial-other v-if="isMiscCategory" v-model="form" />
-
-      <s-form-checkbox-group
-        v-if="isAllergenCategory"
-        v-model="form.allergen"
-        id="allergen"
-        :label="$t('label.ad-allergen')"
-        label-class="h2 mt-4 mb-2"
-        name="allergen"
-        :options="allergenOptions"
-      />
     </div>
 
     <!-- Availability Section -->
@@ -237,17 +227,6 @@
       <s-form-checkbox v-model="form.showAddress" id="showAddress" :label="$t('label.ad-showAddress')" name="showAddress" />
     </div>
 
-    <div class="section section--md section--padding-x section--border-bottom my-4 pb-5 rm-child-margin">
-      <s-form-checkbox-group
-        v-model="form.certification"
-        id="certification"
-        name="certification"
-        :label="$t('section-title.certifications')"
-        label-class="h2 mb-4"
-        :options="certificationOptions"
-      />
-    </div>
-
     <div class="section section--md mt-4 mb-5">
       <s-form-checkbox
         v-model="form.infoIsTrue"
@@ -284,7 +263,6 @@ import SForm from "@/components/form/s-form";
 import SFormInput from "@/components/form/s-form-input";
 import SFormHidden from "@/components/form/s-form-hidden";
 import SFormCheckbox from "@/components/form/s-form-checkbox";
-import SFormCheckboxGroup from "@/components/form/s-form-checkbox-group";
 import SFormSelect from "@/components/form/s-form-select";
 import SFormImage from "@/components/form/s-form-image";
 import SFormGoogleAutocomplete from "@/components/form/s-form-google-autocomplete";
@@ -301,8 +279,6 @@ import { AdCategory } from "@/mixins/ad-category";
 import { AdSalePriceRange } from "@/mixins/ad-sale-price-range";
 import { AdRentalPriceRange } from "@/mixins/ad-rental-price-range";
 import { AvailabilityWeekday } from "@/mixins/availability-weekday";
-import { Certification } from "@/mixins/certification";
-import { Allergen } from "@/mixins/allergen";
 
 import {
   CATEGORY_PROFESSIONAL_KITCHEN,
@@ -317,7 +293,7 @@ import {
 } from "@/consts/categories";
 
 export default {
-  mixins: [AdCategory, AdSalePriceRange, AdRentalPriceRange, AvailabilityWeekday, Certification, Allergen],
+  mixins: [AdCategory, AdSalePriceRange, AdRentalPriceRange, AvailabilityWeekday],
   props: {
     adId: {
       type: String,
@@ -548,7 +524,6 @@ export default {
     SFormInput,
     SFormHidden,
     SFormCheckbox,
-    SFormCheckboxGroup,
     SFormSelect,
     SFormImage,
     SFormGoogleAutocomplete,
@@ -616,16 +591,6 @@ export default {
         CATEGORY_SURPLUS
       ];
       return miscCategories.includes(this.form.category);
-    },
-    isAllergenCategory() {
-      const allergenCategories = [
-        CATEGORY_PROFESSIONAL_KITCHEN,
-        CATEGORY_PREP_EQUIPMENT,
-        CATEGORY_PROFESSIONAL_COOKING_EQUIPMENT,
-        CATEGORY_SURPLUS,
-        CATEGORY_DELIVERY_TRUCK
-      ];
-      return allergenCategories.includes(this.form.category);
     }
   },
   methods: {

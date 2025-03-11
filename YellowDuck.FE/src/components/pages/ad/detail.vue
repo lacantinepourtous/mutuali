@@ -143,17 +143,6 @@
       <detail-partial-storage-space v-if="ad.category === CATEGORY_STORAGE_SPACE" :ad="ad" />
       <detail-partial-other v-if="isMiscCategory" :ad="ad" />
 
-      <div v-if="isAllergenCategory && ad.allergen.length" class="section section--md section--border-top py-6">
-        <h2 class="font-family-base font-weight-bold mb-4">{{ $t("label.ad-allergen") }}</h2>
-        <div class="rm-child-margin">
-          <ul>
-            <li v-for="allergen in ad.allergen" :key="allergen" class="mb-3">
-              {{ getAllergenLabel(allergen) }}
-            </li>
-          </ul>
-        </div>
-      </div>
-
       <div v-if="adAvailability.length && ad.isAvailableForRent" class="section section--md section--border-top py-6">
         <h2 class="font-family-base font-weight-bold mb-4">
           {{ $t("label.availability") }}
@@ -164,18 +153,6 @@
           :view-only="isAdOwnByCurrentUser"
           @update-conversation-message="(v) => (conversationMessage = v)"
         />
-      </div>
-
-      <div v-if="ad.certification.length" class="section section--md section--border-top py-6">
-        <h2 class="font-family-base font-weight-bold mb-4">{{ $t("section-title.certifications") }}</h2>
-        <div class="rm-child-margin">
-          <ul class="equipment-detail__certifications-list">
-            <li v-for="certification in ad.certification" :key="certification" class="equipment-detail__certifications-item">
-              <b-img :src="require('@/assets/icons/checkmark-badge.svg')" alt="" height="20" block></b-img>
-              {{ getCertificationLabel(certification) }}
-            </li>
-          </ul>
-        </div>
       </div>
 
       <div v-if="ad.averageRating > 0" class="section section--md section--border-top my-4">
@@ -246,8 +223,6 @@ import { VUE_APP_MUTUALI_CONTACT_MAIL } from "@/helpers/env";
 import { unpublishAd, publishAd } from "@/services/ad";
 import { AvailabilityWeekday } from "@/mixins/availability-weekday";
 import { PriceDetails } from "@/mixins/price-details";
-import { Certification } from "@/mixins/certification";
-import { Allergen } from "@/mixins/allergen";
 
 import AdCategoryBadge from "@/components/ad/category-badge";
 import AdRatingCarousel from "@/components/ad/rating-carousel";
@@ -265,7 +240,7 @@ import DetailPartialOther from "@/components/ad/detail-partial-other";
 import DetailCalendar from "@/components/ad/detail-calendar";
 
 export default {
-  mixins: [AvailabilityWeekday, PriceDetails, Certification, Allergen],
+  mixins: [AvailabilityWeekday, PriceDetails],
   components: {
     AdCategoryBadge,
     AdRatingCarousel,
@@ -388,16 +363,6 @@ export default {
         CATEGORY_SURPLUS
       ];
       return miscCategories.includes(this.ad.category);
-    },
-    isAllergenCategory() {
-      const allergenCategories = [
-        CATEGORY_PROFESSIONAL_KITCHEN,
-        CATEGORY_PREP_EQUIPMENT,
-        CATEGORY_PROFESSIONAL_COOKING_EQUIPMENT,
-        CATEGORY_SURPLUS,
-        CATEGORY_DELIVERY_TRUCK
-      ];
-      return allergenCategories.includes(this.ad.category);
     }
   },
   methods: {
@@ -657,25 +622,6 @@ query LocalUser {
         flex: 1 1 0;
         margin-bottom: 0;
       }
-    }
-  }
-
-  &__certifications {
-    &-list {
-      list-style-type: none;
-      padding-left: 0;
-      display: flex;
-      flex-wrap: wrap;
-      gap: $spacer / 2;
-    }
-
-    &-item {
-      display: flex;
-      align-items: center;
-      column-gap: $spacer / 2;
-      padding: $spacer / 4 $spacer / 2;
-      border: 1px solid $gray-300;
-      border-radius: 8px;
     }
   }
 }
