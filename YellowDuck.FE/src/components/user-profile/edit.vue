@@ -296,7 +296,7 @@ export default {
     userProfile: {
       immediate: true,
       handler(profile) {
-        if (profile && this.$route.query.action === "validate-phone") {
+        if (profile && this.$route.query.action === "validate-phone" && profile.phoneNumber) {
           this.validatePhoneModal = true;
         }
         if (profile && profile.user.phoneNumberConfirmed) {
