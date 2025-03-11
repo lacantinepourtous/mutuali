@@ -19,7 +19,7 @@ export const PriceDetails = {
         rentPrice: ad.rentPriceToBeDetermined ? this.$t("price.toBeDetermined") : this.$format.formatMoney(ad.rentPrice),
         salePrice: ad.salePriceToBeDetermined ? this.$t("price.toBeDetermined") : this.$format.formatMoney(ad.salePrice),
         rentPriceRange:
-          ad.rentPriceToBeDetermined && ad.rentPriceRange ? `(${this.getRentalPriceRangeLabel(ad.rentPriceRange)})` : "",
+          ad.rentPriceToBeDetermined && ad.rentPriceRange && this.getRentalPriceRangeLabel(ad.rentPriceRange) ? `(${this.getRentalPriceRangeLabel(ad.rentPriceRange)})` : "",
         salePriceRange:
           ad.salePriceToBeDetermined && ad.salePriceRange ? `(${this.getSalePriceRangeLabel(ad.salePriceRange)})` : "",
         rentPriceToBeDetermined: ad.rentPriceToBeDetermined,

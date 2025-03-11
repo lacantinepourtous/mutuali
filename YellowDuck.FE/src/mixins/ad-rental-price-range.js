@@ -20,7 +20,8 @@ export const AdRentalPriceRange = {
   },
   methods: {
     getRentalPriceRangeLabel: function (priceRange) {
-      return this.rentalPriceRangeOptions.filter((x) => x.value === priceRange).first().text;
+      var label = this.rentalPriceRangeOptions.filter((x) => x.value === priceRange).first();
+      return label ? label.text : "";
     }
   }
 };
