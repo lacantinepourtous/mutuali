@@ -5,16 +5,16 @@
         <div class="table__content">
           <table class="table__table">
             <slot name="caption">
-              <caption v-if="this.caption">
+              <caption v-if="caption">
                 {{
-                  this.caption
+                  caption
                 }}
               </caption>
             </slot>
             <thead>
               <tr>
                 <th
-                  v-for="(col, index) in this.cols"
+                  v-for="(col, index) in cols"
                   :key="index"
                   scope="col"
                   class="px-4 py-3"
@@ -25,7 +25,7 @@
               </tr>
             </thead>
             <tbody>
-              <tr v-for="(item, index) in this.items" :key="index">
+              <tr v-for="(item, index) in items" :key="index">
                 <slot :item="item" />
               </tr>
             </tbody>
