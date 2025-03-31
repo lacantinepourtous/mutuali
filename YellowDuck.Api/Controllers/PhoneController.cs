@@ -110,6 +110,7 @@ namespace YellowDuck.Api.Controllers
             if (user != null)
             {
                 var isLocalhost = Request.Host.Host.Contains("localhost");
+                user.PhoneNumberConfirmed = true;
                 await _phoneVerificationService.SetBypass2FATokenForUser(user, Response, isLocalhost);
             }
 
