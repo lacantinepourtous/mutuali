@@ -1,24 +1,23 @@
 <template>
-  <div class="w-100" v-if="contract">
-    <portal v-if="!contractRated" :to="$consts.enums.PORTAL_HEADER">
+  <div class="w-100" v-if="conversation">
+    <portal v-if="!conversationRated" :to="$consts.enums.PORTAL_HEADER">
       <nav-close :to="{ name: $consts.urls.URL_CONVERSATION_DETAIL, params: { id: this.conversationId } }"></nav-close>
     </portal>
 
-    <div v-if="!contractRated">
+    <div v-if="!conversationRated">
       <div class="section section--sm">
-        <h1 class="mt-4 mb-3">{{ $t("page-title.rate-contract") }}</h1>
-        <p>{{ $t("rate-contract.text") }}</p>
+        <h1 class="mt-4 mb-3">{{ $t("page-title.rate-conversation") }}</h1>
+        <p>{{ $t("rate-conversation.text") }}</p>
       </div>
 
-      <s-form @submit="rateContract">
+      <s-form @submit="rateConversation">
         <template v-if="raterIsOwner">
           <div v-show="currentStep === $consts.ratingSteps.STEP_TENANT" class="rating-step">
             <div class="section section--sm mt-4">
-              <h2 class="font-family-base font-weight-bold mb-4">{{ $t("rate-contract.rate-tennant-title") }}</h2>
+              <h2 class="font-family-base font-weight-bold mb-4">{{ $t("rate-conversation.rate-tennant-title") }}</h2>
             </div>
             <hr class="my-0" />
-            <!-- TODO : Add profile img to user-profile-snippet props -->
-            <user-profile-snippet :id="tenant.profile.id" sectionWidth="sm" class="section--border-bottom py-4" />
+            <user-profile-snippet :id="requester.user.profile.id" sectionWidth="sm" class="section--border-bottom py-4" />
             <div class="section section--sm mb-4">
               <div class="mt-4 mb-5">
                 <s-form-rating v-model="rating.user.respect" :label="$t('label.respect-rating')" size="lg" margin="sm" />
@@ -32,7 +31,7 @@
               </div>
 
               <b-button :disabled="isSubmitted" type="submit" variant="primary" size="lg" block>{{
-                $t("btn-rate-contract")
+                $t("btn-rate-conversation")
               }}</b-button>
             </div>
           </div>
@@ -42,7 +41,7 @@
           <div v-show="currentStep === $consts.ratingSteps.STEP_EQUIPEMENT" class="rating-step">
             <div class="section section--sm mt-4">
               <span><small>1/2</small></span>
-              <h2 class="font-family-base font-weight-bold mt-1 mb-4">{{ $t("rate-contract.rate-equipement-title") }}</h2>
+              <h2 class="font-family-base font-weight-bold mt-1 mb-4">{{ $t("rate-conversation.rate-equipement-title") }}</h2>
             </div>
             <hr class="my-0" />
             <ad-snippet
@@ -68,11 +67,11 @@
           <div v-show="currentStep === $consts.ratingSteps.STEP_OWNER" class="rating-step">
             <div class="section section--sm mt-4">
               <span><small>2/2</small></span>
-              <h2 class="font-family-base font-weight-bold mt-1 mb-4">{{ $t("rate-contract.rate-owner-title") }}</h2>
+              <h2 class="font-family-base font-weight-bold mt-1 mb-4">{{ $t("rate-conversation.rate-owner-title") }}</h2>
             </div>
             <hr class="my-0" />
             <!-- TODO : Add profile img to user-profile-snippet props -->
-            <user-profile-snippet :id="owner.profile.id" sectionWidth="sm" hide-rating class="section--border-bottom py-4" />
+            <user-profile-snippet :id="owner.user.profile.id" sectionWidth="sm" hide-rating class="section--border-bottom py-4" />
             <div class="section section--sm mb-4">
               <div class="mt-4 mb-5">
                 <s-form-rating v-model="rating.user.respect" :label="$t('label.respect-rating')" size="lg" margin="sm" />
@@ -89,7 +88,7 @@
                 $t("btn-rate-previous-step")
               }}</b-button>
               <b-button :disabled="isSubmitted" type="submit" variant="primary" size="lg" block>{{
-                $t("btn-rate-contract")
+                $t("btn-rate-conversation")
               }}</b-button>
             </div>
           </div>
@@ -98,8 +97,8 @@
     </div>
     <form-complete
       v-else
-      :title="$t('form-complete.rate-contract.title')"
-      :description="$t('form-complete.rate-contract.description')"
+      :title="$t('form-complete.rate-conversation.title')"
+      :description="$t('form-complete.rate-conversation.description')"
       :image="require('@/assets/icons/checklist-yellow.svg')"
       :ctas="formCompleteCtas"
     />
@@ -117,9 +116,8 @@ import FormComplete from "@/components/generic/form-complete";
 import { CONTENT_LANG_FR } from "@/consts/langs";
 import { URL_CONVERSATION_DETAIL, URL_LIST_AD } from "@/consts/urls";
 import { STEP_EQUIPEMENT, STEP_TENANT } from "@/consts/rating-steps";
-import { CONTRACT_STATUS_CLOSED } from "@/consts/contract-status";
 
-import { rateContract } from "@/services/contract";
+import conversationService from "@/services/conversation";
 
 export default {
   components: {
@@ -159,51 +157,54 @@ export default {
     };
   },
   methods: {
-    rateContract: async function () {
+    rateConversation: async function () {
       this.isSubmitted = true;
       let input = {
-        contractId: this.contractId,
-        adRating: this.rating.ad,
+        userId: this.raterIsOwner ? this.requester.user.id : this.owner.user.id,
+        adId: this.adId,
+        conversationId: this.conversationId,
         userRating: this.rating.user
       };
-      await rateContract(input);
+      
+      if (!this.raterIsOwner) {
+        input.adRating = this.rating.ad;
+      }
+      
+      await conversationService.rateAdAndUser(input);
       window.scrollTo(0, 0);
       this.isSubmitted = false;
     }
   },
   computed: {
-    contractId: function () {
-      return this.$route.params.id.split("-").last();
-    },
     conversationId: function () {
-      return this.contract.conversation.id;
+      return this.$route.params.id;
     },
     adId: function () {
-      return this.contract.conversation.ad.id;
+      return this.conversation.ad.id;
     },
     adOrganization: function () {
-      return this.contract.conversation.ad.organization;
+      return this.conversation.ad.organization;
     },
     adTitle: function () {
-      return this.contract.conversation.ad.translationOrDefault.title;
+      return this.conversation.ad.translationOrDefault.title;
     },
     adImage: function () {
-      return this.contract.conversation.ad.gallery[0];
+      return this.conversation.ad.gallery[0];
     },
-    contractRated: function () {
-      return this.raterIsOwner ? this.hasAlreadyRateUser : Boolean(this.contract.adRating) || this.hasAlreadyRateUser;
-    },
-    tenant: function () {
-      return this.contract.tenant;
+    conversationRated: function () {
+      return this.raterIsOwner ? this.hasAlreadyRateUser : Boolean(this.conversation.adRating && this.conversation.adRating.length > 0) || this.hasAlreadyRateUser;
     },
     owner: function () {
-      return this.contract.owner;
+      return this.conversation.participants.find(p => p.user && p.user.id === this.conversation.ad.user.id);
+    },
+    requester: function () {
+      return this.conversation.participants.find(p => p.user && p.user.id !== this.conversation.ad.user.id);
     },
     raterIsOwner: function () {
-      return this.me.id === this.owner.id;
+      return this.me.id === this.owner.user.id;
     },
     hasAlreadyRateUser: function () {
-      return this.contract.userRatings.some((x) => x.raterUser.id === this.me.id);
+      return this.conversation.userRatings.some((x) => x.raterUser.id === this.me.id);
     }
   },
   apollo: {
@@ -212,21 +213,18 @@ export default {
         return this.$options.query.Me;
       }
     },
-    contract: {
+    conversation: {
       query() {
-        return this.$options.query.ContractById;
+        return this.$options.query.ConversationById;
       },
       variables() {
         return {
-          id: this.contractId,
+          id: this.conversationId,
           language: CONTENT_LANG_FR
         };
       },
       result({ data }) {
         if (data) {
-          if (this.contract.status != CONTRACT_STATUS_CLOSED) {
-            this.$router.replace({ name: this.$consts.urls.URL_404 });
-          }
           this.currentStep = this.raterIsOwner ? STEP_TENANT : STEP_EQUIPEMENT;
         }
       }
@@ -236,54 +234,47 @@ export default {
 </script>
 
 <graphql>
-query ContractById($id: ID!, $language: ContentLanguage!) {
-  contract(id: $id) {
+query ConversationById($id: ID!, $language: ContentLanguage!) {
+  conversation(id: $id) {
     id
-    status
-    conversation {
+    ad {
       id
-      ad {
+      gallery {
         id
-        gallery {
+        src
+        alt
+      }
+      translationOrDefault(language: $language) {
+        id
+        title
+      }
+      user {
+        id
+      }
+      organization
+    }
+    participants {
+      id
+      user {
+        id
+        profile {
           id
-          src
-          alt
+          ... on UserProfileGraphType {
+            publicName
+          }
         }
-        translationOrDefault(language: $language) {
-          id
-          title
-        }
-        user {
-          id
-        }
-        organization
       }
     }
     adRating {
-      id
-    }
-    userRatings {
       id
       raterUser {
         id
       }
     }
-    owner {
+    userRatings {
       id
-      profile {
+      raterUser {
         id
-        ... on UserProfileGraphType {
-          publicName
-        }
-      }
-    }
-    tenant {
-      id
-      profile {
-        id
-        ... on UserProfileGraphType {
-          publicName
-        }
       }
     }
   }

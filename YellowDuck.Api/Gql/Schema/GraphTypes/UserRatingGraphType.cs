@@ -24,19 +24,9 @@ namespace YellowDuck.Api.Gql.Schema.GraphTypes
         public async Task<UserGraphType> User(IAppUserContext ctx)
         {
             var data = await Data;
-
-            return data.Contract != null
+            return data.User != null
                 ? new UserGraphType(data.User)
                 : new UserGraphType(ctx, data.UserId);
-        }
-
-        public async Task<ContractGraphType> Contract(IAppUserContext ctx)
-        {
-            var data = await Data;
-
-            return data.Contract != null
-                ? new ContractGraphType(data.Contract)
-                : new ContractGraphType(ctx, data.ContractId);
         }
 
         public async Task<UserGraphType> RaterUser(IAppUserContext ctx)

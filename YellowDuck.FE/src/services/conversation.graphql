@@ -30,3 +30,14 @@ mutation RemoveConversationNotification($input: RemoveConversationNotificationIn
     count
   }
 }
+
+mutation RateAdAndUser($input: RateAdAndUserInput!) {
+  rateAdAndUser(input: $input) {
+    adRating {
+      id
+    }
+    userRating {
+      id
+    }
+  }
+}

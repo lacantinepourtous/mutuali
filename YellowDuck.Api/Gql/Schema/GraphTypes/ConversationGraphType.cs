@@ -50,5 +50,17 @@ namespace YellowDuck.Api.Gql.Schema.GraphTypes
                 ? new ContractGraphType(data.Contract)
                 : new ContractGraphType(ctx, data.ContractId.Value);
         }
+
+        public async Task<IEnumerable<AdRatingGraphType>> AdRating(IAppUserContext ctx)
+        {
+            var adRatings = await ctx.LoadAdRatingByConversationId(id);
+            return adRatings.Select(x => new AdRatingGraphType(x)).ToList();
+        }
+
+        public async Task<IEnumerable<UserRatingGraphType>> UserRatings(IAppUserContext ctx)
+        {
+            var userRatings = await ctx.LoadUserRatingByConversationId(id);
+            return userRatings.Select(x => new UserRatingGraphType(x)).ToList();
+        }
     }
 }

@@ -731,5 +731,12 @@
   "aria-label.calendar-choose-period": "Choose a period for the selected date",
   "label.calendar-instruction": "Select a date and a period",
   "label.calendar-selection": "Selected date(s)",
-  "btn.remove-date": "Remove this date"
+  "btn.remove-date": "Remove this date",
+  "page-title.rate-conversation": "Rate the experience",
+  "rate-conversation.text": "Rate the experience of renting the equipment",
+  "rate-conversation.rate-owner-title": "Rate the owner",
+  "btn-rate-conversation": "Rate",
+  "conversation.btn-rate": "Rate the experience",
+  "rate-conversation.rate-equipement-title": "Rate the equipment",
+  "rate-conversation.rate-tennant-title": "Rate the tenant"
 }

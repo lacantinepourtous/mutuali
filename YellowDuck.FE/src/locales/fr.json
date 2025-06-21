@@ -729,5 +729,12 @@
   "aria-label.calendar-choose-period": "Choisissez une période pour la date sélectionnée",
   "label.calendar-instruction": "Sélectionner une date et une période",
   "label.calendar-selection": "Date(s) sélectionnée(s)",
-  "btn.remove-date": "Retirer cette date"
+  "btn.remove-date": "Retirer cette date",
+  "page-title.rate-conversation": "Évaluer l'expérience",
+  "rate-conversation.text": "Évaluez l'expérience de location de l'équipement",
+  "rate-conversation.rate-owner-title": "Évaluer le propriétaire",
+  "btn-rate-conversation": "Évaluer",
+  "conversation.btn-rate": "Évaluer l'expérience",
+  "rate-conversation.rate-equipement-title": "Évaluer l'équipement",
+  "rate-conversation.rate-tennant-title": "Évaluer le locataire"
 }

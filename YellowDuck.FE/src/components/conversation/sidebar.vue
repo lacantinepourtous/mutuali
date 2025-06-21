@@ -17,6 +17,14 @@
           $t("btn.conversation-sidebar-show-profile", { name: otherParticipantProfile.publicName })
         }}</b-list-group-item>
       </b-list-group>
+
+      <div class="sidebar__rating-buttons" v-if="canRate">
+        <b-button variant="link" class="sidebar__rating-button" @click="rate">
+          <b-icon-star-half class="mr-2" aria-hidden="true"></b-icon-star-half>
+          {{ $t("conversation.btn-rate") }}
+        </b-button>
+      </div>
+
       <a
         class="sidebar__report"
         :href="
@@ -49,6 +57,18 @@ export default {
       default: ""
     }
   },
+  methods: {
+    rate() {
+      if (this.conversation) {
+        this.$router.push({
+          name: this.$consts.urls.URL_RATE,
+          params: { 
+            id: this.conversation.id
+          }
+        });
+      }
+    }
+  },
   computed: {
     contactUsEmail: function() {
       return VUE_APP_MUTUALI_CONTACT_MAIL;
@@ -75,6 +95,9 @@ export default {
       }
 
       return "";
+    },
+    canRate: function() {
+      return this.otherParticipantProfile && this.conversation && this.conversation.ad;
     }
   },
   apollo: {
@@ -129,6 +152,9 @@ query ConversationById($id: ID!) {
         }
       }
     }
+    ad {
+      id
+    }
   }
 }
 
@@ -181,5 +207,33 @@ query OtherParticipantProfile($id: ID!) {
 .collapsed .when-open,
 .not-collapsed .when-closed {
   display: none;
+}
+
+.sidebar__rating-buttons {
+  display: flex;
+  flex-direction: column;
+  padding: $spacer;
+  border-bottom: 1px solid $gray-200;
+}
+
+.sidebar__rating-button {
+  color: $primary;
+  text-align: left;
+  padding: 0;
+  margin-bottom: $spacer * 0.5;
+  text-decoration: underline;
+  text-decoration-color: transparent;
+  text-decoration-thickness: 2px;
+  transition: color 0.2s ease-in-out, text-decoration 0.2s ease-in-out;
+
+  &:hover {
+    color: $primary;
+    text-decoration-color: currentColor;
+    text-decoration-thickness: 2px;
+  }
+
+  &:last-child {
+    margin-bottom: 0;
+  }
 }
 </style>

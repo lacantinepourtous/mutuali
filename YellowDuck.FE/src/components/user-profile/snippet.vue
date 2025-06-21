@@ -2,22 +2,15 @@
   <div v-if="userProfile" class="user-profile-snippet" :class="{ 'user-profile-snippet--big': isHeading }">
     <div class="section" :class="`section--${sectionWidth}`">
       <div class="user-profile-snippet__inside">
-        <!-- <router-link :to="{ name: $consts.urls.URL_USER_PROFILE_DETAIL, params: { id: id } }">
-          <div class="user-profile-snippet__img-container">
-            <img
-              v-if="profilePicture"
-              class="user-profile-snippet__img"
-              alt=""
-              :src="`${profilePicture}?mode=crop&width=200&height=200`"
-            />
-            <b-icon-person-circle v-else class="user-profile-snippet__img"></b-icon-person-circle>
-            <b-badge v-if="!hideRating && averageRating" class="user-profile-snippet__rating font-weight-bold" variant="warning"
-              ><b-icon-star-fill class="mr-1" /> {{ averageRating }}</b-badge
-            >
-          </div>
-        </router-link> -->
         <div class="user-profile-snippet__content" :class="{ 'user-profile-snippet__content--with-icon': !isHeading }">
-          <b-icon-person-fill v-if="!isHeading" class="user-profile-snippet__icon h4"></b-icon-person-fill>
+          <div class="user-profile-snippet__rating-container">
+            <b-icon-person-fill v-if="!isHeading" class="user-profile-snippet__icon h4"></b-icon-person-fill>
+            <b-badge v-if="!hideRating && averageRating" class="user-profile-snippet__rating font-weight-bold" variant="warning"
+                ><b-icon-star-fill class="mr-1" /> {{ averageRating }}</b-badge
+              >
+          </div>
+          <div>
+
           <component
             :is="titleTag"
             class="m-0"
@@ -36,14 +29,16 @@
           <p v-if="showRegistrationDate" class="m-0 text-primary">
             <small>{{ $t("profile-snipet.member-since", { date: userRegistrationDate }) }}</small>
           </p>
+          
           <p v-if="showPhoneNumber" class="m-0 text-primary">
             <small>{{ userPublicPhoneNumber }}</small>
           </p>
           <p v-if="showEmail" class="m-0 text-primary">
             <small
               ><a :href="`mailto:${userPublicEmail}`">{{ userPublicEmail }}</a></small
-            >
-          </p>
+              >
+            </p>
+          </div>
         </div>
       </div>
     </div>
@@ -197,29 +192,43 @@ export default {
     object-position: center;
   }
 
-  &__rating {
-    position: absolute;
-    bottom: $spacer / -2;
-    right: $spacer / -2;
-  }
-
-  &__content {
-    display: block;
-    flex: 1 1 auto;
-    overflow: hidden;
-    /* padding-left: $spacer; */
-    padding-left: 0;
-
-    &--with-icon {
-      position: relative;
-      padding-left: calc(#{$spacer} + 18px);
-    }
+  &__rating-container {
+    position: relative;
+    flex: 0 0 auto;
+    width: 48px; // Largeur augmentée pour le SVG
+    height: 48px; // Hauteur augmentée pour le SVG
+    overflow: visible; // Permet au badge de déborder
   }
 
   &__icon {
     position: absolute;
-    top: 5px;
-    left: -4px;
+    top: 0;
+    left: 0;
+    width: 48px;
+    height: 48px;
+  }
+
+  &__rating {
+    position: absolute;
+    bottom: -5px;
+    right: -5px;
+    z-index: 1;
+  }
+
+  &__content {
+    display: flex;
+    flex: 1 1 auto;
+    overflow: hidden;
+    /* padding-left: $spacer; */
+    padding-left: 0;
+    align-items: flex-start;
+    gap: $spacer;
+
+    &--with-icon {
+      position: relative;
+      padding-left: 0;
+      overflow: visible;
+    }
   }
 }
 </style>

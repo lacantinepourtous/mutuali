@@ -12,14 +12,6 @@
     <div class="section section--sm mt-3 mt-md-4 mb-5">
       <b-container>
         <b-row>
-          <!--b-col>
-            <b-card class="border-0 rounded-0 text-center" body-class="py-0 pl-0">
-              <b-card-title class="display-4 mb-0 line-height-none">{{ transactionsCount }}</b-card-title>
-              <b-card-text class="text-muted responsive-text">
-                <small>{{ $tc("profile-detail.transactions-count", transactionsCount) }}</small>
-              </b-card-text>
-            </b-card>
-          </b-col-->
           <b-col>
             <b-card class="border-0 rounded-0" body-class="py-0 px-0">
               <b-card-text>
@@ -80,8 +72,8 @@
         </div>
         <ad-no-content v-else class="my-5 py-sm-4" />
       </b-tab>
-      <!-- Disable for Pilote version -->
-      <!--b-tab :active="publishedAds.length == 0">
+      
+      <b-tab :active="publishedAds.length == 0">
         <template #title>
           <span class="profile-tabs__nav-item-title">{{ $t("profile-detail.reviews") }}</span>
           <b-badge class="ml-1 font-weight-bold"> {{ ratings.length }} </b-badge>
@@ -96,15 +88,14 @@
             <p>{{ $t("profile-detail.no-reviews") }}</p>
           </div>
         </div>
-      </b-tab-->
+      </b-tab>
     </b-tabs>
   </div>
 </template>
 
 <script>
-/* Disable for Pilote version */
-/*import Rate from "@/components/rating/rate";*/
-/*import RatingCard from "@/components/rating/card.vue";*/
+import Rate from "@/components/rating/rate";
+import RatingCard from "@/components/rating/card.vue";
 
 import dayjs from "dayjs";
 
@@ -121,9 +112,8 @@ import { VUE_APP_MUTUALI_CONTACT_MAIL } from "@/helpers/env";
 export default {
   mixins: [RatingsCriterias, PriceDetails],
   components: {
-    /* Disable for Pilote version */
-    /*RatingCard*/
-    /*Rate,*/
+    RatingCard,
+    Rate,
     UserProfileSnippet,
     AdNoContent,
     AdSnippet
