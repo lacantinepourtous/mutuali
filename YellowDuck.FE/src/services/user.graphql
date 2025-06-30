@@ -104,6 +104,12 @@ mutation UpdateUserProfile($input: UpdateUserProfileInput!) {
   }
 }
 
+mutation DeleteUserProfile($input: DeleteUserProfileInput!) {
+  deleteUserProfile(input: $input) {
+    success
+  }
+}
+
 mutation CompleteAdminRegistration($input: CompleteAdminRegistrationInput!) {
   completeAdminRegistration(input: $input) {
     user {
