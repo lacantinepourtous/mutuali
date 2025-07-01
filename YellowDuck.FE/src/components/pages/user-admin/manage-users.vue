@@ -71,7 +71,7 @@
           <b-button type="button" variant="outline-primary" @click="cancel()">{{
             $t("modal.delete-user-profile.label-cancel")
           }}</b-button>
-          <b-button type="button" variant="danger" @click="handleDeleteUserProfile(currentUser.id)">{{
+          <b-button class="ml-2" type="button" variant="danger" @click="handleDeleteUserProfile(currentUser.id)">{{
             $t("modal.delete-user-profile.label-delete")
           }}</b-button>
         </div>
@@ -138,8 +138,7 @@ export default {
       this.$apollo.queries.users.refresh();
     },
     async handleDeleteUserProfile(userId) {
-      // eslint-disable-next-line no-console
-      console.log("deleteUserProfile", UserService.deleteUserProfile);
+      this.$refs.deleteUserProfileModal.hide();
       await UserService.deleteUserProfile(userId);
       NotificationService.showSuccess(this.$t("notification.user-deleted"));
       this.$apollo.queries.users.refresh();
