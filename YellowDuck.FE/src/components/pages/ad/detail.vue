@@ -165,11 +165,11 @@
         <div class="small rm-child-margin" v-html="$t('text.ad-disclaimers')"></div>
       </div>
       <div v-if="ad.isPublish" class="fab-container__fab section section--md">
-        <b-button v-if="!isAdOwnByCurrentUser" variant="admin" size="lg" class="text-truncate" block @click="contactUser">
+        <b-button v-if="!isAdOwnByCurrentUser && !isAdmin" variant="admin" size="lg" class="text-truncate" block @click="contactUser">
           <b-icon icon="envelope" class="mr-1" aria-hidden="true"></b-icon>
           {{ $t("btn.contact-owner", { owner: ad.user.profile.publicName }) }}
         </b-button>
-        <template v-else-if="isAdOwnByCurrentUser">
+        <template v-else-if="isAdOwnByCurrentUser || isAdmin">
           <b-button variant="primary" size="lg" class="text-truncate" block @click="editAd">
             <b-icon icon="pencil" class="mr-1" aria-hidden="true"></b-icon>
             {{ $t("btn.edit-ad") }}
@@ -184,11 +184,11 @@
         </template>
       </div>
       <div v-else class="fab-container__fab section section--md section--padding-x bg-light py-3">
-        <p v-if="isAdOwnByCurrentUser && haveJustUnpublish">
+        <p v-if="(isAdOwnByCurrentUser || isAdmin) && haveJustUnpublish">
           {{ $t("text.ad-notpublish-owner") }}
         </p>
         <p v-else>{{ $t("text.ad-notpublish") }}</p>
-        <template v-if="isAdOwnByCurrentUser">
+        <template v-if="isAdOwnByCurrentUser || isAdmin">
           <b-button variant="primary" size="sm" class="text-truncate mr-2" @click="publishAd">
             {{ $t("btn.publish-ad") }}
           </b-button>
