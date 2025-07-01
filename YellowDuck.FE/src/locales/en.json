@@ -664,7 +664,7 @@
   "label.forTrade": "For trade",
   "label.forDonation": "For donation",
   "validator.atLeastOneChecked": "At least one option must be checked",
-  "sr.upload-files": "Upload files",
+  "sr.upload-files": "Attach file",
   "label.drop-files": "Drop files here",
   "notification.conversation-no-dangerous-files": "Some selected files are not allowed. They have been ignored.",
   "notification.conversation-file-size-limit": "The maximum size of a message is 100 MB. File(s) exceeding this size have been ignored.",
