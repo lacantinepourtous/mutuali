@@ -10,8 +10,8 @@
     </b-nav-text>
     <b-sidebar sidebar-class="border-top bg-white" id="conversation" right backdrop no-header>
       <b-list-group v-if="otherParticipantProfile" flush class="border-bottom text-primary">
-        <b-list-group-item class="px-0" disabled>
-          <user-profile-snippet :id="otherParticipantProfile.id" :has-link="false" no-border :showUnderline="false" />
+        <b-list-group-item class="p-0" disabled>
+          <user-profile-snippet class="user-profile-snippet" :id="otherParticipantProfile.id" :has-link="false" no-border :showUnderline="false" />
         </b-list-group-item>
         <b-list-group-item :to="{ name: $consts.urls.URL_USER_PROFILE_DETAIL, params: { id: otherParticipantProfile.id } }">{{
           $t("btn.conversation-sidebar-show-profile", { name: otherParticipantProfile.publicName })
@@ -181,5 +181,12 @@ query OtherParticipantProfile($id: ID!) {
 .collapsed .when-open,
 .not-collapsed .when-closed {
   display: none;
+}
+</style>
+
+<style lang="scss" scoped>
+.user-profile-snippet {
+  background-color: $green-lighter;
+  padding: 16px 14px;
 }
 </style>

@@ -1,18 +1,18 @@
 <template>
   <div>
-    <div v-if="haveHtmlContent(ad.translationOrDefault.surfaceDescription)" class="section section--md section--border-top py-6">
+    <div v-if="haveHtmlContent(ad.translationOrDefault.surfaceDescription)" class="border-top border-grey py-6">
       <h2 class="font-family-base font-weight-bold mb-4">{{ $t("label.ad-surfaceDescription") }}</h2>
       <div class="rm-child-margin" v-html="ad.translationOrDefault.surfaceDescription"></div>
     </div>
-    <div v-if="haveHtmlContent(ad.translationOrDefault.description)" class="section section--md section--border-top py-6">
+    <div v-if="haveHtmlContent(ad.translationOrDefault.description)" class="border-top border-grey py-6">
       <h2 class="font-family-base font-weight-bold mb-4">{{ $t("label.ad-description") }}</h2>
       <div class="rm-child-margin" v-html="ad.translationOrDefault.description"></div>
     </div>
-    <div v-if="haveHtmlContent(ad.translationOrDefault.conditions)" class="section section--md section--border-top py-6">
+    <div v-if="haveHtmlContent(ad.translationOrDefault.conditions)" class="border-top border-grey py-6">
       <h2 class="font-family-base font-weight-bold mb-4">{{ $t("label.ad-conditions") }}</h2>
       <div class="rm-child-margin" v-html="ad.translationOrDefault.conditions"></div>
     </div>
-    <div v-if="ad.professionalKitchenEquipment.length" class="section section--md section--border-top py-6">
+    <div v-if="ad.professionalKitchenEquipment.length" class="border-top border-grey py-6">
       <h2 class="font-family-base font-weight-bold mb-4">{{ $t("label.ad-equipments-inclusions") }}</h2>
       <div class="rm-child-margin">
         <ul>
@@ -30,7 +30,7 @@
         </ul>
       </div>
     </div>
-    <div v-if="ad.certification.length" class="section section--md section--border-top py-6">
+    <div v-if="ad.certification.length" class="border-top border-grey py-6">
       <h2 class="font-family-base font-weight-bold mb-4">{{ $t("section-title.certifications") }}</h2>
       <div class="rm-child-margin">
         <ul class="equipment-detail__certifications-list">
@@ -41,7 +41,7 @@
         </ul>
       </div>
     </div>
-    <div v-if="ad.allergen.length" class="section section--md section--border-top py-6">
+    <div v-if="ad.allergen.length" class="border-top border-grey py-6">
       <h2 class="font-family-base font-weight-bold mb-4">{{ $t("label.ad-allergen") }}</h2>
       <div class="rm-child-margin">
         <ul>

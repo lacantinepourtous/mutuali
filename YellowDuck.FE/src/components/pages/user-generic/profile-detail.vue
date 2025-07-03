@@ -1,47 +1,26 @@
 <template>
   <div v-if="userProfile" class="w-100 mt-3 mt-md-5">
-    <user-profile-snippet
-      :id="userProfile.id"
-      :hasLink="false"
-      isHeading
-      titleTag="h1"
-      showContactInfo
-      sectionWidth="sm"
-      class="my-4"
-    />
-    <div class="section section--sm mt-3 mt-md-4 mb-5">
-      <b-container>
-        <b-row>
-          <!--b-col>
-            <b-card class="border-0 rounded-0 text-center" body-class="py-0 pl-0">
-              <b-card-title class="display-4 mb-0 line-height-none">{{ transactionsCount }}</b-card-title>
-              <b-card-text class="text-muted responsive-text">
-                <small>{{ $tc("profile-detail.transactions-count", transactionsCount) }}</small>
-              </b-card-text>
-            </b-card>
-          </b-col-->
-          <b-col>
-            <b-card class="border-0 rounded-0" body-class="py-0 px-0">
-              <b-card-text>
-                <p class="display-4 mb-1 font-weight-bolder text-green-dark">{{ registeredSince }}</p>
-                <small class="text-muted responsive-text">{{ $t("profile-detail.registered-since") }}</small>
-              </b-card-text>
-              <b-card-text v-if="!isCurrentUser">
-                <a
-                  class="user__report"
-                  :href="`mailto:${contactUsEmail}?subject=${$t('email.report-user-subject')}&body=${$t(
-                    'email.report-user-body',
-                    {
-                      url: urlForReport
-                    }
-                  )}`"
-                  >{{ $t("btn.report-user-ad") }}</a
-                >
-              </b-card-text>
-            </b-card>
-          </b-col>
-        </b-row>
-      </b-container>
+    <div class="section section--sm my-4">
+      <user-profile-snippet
+        :id="userProfile.id"
+        :hasLink="false"
+        isHeading
+        titleTag="h1"
+        showContactInfo
+        sectionWidth="sm"
+        class="mb-2"
+      />
+      <a
+        v-if="!isCurrentUser"
+        class="user__report"
+        :href="`mailto:${contactUsEmail}?subject=${$t('email.report-user-subject')}&body=${$t(
+          'email.report-user-body',
+          {
+            url: urlForReport
+          }
+        )}`"
+        >{{ $t("btn.report-user-ad") }}</a
+      >
     </div>
 
     <b-tabs
