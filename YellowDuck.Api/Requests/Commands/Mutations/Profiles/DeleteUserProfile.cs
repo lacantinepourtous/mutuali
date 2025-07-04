@@ -24,13 +24,13 @@ namespace YellowDuck.Api.Requests.Commands.Mutations.Profiles
         {
             var userId = request.UserId.IdentifierForType<AppUser>();
 
-            var userProfile = await db.UserProfiles.Include(x => x.User).FirstOrDefaultAsync(x => x.UserId == userId, cancellationToken);
+            var user = await db.Users.FirstOrDefaultAsync(x => x.Id == userId, cancellationToken);
 
-            if (userProfile == null) throw new UserNotFoundException();
+            if (user == null) throw new UserNotFoundException();
 
-            db.Users.Remove(userProfile.User);
+            db.Users.Remove(user);
             // db.UserProfiles.Remove(userProfile);
-            
+
             await db.SaveChangesAsync(cancellationToken);
 
             return new Payload()
