@@ -51,6 +51,15 @@ namespace YellowDuck.Api.Gql.Schema
             return mediator.Send(input.Value);
         }
 
+        [ApplyPolicy(AuthorizationPolicies.IsAdmin)]
+        [AnnotateErrorCodes(typeof(DeleteUserProfile))]
+        public Task<DeleteUserProfile.Payload> DeleteUserProfile(
+            [Inject] IMediator mediator,
+            NonNull<DeleteUserProfile.Input> input)
+        {
+            return mediator.Send(input.Value);
+        }
+
         [ApplyPolicy(AuthorizationPolicies.LoggedIn)]
         [AnnotateErrorCodes(typeof(AcceptTos))]
         public Task<AcceptTos.Payload> AcceptTos(
