@@ -11,6 +11,8 @@
           :image="adImage"
           :price-details="getPriceDetailsFromAd(ad)"
           :organization="adOrganization"
+          :isLocked="ad.locked"
+          :isPublished="ad.isPublish"
           snippet-is-link
         />
       </div>
@@ -168,6 +170,8 @@ query AdById($id: ID!, $language: ContentLanguage!) {
     rentPriceToBeDetermined
     salePriceToBeDetermined
     organization
+    isPublish
+    locked
   }
 }
 </graphql>

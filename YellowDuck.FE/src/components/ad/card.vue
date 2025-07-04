@@ -27,7 +27,7 @@
         block
       ></b-img>
       <div v-if="!isPublished" class="mutuali-ad-card__unpublished-badge">
-        <span class="mutuali-ad-card__unpublished-text">NON-PUBLIÉ</span>
+        <span class="mutuali-ad-card__unpublished-text">{{ isLocked ? $t('label.ad-blocked') : $t('label.ad-unpublished') }}</span>
       </div>
     </div>
     <div class="mutuali-ad-card__text">
@@ -136,6 +136,9 @@ export default {
     },
     isPublished: function () {
       return this.ad.isPublish;
+    },
+    isLocked: function () {
+      return this.ad.locked;
     },
     adPriceDetails: function () {
       return this.getPriceDetailsFromAd(this.ad);

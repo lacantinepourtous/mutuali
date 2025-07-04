@@ -317,6 +317,8 @@
   "title.manage-my-ads": "Manage my ads",
   "title.ad-publish": "Published",
   "title-ad-unpublish": "Unpublished",
+  "label.ad-unpublished": "Unpublished",
+  "label.ad-blocked": "Blocked",
   "text.ad-notpublish-owner": "This ad will be unpublished and will no longer appear on the map.",
   "label.postalCode": "Postal Code",
   "validator.postal-code": "Postal code must be in A1B 2C3 format",

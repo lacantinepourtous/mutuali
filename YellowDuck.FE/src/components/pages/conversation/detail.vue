@@ -16,6 +16,8 @@
           :conversationId="conversationId"
           :canCreateContract="canCreateContract"
           :isAccountOnboardingComplete="isAccountOnboardingComplete"
+          :isLocked="ad.locked"
+          :isPublished="ad.isPublish"
           smallTitle
           noWrapTitle
           snippetIsLink
@@ -261,6 +263,8 @@ query ConversationById($id: ID!, $language: ContentLanguage!) {
         id
       }
       organization
+      isPublish
+      locked
     }
   }
 }

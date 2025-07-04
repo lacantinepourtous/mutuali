@@ -8,7 +8,7 @@
           <div v-if="imageSrc" class="ui-snippet__img-container">
         <img class="ui-snippet__img" :src="`${imageSrc}?mode=crop&width=200&height=200`" :alt="imageAlt ? imageAlt : ''" />
         <div v-if="isAdminOnly" class="ui-snippet__overlay-admin"></div>
-        <div v-if="isUnpublished" class="ui-snippet__overlay-unpublished"></div>
+        <div v-if="!isPublished" class="ui-snippet__overlay-unpublished"></div>
         <b-img
           v-if="isAdminOnly"
           class="ui-snippet__icon-invisible"
@@ -17,8 +17,8 @@
           height="30"
           block
         ></b-img>
-        <div v-if="isUnpublished" class="ui-snippet__unpublished-badge">
-          <span class="ui-snippet__unpublished-text">NON-PUBLIÉ</span>
+        <div v-if="!isPublished" class="ui-snippet__unpublished-badge">
+          <span class="ui-snippet__unpublished-text">{{ isLocked ? $t('label.ad-blocked') : $t('label.ad-unpublished') }}</span>
         </div>
       </div>
 
@@ -88,7 +88,8 @@ export default {
     noWrapTitle: Boolean,
     hideActions: Boolean,
     isAdminOnly: Boolean,
-    isUnpublished: Boolean
+    isPublished: Boolean,
+    isLocked: Boolean
   }
 };
 </script>

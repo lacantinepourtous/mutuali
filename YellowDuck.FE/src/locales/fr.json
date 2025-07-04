@@ -318,6 +318,8 @@
   "title.manage-my-ads": "Gérer mes annonces",
   "title.ad-publish": "Publiées",
   "title-ad-unpublish": "Non publiées",
+  "label.ad-unpublished": "Non-publiée",
+  "label.ad-blocked": "Bloquée",
   "text.ad-notpublish-owner": "Cette annonce sera dépubliée et n'apparaîtra plus sur la carte.",
   "label.postalCode": "Code postal",
   "validator.postal-code": "Le code postal doit être au format A1B 2C3",

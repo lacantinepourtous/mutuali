@@ -274,6 +274,7 @@ query Ads(
     salePriceToBeDetermined
     organization
     isPublish
+    locked
   }
 }
 
