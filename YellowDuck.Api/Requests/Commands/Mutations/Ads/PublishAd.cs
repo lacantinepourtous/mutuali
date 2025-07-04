@@ -36,6 +36,11 @@ namespace YellowDuck.Api.Requests.Commands.Mutations.Ads
                 throw new AdNotFoundException();
             }
 
+            if (ad.Locked)
+            {
+                throw new AdLockedException();
+            }
+
             ad.IsPublish = true;
 
             await db.SaveChangesAsync(cancellationToken);
@@ -63,5 +68,6 @@ namespace YellowDuck.Api.Requests.Commands.Mutations.Ads
         public abstract class PublishAdException : RequestValidationException { }
 
         public class AdNotFoundException : PublishAdException { }
+        public class AdLockedException : PublishAdException { }
     }
 }

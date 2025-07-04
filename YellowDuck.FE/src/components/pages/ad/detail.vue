@@ -181,19 +181,32 @@
           <b-button v-if="!ad.isAdminOnly" variant="danger" size="lg" class="text-truncate" block @click="unpublishAd">
             {{ $t("btn.unpublish-ad") }}
           </b-button>
+          <b-button v-if="isAdmin && !ad.locked" variant="warning" size="lg" class="text-truncate" block @click="lockAd">
+            {{ $t("btn.lock-ad") }}
+          </b-button>
+          <b-button v-if="isAdmin && ad.locked" variant="success" size="lg" class="text-truncate" block @click="unlockAd">
+            {{ $t("btn.unlock-ad") }}
+          </b-button>
         </template>
       </div>
       <div v-else class="fab-container__fab section section--md section--padding-x bg-light py-3">
         <p v-if="(isAdOwnByCurrentUser || isAdmin) && haveJustUnpublish">
           {{ $t("text.ad-notpublish-owner") }}
         </p>
+        <p v-else-if="ad.locked">{{ $t("text.ad-locked") }}</p>
         <p v-else>{{ $t("text.ad-notpublish") }}</p>
         <template v-if="isAdOwnByCurrentUser || isAdmin">
-          <b-button variant="primary" size="sm" class="text-truncate mr-2" @click="publishAd">
+          <b-button v-if="!ad.locked" variant="primary" size="sm" class="text-truncate mr-2" @click="publishAd">
             {{ $t("btn.publish-ad") }}
           </b-button>
           <b-button v-if="ad.isAdminOnly" variant="secondary" size="sm" class="text-truncate mr-2" @click="transferAd">
             {{ $t("btn.transfer-ad") }}
+          </b-button>
+          <b-button v-if="isAdmin && !ad.locked" variant="warning" size="sm" class="text-truncate mr-2" @click="lockAd">
+            {{ $t("btn.lock-ad") }}
+          </b-button>
+          <b-button v-if="isAdmin && ad.locked" variant="success" size="sm" class="text-truncate mr-2" @click="unlockAd">
+            {{ $t("btn.unlock-ad") }}
           </b-button>
           <b-button variant="outline-primary" size="sm" class="text-truncate" @click="editAd">
             {{ $t("btn.edit-ad") }}
@@ -220,7 +233,7 @@ import {
 } from "@/consts/categories";
 import { VUE_APP_MUTUALI_CONTACT_MAIL } from "@/helpers/env";
 
-import { unpublishAd, publishAd } from "@/services/ad";
+import { unpublishAd, publishAd, lockAd, unlockAd } from "@/services/ad";
 import { AvailabilityWeekday } from "@/mixins/availability-weekday";
 import { PriceDetails } from "@/mixins/price-details";
 
@@ -394,6 +407,12 @@ export default {
     },
     async publishAd() {
       await publishAd(this.adId);
+    },
+    async lockAd() {
+      await lockAd(this.adId);
+    },
+    async unlockAd() {
+      await unlockAd(this.adId);
     }
   },
   apollo: {
@@ -442,6 +461,7 @@ query AdById($id: ID!, $language: ContentLanguage!) {
     id
     isPublish
     isAdminOnly
+    locked
     isAvailableForRent
     isAvailableForSale
     isAvailableForTrade

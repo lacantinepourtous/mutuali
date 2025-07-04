@@ -31,7 +31,7 @@ namespace YellowDuck.Api.Gql.Schema.GraphTypes
         {
             var data = await Data;
 
-            return data.User != null  
+            return data.User != null
                 ? new UserGraphType(data.User)
                 : new UserGraphType(ctx, data.UserId);
         }
@@ -141,6 +141,8 @@ namespace YellowDuck.Api.Gql.Schema.GraphTypes
         public Task<bool> IsPublish => WithData(x => x.IsPublish);
 
         public Task<bool> IsAdminOnly => WithData(x => x.IsAdminOnly);
+
+        public Task<bool> Locked => WithData(x => x.Locked);
 
         public Task<DateTime?> CreatedAtUTC => WithData(x => x.CreatedAtUTC);
     }

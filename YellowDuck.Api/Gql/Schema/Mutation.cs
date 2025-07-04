@@ -238,7 +238,7 @@ namespace YellowDuck.Api.Gql.Schema
         {
             return mediator.Send(input.Value);
         }
-        
+
         [AnnotateErrorCodes(typeof(CreateStripeAccount))]
         public Task<CreateStripeAccount.Payload> CreateStripeAccount(
             [Inject] IMediator mediator,
@@ -288,6 +288,24 @@ namespace YellowDuck.Api.Gql.Schema
         public Task<TransferAd.Payload> TransferAd(
             [Inject] IMediator mediator,
             NonNull<TransferAd.Input> input)
+        {
+            return mediator.Send(input.Value);
+        }
+
+        [ApplyPolicy(AuthorizationPolicies.IsAdmin)]
+        [AnnotateErrorCodes(typeof(LockAd))]
+        public Task<LockAd.Payload> LockAd(
+            [Inject] IMediator mediator,
+            NonNull<LockAd.Input> input)
+        {
+            return mediator.Send(input.Value);
+        }
+
+        [ApplyPolicy(AuthorizationPolicies.IsAdmin)]
+        [AnnotateErrorCodes(typeof(UnlockAd))]
+        public Task<UnlockAd.Payload> UnlockAd(
+            [Inject] IMediator mediator,
+            NonNull<UnlockAd.Input> input)
         {
             return mediator.Send(input.Value);
         }

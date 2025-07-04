@@ -36,7 +36,7 @@ namespace YellowDuck.Api.DbModel.Entities.Ads
         // Price
         public double? RentPrice { get; set; }
         public bool RentPriceToBeDetermined { get; set; }
-        public PriceRangeRental RentPriceRange {  get; set; }
+        public PriceRangeRental RentPriceRange { get; set; }
         public double? SalePrice { get; set; }
         public bool SalePriceToBeDetermined { get; set; }
         public PriceRangeSale SalePriceRange { get; set; }
@@ -57,6 +57,7 @@ namespace YellowDuck.Api.DbModel.Entities.Ads
 
         public bool IsPublish { get; set; }
         public bool IsAdminOnly { get; set; }
+        public bool Locked { get; set; }
         public DateTime? CreatedAtUTC { get; set; }
     }
 }

@@ -347,6 +347,8 @@
   "btn.unpublish": "Unpublish",
   "btn.publish-ad": "Publish the ad",
   "btn.publish": "Publish",
+  "btn.lock-ad": "Lock ad",
+  "btn.unlock-ad": "Unlock ad",
   "profile-detail.no-ads": "You have not posted any ad.",
   "profile-detail.ads": "Ads",
   "btn.landing-publish": "I have equipment to share",

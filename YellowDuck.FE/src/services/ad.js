@@ -1,5 +1,5 @@
 import Apollo from "@/graphql/vue-apollo";
-import { CreateAd, UpdateAd, UpdateAdTranslation, PublishAd, UnpublishAd, TransferAd } from "./ad.graphql";
+import { CreateAd, UpdateAd, UpdateAdTranslation, PublishAd, UnpublishAd, TransferAd, LockAd, UnlockAd } from "./ad.graphql";
 
 import { CONTENT_LANG_FR } from "@/consts/langs";
 
@@ -226,4 +226,34 @@ async function GetGalleryItems(images) {
   }
 
   return galleryItems;
+}
+
+export async function lockAd(adId) {
+  let mutationInput = {
+    adId
+  };
+
+  let result = await Apollo.instance.defaultClient.mutate({
+    mutation: LockAd,
+    variables: {
+      input: mutationInput
+    }
+  });
+
+  return result;
+}
+
+export async function unlockAd(adId) {
+  let mutationInput = {
+    adId
+  };
+
+  let result = await Apollo.instance.defaultClient.mutate({
+    mutation: UnlockAd,
+    variables: {
+      input: mutationInput
+    }
+  });
+
+  return result;
 }
