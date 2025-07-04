@@ -76,6 +76,7 @@
             sectionWidth="sm"
             smallTitle
             snippetIsLink
+            :is-published="ad.isPublish"
           />
         </div>
         <ad-no-content v-else class="my-5 py-sm-4" />
