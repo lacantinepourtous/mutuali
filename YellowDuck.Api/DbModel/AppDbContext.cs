@@ -118,6 +118,7 @@ namespace YellowDuck.Api.DbModel
                 _.HasMany(x => x.Certifications).WithOne().HasForeignKey(x => x.AdId).OnDelete(DeleteBehavior.Cascade);
                 _.HasMany(x => x.Allergens).WithOne().HasForeignKey(x => x.AdId).OnDelete(DeleteBehavior.Cascade);
                 _.HasOne(x => x.User).WithMany(x => x.Ads).HasForeignKey(x => x.UserId);
+                _.HasIndex(x => new { x.UserId, x.IsPublish });
             });
 
             Configure<Contract>(_ =>
