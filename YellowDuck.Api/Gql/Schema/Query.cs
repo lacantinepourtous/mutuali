@@ -106,7 +106,6 @@ namespace YellowDuck.Api.Gql.Schema
 
         [Description("Details about all the active ads")]
         public async Task<IEnumerable<AdGraphType>> Ads(
-            [Inject] IAppCache cache,
             [Inject] IMediator mediator,
             [Inject] ICurrentUserAccessor currentUserAccessor,
             AdCategory? category = null,
@@ -135,24 +134,13 @@ namespace YellowDuck.Api.Gql.Schema
                 IsAdmin = isAdmin,
             };
 
-            // No cache for admin + show admin only ads
             if (isAdmin)
             {
                 adsQuery.ShowAdminOnly = true;
-                var ads = await mediator.Send(adsQuery);
-                return ads.Select(x => new AdGraphType(x));
             }
 
-            var cacheKey = $"Ads:{currentUserId}-{isAdmin}-{category}-{string.Join(",", dayAvailability.OrderBy(x => x))}-{string.Join(",", eveningAvailability.OrderBy(x => x))}-{string.Join(",", professionalKitchenEquipment.OrderBy(x => x))}-{deliveryTruckType}-{refrigerated}-{canHaveDriver}-{canSharedRoad}";
-
-            return await cache.GetOrAddAsync(cacheKey, async entry =>
-            {
-                entry.SetAbsoluteExpiration(DateTimeOffset.UtcNow.AddMinutes(5));
-                entry.Priority = CacheItemPriority.Low;
-
-                var ads = await mediator.Send(adsQuery);
-                return ads.Select(x => new AdGraphType(x));
-            });
+            var ads = await mediator.Send(adsQuery);
+            return ads.Select(x => new AdGraphType(x));
         }
 
         [Description("Details about a specific alert, identified by it's ID.")]
