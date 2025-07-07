@@ -87,6 +87,8 @@ button,
 .btn-secondary,
 .btn-outline-primary,
 .btn-outline-admin,
+.btn-warning,
+.btn-success,
 .btn-danger,
 .btn-admin,
 .btn-info {
@@ -145,6 +147,22 @@ button,
 .btn-danger {
   &:hover {
     box-shadow: 0px 3px 0px $red-darker;
+  }
+}
+
+.btn-warning {
+  &:hover {
+    background-color: $yellow;
+    border-color: $yellow;
+    box-shadow: 0px 3px 0px $yellow-dark;
+  }
+}
+
+.btn-success {
+  &:hover {
+    background-color: $green;
+    border-color: $green;
+    box-shadow: 0px 3px 0px $green-darker;
   }
 }
 
