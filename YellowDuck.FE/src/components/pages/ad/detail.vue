@@ -33,7 +33,7 @@
       </div>
     </template>
     <div v-else class="mt-4 mb-2">
-      <div class="section section--md my-4">
+      <div class="section section--full-width my-4">
         <breadcrumb :items="breadcrumbs" />
       </div>
 
@@ -50,126 +50,157 @@
         </div>
       </div>
 
-      <div class="section section--md">
-        <div class="mb-n2">
-          <div class="container-fluid">
-            <div class="row align-items-center">
-              <div class="col">
-                <ad-category-badge :category="ad.category" />
+      <div class="layout" :class="isAdOwnByCurrentUser ? 'section section--md' : 'layout--sticky px-4'">
+        <div v-if="!isAdOwnByCurrentUser" class="layout__sticky d-none d-md-block">
+          <div class="layout__sticky-inside grey-box">
+            <user-profile-snippet
+              :id="ad.user.profile.id"
+              show-registration-date
+              hide-organization
+              titleTag="p"
+            />
+            
+            <div class="text-center border-top border-white pt-3">
+              <h2 class="h6 text-uppercase font-weight-bolder mb-1">
+                {{ $t("title.contact-owner") }}
+              </h2>
+              <p class="small mb-2 font-weight-bold mx-3">
+                {{ $t("description.contact-owner") }}
+              </p>
+              <b-button v-if="!isAdOwnByCurrentUser" variant="admin" class="text-truncate d-flex align-items-center justify-content-center" block @click="contactUser">
+                <svg class="mr-2" xmlns="http://www.w3.org/2000/svg" width="27" height="27" viewBox="0 0 27 27" fill="none" aria-hidden="true">
+                  <path fill-rule="evenodd" clip-rule="evenodd" d="M5.22192 5.78931C3.4327 5.78931 1.96973 7.26373 1.96973 9.05429V19.6097C1.96973 21.4002 3.4327 22.8747 5.22192 22.8747H6.46061V25.886L6.46188 25.8873C6.46443 26.2556 6.67852 26.5907 7.01241 26.7475C7.34628 26.9042 7.74008 26.8558 8.02681 26.6238L12.5814 22.876H21.7402C23.5294 22.876 25 21.4016 25 19.6111V9.05565C25 7.26517 23.5294 5.79067 21.7402 5.79067L5.22192 5.78931ZM5.22192 7.70849H21.739C22.4921 7.70849 23.0796 8.28959 23.0796 9.05422V19.6096C23.0796 20.3743 22.4934 20.9553 21.739 20.9553H12.2334C12.0117 20.9566 11.7963 21.0344 11.6243 21.1758L8.37973 23.8469V21.9124L8.381 21.9111C8.37845 21.3822 7.94646 20.9541 7.41759 20.9553H5.22313C4.46998 20.9553 3.89016 20.3755 3.89016 19.6096V9.05421C3.89016 8.28831 4.4687 7.70848 5.22313 7.70848L5.22192 7.70849ZM8.38743 11.1239C8.13383 11.1226 7.88916 11.2233 7.7082 11.403C7.52724 11.5814 7.42529 11.8248 7.42402 12.0796C7.42402 12.3358 7.52469 12.5817 7.70565 12.7627C7.88661 12.9424 8.13257 13.0443 8.38742 13.0431H18.5823C18.8359 13.0418 19.0806 12.9398 19.259 12.7589C19.4387 12.5792 19.5381 12.3345 19.5381 12.0797C19.5355 11.5533 19.1086 11.1264 18.5823 11.1239L8.38743 11.1239ZM8.38743 15.6223C8.13383 15.6211 7.88916 15.7217 7.7082 15.9002C7.52724 16.0798 7.42529 16.3233 7.42402 16.5781C7.42402 16.8343 7.52469 17.0789 7.70565 17.2599C7.88661 17.4408 8.13257 17.5428 8.38742 17.5415H14.3794C14.6356 17.5428 14.8815 17.4408 15.0625 17.2599C15.2435 17.0789 15.3441 16.8342 15.3428 16.5781C15.3416 16.3232 15.2396 16.0798 15.0599 15.9002C14.879 15.7217 14.6343 15.6211 14.3794 15.6223H8.38743Z" fill="#414042"/>
+                </svg>
+                {{ $t("btn.contact-owner") }}
+              </b-button>
+            </div>
+          </div>
+        </div>
+
+        <div class="layout__content" :class="{ 'layout__content--sticky': !isAdOwnByCurrentUser }">
+          <div class="mb-n2">
+            <div class="container-fluid">
+              <div class="row align-items-center">
+                <div class="col">
+                  <ad-category-badge :category="ad.category" />
+                </div>
+                <div class="col col-auto" v-if="!isAdOwnByCurrentUser">
+                  <a
+                    :aria-label="$t('btn.report-ad')"
+                    class="equipment-detail__report btn-link"
+                    :href="`mailto:${contactUsEmail}?subject=${$t('email.report-subject')}&body=${$t('email.report-body', {
+                      url: adUrlForReport
+                    })}`"
+                  >
+                    <b-icon-flag class="mr-sm-2" aria-hidden="true" />
+                    <span class="d-none d-sm-inline">{{ $t("btn.report-ad") }}</span>
+                  </a>
+                </div>
               </div>
-              <div class="col col-auto" v-if="!isAdOwnByCurrentUser">
-                <a
-                  :aria-label="$t('btn.report-ad')"
-                  class="equipment-detail__report btn-link"
-                  :href="`mailto:${contactUsEmail}?subject=${$t('email.report-subject')}&body=${$t('email.report-body', {
-                    url: adUrlForReport
-                  })}`"
+            </div>
+
+            <p class="mt-2 text-uppercase font-weight-bold letter-spacing-wide small">
+              {{ ad.organization }}
+            </p>
+
+            <h1 class="my-4">{{ ad.translationOrDefault.title }}</h1>
+            <ul class="equipment-detail__types">
+              <li v-if="adPriceDetails.isAvailableForRent">
+                <AdTypeCard
+                  :title="$t('label.forRent')"
+                  :price="adPriceDetails.rentPrice"
+                  :price-to-be-determined="adPriceDetails.rentPriceToBeDetermined"
+                  :modality="adPriceDetails.rentPriceDescription"
+                  :footnote="adPriceDetails.rentPriceRange"
                 >
-                  <b-icon-flag class="mr-sm-2" aria-hidden="true" />
-                  <span class="d-none d-sm-inline">{{ $t("btn.report-ad") }}</span>
-                </a>
-              </div>
+                  <b-img :src="require('@/assets/icons/rent.svg')" alt="" height="30" block></b-img>
+                </AdTypeCard>
+              </li>
+              <li v-if="adPriceDetails.isAvailableForSale">
+                <AdTypeCard
+                  :title="$t('label.forSale')"
+                  :price="adPriceDetails.salePrice"
+                  :price-to-be-determined="adPriceDetails.salePriceToBeDetermined"
+                  :modality="adPriceDetails.salePriceDescription"
+                  :footnote="adPriceDetails.salePriceRange"
+                >
+                  <b-img :src="require('@/assets/icons/sale.svg')" alt="" height="30" block></b-img>
+                </AdTypeCard>
+              </li>
+              <li v-if="adPriceDetails.isAvailableForTrade">
+                <AdTypeCard :title="$t('label.forTrade')" :description="adPriceDetails.tradeDescription">
+                  <b-img :src="require('@/assets/icons/trade.svg')" alt="" height="30" block></b-img>
+                </AdTypeCard>
+              </li>
+              <li v-if="adPriceDetails.isAvailableForDonation">
+                <AdTypeCard :title="$t('label.forDonation')" :description="adPriceDetails.donationDescription">
+                  <b-img :src="require('@/assets/icons/donation.svg')" alt="" height="30" block></b-img>
+                </AdTypeCard>
+              </li>
+            </ul>
+          </div>
+
+          <div class="border-top border-grey mt-6">
+            <div class="equipment-detail__location">
+              <p v-if="ad.showAddress">
+                <span class="responsive-text">{{ adAddressReadable }}</span
+                ><br />
+                <b-button variant="link" class="p-0 mr-1 font-weight-bolder" @click="showMap">{{
+                  $t("btn.display-ad-on-map")
+                }}</b-button>
+              </p>
+              <p v-else>
+                <span class="responsive-text">{{ adCity }}</span
+                ><br />
+                <b-button variant="link" class="p-0 mr-1 font-weight-bolder" @click="showMap">{{
+                  $t("btn.display-ad-on-map")
+                }}</b-button>
+                <span class="d-inline-block small align-middle">{{ $t("hint.approximate-location") }}</span>
+              </p>
             </div>
           </div>
 
-          <p class="mt-2 text-uppercase font-weight-bold letter-spacing-wide small">
-            {{ ad.organization }}
-          </p>
-        </div>
-        <h1 class="my-4">{{ ad.translationOrDefault.title }}</h1>
-        <ul class="equipment-detail__types">
-          <li v-if="adPriceDetails.isAvailableForRent">
-            <AdTypeCard
-              :title="$t('label.forRent')"
-              :price="adPriceDetails.rentPrice"
-              :price-to-be-determined="adPriceDetails.rentPriceToBeDetermined"
-              :modality="adPriceDetails.rentPriceDescription"
-              :footnote="adPriceDetails.rentPriceRange"
-            >
-              <b-img :src="require('@/assets/icons/rent.svg')" alt="" height="30" block></b-img>
-            </AdTypeCard>
-          </li>
-          <li v-if="adPriceDetails.isAvailableForSale">
-            <AdTypeCard
-              :title="$t('label.forSale')"
-              :price="adPriceDetails.salePrice"
-              :price-to-be-determined="adPriceDetails.salePriceToBeDetermined"
-              :modality="adPriceDetails.salePriceDescription"
-              :footnote="adPriceDetails.salePriceRange"
-            >
-              <b-img :src="require('@/assets/icons/sale.svg')" alt="" height="30" block></b-img>
-            </AdTypeCard>
-          </li>
-          <li v-if="adPriceDetails.isAvailableForTrade">
-            <AdTypeCard :title="$t('label.forTrade')" :description="adPriceDetails.tradeDescription">
-              <b-img :src="require('@/assets/icons/trade.svg')" alt="" height="30" block></b-img>
-            </AdTypeCard>
-          </li>
-          <li v-if="adPriceDetails.isAvailableForDonation">
-            <AdTypeCard :title="$t('label.forDonation')" :description="adPriceDetails.donationDescription">
-              <b-img :src="require('@/assets/icons/donation.svg')" alt="" height="30" block></b-img>
-            </AdTypeCard>
-          </li>
-        </ul>
-      </div>
-      <div class="section section--md section--border-top section--border-bottom mt-6">
-        <div class="equipment-detail__location">
-          <p v-if="ad.showAddress">
-            <span class="responsive-text">{{ adAddressReadable }}</span
-            ><br />
-            <b-button variant="link" class="p-0 mr-1 font-weight-bolder" @click="showMap">{{
-              $t("btn.display-ad-on-map")
-            }}</b-button>
-          </p>
-          <p v-else>
-            <span class="responsive-text">{{ adCity }}</span
-            ><br />
-            <b-button variant="link" class="p-0 mr-1 font-weight-bolder" @click="showMap">{{
-              $t("btn.display-ad-on-map")
-            }}</b-button>
-            <span class="d-inline-block small align-middle">{{ $t("hint.approximate-location") }}</span>
-          </p>
+          <detail-partial-delivery-truck v-if="ad.category === CATEGORY_DELIVERY_TRUCK" :ad="ad" />
+          <detail-partial-professional-kitchen v-if="ad.category === CATEGORY_PROFESSIONAL_KITCHEN" :ad="ad" />
+          <detail-partial-storage-space v-if="ad.category === CATEGORY_STORAGE_SPACE" :ad="ad" />
+          <detail-partial-other v-if="isMiscCategory" :ad="ad" />
+
+          <div v-if="adAvailability.length && ad.isAvailableForRent" class="border-top border-grey py-6">
+            <h2 class="font-family-base font-weight-bold mb-4">
+              {{ $t("label.availability") }}
+            </h2>
+            <detail-calendar
+              :availability="adAvailability"
+              :restrictions="ad.availabilityRestriction"
+              :view-only="isAdOwnByCurrentUser"
+              @update-conversation-message="(v) => (conversationMessage = v)"
+            />
+          </div>
+
+          <div v-if="ad.averageRating > 0" class="border-top border-grey my-4">
+            <ad-rating-carousel :id="adId" class="mt-4" />
+          </div>
+
+          <div class="border-top border-grey py-6">
+            <h2 class="font-family-base h4 font-weight-bold mb-4">
+              {{ $t("label.ad-disclaimers") }}
+            </h2>
+            <div class="small rm-child-margin" v-html="$t('text.ad-disclaimers')"></div>
+          </div>
+
+          <div v-if="!isAdOwnByCurrentUser" class="user-mobile grey-box d-md-none mx-n2">
+            <user-profile-snippet
+              :id="ad.user.profile.id"
+              show-registration-date
+              hide-organization
+              titleTag="p"
+            />
+          </div>
         </div>
       </div>
-      <user-profile-snippet
-        :id="ad.user.profile.id"
-        show-registration-date
-        hide-organization
-        titleTag="p"
-        class="section--border-bottom py-4"
-      />
-      <detail-partial-delivery-truck v-if="ad.category === CATEGORY_DELIVERY_TRUCK" :ad="ad" />
-      <detail-partial-professional-kitchen v-if="ad.category === CATEGORY_PROFESSIONAL_KITCHEN" :ad="ad" />
-      <detail-partial-storage-space v-if="ad.category === CATEGORY_STORAGE_SPACE" :ad="ad" />
-      <detail-partial-other v-if="isMiscCategory" :ad="ad" />
-
-      <div v-if="adAvailability.length && ad.isAvailableForRent" class="section section--md section--border-top py-6">
-        <h2 class="font-family-base font-weight-bold mb-4">
-          {{ $t("label.availability") }}
-        </h2>
-        <detail-calendar
-          :availability="adAvailability"
-          :restrictions="ad.availabilityRestriction"
-          :view-only="isAdOwnByCurrentUser"
-          @update-conversation-message="(v) => (conversationMessage = v)"
-        />
-      </div>
-
-      <div v-if="ad.averageRating > 0" class="section section--md section--border-top my-4">
-        <ad-rating-carousel :id="adId" class="mt-4" />
-      </div>
-      <div class="section section--md section--border-top py-6">
-        <h2 class="font-family-base h4 font-weight-bold mb-4">
-          {{ $t("label.ad-disclaimers") }}
-        </h2>
-        <div class="small rm-child-margin" v-html="$t('text.ad-disclaimers')"></div>
-      </div>
-      <div v-if="ad.isPublish" class="fab-container__fab section section--md">
-        <b-button v-if="!isAdOwnByCurrentUser" variant="admin" size="lg" class="text-truncate" block @click="contactUser">
-          <b-icon icon="envelope" class="mr-1" aria-hidden="true"></b-icon>
-          {{ $t("btn.contact-owner", { owner: ad.user.profile.publicName }) }}
-        </b-button>
-        <template v-else-if="isAdOwnByCurrentUser">
+     
+      <div v-if="ad.isPublish" class="fab-container__fab" :class="isAdOwnByCurrentUser ? 'section section--md mt-4' : 'px-3'">
+        <template v-if="isAdOwnByCurrentUser">
           <b-button variant="primary" size="lg" class="text-truncate" block @click="editAd">
             <b-icon icon="pencil" class="mr-1" aria-hidden="true"></b-icon>
             {{ $t("btn.edit-ad") }}
@@ -182,8 +213,22 @@
             {{ $t("btn.unpublish-ad") }}
           </b-button>
         </template>
+        <div v-else class="grey-box border-top border-white text-center d-md-none">
+          <h2 class="h6 text-uppercase font-weight-bolder mb-1">
+            {{ $t("title.contact-owner") }}
+          </h2>
+          <p class="small mb-2 font-weight-bold">
+            {{ $t("description.contact-owner") }}
+          </p>
+          <b-button variant="admin" class="text-truncate d-flex align-items-center justify-content-center" block @click="contactUser">
+            <svg class="mr-2" xmlns="http://www.w3.org/2000/svg" width="27" height="27" viewBox="0 0 27 27" fill="none" aria-hidden="true">
+              <path fill-rule="evenodd" clip-rule="evenodd" d="M5.22192 5.78931C3.4327 5.78931 1.96973 7.26373 1.96973 9.05429V19.6097C1.96973 21.4002 3.4327 22.8747 5.22192 22.8747H6.46061V25.886L6.46188 25.8873C6.46443 26.2556 6.67852 26.5907 7.01241 26.7475C7.34628 26.9042 7.74008 26.8558 8.02681 26.6238L12.5814 22.876H21.7402C23.5294 22.876 25 21.4016 25 19.6111V9.05565C25 7.26517 23.5294 5.79067 21.7402 5.79067L5.22192 5.78931ZM5.22192 7.70849H21.739C22.4921 7.70849 23.0796 8.28959 23.0796 9.05422V19.6096C23.0796 20.3743 22.4934 20.9553 21.739 20.9553H12.2334C12.0117 20.9566 11.7963 21.0344 11.6243 21.1758L8.37973 23.8469V21.9124L8.381 21.9111C8.37845 21.3822 7.94646 20.9541 7.41759 20.9553H5.22313C4.46998 20.9553 3.89016 20.3755 3.89016 19.6096V9.05421C3.89016 8.28831 4.4687 7.70848 5.22313 7.70848L5.22192 7.70849ZM8.38743 11.1239C8.13383 11.1226 7.88916 11.2233 7.7082 11.403C7.52724 11.5814 7.42529 11.8248 7.42402 12.0796C7.42402 12.3358 7.52469 12.5817 7.70565 12.7627C7.88661 12.9424 8.13257 13.0443 8.38742 13.0431H18.5823C18.8359 13.0418 19.0806 12.9398 19.259 12.7589C19.4387 12.5792 19.5381 12.3345 19.5381 12.0797C19.5355 11.5533 19.1086 11.1264 18.5823 11.1239L8.38743 11.1239ZM8.38743 15.6223C8.13383 15.6211 7.88916 15.7217 7.7082 15.9002C7.52724 16.0798 7.42529 16.3233 7.42402 16.5781C7.42402 16.8343 7.52469 17.0789 7.70565 17.2599C7.88661 17.4408 8.13257 17.5428 8.38742 17.5415H14.3794C14.6356 17.5428 14.8815 17.4408 15.0625 17.2599C15.2435 17.0789 15.3441 16.8342 15.3428 16.5781C15.3416 16.3232 15.2396 16.0798 15.0599 15.9002C14.879 15.7217 14.6343 15.6211 14.3794 15.6223H8.38743Z" fill="#414042"/>
+            </svg>
+            {{ $t("btn.contact-owner") }}
+          </b-button>
+        </div>
       </div>
-      <div v-else class="fab-container__fab section section--md section--padding-x bg-light py-3">
+      <div v-else class="fab-container__fab mt-4" :class="isAdOwnByCurrentUser ? 'section section--md' : 'px-3'">
         <p v-if="isAdOwnByCurrentUser && haveJustUnpublish">
           {{ $t("text.ad-notpublish-owner") }}
         </p>
@@ -529,7 +574,41 @@ query LocalUser {
 }
 </graphql>
 
-<style lang="scss">
+<style lang="scss" scoped>
+.layout {
+  &--sticky {
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  &__sticky {
+    position: sticky;
+    top: 80px;
+    width: 100%;
+
+    &-inside {
+      position: absolute;
+      top: 0;
+      right: 0;
+      width: 280px;
+    }
+  }
+
+  &__content {
+    &--sticky {
+      @include media-breakpoint-up(md) {
+        width: calc(100% - 340px);
+      }
+    }
+  }
+}
+
+.grey-box {
+  background-color: $green-lighter;
+  border-radius: 8px;
+  padding: 16px 14px;
+}
+
 .equipment-detail {
   & {
     &--modal {
