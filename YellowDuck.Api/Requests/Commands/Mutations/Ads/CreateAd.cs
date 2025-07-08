@@ -50,7 +50,7 @@ namespace YellowDuck.Api.Requests.Commands.Mutations.Ads
 
             var owner = await currentUserAccessor.GetCurrentUser();
 
-            if (owner.PhoneNumberConfirmed == false)
+            if (owner.PhoneNumberConfirmed == false && owner.Type != UserType.Admin)
             {
                 throw new Exception("Phone number is not confirmed");
             }
@@ -138,7 +138,8 @@ namespace YellowDuck.Api.Requests.Commands.Mutations.Ads
             request.AvailabilityRestriction.IfSet(v =>
             {
                 ad.AvailabilityRestrictions = new List<AdAvailabilityRestriction>();
-                v.ForEach(x => ad.AvailabilityRestrictions.Add(new AdAvailabilityRestriction() { 
+                v.ForEach(x => ad.AvailabilityRestrictions.Add(new AdAvailabilityRestriction()
+                {
                     Day = x.Day,
                     Evening = x.Evening,
                     StartDate = x.StartDate,

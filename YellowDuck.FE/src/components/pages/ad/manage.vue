@@ -24,6 +24,7 @@
           show-ad-detail-btn
           show-manage-btn
           :isPublished="ad.isPublish"
+          :isLocked="ad.locked"
           :canTransfer="isAdmin"
           :isAdminOnly="ad.isAdminOnly"
         />
@@ -47,6 +48,7 @@
           show-ad-detail-btn
           show-manage-btn
           :isPublished="ad.isPublish"
+          :isLocked="ad.locked"
           :canTransfer="isAdmin"
           :isAdminOnly="ad.isAdminOnly"
         />
@@ -126,6 +128,7 @@ query UserProfileById($id: ID!, $language: ContentLanguage!) {
       ads {
         id
         isPublish
+        locked
         isAdminOnly
         isAvailableForRent
         isAvailableForSale
