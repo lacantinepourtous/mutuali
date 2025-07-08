@@ -13,6 +13,8 @@
         :mainRoute="{ name: $consts.urls.URL_AD_DETAIL, params: { id: this.id } }"
         :mainRouteLabel="$t('btn.ad-detail')"
         :is-admin-only="isAdminOnly"
+        :is-published="isPublished"
+        :is-locked="isLocked"
       >
         <template v-if="priceDetails" #description>
           <ul class="equipment-snippet__types">
@@ -162,7 +164,14 @@ export default {
     isAccountOnboardingComplete: Boolean,
     showAdDetailBtn: Boolean,
     showManageBtn: Boolean,
-    isPublished: Boolean,
+    isPublished: {
+      type: Boolean,
+      default: true
+    },
+    isLocked: {
+      type: Boolean,
+      default: false
+    },
     isAdminOnly: Boolean,
     canTransfer: Boolean
   },

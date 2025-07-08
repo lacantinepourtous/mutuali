@@ -118,7 +118,11 @@
 
           <div class="equipment-list__list-view-row">
             <div class="equipment-list__list-view-col" v-for="adMarker in adMarkers" :key="adMarker.id">
-              <ad-card class="equipment-list__list-view-card" :ad="adMarker.ad" :distance="adMarker.distance" />
+              <ad-card 
+                class="equipment-list__list-view-card" 
+                :ad="adMarker.ad" 
+                :distance="adMarker.distance"
+              />
             </div>
           </div>
 
@@ -179,7 +183,10 @@
         </template>
       </alert-modal>
       <div class="equipment-list__bottom section section--md">
-        <ad-card v-if="displayAdSnippet && view === CARD_VIEW" :ad="snippetAd" />
+        <ad-card 
+          v-if="displayAdSnippet && view === CARD_VIEW" 
+          :ad="snippetAd"
+        />
         <template v-else-if="isConnected && createAlertModalHidden && adMarkers.length != 0">
           <div v-if="isAdmin" class="mx-4">
             <b-button variant="admin" size="lg" block :to="{ name: $consts.urls.URL_PREPARE_AD }">{{
@@ -266,6 +273,8 @@ query Ads(
     rentPriceToBeDetermined
     salePriceToBeDetermined
     organization
+    isPublish
+    locked
   }
 }
 
@@ -377,7 +386,7 @@ export default {
     resetMarkerIcon() {
       let marker = this.adMarkers.find((x) => this.snippetAd !== null && x.id === this.snippetAd.id);
       if (marker) {
-        marker.icon = require("@/assets/icons/marker-red.svg");
+        marker.icon = marker.originalIcon;
       }
     },
     mapClicked() {
@@ -386,6 +395,7 @@ export default {
     },
     markerClicked(marker) {
       this.resetMarkerIcon();
+      marker.originalIcon = marker.icon;
       marker.icon = require("@/assets/icons/marker-yellow.svg");
       this.snippetAd = marker.ad;
     },
@@ -719,7 +729,6 @@ export default {
         this.snippetAd = null;
         if (data) {
           this.adMarkers = data.ads
-            .filter((x) => x.isPublish)
             .map((x) => {
               let pos = randomPosition(x.address.latitude, x.address.longitude);
               return {
@@ -730,7 +739,7 @@ export default {
                 lng: pos.lng,
                 distance: null,
                 createdTimestamp: new Date(x.createdAtUTC).getTime(),
-                icon: x.isAdminOnly ? require("@/assets/icons/marker-green.svg") : require("@/assets/icons/marker-red.svg")
+                icon: x.isAdminOnly ? require("@/assets/icons/marker-green.svg") : (x.isPublish === false ? require("@/assets/icons/marker-red-unpublished.svg") : require("@/assets/icons/marker-red.svg"))
               };
             });
           this.$gmapApiPromiseLazy().then(() => {

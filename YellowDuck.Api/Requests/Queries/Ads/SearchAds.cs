@@ -8,7 +8,6 @@ using System.Collections.Generic;
 using YellowDuck.Api.DbModel.Entities.Ads;
 using Microsoft.EntityFrameworkCore;
 using YellowDuck.Api.DbModel.Enums;
-using YellowDuck.Api.Services.System;
 
 namespace YellowDuck.Api.Requests.Queries.Ads
 {
@@ -16,7 +15,7 @@ namespace YellowDuck.Api.Requests.Queries.Ads
     {
         private readonly AppDbContext db;
 
-        public SearchAds(AppDbContext db, ICurrentUserAccessor currentUserAccessor)
+        public SearchAds(AppDbContext db)
         {
             this.db = db;
         }
@@ -84,13 +83,32 @@ namespace YellowDuck.Api.Requests.Queries.Ads
                 adsQuery = adsQuery.Where(x => professionalKitchenEquipmentsAdIds.Contains(x.Id));
             }
 
-            if(!query.ShowAdminOnly)
-            {
-                adsQuery = adsQuery.Where(x => x.IsAdminOnly == false);
-            }
+            // Appliquer le filtrage selon le type d'utilisateur
+            adsQuery = ApplyUserAccessFilter(adsQuery, query);
 
             var ads = await adsQuery.ToListAsync(cancellationToken: cancellationToken);
             return ads;
+        }
+
+        /// <summary>
+        /// Applique le filtrage d'accès selon le type d'utilisateur
+        /// </summary>
+        private static IQueryable<Ad> ApplyUserAccessFilter(IQueryable<Ad> query, Query searchQuery)
+        {
+            if (searchQuery.IsAdmin)
+            {
+                // Admin voit TOUT (publiées, non publiées, admin-only)
+                return query;
+            }
+
+            if (searchQuery.CurrentUserId != null)
+            {
+                // Utilisateur connecté : publiées + ses propres non publiées, mais pas admin-only
+                return query.Where(x => (x.IsPublish || x.UserId == searchQuery.CurrentUserId) && !x.IsAdminOnly);
+            }
+
+            // Utilisateur non connecté : seulement publiées et pas admin-only
+            return query.Where(x => x.IsPublish && !x.IsAdminOnly);
         }
 
         public class Query : IRequest<IEnumerable<Ad>>
@@ -104,6 +122,8 @@ namespace YellowDuck.Api.Requests.Queries.Ads
             public bool? CanSharedRoad = null;
             public bool? CanHaveDriver = null;
             public bool ShowAdminOnly = false;
+            public string CurrentUserId = null;
+            public bool IsAdmin = false;
         }
 
     }

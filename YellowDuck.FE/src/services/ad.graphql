@@ -48,3 +48,23 @@ mutation TransferAd($input: TransferAdInput!) {
     }
   }
 }
+
+mutation LockAd($input: LockAdInput!) {
+  lockAd(input: $input) {
+    ad {
+      id
+      isPublish
+      locked
+    }
+  }
+}
+
+mutation UnlockAd($input: UnlockAdInput!) {
+  unlockAd(input: $input) {
+    ad {
+      id
+      isPublish
+      locked
+    }
+  }
+}

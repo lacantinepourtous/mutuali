@@ -100,24 +100,26 @@ namespace YellowDuck.Api.Gql.Schema
         public async Task<AdGraphType> Ad(IAppUserContext ctx, Id id)
         {
             var ad = await ctx.LoadAd(id.LongIdentifierForType<Ad>());
-            if(ad == null) return null;
+            if (ad == null) return null;
             return new AdGraphType(ad);
         }
 
         [Description("Details about all the active ads")]
         public async Task<IEnumerable<AdGraphType>> Ads(
-            [Inject] IAppCache cache, 
             [Inject] IMediator mediator,
-[Inject] ICurrentUserAccessor currentUserAccessor,
-            AdCategory? category = null, 
+            [Inject] ICurrentUserAccessor currentUserAccessor,
+            AdCategory? category = null,
             IList<DayOfWeek> dayAvailability = null,
-            IList<DayOfWeek> eveningAvailability = null, 
+            IList<DayOfWeek> eveningAvailability = null,
             IList<ProfessionalKitchenEquipment> professionalKitchenEquipment = null,
-            DeliveryTruckType? deliveryTruckType = null, 
-            bool? refrigerated = null, 
-            bool? canSharedRoad = null, 
+            DeliveryTruckType? deliveryTruckType = null,
+            bool? refrigerated = null,
+            bool? canSharedRoad = null,
             bool? canHaveDriver = null)
         {
+            var isAdmin = currentUserAccessor.IsUserType(UserType.Admin);
+            var currentUserId = currentUserAccessor.GetCurrentUserId();
+
             var adsQuery = new SearchAds.Query
             {
                 Category = category,
@@ -128,23 +130,17 @@ namespace YellowDuck.Api.Gql.Schema
                 Refrigerated = refrigerated,
                 CanHaveDriver = canHaveDriver,
                 CanSharedRoad = canSharedRoad,
+                CurrentUserId = currentUserId,
+                IsAdmin = isAdmin,
             };
 
-            // No cache for admin + show admin only ads
-            if (currentUserAccessor.IsUserType(UserType.Admin)) {
+            if (isAdmin)
+            {
                 adsQuery.ShowAdminOnly = true;
-                var ads = await mediator.Send(adsQuery);
-                return ads.Select(x => new AdGraphType(x));
             }
 
-            return await cache.GetOrAddAsync($"Ads:{category}-{string.Join(",", dayAvailability.OrderBy(x => x))}-{string.Join(",", eveningAvailability.OrderBy(x => x))}-{string.Join(",", professionalKitchenEquipment.OrderBy(x => x))}-{deliveryTruckType}-{refrigerated}-{canHaveDriver}-{canSharedRoad}", async entry =>
-            {
-                entry.SetAbsoluteExpiration(DateTimeOffset.UtcNow.AddMinutes(5));
-                entry.Priority = CacheItemPriority.Low;
-
-                var ads = await mediator.Send(adsQuery);
-                return ads.Select(x => new AdGraphType(x));
-            });
+            var ads = await mediator.Send(adsQuery);
+            return ads.Select(x => new AdGraphType(x));
         }
 
         [Description("Details about a specific alert, identified by it's ID.")]

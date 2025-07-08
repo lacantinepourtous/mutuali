@@ -76,6 +76,8 @@
             sectionWidth="sm"
             smallTitle
             snippetIsLink
+            :is-published="ad.isPublish"
+            :is-locked="ad.locked"
           />
         </div>
         <ad-no-content v-else class="my-5 py-sm-4" />
@@ -213,6 +215,7 @@ query UserProfileById($id: ID!, $language: ContentLanguage!) {
       ads {
         id
         isPublish
+        locked
         isAvailableForRent
         isAvailableForSale
         isAvailableForTrade
