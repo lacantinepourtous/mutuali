@@ -41,8 +41,19 @@ export default {
       onChange(onChangeAction) {
         if (typeof onChangeAction === "function") {
           window.addEventListener("cc_userConsentSaved", (function () {
-            window.console.log("User consent saved: ", cookieConsent.userConsent.acceptedLevels);
-            onChangeAction(cookieConsent.userConsent.acceptedLevels);
+            if (cookieConsent && cookieConsent.userConsent && cookieConsent.userConsent.acceptedLevels) {
+              window.console.log("User consent saved: ", cookieConsent.userConsent.acceptedLevels);
+              onChangeAction(cookieConsent.userConsent.acceptedLevels);
+            } else {
+              // Fallback: utiliser la méthode hasConsent pour récupérer les niveaux de consentement
+              const acceptedLevels = {};
+              const consentLevels = ["strictly-necessary", "functionality", "tracking", "targeting"];
+              consentLevels.forEach(level => {
+                acceptedLevels[level] = this.hasConsent(level);
+              });
+              window.console.log("User consent saved (fallback): ", acceptedLevels);
+              onChangeAction(acceptedLevels);
+            }
           }).bind(this));
         }
       }
