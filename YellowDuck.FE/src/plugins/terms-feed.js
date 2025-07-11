@@ -1,38 +1,54 @@
 export default {
   install(Vue, options) {
-    var defaultOptions = {
+    const defaultOptions = {
       noticeBannerType: "simple",
       consentType: "express",
       palette: "light",
       language: "en",
-      pageLoadConsentLevles: ["strictly-necessary", "functionality"],
+      pageLoadConsentLevels: ["strictly-necessary", "functionality"],
       noticeBannerRejectButtonHide: false,
       preferencesCenterCloseButtonHide: false,
       pageRefreshConfirmationButtons: false,
       websiteName: ""
     };
+
     options = { ...defaultOptions, ...options };
 
-    var cookieConsent = null;
+    let cookieConsent = null;
 
-    // Initialisation directe puisque le script est chargé de manière synchrone dans le head
-    if (window.cookieconsent) {
-      cookieConsent = window.cookieconsent.run({
-        "notice_banner_type": options.noticeBannerType,
-        "consent_type": options.consentType,
-        "palette": options.palette,
-        "language": options.language,
-        "page_load_consent_levels": options.pageLoadConsentLevles,
-        "notice_banner_reject_button_hide": options.noticeBannerRejectButtonHide,
-        "preferences_center_close_button_hide": options.preferencesCenterCloseButtonHide,
-        "page_refresh_confirmation_buttons": options.pageRefreshConfirmationButtons,
-        "website_name": options.websiteName
-      });
-    }
+    const initializeCookieConsent = () => {
+      if (window.cookieconsent) {
+        cookieConsent = window.cookieconsent.run({
+          notice_banner_type: options.noticeBannerType,
+          consent_type: options.consentType,
+          palette: options.palette,
+          language: options.language,
+          page_load_consent_levels: options.pageLoadConsentLevels,
+          notice_banner_reject_button_hide: options.noticeBannerRejectButtonHide,
+          preferences_center_close_button_hide: options.preferencesCenterCloseButtonHide,
+          page_refresh_confirmation_buttons: options.pageRefreshConfirmationButtons,
+          website_name: options.websiteName
+        });
+        return true;
+      }
+      return false;
+    };
+
+    const maxAttempts = 50;
+    const checkInterval = 100;
+    let attempts = 0;
+
+    const checkCookieConsent = () => {
+      attempts++;
+      if (initializeCookieConsent()) return;
+      if (attempts < maxAttempts) setTimeout(checkCookieConsent, checkInterval);
+    };
+
+    checkCookieConsent();
 
     Vue.prototype.$termsFeed = {
-      cookieConsent,
-      hasConsent: this.hasConsent,
+      getCookieConsent: () => cookieConsent,
+      hasConsent,
       openPreferencesCenter() {
         if (cookieConsent) {
           cookieConsent.openPreferencesCenter();
@@ -40,47 +56,40 @@ export default {
       },
       onChange(onChangeAction) {
         if (typeof onChangeAction === "function") {
-          window.addEventListener("cc_userConsentSaved", (function () {
-            if (cookieConsent && cookieConsent.userConsent && cookieConsent.userConsent.acceptedLevels) {
-              window.console.log("User consent saved: ", cookieConsent.userConsent.acceptedLevels);
-              onChangeAction(cookieConsent.userConsent.acceptedLevels);
-            } else {
-              // Fallback: utiliser la méthode hasConsent pour récupérer les niveaux de consentement
-              const acceptedLevels = {};
-              const consentLevels = ["strictly-necessary", "functionality", "tracking", "targeting"];
-              consentLevels.forEach(level => {
-                acceptedLevels[level] = this.hasConsent(level);
-              });
-              window.console.log("User consent saved (fallback): ", acceptedLevels);
+          window.addEventListener("cc_userConsentSaved", () => {
+            const acceptedLevels = cookieConsent && cookieConsent.userConsent && cookieConsent.userConsent.acceptedLevels ? cookieConsent.userConsent.acceptedLevels : {};
+            if (Object.keys(acceptedLevels).length > 0) {
               onChangeAction(acceptedLevels);
+            } else {
+              const fallback = {};
+              const levels = ["strictly-necessary", "functionality", "tracking", "targeting"];
+              levels.forEach(level => {
+                fallback[level] = hasConsent(level);
+              });
+              onChangeAction(fallback);
             }
-          }).bind(this));
+          });
         }
       }
     };
   },
-  hasConsent(consentLevel) {
-    if (window.cookieconsent && window.cookieconsent.cookieConsentObject && window.cookieconsent.cookieConsentObject.userConsent && window.cookieconsent.cookieConsentObject.userConsent.acceptedLevels) {
-      return window.cookieconsent.cookieConsentObject.userConsent.acceptedLevels[consentLevel];
-    }
-    else { // else, read the cookie directly
-      const termsFeedConsentLevel = readCookie("cookie_consent_level");
-
-      let consent = false;
-
-      // Accepted consentLevel param are "strictly-necessary", "functionality", "tracking" and "targeting"
-      if (termsFeedConsentLevel) {
-        const consentString = decodeURIComponent(termsFeedConsentLevel);
-        const startIndex = consentString.indexOf(consentLevel) + consentLevel.length + 2;
-        const consentValueSubstr = consentString.substring(startIndex, startIndex + 5); // should return "true," or "false"
-        consent = consentValueSubstr.includes("true");
-      }
-
-      return consent;
-    }
-
-  }
+  hasConsent
 };
+
+function hasConsent(consentLevel) {
+  const levels = window.cookieconsent && window.cookieconsent.cookieConsentObject && window.cookieconsent.cookieConsentObject.userConsent && window.cookieconsent.cookieConsentObject.userConsent.acceptedLevels;
+  if (levels) return !!levels[consentLevel];
+
+  const termsFeedConsentLevel = readCookie("cookie_consent_level");
+  if (termsFeedConsentLevel) {
+    const decoded = decodeURIComponent(termsFeedConsentLevel);
+    const startIndex = decoded.indexOf(consentLevel) + consentLevel.length + 2;
+    const value = decoded.substring(startIndex, startIndex + 5);
+    return value.includes("true");
+  }
+
+  return false;
+}
 
 function readCookie(name) {
   var nameEQ = name + "=";
