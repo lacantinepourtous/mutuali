@@ -1,54 +1,42 @@
 export default {
   install(Vue, options) {
-    const defaultOptions = {
+    var defaultOptions = {
       noticeBannerType: "simple",
       consentType: "express",
       palette: "light",
       language: "en",
-      pageLoadConsentLevels: ["strictly-necessary", "functionality"],
+      pageLoadConsentLevles: ["strictly-necessary", "functionality"],
       noticeBannerRejectButtonHide: false,
       preferencesCenterCloseButtonHide: false,
       pageRefreshConfirmationButtons: false,
       websiteName: ""
     };
-
     options = { ...defaultOptions, ...options };
 
-    let cookieConsent = null;
+    const script = document.createElement('script');
+    script.src = '/static/vendors/termsfeed-cookie-consent.js';
+    script.async = true;
+    document.body.appendChild(script);
 
-    const initializeCookieConsent = () => {
-      if (window.cookieconsent) {
-        cookieConsent = window.cookieconsent.run({
-          notice_banner_type: options.noticeBannerType,
-          consent_type: options.consentType,
-          palette: options.palette,
-          language: options.language,
-          page_load_consent_levels: options.pageLoadConsentLevels,
-          notice_banner_reject_button_hide: options.noticeBannerRejectButtonHide,
-          preferences_center_close_button_hide: options.preferencesCenterCloseButtonHide,
-          page_refresh_confirmation_buttons: options.pageRefreshConfirmationButtons,
-          website_name: options.websiteName
-        });
-        return true;
-      }
-      return false;
+    var cookieConsent = null;
+
+    script.onload = () => {
+      cookieConsent = window.cookieconsent.run({
+        "notice_banner_type": options.noticeBannerType,
+        "consent_type": options.consentType,
+        "palette": options.palette,
+        "language": options.language,
+        "page_load_consent_levels": options.pageLoadConsentLevles,
+        "notice_banner_reject_button_hide": options.noticeBannerRejectButtonHide,
+        "preferences_center_close_button_hide": options.preferencesCenterCloseButtonHide,
+        "page_refresh_confirmation_buttons": options.pageRefreshConfirmationButtons,
+        "website_name": options.websiteName
+      });
     };
-
-    const maxAttempts = 50;
-    const checkInterval = 100;
-    let attempts = 0;
-
-    const checkCookieConsent = () => {
-      attempts++;
-      if (initializeCookieConsent()) return;
-      if (attempts < maxAttempts) setTimeout(checkCookieConsent, checkInterval);
-    };
-
-    checkCookieConsent();
 
     Vue.prototype.$termsFeed = {
-      getCookieConsent: () => cookieConsent,
-      hasConsent,
+      cookieConsent,
+      hasConsent: this.hasConsent,
       openPreferencesCenter() {
         if (cookieConsent) {
           cookieConsent.openPreferencesCenter();
@@ -56,40 +44,36 @@ export default {
       },
       onChange(onChangeAction) {
         if (typeof onChangeAction === "function") {
-          window.addEventListener("cc_userConsentSaved", () => {
-            const acceptedLevels = cookieConsent && cookieConsent.userConsent && cookieConsent.userConsent.acceptedLevels ? cookieConsent.userConsent.acceptedLevels : {};
-            if (Object.keys(acceptedLevels).length > 0) {
-              onChangeAction(acceptedLevels);
-            } else {
-              const fallback = {};
-              const levels = ["strictly-necessary", "functionality", "tracking", "targeting"];
-              levels.forEach(level => {
-                fallback[level] = hasConsent(level);
-              });
-              onChangeAction(fallback);
-            }
-          });
+          window.addEventListener("cc_userConsentSaved", (function () {
+            window.console.log("User consent saved: ", cookieConsent.userConsent.acceptedLevels);
+            onChangeAction(cookieConsent.userConsent.acceptedLevels);
+          }).bind(this));
         }
       }
     };
   },
-  hasConsent
-};
+  hasConsent(consentLevel) {
+    if (window.cookieconsent && window.cookieconsent.cookieConsentObject && window.cookieconsent.cookieConsentObject.userConsent && window.cookieconsent.cookieConsentObject.userConsent.acceptedLevels) {
+      return window.cookieconsent.cookieConsentObject.userConsent.acceptedLevels[consentLevel];
+    }
+    else { // else, read the cookie directly
+      const termsFeedConsentLevel = readCookie("cookie_consent_level");
 
-function hasConsent(consentLevel) {
-  const levels = window.cookieconsent && window.cookieconsent.cookieConsentObject && window.cookieconsent.cookieConsentObject.userConsent && window.cookieconsent.cookieConsentObject.userConsent.acceptedLevels;
-  if (levels) return !!levels[consentLevel];
+      let consent = false;
 
-  const termsFeedConsentLevel = readCookie("cookie_consent_level");
-  if (termsFeedConsentLevel) {
-    const decoded = decodeURIComponent(termsFeedConsentLevel);
-    const startIndex = decoded.indexOf(consentLevel) + consentLevel.length + 2;
-    const value = decoded.substring(startIndex, startIndex + 5);
-    return value.includes("true");
+      // Accepted consentLevel param are "strictly-necessary", "functionality", "tracking" and "targeting"
+      if (termsFeedConsentLevel) {
+        const consentString = decodeURIComponent(termsFeedConsentLevel);
+        const startIndex = consentString.indexOf(consentLevel) + consentLevel.length + 2;
+        const consentValueSubstr = consentString.substring(startIndex, startIndex + 5); // should return "true," or "false"
+        consent = consentValueSubstr.includes("true");
+      }
+
+      return consent;
+    }
+
   }
-
-  return false;
-}
+};
 
 function readCookie(name) {
   var nameEQ = name + "=";
