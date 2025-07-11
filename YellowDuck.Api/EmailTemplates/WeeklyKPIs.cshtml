@@ -1,190 +1,492 @@
 ﻿@model YellowDuck.Api.EmailTemplates.Models.WeeklyKPIsEmail
-@{ Layout = "_EmailLayout.cshtml"; }
+@{
+    Layout = "_EmailLayout.cshtml";
+}
 
-<p>Bonjour,</p>
-<p>Voici les KPIs à jour</p>
+<style>
+    /* Styles de base compatibles avec les lecteurs de courriel */
+    .kpi-container {
+        font-family: Arial, sans-serif;
+        max-width: 600px;
+        margin: 0 auto;
+        padding: 10px;
+        background-color: #f5f5f5;
+    }
 
-<p><b>Nombre total d'utilisateur</b> : @Model.UserCount</p>
-<p>
-    <b>Nombre d'utilisateur par organisation</b>
-    @{
-        foreach (var group in Model.UserByOranizationType)
+    .kpi-header {
+        background-color: #2c3e50;
+        color: white;
+        padding: 15px;
+        text-align: center;
+        margin-bottom: 15px;
+    }
+
+    .kpi-header h1 {
+        margin: 0 0 10px 0;
+        font-size: 20px;
+    }
+
+    .kpi-header p {
+        margin: 0;
+        font-size: 14px;
+    }
+
+    .kpi-section {
+        background-color: white;
+        margin-bottom: 15px;
+        border: 1px solid #ddd;
+    }
+
+    .section-header {
+        background-color: #3498db;
+        color: white;
+        padding: 10px 15px;
+        font-weight: bold;
+        font-size: 16px;
+    }
+
+    .kpi-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin: 0;
+    }
+
+    .kpi-table th {
+        background-color: #ecf0f1;
+        padding: 8px 10px;
+        text-align: left;
+        font-weight: bold;
+        border-bottom: 2px solid #bdc3c7;
+    }
+
+    .kpi-table td {
+        padding: 8px 10px;
+        border-bottom: 1px solid #ecf0f1;
+    }
+
+    .count-cell {
+        text-align: right;
+        font-weight: bold;
+        color: #2c3e50;
+    }
+
+    .other-details {
+        background-color: #fff3cd;
+        border-left: 4px solid #ffc107;
+        padding: 10px;
+        margin: 10px;
+    }
+
+    .other-details-header {
+        font-weight: bold;
+        color: #856404;
+        margin-bottom: 8px;
+    }
+
+    .other-details-table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+
+    .other-details-table td {
+        padding: 4px 8px;
+        border-bottom: 1px solid #ffeaa7;
+    }
+
+    .other-details-table .count-cell {
+        text-align: right;
+        font-weight: bold;
+    }
+
+    .remaining {
+        background-color: #d1ecf1;
+        border-left: 4px solid #17a2b8;
+        padding: 8px 10px;
+        margin-top: 8px;
+        font-weight: bold;
+        color: #0c5460;
+    }
+
+    .summary-box {
+        background-color: #e8f5e8;
+        border: 2px solid #28a745;
+        padding: 15px;
+        margin: 15px 0;
+        text-align: center;
+    }
+
+    .summary-number {
+        font-size: 24px;
+        font-weight: bold;
+        color: #155724;
+        margin: 0;
+    }
+
+    .summary-label {
+        color: #155724;
+        font-size: 14px;
+        margin: 5px 0 0 0;
+    }
+
+    .postal-codes {
+        background-color: #f8f9fa;
+        border: 1px solid #dee2e6;
+        padding: 10px;
+        font-family: monospace;
+        font-size: 12px;
+        line-height: 1.4;
+    }
+
+    .postal-code-table {
+        font-size: 12px;
+    }
+
+    .postal-code-table th,
+    .postal-code-table td {
+        padding: 6px 8px;
+        text-align: center;
+    }
+
+    .postal-code-table th:first-child,
+    .postal-code-table th:nth-child(3) {
+        text-align: left;
+    }
+
+    .postal-code-table td:first-child,
+    .postal-code-table td:nth-child(3) {
+        text-align: left;
+        font-weight: bold;
+    }
+
+    .footer {
+        text-align: center;
+        margin-top: 20px;
+        padding: 15px;
+        color: #6c757d;
+        font-style: italic;
+    }
+</style>
+
+<div class="kpi-container">
+    <div class="kpi-header">
+        <h1>Rapport hebdomadaire des KPIs - MutuAli</h1>
+        <p>Généré le @DateTime.Now.ToString("dd/MM/yyyy à HH:mm")</p>
+    </div>
+
+    <!-- Résumé général -->
+    <div class="summary-box">
+        <div class="summary-number">@Model.UserCount</div>
+        <div class="summary-label">Utilisateurs totaux</div>
+    </div>
+
+    <!-- Utilisateurs par organisation -->
+    <div class="kpi-section">
+        <div class="section-header">Utilisateurs par type d'organisation</div>
+        <table class="kpi-table">
+            <thead>
+                <tr>
+                    <th>Type d'organisation</th>
+                    <th class="count-cell">Nombre</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var group in Model.UserByOranizationType)
+                {
+                    var organizationType = "";
+                    switch (group.Key)
+                    {
+                        case YellowDuck.Api.DbModel.Enums.OrganizationType.NonProfit:
+                            organizationType = "Organisme à but non lucratif";
+                            break;
+                        case YellowDuck.Api.DbModel.Enums.OrganizationType.Other:
+                            organizationType = "Autre";
+                            break;
+                        case YellowDuck.Api.DbModel.Enums.OrganizationType.SocialEconomyOrganizations:
+                            organizationType = "Entreprise d'économie sociale ou organisme communautaire";
+                            break;
+                        case YellowDuck.Api.DbModel.Enums.OrganizationType.FoodProcessingOrganizations:
+                            organizationType = "Entreprise de transformation alimentaire";
+                            break;
+                        case YellowDuck.Api.DbModel.Enums.OrganizationType.AgricultureOrganizations:
+                            organizationType = "Entreprise de production agricole ou d'agriculture urbaine";
+                            break;
+                    }
+                    <tr>
+                        <td>@organizationType</td>
+                        <td class="count-cell">@group.Count()</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+
+        @if (Model.UserByOrganizationTypeOtherSpecification != null &&
+                Model.UserByOrganizationTypeOtherSpecification.Any())
         {
-            var organizationType = "";
-            switch (group.Key)
+            var otherCount = Model.UserByOranizationType.FirstOrDefault(g => g.Key ==
+            YellowDuck.Api.DbModel.Enums.OrganizationType.Other)?.Count() ?? 0;
+            <div class="other-details">
+                <div class="other-details-header">Détails des @otherCount autres :</div>
+                <table class="other-details-table">
+                    @foreach (var group in Model.UserByOrganizationTypeOtherSpecification)
+                    {
+                        <tr>
+                            <td>@group.Key</td>
+                            <td class="count-cell">@group.Count()</td>
+                        </tr>
+                    }
+                </table>
+                @if (Model.UserOrganizationTypeOtherRemaining > 0)
+                {
+                    <div class="remaining">Autre : @Model.UserOrganizationTypeOtherRemaining</div>
+                }
+            </div>
+        }
+    </div>
+
+    <!-- Utilisateurs par secteur d'activité -->
+    <div class="kpi-section">
+        <div class="section-header">Utilisateurs par secteur d'activité</div>
+        <table class="kpi-table">
+            <thead>
+                <tr>
+                    <th>Secteur d'activité</th>
+                    <th class="count-cell">Nombre</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var group in Model.UserByIndustry)
+                {
+                    var industryType = "";
+                    switch (group.Key)
+                    {
+                        case YellowDuck.Api.DbModel.Enums.Industry.Catering:
+                            industryType = "Restauration";
+                            break;
+                        case YellowDuck.Api.DbModel.Enums.Industry.EducationAndTeaching:
+                            industryType = "Éducation et enseignement";
+                            break;
+                        case YellowDuck.Api.DbModel.Enums.Industry.FoodProcessingAndDistribution:
+                            industryType = "Transformation et distribution alimentaires";
+                            break;
+                        case YellowDuck.Api.DbModel.Enums.Industry.HealthAndSocialServices:
+                            industryType = "Santé et services sociaux";
+                            break;
+                        case YellowDuck.Api.DbModel.Enums.Industry.Other:
+                            industryType = "Autre";
+                            break;
+                        case YellowDuck.Api.DbModel.Enums.Industry.Retail:
+                            industryType = "Vente au détail";
+                            break;
+                        case YellowDuck.Api.DbModel.Enums.Industry.Transport:
+                            industryType = "Transport";
+                            break;
+                    }
+                    <tr>
+                        <td>@industryType</td>
+                        <td class="count-cell">@group.Count()</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Résumé des annonces -->
+    <div class="summary-box">
+        <div class="summary-number">@Model.AdCount</div>
+        <div class="summary-label">Annonces totales</div>
+    </div>
+
+    <!-- Annonces par type d'organisation -->
+    <div class="kpi-section">
+        <div class="section-header">Annonces par type d'organisation</div>
+        <table class="kpi-table">
+            <thead>
+                <tr>
+                    <th>Type d'organisation</th>
+                    <th class="count-cell">Nombre</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var group in Model.AdByOrganizationType)
+                {
+                    var organizationType = "";
+                    switch (group.Key)
+                    {
+                        case YellowDuck.Api.DbModel.Enums.OrganizationType.NonProfit:
+                            organizationType = "Organisme à but non lucratif";
+                            break;
+                        case YellowDuck.Api.DbModel.Enums.OrganizationType.Other:
+                            organizationType = "Autre";
+                            break;
+                        case YellowDuck.Api.DbModel.Enums.OrganizationType.SocialEconomyOrganizations:
+                            organizationType = "Entreprise d'économie sociale ou organisme communautaire";
+                            break;
+                        case YellowDuck.Api.DbModel.Enums.OrganizationType.FoodProcessingOrganizations:
+                            organizationType = "Entreprise de transformation alimentaire";
+                            break;
+                        case YellowDuck.Api.DbModel.Enums.OrganizationType.AgricultureOrganizations:
+                            organizationType = "Entreprise de production agricole ou d'agriculture urbaine";
+                            break;
+                    }
+                    <tr>
+                        <td>@organizationType</td>
+                        <td class="count-cell">@group.Count()</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+
+        @if (Model.AdByOrganizationTypeOtherSpecification != null && Model.AdByOrganizationTypeOtherSpecification.Any())
+        {
+            var otherCount = Model.AdByOrganizationType.FirstOrDefault(g => g.Key ==
+            YellowDuck.Api.DbModel.Enums.OrganizationType.Other)?.Count() ?? 0;
+            <div class="other-details">
+                <div class="other-details-header">Détails des @otherCount autres :</div>
+                <table class="other-details-table">
+                    @foreach (var group in Model.AdByOrganizationTypeOtherSpecification)
+                    {
+                        <tr>
+                            <td>@group.Key</td>
+                            <td class="count-cell">@group.Count()</td>
+                        </tr>
+                    }
+                </table>
+                @if (Model.AdOrganizationTypeOtherRemaining > 0)
+                {
+                    <div class="remaining">Autre : @Model.AdOrganizationTypeOtherRemaining</div>
+                }
+            </div>
+        }
+    </div>
+
+    <!-- Annonces par type d'équipement -->
+    <div class="kpi-section">
+        <div class="section-header">Annonces par type d'équipement</div>
+        <table class="kpi-table">
+            <thead>
+                <tr>
+                    <th>Type d'équipement</th>
+                    <th class="count-cell">Nombre</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var group in Model.AdByCategory)
+                {
+                    var category = "";
+                    switch (group.Key)
+                    {
+                        case YellowDuck.Api.DbModel.Enums.AdCategory.ProfessionalKitchen:
+                            category = "Cuisines professionnelles";
+                            break;
+                        case YellowDuck.Api.DbModel.Enums.AdCategory.DeliveryTruck:
+                            category = "Camions de livraison";
+                            break;
+                        case YellowDuck.Api.DbModel.Enums.AdCategory.StorageSpace:
+                            category = "Espaces d'entreposage";
+                            break;
+                        case YellowDuck.Api.DbModel.Enums.AdCategory.Other:
+                            category = "Autre";
+                            break;
+                        case YellowDuck.Api.DbModel.Enums.AdCategory.ProfessionalCookingEquipment:
+                            category = "Matériel de cuisson professionnels";
+                            break;
+                        case YellowDuck.Api.DbModel.Enums.AdCategory.PrepEquipment:
+                            category = "Matériel de préparation";
+                            break;
+                        case YellowDuck.Api.DbModel.Enums.AdCategory.RefrigerationEquipment:
+                            category = "Équipements de réfrigération et/ou de congélation";
+                            break;
+                        case YellowDuck.Api.DbModel.Enums.AdCategory.HeavyEquipment:
+                            category = "Équipements lourds";
+                            break;
+                        case YellowDuck.Api.DbModel.Enums.AdCategory.Surplus:
+                            category = "Surplus";
+                            break;
+                    }
+                    <tr>
+                        <td>@category</td>
+                        <td class="count-cell">@group.Count()</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Annonces par ville -->
+    <div class="kpi-section">
+        <div class="section-header">Annonces par ville</div>
+        <table class="kpi-table">
+            <thead>
+                <tr>
+                    <th>Ville</th>
+                    <th class="count-cell">Nombre</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var group in Model.AdByRegion)
+                {
+                    <tr>
+                        <td>@group.Key</td>
+                        <td class="count-cell">@group.Count()</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Codes postaux -->
+    <div class="kpi-section">
+        <div class="section-header">Codes postaux associés aux annonces</div>
+        @{
+            var postalCodeGroups = Model.AdByPostalCode
+            .Select(g => new
             {
-                case YellowDuck.Api.DbModel.Enums.OrganizationType.NonProfit:
-                {
-                    organizationType = "Organisme à but non lucratif";
-                    break;
-                }
-                case YellowDuck.Api.DbModel.Enums.OrganizationType.Other:
-                {
-                    organizationType = "Autre";
-                    break;
-                }
-                case YellowDuck.Api.DbModel.Enums.OrganizationType.SocialEconomyOrganizations:
-                {
-                    organizationType = "Entreprise d’économie sociale ou organisme communautaire";
-                    break;
-                }
-                case YellowDuck.Api.DbModel.Enums.OrganizationType.FoodProcessingOrganizations:
-                {
-                    organizationType = "Entreprise de transformation alimentaire";
-                    break;
-                }
-                case YellowDuck.Api.DbModel.Enums.OrganizationType.AgricultureOrganizations:
-                {
-                    organizationType = "Entreprise de production agricole ou d’agriculture urbaine";
-                    break;
-                }
-            }
-            <p>@organizationType : @group.Count()</p>
-        }
-    }
-</p>
-
-<p>
-    <b>Nombre d'utilisateur par secteur d'activité</b>
-    @{
-        foreach (var group in Model.UserByIndustry)
-        {
-            var industryType = "";
-            switch (group.Key)
+                Prefix = g.Key.Length >= 3 ? g.Key.Substring(0, 3) : g.Key,
+                Count = g.Count()
+            })
+            .GroupBy(x => x.Prefix)
+            .Select(g => new
             {
-                case YellowDuck.Api.DbModel.Enums.Industry.Catering:
-                {
-                    industryType = "Restauration";
-                    break;
-                }
-                case YellowDuck.Api.DbModel.Enums.Industry.EducationAndTeaching:
-                {
-                    industryType = "Éducation et enseignement";
-                    break;
-                }
-                case YellowDuck.Api.DbModel.Enums.Industry.FoodProcessingAndDistribution:
-                {
-                    industryType = "Transformation et distribution alimentaires";
-                    break;
-                }
-                case YellowDuck.Api.DbModel.Enums.Industry.HealthAndSocialServices:
-                {
-                    industryType = "Santé et services sociaux";
-                    break;
-                }
-                case YellowDuck.Api.DbModel.Enums.Industry.Other:
-                {
-                    industryType = "Autre";
-                    break;
-                }
-                case YellowDuck.Api.DbModel.Enums.Industry.Retail:
-                {
-                    industryType = "Vente au détail";
-                    break;
-                }
-                case YellowDuck.Api.DbModel.Enums.Industry.Transport:
-                {
-                    industryType = "Transport";
-                    break;
-                }
-            }
-            <p>@industryType : @group.Count()</p>
+                Prefix = g.Key,
+                Count = g.Sum(x => x.Count)
+            })
+            .OrderBy(x => x.Prefix)
+            .ToList();
         }
-    }
-</p>
 
-<p><b>Nombre total d'annonce</b> : @Model.AdCount</p>
-<p>
-    <b>Nombre d'annonce par type d'organisation</b>
-    @{
-        foreach (var group in Model.AdByOrganizationType)
-        {
-            var organizationType = "";
-            switch (group.Key)
-            {
-                case YellowDuck.Api.DbModel.Enums.OrganizationType.NonProfit:
+        <table class="kpi-table postal-code-table">
+            <thead>
+                <tr>
+                    <th>Code postal</th>
+                    <th class="count-cell">Nombre</th>
+                    <th>Code postal</th>
+                    <th class="count-cell">Nombre</th>
+                </tr>
+            </thead>
+            <tbody>
+                @for (int i = 0; i < postalCodeGroups.Count; i += 2)
                 {
-                    organizationType = "Organisme à but non lucratif";
-                    break;
+                    <tr>
+                        <td>@postalCodeGroups[i].Prefix</td>
+                        <td class="count-cell">@postalCodeGroups[i].Count</td>
+                        @if (i + 1 < postalCodeGroups.Count)
+                        {
+                            <td>@postalCodeGroups[i + 1].Prefix</td>
+                            <td class="count-cell">@postalCodeGroups[i + 1].Count</td>
+                        }
+                        else
+                        {
+                            <td></td>
+                            <td class="count-cell"></td>
+                        }
+                    </tr>
                 }
-                case YellowDuck.Api.DbModel.Enums.OrganizationType.Other:
-                {
-                    organizationType = "Autre";
-                    break;
-                }
-                case YellowDuck.Api.DbModel.Enums.OrganizationType.SocialEconomyOrganizations:
-                {
-                    organizationType = "Entreprise d’économie sociale ou organisme communautaire";
-                    break;
-                }
-                case YellowDuck.Api.DbModel.Enums.OrganizationType.FoodProcessingOrganizations:
-                {
-                    organizationType = "Entreprise de transformation alimentaire";
-                    break;
-                }
-                case YellowDuck.Api.DbModel.Enums.OrganizationType.AgricultureOrganizations:
-                {
-                    organizationType = "Entreprise de production agricole ou d’agriculture urbaine";
-                    break;
-                }
-            }
-            <p>@organizationType : @group.Count()</p>
-        }
-    }
-</p>
-<p>
-    <b>Nombre d'annonce par type d'équipement</b>
-    @{
-        foreach (var group in Model.AdByCategory)
-        {
-            var category = "";
-            switch (group.Key)
-            {
-                case YellowDuck.Api.DbModel.Enums.AdCategory.DeliveryTruck:
-                {
-                    category = "Camions de livraison";
-                    break;
-                }
-                case YellowDuck.Api.DbModel.Enums.AdCategory.ProfessionalKitchen:
-                {
-                    category = "Cuisines professionnelles";
-                    break;
-                }
-                case YellowDuck.Api.DbModel.Enums.AdCategory.StorageSpace:
-                {
-                    category = "Espaces d'entreposage";
-                    break;
-                }
-                case YellowDuck.Api.DbModel.Enums.AdCategory.Other:
-                {
-                    category = "Autre";
-                    break;
-                }
-            }
-            <p>@category : @group.Count()</p>
-        }
-    }
-</p>
+            </tbody>
+        </table>
+    </div>
 
-<p>
-    <b>Nombre d'annonce par ville</b>
-    @{
-        foreach (var group in Model.AdByRegion)
-        {
-            <p>@group.Key : @group.Count()</p>
-        }
-    }
-</p>
-
-<p>
-    <b>Liste des codes postaux associés à une annonce</b>
-    <br />
-    @{
-        foreach (var group in Model.AdByPostalCode)
-        {
-            <span>@(group.Key);@(group.Count())<br /></span>
-        }
-    }
-</p>
-
-<p>À dimanche prochain</p>
+    <div class="footer">
+        <p>À dimanche prochain !</p>
+        <p>Rapport généré automatiquement par MutuAli</p>
+    </div>
+</div>

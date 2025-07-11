@@ -15,12 +15,21 @@ namespace YellowDuck.Api.EmailTemplates.Models
         public List<IGrouping<OrganizationType, AppUser>> UserByOranizationType { get; set; }
         public List<IGrouping<Industry, AppUser>> UserByIndustry { get; set; }
 
+        // Nouvelles propriétés pour les spécifications "Other" populaires
+        public List<IGrouping<string, AppUser>> UserByOrganizationTypeOtherSpecification { get; set; }
 
         public int AdCount { get; set; }
         public List<IGrouping<OrganizationType, Ad>> AdByOrganizationType { get; set; }
         public List<IGrouping<AdCategory, Ad>> AdByCategory { get; set; }
         public List<IGrouping<string, Ad>> AdByRegion { get; set; }
         public List<IGrouping<string, Ad>> AdByPostalCode { get; set; }
+
+        // Nouvelles propriétés pour les annonces par spécifications "Other" populaires
+        public List<IGrouping<string, Ad>> AdByOrganizationTypeOtherSpecification { get; set; }
+
+        // Propriétés pour calculer le reste
+        public int UserOrganizationTypeOtherRemaining { get; set; }
+        public int AdOrganizationTypeOtherRemaining { get; set; }
 
         public WeeklyKPIsEmail(string to) : base(to) { }
     }
