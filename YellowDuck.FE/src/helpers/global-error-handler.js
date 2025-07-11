@@ -2,11 +2,26 @@ import i18n from "@/helpers/i18n";
 import NotificationService from "@/services/notification";
 import Logger from "@/services/logger";
 
-export default function(err, vm) {
+export default function (err, vm) {
   if (err.error) err = err.error;
   if (err.handled) return;
+
+  // Ignorer les erreurs de scripts externes
+  if (isErrorFromExternalScript(err)) {
+    err.handled = true;
+    return;
+  }
+
   err.handled = true;
   showErrors(getErrorMessages(err, vm));
+}
+
+function isErrorFromExternalScript(err) {
+  // Les erreurs de scripts tiers ont souvent une stack null
+  // et un message générique comme "Script error."
+  // TermsFeed faisait parfois des erreurs de ce type et one ne veut pas les afficher
+  const isScriptError = err.message === "Script error." && !err.stack;
+  return isScriptError;
 }
 
 function showErrors(messages) {
@@ -15,6 +30,8 @@ function showErrors(messages) {
   }
 
   for (const message of messages) {
+    // eslint-disable-next-line no-console
+    console.log("message", message);
     NotificationService.showError(message);
   }
 }
