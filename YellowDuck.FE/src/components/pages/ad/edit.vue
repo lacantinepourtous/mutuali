@@ -12,6 +12,7 @@
         :adId="adId"
         :title="ad.translationOrDefault.title"
         :description="ad.translationOrDefault.description"
+        :initialCategoryGroup="getCategoryGroupByCategory(ad.category)"
         :category="ad.category"
         :is-available-for-sale="ad.isAvailableForSale"
         :is-available-for-rent="ad.isAvailableForRent"
@@ -68,6 +69,7 @@
 import NavClose from "@/components/nav/close";
 import FormComplete from "@/components/generic/form-complete";
 import AdForm from "@/components/ad/form";
+import { AdCategory } from "@/mixins/ad-category";
 
 import { URL_ROOT, URL_AD_DETAIL, URL_AD_EDIT } from "@/consts/urls";
 import { CONTENT_LANG_FR } from "@/consts/langs";
@@ -76,6 +78,7 @@ import NotificationService from "@/services/notification";
 import { updateAd } from "@/services/ad";
 
 export default {
+  mixins: [AdCategory],
   components: {
     NavClose,
     AdForm,

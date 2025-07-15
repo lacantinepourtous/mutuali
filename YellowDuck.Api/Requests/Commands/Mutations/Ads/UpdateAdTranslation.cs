@@ -50,6 +50,10 @@ namespace YellowDuck.Api.Requests.Commands.Mutations.Ads
             request.SurfaceSize.IfSet(v => translation.SurfaceSize = v);
             request.ProfessionalKitchenEquipmentOther.IfSet(v => translation.ProfessionalKitchenEquipmentOther = v);
             request.SurfaceDescription.IfSet(v => translation.SurfaceDescription = v);
+            request.HumanResourceFieldOther.IfSet(v => translation.HumanResourceFieldOther = v);
+            request.Qualifications.IfSet(v => translation.Qualifications = v);
+            request.Tasks.IfSet(v => translation.Tasks = v);
+            request.GeographicCoverage.IfSet(v => translation.GeographicCoverage = v);
 
             await db.SaveChangesAsync(cancellationToken);
 
@@ -163,6 +167,38 @@ namespace YellowDuck.Api.Requests.Commands.Mutations.Ads
                     throw new EmptyDeliveryTruckTypeOtherException();
                 }
             }
+
+            if (request.HumanResourceFieldOther.IsSet())
+            {
+                if (request.HumanResourceFieldOther.Value == "")
+                {
+                    throw new EmptyHumanResourceFieldOtherException();
+                }
+            }
+
+            if (request.Qualifications.IsSet())
+            {
+                if (request.Qualifications.Value == "")
+                {
+                    throw new EmptyQualificationsException();
+                }
+            }
+
+            if (request.Tasks.IsSet())
+            {
+                if (request.Tasks.Value == "")
+                {
+                    throw new EmptyTasksException();
+                }
+            }
+
+            if (request.GeographicCoverage.IsSet())
+            {
+                if (request.GeographicCoverage.Value == "")
+                {
+                    throw new EmptyGeographicCoverageException();
+                }
+            }
         }
 
         [MutationInput]
@@ -189,6 +225,10 @@ namespace YellowDuck.Api.Requests.Commands.Mutations.Ads
             public Maybe<bool> IsAvailableForSale { get; set; }
             public Maybe<bool> IsAvailableForTrade { get; set; }
             public Maybe<bool> IsAvailableForDonation { get; set; }
+            public Maybe<NonNull<string>> HumanResourceFieldOther { get; set; }
+            public Maybe<NonNull<string>> Qualifications { get; set; }
+            public Maybe<NonNull<string>> Tasks { get; set; }
+            public Maybe<NonNull<string>> GeographicCoverage { get; set; }
 
         }
 
@@ -231,5 +271,9 @@ namespace YellowDuck.Api.Requests.Commands.Mutations.Ads
         public class EmptyEquipmentException : UpdateAdTranslationException { }
         public class EmptySurfaceSizeException : UpdateAdTranslationException { }
         public class EmptyDeliveryTruckTypeOtherException : UpdateAdTranslationException { }
+        public class EmptyHumanResourceFieldOtherException : UpdateAdTranslationException { }
+        public class EmptyQualificationsException : UpdateAdTranslationException { }
+        public class EmptyTasksException : UpdateAdTranslationException { }
+        public class EmptyGeographicCoverageException : UpdateAdTranslationException { }
     }
 }

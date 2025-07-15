@@ -1,28 +1,44 @@
 <template>
   <s-form @submit="submitForm" class="ad-form">
     <div class="section section--md section--padding-x section--border-bottom my-4 pb-5 rm-child-margin">
-      <h2 class="my-4">{{ $t("section-title.general-info") }}</h2>
-      <s-form-input
-        v-model="form.title"
-        id="title"
-        :label="$t('label.ad-title')"
-        name="title"
+      <s-form-select
+        v-model="categoryGroup"
+        id="categoryGroup"
+        :label="$t('label.ad-categoryGroup')"
+        name="categoryGroup"
         rules="required"
-        :placeholder="$t('placeholder.ad-title')"
+        :placeholder="$t('placeholder.ad-categoryGroup')"
+        :options="categoryGroupOptions"
         required
       />
       <s-form-select
+        v-if="categoryGroup"
         v-model="form.category"
         id="category"
         :label="$t('label.ad-category')"
         name="category"
         rules="required"
         :placeholder="$t('placeholder.ad-category')"
-        :options="categoryOptions"
+        :options="subCategoryOptions"
+        required
+      />
+    </div>
+    <div v-if="form.category" class="section section--md section--padding-x section--border-bottom my-4 pb-5 rm-child-margin">
+      <h2 class="my-4">{{ $t("section-title.general-info") }}</h2>
+
+      <s-form-input
+        v-model="form.title"
+        id="title"
+        :label="$t('label.ad-title')"
+        name="title"
+        rules="required"
+        :placeholder="getCategoryTitlePlaceholder(form.category)"
+        :description="form.category === CATEGORY_HUMAN_RESOURCES ? $t('description.ad-title-human-resources') : null"
         required
       />
 
-      <s-form-hidden
+      <template v-if="categoryGroup !== CATEGORY_GROUP_WORKFORCE">
+        <s-form-hidden
         :value="hasAtLeastOneTransactionType ? 1 : 0"
         id="hasAtLeastOneTransactionType"
         name="hasAtLeastOneTransactionType"
@@ -161,9 +177,8 @@
           :placeholder="$t('placeholder.ad-donationDescription')"
         />
       </div>
-    </div>
-    <div class="section section--md section--padding-x section--border-bottom my-4 pb-5 rm-child-margin">
-      <h2 class="my-4">{{ $t("section-title.description") }}</h2>
+      </template>
+
       <s-form-image
         v-model="form.images"
         :currentImages="form.currentImages"
@@ -179,12 +194,14 @@
       <form-partial-delivery-truck v-if="form.category === CATEGORY_DELIVERY_TRUCK" v-model="form" />
       <form-partial-professional-kitchen v-if="form.category === CATEGORY_PROFESSIONAL_KITCHEN" v-model="form" />
       <form-partial-storage-space v-if="form.category === CATEGORY_STORAGE_SPACE" v-model="form" />
+      <form-partial-human-resources v-if="form.category === CATEGORY_HUMAN_RESOURCES" v-model="form" />
+      <form-partial-subcontracting v-if="form.category === CATEGORY_SUBCONTRACTING" v-model="form" />
       <form-partial-other v-if="isMiscCategory" v-model="form" />
     </div>
 
     <!-- Availability Section -->
     <div
-      v-if="form.isAvailableForRent"
+      v-if="form.isAvailableForRent || form.category === CATEGORY_HUMAN_RESOURCES"
       class="section section--md section--padding-x section--border-bottom my-4 pb-5 rm-child-margin"
     >
       <h2 class="my-4">{{ $t("section-title.availability") }}</h2>
@@ -271,6 +288,8 @@ import SFormAvailability from "@/components/form/s-form-availability";
 import FormPartialDeliveryTruck from "@/components/ad/form-partial-delivery-truck";
 import FormPartialProfessionalKitchen from "@/components/ad/form-partial-professional-kitchen";
 import FormPartialStorageSpace from "@/components/ad/form-partial-storage-space";
+import FormPartialHumanResources from "@/components/ad/form-partial-human-resources";
+import FormPartialSubcontracting from "@/components/ad/form-partial-subcontracting";
 import FormPartialOther from "@/components/ad/form-partial-other";
 
 import AvailabilityRestrictions from "@/components/ad/availability-restrictions";
@@ -281,6 +300,10 @@ import { AdRentalPriceRange } from "@/mixins/ad-rental-price-range";
 import { AvailabilityWeekday } from "@/mixins/availability-weekday";
 
 import {
+  CATEGORY_GROUP_WORKFORCE
+} from "@/consts/category-groups";
+
+import {
   CATEGORY_PROFESSIONAL_KITCHEN,
   CATEGORY_DELIVERY_TRUCK,
   CATEGORY_STORAGE_SPACE,
@@ -289,6 +312,8 @@ import {
   CATEGORY_REFRIGERATION_EQUIPMENT,
   CATEGORY_HEAVY_EQUIPMENT,
   CATEGORY_SURPLUS,
+  CATEGORY_HUMAN_RESOURCES,
+  CATEGORY_SUBCONTRACTING,
   CATEGORY_OTHER
 } from "@/consts/categories";
 
@@ -300,6 +325,10 @@ export default {
       default: ""
     },
     title: {
+      type: String,
+      default: ""
+    },
+    initialCategoryGroup: {
       type: String,
       default: ""
     },
@@ -468,6 +497,26 @@ export default {
     disabledBtn: {
       type: Boolean,
       default: false
+    },
+    humanResourceField: {
+      type: String,
+      default: ""
+    },
+    humanResourceFieldOther: {
+      type: String,
+      default: ""
+    },
+    qualifications: {
+      type: String,
+      default: ""
+    },
+    tasks: {
+      type: String,
+      default: ""
+    },
+    geographicCoverage: {
+      type: String,
+      default: ""
     }
   },
   data() {
@@ -511,11 +560,20 @@ export default {
         canSharedRoad: this.canSharedRoad,
         canHaveDriver: this.canHaveDriver,
         certification: this.certification || [],
-        infoIsTrue: this.infoIsTrue
+        infoIsTrue: this.infoIsTrue,
+        humanResourceField: this.humanResourceField,
+        humanResourceFieldOther: this.humanResourceFieldOther,
+        qualifications: this.qualifications,
+        tasks: this.tasks,
+        geographicCoverage: this.geographicCoverage
       },
+      categoryGroup: this.initialCategoryGroup,
+      CATEGORY_GROUP_WORKFORCE,
       CATEGORY_PROFESSIONAL_KITCHEN,
       CATEGORY_DELIVERY_TRUCK,
       CATEGORY_STORAGE_SPACE,
+      CATEGORY_HUMAN_RESOURCES,
+      CATEGORY_SUBCONTRACTING,
       CATEGORY_OTHER
     };
   },
@@ -531,6 +589,8 @@ export default {
     FormPartialDeliveryTruck,
     FormPartialProfessionalKitchen,
     FormPartialStorageSpace,
+    FormPartialHumanResources,
+    FormPartialSubcontracting,
     FormPartialOther,
     AvailabilityRestrictions
   },
@@ -570,7 +630,12 @@ export default {
       if (!value) {
         this.form.donationDescription = "";
       }
-    }
+    },
+    "categoryGroup"(value, oldValue) {
+      if (value !== oldValue) {
+        this.form.category = "";
+      }
+    },
   },
   computed: {
     hasAtLeastOneTransactionType() {
@@ -591,6 +656,9 @@ export default {
         CATEGORY_SURPLUS
       ];
       return miscCategories.includes(this.form.category);
+    },
+    subCategoryOptions() {
+      return this.getCategoryOptionsByCategoryGroup(this.categoryGroup);
     }
   },
   methods: {
@@ -658,7 +726,12 @@ export default {
         "canSharedRoad",
         "canHaveDriver",
         "certification",
-        "infoIsTrue"
+        "infoIsTrue",
+        "humanResourceField",
+        "humanResourceFieldOther",
+        "qualifications",
+        "tasks",
+        "geographicCoverage"
       ];
       for (let maybeEditedField of maybeEditedFields) {
         if (
@@ -688,7 +761,7 @@ export default {
       }
       this.$emit("submitForm", input);
     }
-  }
+  },
 };
 </script>
 

@@ -85,6 +85,7 @@ namespace YellowDuck.Api.Gql.Schema.GraphTypes
         public Task<bool> CanSharedRoad => WithData(x => x.CanSharedRoad);
 
         public Task<bool> CanHaveDriver => WithData(x => x.CanHaveDriver);
+        public Task<HumanResourceField> HumanResourceField => WithData(x => x.HumanResourceField);
         public async Task<IEnumerable<Allergen>> Allergen(IAppUserContext ctx)
         {
             var allergens = await ctx.LoadAllergensByAdId(id);

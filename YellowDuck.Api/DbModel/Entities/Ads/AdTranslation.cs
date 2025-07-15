@@ -32,5 +32,11 @@ namespace YellowDuck.Api.DbModel.Entities.Ads
 
         // Delivery Truck
         public string DeliveryTruckTypeOther { get; set; }
+
+        // Human Resources
+        public string HumanResourceFieldOther { get; set; }
+        public string Qualifications { get; set; }
+        public string Tasks { get; set; }
+        public string GeographicCoverage { get; set; }
     }
 }
