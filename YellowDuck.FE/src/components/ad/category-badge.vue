@@ -1,5 +1,5 @@
 <template>
-  <b-badge class="custom-badge text-white py-1" variant="info" pill>
+  <b-badge class="custom-badge text-white py-1" :class="this.getCategoryGroupByCategory(category).color" pill>
     <span class="custom-badge__label">{{ isShort ? getCategoryShortLabel(category) : getCategoryLabel(category) }}</span>
     <b-button v-if="closable" class="custom-badge__dismiss-btn h-extend-cursor-area" @click="$emit('close')">
       <span class="sr-only">{{ dismissLabel }}</span>
@@ -40,6 +40,7 @@ export default {
   align-items: center;
   justify-content: space-between;
   max-width: 100%;
+  background-color: var(--accent-color);
 
   &__label {
     display: block;

@@ -4,7 +4,7 @@
       <h2 class="font-family-base font-weight-bold mb-4">{{ $t("label.ad-description") }}</h2>
       <div class="rm-child-margin" v-html="ad.translationOrDefault.description"></div>
     </div>
-    <div v-if="haveAdConditions" class="border-top border-grey py-6">
+    <div v-if="haveHtmlContent(ad.translationOrDefault.conditions)" class="border-top border-grey py-6">
       <h2 class="font-family-base font-weight-bold mb-4">{{ $t("label.ad-conditions") }}</h2>
       <div class="rm-child-margin" v-html="ad.translationOrDefault.conditions"></div>
     </div>
@@ -26,11 +26,12 @@ export default {
       }
     }
   },
-  computed: {
-    haveAdConditions() {
-      let adConditionsEl = document.createElement("div");
-      adConditionsEl.innerHTML = this.adConditions;
-      return adConditionsEl.textContent.trim() !== "";
+  methods: {
+    haveHtmlContent(content) {
+      if (!content) return false;
+      let divEl = document.createElement("div");
+      divEl.innerHTML = content;
+      return divEl.textContent.trim() !== "";
     }
   }
 };

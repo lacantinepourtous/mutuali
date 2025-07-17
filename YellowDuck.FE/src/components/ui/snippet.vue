@@ -5,22 +5,22 @@
     :class="{ 'ui-snippet--link': snippetIsLink }"
     :to="mainRoute"
   >
-          <div v-if="imageSrc" class="ui-snippet__img-container">
-        <img class="ui-snippet__img" :src="`${imageSrc}?mode=crop&width=200&height=200`" :alt="imageAlt ? imageAlt : ''" />
-        <div v-if="isAdminOnly" class="ui-snippet__overlay-admin"></div>
-        <div v-if="!isPublished" class="ui-snippet__overlay-unpublished"></div>
-        <b-img
-          v-if="isAdminOnly"
-          class="ui-snippet__icon-invisible"
-          :src="require('@/assets/icons/invisible.svg')"
-          alt=""
-          height="30"
-          block
-        ></b-img>
-        <div v-if="!isPublished" class="ui-snippet__unpublished-badge">
-          <span class="ui-snippet__unpublished-text">{{ isLocked ? $t('label.ad-blocked') : $t('label.ad-unpublished') }}</span>
-        </div>
+    <div v-if="imageSrc" class="ui-snippet__img-container">
+      <img class="ui-snippet__img" :src="`${imageSrc}?mode=crop&width=200&height=200`" :alt="imageAlt ? imageAlt : ''" />
+      <div v-if="isAdminOnly" class="ui-snippet__overlay-admin"></div>
+      <div v-if="!isPublished" class="ui-snippet__overlay-unpublished"></div>
+      <b-img
+        v-if="isAdminOnly"
+        class="ui-snippet__icon-invisible"
+        :src="require('@/assets/icons/invisible.svg')"
+        alt=""
+        height="30"
+        block
+      ></b-img>
+      <div v-if="!isPublished" class="ui-snippet__unpublished-badge">
+        <span class="ui-snippet__unpublished-text">{{ isLocked ? $t('label.ad-blocked') : $t('label.ad-unpublished') }}</span>
       </div>
+    </div>
 
     <div class="ui-snippet__content">
       <slot name="suptitle">
@@ -154,7 +154,7 @@ export default {
   }
 
   &__overlay-unpublished {
-    background-color: $red;
+    background-color: var(--accent-color);
     opacity: 0.8;
     position: absolute;
     top: 0;
@@ -174,7 +174,7 @@ export default {
     position: absolute;
     top: 8px;
     right: 8px;
-    background-color: $red;
+    background-color: var(--accent-color);
     color: white;
     padding: 4px 8px;
     border-radius: 4px;

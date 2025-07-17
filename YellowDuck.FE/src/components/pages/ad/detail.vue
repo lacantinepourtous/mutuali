@@ -1,5 +1,5 @@
 <template>
-  <div v-if="ad" class="equipment-detail fab-container" :class="{ 'equipment-detail--modal': displayMap }">
+  <div v-if="ad" class="equipment-detail fab-container" :class="[getCategoryGroupByCategory(ad.category).color, { 'equipment-detail--modal': displayMap }]">
     <div v-if="ad.isAdminOnly" class="px-3 py-2 yellow equipment-detail__notif">
       <b-img class="equipment-detail__notif-icon" :src="require('@/assets/icons/invisible.svg')" alt="" height="20" block></b-img>
       {{ $t("banner.ad-is-admin-only") }}
@@ -22,6 +22,9 @@
       </div>
       <div class="equipment-detail__model-footer">
         <p class="equipment-detail__map-location">
+          <svg class="equipment-detail__map-location-icon" width="18" height="41" viewBox="0 0 18 41" fill="currentColor" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+            <path fill-rule="evenodd" clip-rule="evenodd" d="M8.60552 40.7989C2.88217 32.8965 0 22.2477 0 8.69393C0 3.89609 3.85199 0.0137671 8.60552 0C13.359 0.0137671 17.211 3.89609 17.211 8.69393C17.211 22.2477 14.3357 32.8965 8.60552 40.7989ZM8.605 14.21C11.7006 14.21 14.21 11.7006 14.21 8.605C14.21 5.50944 11.7006 3 8.605 3C5.50944 3 3 5.50944 3 8.605C3 11.7006 5.50944 14.21 8.605 14.21Z" />
+          </svg>
           <template v-if="ad.showAddress">
             {{ adAddressReadable }}
           </template>
@@ -104,66 +107,22 @@
             </p>
 
             <h1 class="my-4">{{ ad.translationOrDefault.title }}</h1>
-            <ul class="equipment-detail__types">
-              <li v-if="adPriceDetails.isAvailableForRent">
-                <AdTypeCard
-                  :title="$t('label.forRent')"
-                  :price="adPriceDetails.rentPrice"
-                  :price-to-be-determined="adPriceDetails.rentPriceToBeDetermined"
-                  :modality="adPriceDetails.rentPriceDescription"
-                  :footnote="adPriceDetails.rentPriceRange"
-                >
-                  <b-img :src="require('@/assets/icons/rent.svg')" alt="" height="30" block></b-img>
-                </AdTypeCard>
-              </li>
-              <li v-if="adPriceDetails.isAvailableForSale">
-                <AdTypeCard
-                  :title="$t('label.forSale')"
-                  :price="adPriceDetails.salePrice"
-                  :price-to-be-determined="adPriceDetails.salePriceToBeDetermined"
-                  :modality="adPriceDetails.salePriceDescription"
-                  :footnote="adPriceDetails.salePriceRange"
-                >
-                  <b-img :src="require('@/assets/icons/sale.svg')" alt="" height="30" block></b-img>
-                </AdTypeCard>
-              </li>
-              <li v-if="adPriceDetails.isAvailableForTrade">
-                <AdTypeCard :title="$t('label.forTrade')" :description="adPriceDetails.tradeDescription">
-                  <b-img :src="require('@/assets/icons/trade.svg')" alt="" height="30" block></b-img>
-                </AdTypeCard>
-              </li>
-              <li v-if="adPriceDetails.isAvailableForDonation">
-                <AdTypeCard :title="$t('label.forDonation')" :description="adPriceDetails.donationDescription">
-                  <b-img :src="require('@/assets/icons/donation.svg')" alt="" height="30" block></b-img>
-                </AdTypeCard>
-              </li>
-              <li v-if="ad.category === CATEGORY_SUBCONTRACTING">
-                <AdTypeCard :title="$t('select.category-subcontracting')" :price="$t('text.ad-subcontracting-info', {name: ad.user.profile.publicName})">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="27" height="32" viewBox="0 0 27 32" fill="currentColor" aria-hidden="true">
-                    <path d="M13.5 15.5613C17.8346 15.5613 21.361 12.13 21.361 7.91272C21.361 3.69539 17.8345 0.26416 13.5 0.26416C9.16552 0.26416 5.63898 3.69539 5.63898 7.91272C5.63898 12.13 9.16552 15.5613 13.5 15.5613ZM13.5 2.51416C16.5597 2.51416 19.0485 4.93574 19.0485 7.91272C19.0485 10.8897 16.5597 13.3113 13.5 13.3113C10.4403 13.3113 7.95148 10.8897 7.95148 7.91272C7.95148 4.9357 10.4403 2.51416 13.5 2.51416ZM18.125 15.9861H8.875C4.41317 15.9861 0.78125 19.5186 0.78125 23.8611V30.6111C0.78125 31.2327 1.29866 31.7361 1.9375 31.7361H25.0625C25.7013 31.7361 26.2188 31.2327 26.2188 30.6111V23.8611C26.2188 19.5188 22.5867 15.9861 18.125 15.9861ZM7.71875 26.2122C8.03238 25.8536 8.26798 25.4275 8.44284 24.9874H18.5572C18.732 25.429 18.9662 25.8536 19.2813 26.2122V29.4874L7.71875 29.486V26.2122ZM18.125 18.2361V22.7361H8.875V18.2361H18.125ZM3.09375 23.8611C3.09375 21.5605 4.52461 19.5832 6.5625 18.7127V22.7318C6.5625 22.7543 6.49746 24.9846 5.40625 24.9846C4.76741 24.9846 4.25 25.488 4.25 26.1096C4.25 26.7311 4.76741 27.2346 5.40625 27.2346V29.4846L3.09375 29.486V23.8611ZM23.9063 29.4861H21.5938V27.2361C22.2326 27.2361 22.75 26.7327 22.75 26.1111C22.75 25.4895 22.2326 24.9861 21.5938 24.9861C20.5025 24.9861 20.4375 22.7558 20.4375 22.7361V18.7127C22.4754 19.5832 23.9063 21.5604 23.9063 23.8611V29.4861ZM16.9325 27.2502C16.9325 27.8717 16.4151 28.3752 15.7762 28.3752H11.1875C10.5487 28.3752 10.0313 27.8717 10.0313 27.2502C10.0313 26.6286 10.5487 26.1252 11.1875 26.1252H15.7762C16.4151 26.1252 16.9325 26.6286 16.9325 27.2502Z" />
-                  </svg>
-                </AdTypeCard>
-              </li>
-              <li v-if="ad.category === CATEGORY_HUMAN_RESOURCES">
-                <AdTypeCard :title="$t('label.ad-humanResourceField')" :price="getHumanResourceFieldLabel(ad.humanResourceField)">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="27" height="32" viewBox="0 0 27 32" fill="currentColor" aria-hidden="true">
-                    <path d="M13.5 15.5613C17.8346 15.5613 21.361 12.13 21.361 7.91272C21.361 3.69539 17.8345 0.26416 13.5 0.26416C9.16552 0.26416 5.63898 3.69539 5.63898 7.91272C5.63898 12.13 9.16552 15.5613 13.5 15.5613ZM13.5 2.51416C16.5597 2.51416 19.0485 4.93574 19.0485 7.91272C19.0485 10.8897 16.5597 13.3113 13.5 13.3113C10.4403 13.3113 7.95148 10.8897 7.95148 7.91272C7.95148 4.9357 10.4403 2.51416 13.5 2.51416ZM18.125 15.9861H8.875C4.41317 15.9861 0.78125 19.5186 0.78125 23.8611V30.6111C0.78125 31.2327 1.29866 31.7361 1.9375 31.7361H25.0625C25.7013 31.7361 26.2188 31.2327 26.2188 30.6111V23.8611C26.2188 19.5188 22.5867 15.9861 18.125 15.9861ZM7.71875 26.2122C8.03238 25.8536 8.26798 25.4275 8.44284 24.9874H18.5572C18.732 25.429 18.9662 25.8536 19.2813 26.2122V29.4874L7.71875 29.486V26.2122ZM18.125 18.2361V22.7361H8.875V18.2361H18.125ZM3.09375 23.8611C3.09375 21.5605 4.52461 19.5832 6.5625 18.7127V22.7318C6.5625 22.7543 6.49746 24.9846 5.40625 24.9846C4.76741 24.9846 4.25 25.488 4.25 26.1096C4.25 26.7311 4.76741 27.2346 5.40625 27.2346V29.4846L3.09375 29.486V23.8611ZM23.9063 29.4861H21.5938V27.2361C22.2326 27.2361 22.75 26.7327 22.75 26.1111C22.75 25.4895 22.2326 24.9861 21.5938 24.9861C20.5025 24.9861 20.4375 22.7558 20.4375 22.7361V18.7127C22.4754 19.5832 23.9063 21.5604 23.9063 23.8611V29.4861ZM16.9325 27.2502C16.9325 27.8717 16.4151 28.3752 15.7762 28.3752H11.1875C10.5487 28.3752 10.0313 27.8717 10.0313 27.2502C10.0313 26.6286 10.5487 26.1252 11.1875 26.1252H15.7762C16.4151 26.1252 16.9325 26.6286 16.9325 27.2502Z" />
-                  </svg>
-                </AdTypeCard>
-              </li>
-            </ul>
+            <detail-transaction-types :ad="ad" />
           </div>
 
           <div class="border-top border-grey mt-6">
             <div class="equipment-detail__location">
-              <p v-if="ad.showAddress">
+              <svg class="equipment-detail__location-icon" width="18" height="41" viewBox="0 0 18 41" fill="currentColor" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                <path fill-rule="evenodd" clip-rule="evenodd" d="M8.60552 40.7989C2.88217 32.8965 0 22.2477 0 8.69393C0 3.89609 3.85199 0.0137671 8.60552 0C13.359 0.0137671 17.211 3.89609 17.211 8.69393C17.211 22.2477 14.3357 32.8965 8.60552 40.7989ZM8.605 14.21C11.7006 14.21 14.21 11.7006 14.21 8.605C14.21 5.50944 11.7006 3 8.605 3C5.50944 3 3 5.50944 3 8.605C3 11.7006 5.50944 14.21 8.605 14.21Z" />
+              </svg>
+              <p v-if="ad.showAddress" class="mb-0">
                 <span class="responsive-text">{{ adAddressReadable }}</span
                 ><br />
                 <b-button variant="link" class="p-0 mr-1 font-weight-bolder" @click="showMap">{{
                   $t("btn.display-ad-on-map")
                 }}</b-button>
               </p>
-              <p v-else>
+              <p v-else class="mb-0">
                 <span class="responsive-text">{{ adCity }}</span
                 ><br />
                 <b-button variant="link" class="p-0 mr-1 font-weight-bolder" @click="showMap">{{
@@ -181,7 +140,7 @@
           <detail-partial-human-resources v-if="ad.category === CATEGORY_HUMAN_RESOURCES" :ad="ad" />
           <detail-partial-other v-if="isMiscCategory" :ad="ad" />
 
-          <div v-if="adAvailability.length && ad.isAvailableForRent" class="border-top border-grey py-6">
+          <div v-if="adAvailability.length && (ad.isAvailableForRent || ad.category === CATEGORY_HUMAN_RESOURCES)" class="border-top border-grey py-6">
             <h2 class="font-family-base font-weight-bold mb-4">
               {{ $t("label.availability") }}
             </h2>
@@ -296,15 +255,14 @@ import {
 } from "@/consts/categories";
 import { VUE_APP_MUTUALI_CONTACT_MAIL } from "@/helpers/env";
 
+
 import { unpublishAd, publishAd, lockAd, unlockAd } from "@/services/ad";
 import { AvailabilityWeekday } from "@/mixins/availability-weekday";
-import { AdHumanResourceField } from "@/mixins/ad-human-resource-field";
-import { PriceDetails } from "@/mixins/price-details";
+import { AdCategory } from "@/mixins/ad-category";
 
 import AdCategoryBadge from "@/components/ad/category-badge";
 import AdRatingCarousel from "@/components/ad/rating-carousel";
 import AdPicture from "@/components/ad/picture";
-import AdTypeCard from "@/components/ad/type-card";
 import Breadcrumb from "@/components/generic/breadcrumb";
 import Carousel from "@/components/generic/carousel";
 import GoogleMap from "@/components/generic/google-map";
@@ -317,14 +275,14 @@ import DetailPartialSubcontracting from "@/components/ad/detail-partial-subcontr
 import DetailPartialHumanResources from "@/components/ad/detail-partial-human-resources";
 import DetailPartialOther from "@/components/ad/detail-partial-other";
 import DetailCalendar from "@/components/ad/detail-calendar";
+import DetailTransactionTypes from "@/components/ad/detail-transaction-types";
 
 export default {
-  mixins: [AvailabilityWeekday, PriceDetails, AdHumanResourceField],
+  mixins: [AvailabilityWeekday, AdCategory],
   components: {
     AdCategoryBadge,
     AdRatingCarousel,
     AdPicture,
-    AdTypeCard,
     Breadcrumb,
     Carousel,
     GoogleMap,
@@ -336,7 +294,8 @@ export default {
     DetailPartialSubcontracting,
     DetailPartialHumanResources,
     DetailPartialOther,
-    DetailCalendar
+    DetailCalendar,
+    DetailTransactionTypes
   },
   data() {
     return {
@@ -400,7 +359,7 @@ export default {
     },
     adMarkers() {
       const markerIcon = this.ad.showAddress
-        ? require("@/assets/icons/marker-red.svg")
+        ? require(`@/assets/icons/marker-${this.getCategoryGroupByCategory(this.ad.category).color}.svg`)
         : require("@/assets/icons/marker-radius.svg");
       return [
         {
@@ -409,9 +368,6 @@ export default {
           icon: markerIcon
         }
       ];
-    },
-    adPriceDetails() {
-      return this.getPriceDetailsFromAd(this.ad);
     },
     adUrlForReport() {
       return encodeURI(window.location.href);
@@ -701,18 +657,27 @@ query LocalUser {
   }
 
   &__location {
-    background: url("~@/assets/icons/marker-red.svg") no-repeat 0 0;
-    background-size: 13px auto;
     margin: $spacer * 2 0;
-    padding: 0 $spacer 0 calc(#{$spacer} + 18px);
+    padding: 0 $spacer;
+    display: flex;
+    align-items: start;
+    column-gap: $spacer;
+
+    &-icon {
+      color: var(--accent-color);
+      width: 13px;
+    }
   }
 
   &__map {
     &-location {
-      background: $light url("~@/assets/icons/marker-red.svg") no-repeat $spacer 50%;
-      background-size: 13px auto;
       margin: 0;
-      padding: $spacer $spacer $spacer calc(#{$spacer * 2} + 13px);
+      padding: $spacer;
+
+      &-icon {
+        color: var(--accent-color);
+        width: 13px;
+      }
     }
   }
 
@@ -732,25 +697,6 @@ query LocalUser {
       transform: translate(-50%, -50%);
       top: 50%;
       left: 50%;
-    }
-  }
-
-  &__types {
-    list-style-type: none;
-    padding-left: 0;
-
-    @include media-breakpoint-up(lg) {
-      display: flex;
-      column-gap: $spacer;
-    }
-
-    & > li {
-      margin-bottom: $spacer / 2;
-
-      @include media-breakpoint-up(lg) {
-        flex: 1 1 0;
-        margin-bottom: 0;
-      }
     }
   }
 }

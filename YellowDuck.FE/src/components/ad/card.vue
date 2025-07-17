@@ -2,7 +2,7 @@
   <router-link
     v-if="ad"
     class="mutuali-ad-card card"
-    :class="{ 'mutuali-ad-card--admin': adIsAdminOnly }"
+    :class="[{ 'mutuali-ad-card--admin': adIsAdminOnly }, getCategoryGroupByCategory(adCategory).color]"
     :to="{ name: $consts.urls.URL_AD_DETAIL, params: { id: ad.id } }"
   >
     <div class="mutuali-ad-card__badge">
@@ -93,12 +93,13 @@
 <script>
 import AdCategoryBadge from "@/components/ad/category-badge";
 import { PriceDetails } from "@/mixins/price-details";
+import { AdCategory } from "@/mixins/ad-category";
 
 export default {
   components: {
     AdCategoryBadge
   },
-  mixins: [PriceDetails],
+  mixins: [PriceDetails, AdCategory],
   props: {
     ad: {
       type: Object,
@@ -225,7 +226,7 @@ export default {
   }
 
   &__overlay-unpublished {
-    background-color: $red;
+    background-color: var(--accent-color);
     opacity: 0.8;
     position: absolute;
     top: 0;
@@ -245,7 +246,7 @@ export default {
     position: absolute;
     top: 8px;
     right: 8px;
-    background-color: $red;
+    background-color: var(--accent-color);
     color: white;
     padding: 4px 8px;
     border-radius: 4px;

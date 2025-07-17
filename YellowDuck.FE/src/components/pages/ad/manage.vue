@@ -39,6 +39,7 @@
           v-for="ad in unpublishedAds"
           :key="ad.id"
           :id="ad.id"
+          :class="getCategoryGroupByCategory(ad.category).color"
           :title="ad.translationOrDefault.title"
           :image="ad.gallery[0]"
           :price-details="getPriceDetailsFromAd(ad)"
@@ -62,11 +63,12 @@
 import AdNoContent from "@/components/ad/no-content.vue";
 import AdSnippet from "@/components/ad/snippet.vue";
 import { CONTENT_LANG_FR } from "@/consts/langs";
+import { AdCategory } from "@/mixins/ad-category";
 import { RatingsCriterias } from "@/mixins/ratings-criterias";
 import { PriceDetails } from "@/mixins/price-details";
 
 export default {
-  mixins: [RatingsCriterias, PriceDetails],
+  mixins: [AdCategory, RatingsCriterias, PriceDetails],
   components: {
     AdNoContent,
     AdSnippet
@@ -130,6 +132,7 @@ query UserProfileById($id: ID!, $language: ContentLanguage!) {
         isPublish
         locked
         isAdminOnly
+        category
         isAvailableForRent
         isAvailableForSale
         isAvailableForTrade

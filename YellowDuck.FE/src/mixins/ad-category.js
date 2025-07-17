@@ -26,22 +26,26 @@ export const AdCategory = {
         {
           value: CATEGORY_GROUP_EQUIPMENT,
           text: this.$t("select.category-group-equipment"),
-          shortText: this.$t("select.category-group-equipment")
+          shortText: this.$t("select.category-group-equipment"),
+          color: "red"
         },
         {
           value: CATEGORY_GROUP_SPACE,
           text: this.$t("select.category-group-space"),
-          shortText: this.$t("select.category-group-space")
+          shortText: this.$t("select.category-group-space"),
+          color: "purple"
         },
         {
           value: CATEGORY_GROUP_WORKFORCE,
           text: this.$t("select.category-group-workforce"),
-          shortText: this.$t("select.category-group-workforce")
+          shortText: this.$t("select.category-group-workforce"),
+          color: "apple"
         },
         {
           value: CATEGORY_GROUP_OTHER,
           text: this.$t("select.category-group-other"),
-          shortText: this.$t("select.category-group-other")
+          shortText: this.$t("select.category-group-other"),
+          color: "blue"
         }
       ],
       categoryOptions: [
@@ -131,22 +135,22 @@ export const AdCategory = {
         case CATEGORY_PREP_EQUIPMENT:
         case CATEGORY_REFRIGERATION_EQUIPMENT:
         case CATEGORY_HEAVY_EQUIPMENT:
-          return CATEGORY_GROUP_EQUIPMENT;
+          return this.categoryGroupOptions.find((x) => x.value === CATEGORY_GROUP_EQUIPMENT);
         case CATEGORY_PROFESSIONAL_KITCHEN:
         case CATEGORY_STORAGE_SPACE:
-          return CATEGORY_GROUP_SPACE;
+          return this.categoryGroupOptions.find((x) => x.value === CATEGORY_GROUP_SPACE);
         case CATEGORY_HUMAN_RESOURCES:
         case CATEGORY_SUBCONTRACTING:
-          return CATEGORY_GROUP_WORKFORCE;
+          return this.categoryGroupOptions.find((x) => x.value === CATEGORY_GROUP_WORKFORCE);
         case CATEGORY_SURPLUS:
         case CATEGORY_OTHER:
-          return CATEGORY_GROUP_OTHER;
+          return this.categoryGroupOptions.find((x) => x.value === CATEGORY_GROUP_OTHER);
         default:
           "";
       }
     },
-    getCategoryOptionsByCategoryGroup: function (categoryGroup) {
-      return this.categoryOptions.filter((x) => this.getCategoryGroupByCategory(x.value) === categoryGroup);
+    getCategoryOptionsByCategoryGroup: function (categoryGroupValue) {
+      return this.categoryOptions.filter((x) => this.getCategoryGroupByCategory(x.value).value === categoryGroupValue);
     }
   }
 };

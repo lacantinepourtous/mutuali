@@ -20,6 +20,7 @@
 :root {
   --offset-outline-color: white;
   --outline-color: #{$green};
+  --accent-color: #{$green};
 
   .gray-lighter {
     --offset-outline-color: #{$gray-100};
@@ -43,6 +44,22 @@
   .yellow {
     --offset-outline-color: #{$yellow};
     --outline-color: #{$gray-900};
+  }
+
+  .red {
+    --accent-color: #{$red};
+  }
+
+  .purple {
+    --accent-color: #{$purple};
+  }
+
+  .apple {
+    --accent-color: #{$apple};
+  }
+
+  .blue {
+    --accent-color: #{$blue};
   }
 }
 

@@ -12,7 +12,7 @@
         :adId="adId"
         :title="ad.translationOrDefault.title"
         :description="ad.translationOrDefault.description"
-        :initialCategoryGroup="getCategoryGroupByCategory(ad.category)"
+        :initialCategoryGroup="getCategoryGroupByCategory(ad.category).value"
         :category="ad.category"
         :is-available-for-sale="ad.isAvailableForSale"
         :is-available-for-rent="ad.isAvailableForRent"

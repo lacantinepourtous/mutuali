@@ -636,6 +636,17 @@ export default {
         this.form.category = "";
       }
     },
+    "form.category"(value, oldValue) {
+      if (value !== oldValue) {
+        this.form.isAvailableForRent = false;
+        this.form.isAvailableForSale = false;
+        this.form.isAvailableForTrade = false;
+        this.form.isAvailableForDonation = false;
+        this.form.dayAvailability = [];
+        this.form.eveningAvailability = [];
+        this.form.availabilityRestriction = [];
+      }
+    }
   },
   computed: {
     hasAtLeastOneTransactionType() {
