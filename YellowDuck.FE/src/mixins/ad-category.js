@@ -144,9 +144,8 @@ export const AdCategory = {
           return this.categoryGroupOptions.find((x) => x.value === CATEGORY_GROUP_WORKFORCE);
         case CATEGORY_SURPLUS:
         case CATEGORY_OTHER:
-          return this.categoryGroupOptions.find((x) => x.value === CATEGORY_GROUP_OTHER);
         default:
-          "";
+          return this.categoryGroupOptions.find((x) => x.value === CATEGORY_GROUP_OTHER);
       }
     },
     getCategoryOptionsByCategoryGroup: function (categoryGroupValue) {

@@ -521,6 +521,7 @@ export default {
   },
   data() {
     return {
+      // TODO: pluralize array properties (certification, allergen, dayAvailability, eveningAvailability, availabilityRestriction, professionalKitchenEquipment)
       form: {
         title: this.title,
         category: this.category,

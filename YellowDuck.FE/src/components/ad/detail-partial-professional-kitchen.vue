@@ -59,6 +59,7 @@ import { ProfessionalKitchenEquipment } from "@/mixins/professional-kitchen-equi
 import { PROFESSIONAL_KITCHEN_EQUIPMENT_OTHER } from "@/consts/professional-kitchen-equipment";
 import { Allergen } from "@/mixins/allergen";
 import { Certification } from "@/mixins/certification";
+import haveHtmlContent from "@/helpers/have-html-content";
 
 export default {
   mixins: [ProfessionalKitchenEquipment, Certification, Allergen],
@@ -74,7 +75,8 @@ export default {
             professionalKitchenEquipmentOther: ""
           },
           professionalKitchenEquipment: null,
-          certification: null
+          certification: null,
+          allergen: null
         };
       }
     }
@@ -85,12 +87,7 @@ export default {
     };
   },
   methods: {
-    haveHtmlContent(content) {
-      if (!content) return false;
-      let divEl = document.createElement("div");
-      divEl.innerHTML = content;
-      return divEl.textContent.trim() !== "";
-    }
+    haveHtmlContent
   }
 };
 </script>

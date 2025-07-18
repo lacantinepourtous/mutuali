@@ -4,10 +4,10 @@
       v-model="form.humanResourceField"
       @input="$emit('input', value)"
       id="humanResourceField"
-      :label="$t('label.ad-humanResourceField')"
+      :label="$t('label.ad-human-resource-field')"
       name="humanResourceField"
       rules="required"
-      :placeholder="$t('placeholder.ad-humanResourceField')"
+      :placeholder="$t('placeholder.ad-human-resource-field')"
       :options="humanResourceFieldOptions"
       required
     />
@@ -16,10 +16,10 @@
       @input="$emit('input', value)"
       v-model="form.humanResourceFieldOther"
       id="humanResourceFieldOther"
-      :label="$t('label.ad-humanResourceFieldOther')"
+      :label="$t('label.ad-human-resource-field-other')"
       name="humanResourceFieldOther"
       rules="required"
-      :placeholder="$t('placeholder.ad-humanResourceFieldOther')"
+      :placeholder="$t('placeholder.ad-human-resource-field-other')"
       required
     />
     <s-form-rich-text-editor
@@ -51,8 +51,8 @@
       v-model="form.geographicCoverage"
       @input="$emit('input', value)"
       name="geographicCoverage"
-      :label="$t('label.ad-geographicCoverage')"
-      :description="$t('placeholder.ad-geographicCoverage')"
+      :label="$t('label.ad-geographic-coverage')"
+      :description="$t('placeholder.ad-geographic-coverage')"
       :headingOn="false"
     />
   </div>

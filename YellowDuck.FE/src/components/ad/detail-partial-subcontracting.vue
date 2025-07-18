@@ -39,6 +39,7 @@
 <script>
 import { Allergen } from "@/mixins/allergen";
 import { Certification } from "@/mixins/certification";
+import haveHtmlContent from "@/helpers/have-html-content";
 
 export default {
   mixins: [Certification, Allergen],
@@ -59,12 +60,7 @@ export default {
     }
   },
   methods: {
-    haveHtmlContent(content) {
-      if (!content) return false;
-      let divEl = document.createElement("div");
-      divEl.innerHTML = content;
-      return divEl.textContent.trim() !== "";
-    }
+    haveHtmlContent
   }
 };
 </script>
