@@ -291,7 +291,7 @@
   "profile-detail.no-reviews": "No reviews to date",
   "btn.conversation-sidebar-show-profile": "View the profile of {name}",
   "profile-snippet.loyal-member": "Loyal member",
-  "profile-snippet.new-member": "New member",
+  "profile-snippet.verified-member": "Verified member",
   "profile-snippet.member-since": "Since {date}",
   "profile-snippet.verified-phone-and-email": "Phone and email verified",
   "profile-snippet.verified-email": "Email verified",

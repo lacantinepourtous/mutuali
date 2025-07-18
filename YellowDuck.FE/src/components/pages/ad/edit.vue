@@ -48,6 +48,11 @@
         :canSharedRoad="ad.canSharedRoad"
         :certification="ad.certification"
         :allergen="ad.allergen"
+        :humanResourceField="ad.humanResourceField"
+        :humanResourceFieldOther="ad.translationOrDefault.humanResourceFieldOther"
+        :tasks="ad.translationOrDefault.tasks"
+        :qualifications="ad.translationOrDefault.qualifications"
+        :geographicCoverage="ad.translationOrDefault.geographicCoverage"
         @submitForm="editAd"
         :btnLabel="$t('btn.edit-ad-save')"
         :transferBtnLabel="$t('btn.transfer-ad')"
@@ -206,6 +211,10 @@ query AdById($id: ID!, $language: ContentLanguage!) {
       surfaceDescription
       professionalKitchenEquipmentOther
       deliveryTruckTypeOther
+      humanResourceFieldOther
+      tasks
+      qualifications
+      geographicCoverage
     }
     address {
       id
@@ -247,6 +256,7 @@ query AdById($id: ID!, $language: ContentLanguage!) {
     }
     certification
     allergen
+    humanResourceField
   }
 }
 </graphql>

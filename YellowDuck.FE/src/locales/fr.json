@@ -290,7 +290,7 @@
   "profile-detail.no-reviews": "Aucun avis à ce jour",
   "btn.conversation-sidebar-show-profile": "Voir le profil de {name}",
   "profile-snippet.loyal-member": "Membre loyal.e",
-  "profile-snippet.new-member": "Nouvelle.au membre",
+  "profile-snippet.verified-member": "Membre vérifié.e",
   "profile-snippet.member-since": "Depuis {date}",
   "profile-snippet.verified-phone-and-email": "Téléphone et courriel vérifiés",
   "profile-snippet.verified-email": "Courriel vérifié",
