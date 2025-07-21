@@ -115,7 +115,8 @@ namespace YellowDuck.ApiTests.Requests.Commands.Mutations.Ads
                 },
                 Refrigerated = true,
                 CanHaveDriver = true,
-                CanSharedRoad = false
+                CanSharedRoad = false,
+                HumanResourceField = HumanResourceField.Maintenance
             };
             return input;
         }
@@ -151,6 +152,7 @@ namespace YellowDuck.ApiTests.Requests.Commands.Mutations.Ads
                 ad.Refrigerated.Should().Be(true);
                 ad.CanHaveDriver.Should().Be(true);
                 ad.CanSharedRoad.Should().Be(false);
+                ad.HumanResourceField.Should().Be(HumanResourceField.Maintenance);
             }
         }
 

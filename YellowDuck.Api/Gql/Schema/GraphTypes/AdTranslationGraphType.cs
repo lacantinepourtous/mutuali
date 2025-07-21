@@ -28,5 +28,9 @@ namespace YellowDuck.Api.Gql.Schema.GraphTypes
         public Task<string> Equipment => WithData(x => x.Equipment);
         public Task<string> SurfaceSize => WithData(x => x.SurfaceSize);
         public Task<string> DeliveryTruckTypeOther => WithData(x => x.DeliveryTruckTypeOther);
+        public Task<string> HumanResourceFieldOther => WithData(x =>x.HumanResourceFieldOther);
+        public Task<string> Tasks => WithData(x => x.Tasks);
+        public Task<string> Qualifications => WithData(x => x.Qualifications);
+        public Task<string> GeographicCoverage => WithData(x => x.GeographicCoverage);
     }
 }

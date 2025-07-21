@@ -12,6 +12,7 @@
         :adId="adId"
         :title="ad.translationOrDefault.title"
         :description="ad.translationOrDefault.description"
+        :initialCategoryGroup="getCategoryGroupByCategory(ad.category).value"
         :category="ad.category"
         :is-available-for-sale="ad.isAvailableForSale"
         :is-available-for-rent="ad.isAvailableForRent"
@@ -47,6 +48,11 @@
         :canSharedRoad="ad.canSharedRoad"
         :certification="ad.certification"
         :allergen="ad.allergen"
+        :humanResourceField="ad.humanResourceField"
+        :humanResourceFieldOther="ad.translationOrDefault.humanResourceFieldOther"
+        :tasks="ad.translationOrDefault.tasks"
+        :qualifications="ad.translationOrDefault.qualifications"
+        :geographicCoverage="ad.translationOrDefault.geographicCoverage"
         @submitForm="editAd"
         :btnLabel="$t('btn.edit-ad-save')"
         :transferBtnLabel="$t('btn.transfer-ad')"
@@ -68,6 +74,7 @@
 import NavClose from "@/components/nav/close";
 import FormComplete from "@/components/generic/form-complete";
 import AdForm from "@/components/ad/form";
+import { AdCategory } from "@/mixins/ad-category";
 
 import { URL_ROOT, URL_AD_DETAIL, URL_AD_EDIT } from "@/consts/urls";
 import { CONTENT_LANG_FR } from "@/consts/langs";
@@ -76,6 +83,7 @@ import NotificationService from "@/services/notification";
 import { updateAd } from "@/services/ad";
 
 export default {
+  mixins: [AdCategory],
   components: {
     NavClose,
     AdForm,
@@ -203,6 +211,10 @@ query AdById($id: ID!, $language: ContentLanguage!) {
       surfaceDescription
       professionalKitchenEquipmentOther
       deliveryTruckTypeOther
+      humanResourceFieldOther
+      tasks
+      qualifications
+      geographicCoverage
     }
     address {
       id
@@ -244,6 +256,7 @@ query AdById($id: ID!, $language: ContentLanguage!) {
     }
     certification
     allergen
+    humanResourceField
   }
 }
 </graphql>

@@ -74,6 +74,7 @@ namespace YellowDuck.Api.Requests.Commands.Mutations.Ads
             request.CanSharedRoad.IfSet(v => ad.CanSharedRoad = v);
             request.CanHaveDriver.IfSet(v => ad.CanHaveDriver = v);
             request.Allergen.IfSet(v => UpdateAllergens(ad, v));
+            request.HumanResourceField.IfSet(v => ad.HumanResourceField = v);
 
             await db.SaveChangesAsync(cancellationToken);
 
@@ -225,6 +226,7 @@ namespace YellowDuck.Api.Requests.Commands.Mutations.Ads
             public Maybe<bool> CanSharedRoad { get; set; }
             public Maybe<bool> CanHaveDriver { get; set; }
             public Maybe<List<Allergen>> Allergen { get; set; }
+            public Maybe<HumanResourceField> HumanResourceField { get; set; }
         }
 
         [MutationPayload]

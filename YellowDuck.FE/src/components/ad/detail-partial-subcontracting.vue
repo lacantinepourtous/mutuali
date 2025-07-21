@@ -1,8 +1,8 @@
 <template>
   <div>
-    <div v-if="haveHtmlContent(ad.translationOrDefault.surfaceDescription)" class="border-top border-grey py-6">
-      <h2 class="font-family-base font-weight-bold mb-4">{{ $t("label.ad-surfaceDescription") }}</h2>
-      <div class="rm-child-margin" v-html="ad.translationOrDefault.surfaceDescription"></div>
+    <div v-if="haveHtmlContent(ad.translationOrDefault.tasks)" class="border-top border-grey py-6">
+      <h2 class="font-family-base font-weight-bold mb-4">{{ $t("label.ad-tasks-subcontracting") }}</h2>
+      <div class="rm-child-margin" v-html="ad.translationOrDefault.tasks"></div>
     </div>
     <div v-if="haveHtmlContent(ad.translationOrDefault.description)" class="border-top border-grey py-6">
       <h2 class="font-family-base font-weight-bold mb-4">{{ $t("label.ad-description") }}</h2>
@@ -11,24 +11,6 @@
     <div v-if="haveHtmlContent(ad.translationOrDefault.conditions)" class="border-top border-grey py-6">
       <h2 class="font-family-base font-weight-bold mb-4">{{ $t("label.ad-conditions") }}</h2>
       <div class="rm-child-margin" v-html="ad.translationOrDefault.conditions"></div>
-    </div>
-    <div v-if="ad.professionalKitchenEquipment.length" class="border-top border-grey py-6">
-      <h2 class="font-family-base font-weight-bold mb-4">{{ $t("label.ad-equipments-inclusions") }}</h2>
-      <div class="rm-child-margin">
-        <ul>
-          <li
-            v-for="professionalKitchenEquipment in ad.professionalKitchenEquipment"
-            :key="professionalKitchenEquipment"
-            class="mb-3"
-          >
-            {{
-              professionalKitchenEquipment == PROFESSIONAL_KITCHEN_EQUIPMENT_OTHER
-                ? ad.translationOrDefault.professionalKitchenEquipmentOther
-                : getProfessionalKitchenEquipmentLabel(professionalKitchenEquipment)
-            }}
-          </li>
-        </ul>
-      </div>
     </div>
     <div v-if="ad.certification.length" class="border-top border-grey py-6">
       <h2 class="font-family-base font-weight-bold mb-4">{{ $t("section-title.certifications") }}</h2>
@@ -55,36 +37,27 @@
 </template>
 
 <script>
-import { ProfessionalKitchenEquipment } from "@/mixins/professional-kitchen-equipment";
-import { PROFESSIONAL_KITCHEN_EQUIPMENT_OTHER } from "@/consts/professional-kitchen-equipment";
 import { Allergen } from "@/mixins/allergen";
 import { Certification } from "@/mixins/certification";
 import haveHtmlContent from "@/helpers/have-html-content";
 
 export default {
-  mixins: [ProfessionalKitchenEquipment, Certification, Allergen],
+  mixins: [Certification, Allergen],
   props: {
     ad: {
       type: Object,
       default() {
         return {
           translationOrDefault: {
-            surfaceDescription: "",
+            tasks: "",
             description: "",
             conditions: "",
-            professionalKitchenEquipmentOther: ""
           },
-          professionalKitchenEquipment: null,
-          certification: null,
-          allergen: null
+          allergen: null,
+          certification: null
         };
       }
     }
-  },
-  data: function () {
-    return {
-      PROFESSIONAL_KITCHEN_EQUIPMENT_OTHER
-    };
   },
   methods: {
     haveHtmlContent

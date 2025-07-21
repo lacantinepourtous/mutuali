@@ -1,5 +1,5 @@
 <template>
-  <div v-if="ad" class="equipment-detail fab-container" :class="{ 'equipment-detail--modal': displayMap }">
+  <div v-if="ad" class="equipment-detail fab-container" :class="[getCategoryGroupByCategory(ad.category).color, { 'equipment-detail--modal': displayMap }]">
     <div v-if="ad.isAdminOnly" class="px-3 py-2 yellow equipment-detail__notif">
       <b-img class="equipment-detail__notif-icon" :src="require('@/assets/icons/invisible.svg')" alt="" height="20" block></b-img>
       {{ $t("banner.ad-is-admin-only") }}
@@ -22,6 +22,9 @@
       </div>
       <div class="equipment-detail__model-footer">
         <p class="equipment-detail__map-location">
+          <svg class="equipment-detail__map-location-icon" width="18" height="41" viewBox="0 0 18 41" fill="currentColor" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+            <path fill-rule="evenodd" clip-rule="evenodd" d="M8.60552 40.7989C2.88217 32.8965 0 22.2477 0 8.69393C0 3.89609 3.85199 0.0137671 8.60552 0C13.359 0.0137671 17.211 3.89609 17.211 8.69393C17.211 22.2477 14.3357 32.8965 8.60552 40.7989ZM8.605 14.21C11.7006 14.21 14.21 11.7006 14.21 8.605C14.21 5.50944 11.7006 3 8.605 3C5.50944 3 3 5.50944 3 8.605C3 11.7006 5.50944 14.21 8.605 14.21Z" />
+          </svg>
           <template v-if="ad.showAddress">
             {{ adAddressReadable }}
           </template>
@@ -104,52 +107,22 @@
             </p>
 
             <h1 class="my-4">{{ ad.translationOrDefault.title }}</h1>
-            <ul class="equipment-detail__types">
-              <li v-if="adPriceDetails.isAvailableForRent">
-                <AdTypeCard
-                  :title="$t('label.forRent')"
-                  :price="adPriceDetails.rentPrice"
-                  :price-to-be-determined="adPriceDetails.rentPriceToBeDetermined"
-                  :modality="adPriceDetails.rentPriceDescription"
-                  :footnote="adPriceDetails.rentPriceRange"
-                >
-                  <b-img :src="require('@/assets/icons/rent.svg')" alt="" height="30" block></b-img>
-                </AdTypeCard>
-              </li>
-              <li v-if="adPriceDetails.isAvailableForSale">
-                <AdTypeCard
-                  :title="$t('label.forSale')"
-                  :price="adPriceDetails.salePrice"
-                  :price-to-be-determined="adPriceDetails.salePriceToBeDetermined"
-                  :modality="adPriceDetails.salePriceDescription"
-                  :footnote="adPriceDetails.salePriceRange"
-                >
-                  <b-img :src="require('@/assets/icons/sale.svg')" alt="" height="30" block></b-img>
-                </AdTypeCard>
-              </li>
-              <li v-if="adPriceDetails.isAvailableForTrade">
-                <AdTypeCard :title="$t('label.forTrade')" :description="adPriceDetails.tradeDescription">
-                  <b-img :src="require('@/assets/icons/trade.svg')" alt="" height="30" block></b-img>
-                </AdTypeCard>
-              </li>
-              <li v-if="adPriceDetails.isAvailableForDonation">
-                <AdTypeCard :title="$t('label.forDonation')" :description="adPriceDetails.donationDescription">
-                  <b-img :src="require('@/assets/icons/donation.svg')" alt="" height="30" block></b-img>
-                </AdTypeCard>
-              </li>
-            </ul>
+            <detail-transaction-types :ad="ad" />
           </div>
 
           <div class="border-top border-grey mt-6">
             <div class="equipment-detail__location">
-              <p v-if="ad.showAddress">
+              <svg class="equipment-detail__location-icon" width="18" height="41" viewBox="0 0 18 41" fill="currentColor" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                <path fill-rule="evenodd" clip-rule="evenodd" d="M8.60552 40.7989C2.88217 32.8965 0 22.2477 0 8.69393C0 3.89609 3.85199 0.0137671 8.60552 0C13.359 0.0137671 17.211 3.89609 17.211 8.69393C17.211 22.2477 14.3357 32.8965 8.60552 40.7989ZM8.605 14.21C11.7006 14.21 14.21 11.7006 14.21 8.605C14.21 5.50944 11.7006 3 8.605 3C5.50944 3 3 5.50944 3 8.605C3 11.7006 5.50944 14.21 8.605 14.21Z" />
+              </svg>
+              <p v-if="ad.showAddress" class="mb-0">
                 <span class="responsive-text">{{ adAddressReadable }}</span
                 ><br />
                 <b-button variant="link" class="p-0 mr-1 font-weight-bolder" @click="showMap">{{
                   $t("btn.display-ad-on-map")
                 }}</b-button>
               </p>
-              <p v-else>
+              <p v-else class="mb-0">
                 <span class="responsive-text">{{ adCity }}</span
                 ><br />
                 <b-button variant="link" class="p-0 mr-1 font-weight-bolder" @click="showMap">{{
@@ -163,9 +136,11 @@
           <detail-partial-delivery-truck v-if="ad.category === CATEGORY_DELIVERY_TRUCK" :ad="ad" />
           <detail-partial-professional-kitchen v-if="ad.category === CATEGORY_PROFESSIONAL_KITCHEN" :ad="ad" />
           <detail-partial-storage-space v-if="ad.category === CATEGORY_STORAGE_SPACE" :ad="ad" />
+          <detail-partial-subcontracting v-if="ad.category === CATEGORY_SUBCONTRACTING" :ad="ad" />
+          <detail-partial-human-resources v-if="ad.category === CATEGORY_HUMAN_RESOURCES" :ad="ad" />
           <detail-partial-other v-if="isMiscCategory" :ad="ad" />
 
-          <div v-if="adAvailability.length && ad.isAvailableForRent" class="border-top border-grey py-6">
+          <div v-if="adAvailability.length && (ad.isAvailableForRent || ad.category === CATEGORY_HUMAN_RESOURCES)" class="border-top border-grey py-6">
             <h2 class="font-family-base font-weight-bold mb-4">
               {{ $t("label.availability") }}
             </h2>
@@ -199,23 +174,26 @@
         </div>
       </div>
      
-      <div v-if="ad.isPublish" class="fab-container__fab" :class="isAdOwnByCurrentUser ? 'section section--md mt-4' : 'px-3'">
-        <template v-if="isAdOwnByCurrentUser">
-          <b-button variant="primary" size="lg" class="text-truncate" block @click="editAd">
+      <div v-if="ad.isPublish" class="fab-container__fab" :class="(isAdOwnByCurrentUser || isAdmin) ? 'text-center bg-light p-3' : 'px-3'">
+        <template v-if="isAdOwnByCurrentUser || isAdmin">
+          <b-button variant="primary" size="lg" class="text-truncate mx-1" @click="editAd">
             <b-icon icon="pencil" class="mr-1" aria-hidden="true"></b-icon>
             {{ $t("btn.edit-ad") }}
           </b-button>
-          <b-button v-if="ad.isAdminOnly" variant="admin" size="lg" class="text-truncate" block @click="transferAd">
+          <b-button v-if="ad.isAdminOnly" variant="admin" size="lg" class="text-truncate mx-1" @click="transferAd">
             <b-icon icon="arrow-right" class="mr-1" aria-hidden="true"></b-icon>
             {{ $t("btn.transfer-ad") }}
           </b-button>
-          <b-button v-if="!ad.isAdminOnly" variant="danger" size="lg" class="text-truncate" block @click="unpublishAd">
+          <b-button v-if="!ad.isAdminOnly" variant="danger" size="lg" class="text-truncate mx-1" @click="unpublishAd">
+            <b-icon icon="eye-slash" class="mr-1" aria-hidden="true"></b-icon>
             {{ $t("btn.unpublish-ad") }}
           </b-button>
-          <b-button v-if="isAdmin && !ad.locked" variant="warning" size="lg" class="text-truncate" block @click="lockAd">
+          <b-button v-if="isAdmin && !ad.locked" variant="warning" size="lg" class="text-truncate mx-1" @click="lockAd">
+            <b-icon icon="x-circle" class="mr-1" aria-hidden="true"></b-icon>
             {{ $t("btn.lock-ad") }}
           </b-button>
-          <b-button v-if="isAdmin && ad.locked" variant="success" size="lg" class="text-truncate" block @click="unlockAd">
+          <b-button v-if="isAdmin && ad.locked" variant="success" size="lg" class="text-truncate mx-1" @click="unlockAd">
+            <b-icon icon="check-circle" class="mr-1" aria-hidden="true"></b-icon>
             {{ $t("btn.unlock-ad") }}
           </b-button>
         </template>
@@ -234,7 +212,7 @@
           </b-button>
         </div>
       </div>
-      <div v-else class="fab-container__fab mt-4" :class="(isAdOwnByCurrentUser || isAdmin) ? 'section section--md section--padding-x bg-light py-3' : 'px-3'">
+      <div v-else class="fab-container__fab mt-4" :class="(isAdOwnByCurrentUser || isAdmin) ? 'text-center bg-light p-3' : 'px-3'">
         <p v-if="(isAdOwnByCurrentUser || isAdmin) && haveJustUnpublish">
           {{ $t("text.ad-notpublish-owner") }}
         </p>
@@ -274,18 +252,20 @@ import {
   CATEGORY_REFRIGERATION_EQUIPMENT,
   CATEGORY_HEAVY_EQUIPMENT,
   CATEGORY_SURPLUS,
+  CATEGORY_SUBCONTRACTING,
+  CATEGORY_HUMAN_RESOURCES,
   CATEGORY_OTHER
 } from "@/consts/categories";
 import { VUE_APP_MUTUALI_CONTACT_MAIL } from "@/helpers/env";
 
+
 import { unpublishAd, publishAd, lockAd, unlockAd } from "@/services/ad";
 import { AvailabilityWeekday } from "@/mixins/availability-weekday";
-import { PriceDetails } from "@/mixins/price-details";
+import { AdCategory } from "@/mixins/ad-category";
 
 import AdCategoryBadge from "@/components/ad/category-badge";
 import AdRatingCarousel from "@/components/ad/rating-carousel";
 import AdPicture from "@/components/ad/picture";
-import AdTypeCard from "@/components/ad/type-card";
 import Breadcrumb from "@/components/generic/breadcrumb";
 import Carousel from "@/components/generic/carousel";
 import GoogleMap from "@/components/generic/google-map";
@@ -294,16 +274,18 @@ import UserProfileSnippet from "@/components/user-profile/snippet";
 import DetailPartialDeliveryTruck from "@/components/ad/detail-partial-delivery-truck";
 import DetailPartialProfessionalKitchen from "@/components/ad/detail-partial-professional-kitchen";
 import DetailPartialStorageSpace from "@/components/ad/detail-partial-storage-space";
+import DetailPartialSubcontracting from "@/components/ad/detail-partial-subcontracting";
+import DetailPartialHumanResources from "@/components/ad/detail-partial-human-resources";
 import DetailPartialOther from "@/components/ad/detail-partial-other";
 import DetailCalendar from "@/components/ad/detail-calendar";
+import DetailTransactionTypes from "@/components/ad/detail-transaction-types";
 
 export default {
-  mixins: [AvailabilityWeekday, PriceDetails],
+  mixins: [AvailabilityWeekday, AdCategory],
   components: {
     AdCategoryBadge,
     AdRatingCarousel,
     AdPicture,
-    AdTypeCard,
     Breadcrumb,
     Carousel,
     GoogleMap,
@@ -312,8 +294,11 @@ export default {
     DetailPartialDeliveryTruck,
     DetailPartialProfessionalKitchen,
     DetailPartialStorageSpace,
+    DetailPartialSubcontracting,
+    DetailPartialHumanResources,
     DetailPartialOther,
-    DetailCalendar
+    DetailCalendar,
+    DetailTransactionTypes
   },
   data() {
     return {
@@ -328,6 +313,8 @@ export default {
       CATEGORY_REFRIGERATION_EQUIPMENT,
       CATEGORY_HEAVY_EQUIPMENT,
       CATEGORY_SURPLUS,
+      CATEGORY_SUBCONTRACTING,
+      CATEGORY_HUMAN_RESOURCES,
       CATEGORY_OTHER
     };
   },
@@ -375,7 +362,7 @@ export default {
     },
     adMarkers() {
       const markerIcon = this.ad.showAddress
-        ? require("@/assets/icons/marker-red.svg")
+        ? require(`@/assets/icons/marker-${this.getCategoryGroupByCategory(this.ad.category).color}.svg`)
         : require("@/assets/icons/marker-radius.svg");
       return [
         {
@@ -384,9 +371,6 @@ export default {
           icon: markerIcon
         }
       ];
-    },
-    adPriceDetails() {
-      return this.getPriceDetailsFromAd(this.ad);
     },
     adUrlForReport() {
       return encodeURI(window.location.href);
@@ -526,6 +510,10 @@ query AdById($id: ID!, $language: ContentLanguage!) {
       surfaceDescription
       professionalKitchenEquipmentOther
       deliveryTruckTypeOther
+      humanResourceFieldOther
+      tasks
+      qualifications
+      geographicCoverage
     }
     address {
       id
@@ -567,6 +555,7 @@ query AdById($id: ID!, $language: ContentLanguage!) {
     canHaveDriver
     professionalKitchenEquipment
     deliveryTruckType
+    humanResourceField
     dayAvailability
     eveningAvailability
     availabilityRestriction {
@@ -671,18 +660,27 @@ query LocalUser {
   }
 
   &__location {
-    background: url("~@/assets/icons/marker-red.svg") no-repeat 0 0;
-    background-size: 13px auto;
     margin: $spacer * 2 0;
-    padding: 0 $spacer 0 calc(#{$spacer} + 18px);
+    padding: 0 $spacer;
+    display: flex;
+    align-items: start;
+    column-gap: $spacer;
+
+    &-icon {
+      color: var(--accent-color);
+      width: 13px;
+    }
   }
 
   &__map {
     &-location {
-      background: $light url("~@/assets/icons/marker-red.svg") no-repeat $spacer 50%;
-      background-size: 13px auto;
       margin: 0;
-      padding: $spacer $spacer $spacer calc(#{$spacer * 2} + 13px);
+      padding: $spacer;
+
+      &-icon {
+        color: var(--accent-color);
+        width: 13px;
+      }
     }
   }
 
@@ -702,25 +700,6 @@ query LocalUser {
       transform: translate(-50%, -50%);
       top: 50%;
       left: 50%;
-    }
-  }
-
-  &__types {
-    list-style-type: none;
-    padding-left: 0;
-
-    @include media-breakpoint-up(lg) {
-      display: flex;
-      column-gap: $spacer;
-    }
-
-    & > li {
-      margin-bottom: $spacer / 2;
-
-      @include media-breakpoint-up(lg) {
-        flex: 1 1 0;
-        margin-bottom: 0;
-      }
     }
   }
 }

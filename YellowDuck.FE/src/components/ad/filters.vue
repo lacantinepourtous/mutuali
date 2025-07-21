@@ -2,17 +2,8 @@
   <div class="search-filters">
     <div class="section section--lg my-4 my-md-5">
       <h2 class="mb-3">{{ $t("label.advancedSearch") }}</h2>
-      <s-form-select
-        class="search-filters__select"
-        :value="filters.category"
-        @input="(value) => updateFilters('category', value)"
-        id="adCategory"
-        name="adCategory"
-        :label="$t('label-whichCategory')"
-        :options="categoryOptions"
-        right
-        variant="outline-secondary"
-      />
+      <p class="label mb-1">{{ $t('label-whichCategory') }}</p>
+      <ad-filters-category class="search-filters__select" id="adCategoryFilterAdvancedSearch" :category="filters.category" @update:category="(value) => updateFilters('category', value)" />
     </div>
     <hr />
 
@@ -64,6 +55,7 @@
 
         <div class="search-filters__col">
           <s-form-availability
+            v-if="filters.category !== CATEGORY_SUBCONTRACTING"
             id="availability"
             :legend="$t('label.availability')"
             legend-class="label mb-0"
@@ -94,25 +86,20 @@
 import {
   CATEGORY_PROFESSIONAL_KITCHEN,
   CATEGORY_DELIVERY_TRUCK,
-  CATEGORY_STORAGE_SPACE,
-  CATEGORY_PROFESSIONAL_COOKING_EQUIPMENT,
-  CATEGORY_PREP_EQUIPMENT,
-  CATEGORY_REFRIGERATION_EQUIPMENT,
-  CATEGORY_HEAVY_EQUIPMENT,
-  CATEGORY_SURPLUS,
-  CATEGORY_OTHER
+  CATEGORY_SUBCONTRACTING
 } from "@/consts/categories";
 
 import SFormCheckboxGroup from "@/components/form/s-form-checkbox-group";
 import SFormAvailability from "@/components/form/s-form-availability";
 import SFormCheckbox from "@/components/form/s-form-checkbox";
 import SFormSelect from "@/components/form/s-form-select";
+import AdFiltersCategory from "@/components/ad/filters-category";
 
 import { AdCategory } from "@/mixins/ad-category";
-
 import { ProfessionalKitchenEquipment } from "@/mixins/professional-kitchen-equipment";
 import { AdDeliveryTruckType } from "@/mixins/ad-delivery-truck-type";
 import { AvailabilityWeekday } from "@/mixins/availability-weekday";
+
 const defaultFilterValue = {
   category: null,
   professionalKitchenEquipment: [],
@@ -123,9 +110,10 @@ const defaultFilterValue = {
   canHaveDriver: false,
   canSharedRoad: false
 };
+
 export default {
   mixins: [AdCategory, ProfessionalKitchenEquipment, AvailabilityWeekday, AdDeliveryTruckType],
-  components: { SFormCheckboxGroup, SFormAvailability, SFormCheckbox, SFormSelect },
+  components: { SFormCheckboxGroup, SFormAvailability, SFormCheckbox, SFormSelect, AdFiltersCategory },
   props: {
     value: {
       type: Object,
@@ -150,26 +138,9 @@ export default {
     return {
       filters: { ...this.value },
       professionalKitchenEquipment: [],
-      categoryOptions: [
-        { value: null, text: this.$t("select.all-equipment") },
-        {
-          value: CATEGORY_PROFESSIONAL_KITCHEN,
-          text: this.$t("select.category-professional-kitchen")
-        },
-        {
-          value: CATEGORY_DELIVERY_TRUCK,
-          text: this.$t("select.category-delivery-truck")
-        },
-        { value: CATEGORY_STORAGE_SPACE, text: this.$t("select.category-storage-space") },
-        { value: CATEGORY_PROFESSIONAL_COOKING_EQUIPMENT, text: this.$t("select.category-professional-cooking-equipment") },
-        { value: CATEGORY_PREP_EQUIPMENT, text: this.$t("select.category-prep-equipment") },
-        { value: CATEGORY_REFRIGERATION_EQUIPMENT, text: this.$t("select.category-refrigeration-equipment") },
-        { value: CATEGORY_HEAVY_EQUIPMENT, text: this.$t("select.category-heavy-equipment") },
-        { value: CATEGORY_SURPLUS, text: this.$t("select.category-surplus") },
-        { value: CATEGORY_OTHER, text: this.$t("select.category-other") }
-      ],
       CATEGORY_PROFESSIONAL_KITCHEN,
-      CATEGORY_DELIVERY_TRUCK
+      CATEGORY_DELIVERY_TRUCK,
+      CATEGORY_SUBCONTRACTING
     };
   },
   computed: {
@@ -205,7 +176,7 @@ export default {
   }
 
   &__select {
-    width: calc(100% + 10px);
+    width: 100%;
   }
 
   .label {

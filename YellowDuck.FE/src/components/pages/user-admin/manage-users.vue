@@ -24,12 +24,12 @@
           <td class="px-4">
             <b-button-group>
               <b-button
-              v-if="!slotProps.item.isConfirmed"
-              class="text-nowrap"
-              variant="outline-primary"
-              size="sm"
-              @click="resendVerificationEmail(slotProps.item)">
-                {{ $t("btn.resend-verification-email") }}
+                v-if="!slotProps.item.isConfirmed"
+                variant="outline-primary"
+                size="sm"
+                @click="resendVerificationEmail(slotProps.item)">
+                <b-icon icon="envelope" />
+                <span class="sr-only">{{ $t("btn.resend-verification-email") }}</span>
               </b-button>
               <b-button
                 variant="outline-primary"
@@ -38,8 +38,13 @@
                 <b-icon icon="pencil" />
                 <span class="sr-only">{{ $t("btn.modify-user") }}</span>
               </b-button>
-              <b-button v-if="!slotProps.item.isConfirmed" variant="outline-primary" size="sm" @click="confirmEmail(slotProps.item)">
-                {{ $t("btn.allow-user") }}
+              <b-button 
+                v-if="!slotProps.item.isConfirmed" 
+                variant="outline-primary" 
+                size="sm" 
+                @click="confirmEmail(slotProps.item)">
+                <b-icon icon="check-circle" />
+                <span class="sr-only">{{ $t("btn.allow-user") }}</span>
               </b-button>
               <b-button variant="outline-danger" size="sm" @click="openDeleteUserProfileModal(slotProps.item)">
                 <b-icon icon="trash" />

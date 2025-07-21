@@ -20,6 +20,8 @@
 </template>
 
 <script>
+import haveHtmlContent from "@/helpers/have-html-content";
+
 export default {
   props: {
     ad: {
@@ -38,12 +40,7 @@ export default {
     }
   },
   methods: {
-    haveHtmlContent(content) {
-      if (!content) return false;
-      let divEl = document.createElement("div");
-      divEl.innerHTML = content;
-      return divEl.textContent.trim() !== "";
-    }
+    haveHtmlContent
   }
 };
 </script>
