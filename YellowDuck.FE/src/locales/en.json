@@ -586,6 +586,7 @@
   "sr.play-video": "Play video",
   "sr.edit": "Edit",
   "sr.send-message": "Send message",
+  "sr.send-first-message": "Start the conversation",
   "sr.open": "Open",
   "sr.close": "Close",
   "sr.user-menu-toggle": "user menu",
