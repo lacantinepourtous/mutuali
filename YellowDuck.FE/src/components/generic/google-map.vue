@@ -90,26 +90,7 @@ export default {
     };
   },
   mounted() {
-    this.$refs.mapRef.$mapPromise.then((map) => {
-      map.mapTypes.set(
-        "styled_map",
-        new this.google.maps.StyledMapType(require("@/assets/gmap/style.json"), {
-          name: "Styled Map"
-        })
-      );
-
-      this.google.maps.event.addListenerOnce(map, "idle", () => {
-        this.fitBoundsIfNeeded();
-      });
-    });
-
-    if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(this.setCenterPosition);
-    }
-
-    if (this.geolocationControl) {
-      this.addGeolocationControl();
-    }
+    this.initMap();
   },
   computed: {
     allMarkers: function () {
@@ -172,6 +153,27 @@ export default {
     }
   },
   methods: {
+    async initMap() {
+      var map = await this.$refs.mapRef.$mapPromise;
+      map.mapTypes.set(
+        "styled_map",
+        new this.google.maps.StyledMapType(require("@/assets/gmap/style.json"), {
+          name: "Styled Map"
+        })
+      );
+
+      this.google.maps.event.addListenerOnce(map, "idle", () => {
+        this.fitBoundsIfNeeded();
+      });
+
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(this.setCenterPosition);
+      }
+
+      if (this.geolocationControl) {
+        this.addGeolocationControl();
+      }
+    },
     centerChanged(latLng) {
       if (this.preventEmitEvents) return;
       this.$emit("mapMoved", { lat: latLng.lat(), lng: latLng.lng() });

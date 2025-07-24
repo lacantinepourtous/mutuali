@@ -508,15 +508,15 @@ export default {
     },
     qualifications: {
       type: String,
-      default: ""
+      default: "<p></p>"
     },
     tasks: {
       type: String,
-      default: ""
+      default: "<p></p>"
     },
     geographicCoverage: {
       type: String,
-      default: ""
+      default: "<p></p>"
     }
   },
   data() {
