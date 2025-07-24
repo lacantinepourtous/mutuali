@@ -71,6 +71,9 @@ button,
 .btn-secondary,
 .btn-outline-primary,
 .btn-outline-secondary,
+.btn-outline-danger,
+.btn-warning,
+.btn-danger,
 .btn-admin,
 .btn-info,
 .form-control,
@@ -104,7 +107,9 @@ button,
 .btn-secondary,
 .btn-outline-primary,
 .btn-outline-admin,
+.btn-outline-danger,
 .btn-warning,
+.btn-danger,
 .btn-success,
 .btn-danger,
 .btn-admin,
@@ -200,6 +205,14 @@ button,
     background-color: $gray-900;
     border-color: $gray-900;
     color: $gray-100;
+  }
+}
+
+.btn-outline-danger {
+  &:hover {
+    background-color: transparent;
+    color: $red-darker;
+    box-shadow: 0px 3px 0px $red-darker;
   }
 }
 

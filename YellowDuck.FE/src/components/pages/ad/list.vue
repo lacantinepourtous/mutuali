@@ -67,8 +67,9 @@
       </div>
 
       <google-map
+        :key="mapKey"
         ref="map"
-        v-show="view === CARD_VIEW"
+        v-if="view === CARD_VIEW && mapHasRefreshed"
         :markers="adMarkers"
         marker-clickable
         @mapClicked="mapClicked"
@@ -360,6 +361,11 @@ export default {
       return new this.google.maps.LatLng(this.researchPosition.latitude, this.researchPosition.longitude);
     },
     google: gmapApi,
+    mapKey() {
+      // Use category and a stable, order-independent marker id set
+      const markerIds = this.adMarkers.map(m => m.id).sort().join(',');
+      return `${this.filters.category || 'all'}-${markerIds}`;
+    }
   },
   methods: {
     mapMoved(latLng) {
@@ -608,7 +614,8 @@ export default {
       ],
       view: this.$router.currentRoute.query.view == LIST_VIEW ? LIST_VIEW : CARD_VIEW,
       CARD_VIEW,
-      LIST_VIEW
+      LIST_VIEW,
+      mapHasRefreshed: true
     };
   },
   mounted() {
@@ -636,6 +643,11 @@ export default {
         this.filters.canHaveDriver = false;
         this.filters.canSharedRoad = false;
       }
+      // Wait for the next tick to ensure the map is updated
+      this.mapHasRefreshed = false;
+      this.$nextTick(() => {
+        this.mapHasRefreshed = true;
+      });
     }
   },
   apollo: {

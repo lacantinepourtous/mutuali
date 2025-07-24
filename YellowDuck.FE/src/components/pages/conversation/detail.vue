@@ -16,8 +16,8 @@
           :conversationId="conversationId"
           :canCreateContract="canCreateContract"
           :isAccountOnboardingComplete="isAccountOnboardingComplete"
-          :isLocked="ad.locked"
-          :isPublished="ad.isPublish"
+          :isLocked="adIsLocked"
+          :isPublished="adIsPublished"
           smallTitle
           noWrapTitle
           snippetIsLink
@@ -106,6 +106,12 @@ export default {
     },
     adOwnerId: function () {
       return this.conversation.ad.user.id;
+    },
+    adIsLocked: function () {
+      return this.conversation.ad.locked;
+    },
+    adIsPublished: function () {
+      return this.conversation.ad.isPublish;
     },
     conversationId: function () {
       return this.$route.params.id.split("-").last();

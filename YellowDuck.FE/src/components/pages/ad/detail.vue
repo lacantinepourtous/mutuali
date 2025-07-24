@@ -213,10 +213,7 @@
         </div>
       </div>
       <div v-else class="fab-container__fab mt-4" :class="(isAdOwnByCurrentUser || isAdmin) ? 'text-center bg-light p-3' : 'px-3'">
-        <p v-if="(isAdOwnByCurrentUser || isAdmin) && haveJustUnpublish">
-          {{ $t("text.ad-notpublish-owner") }}
-        </p>
-        <p v-else-if="ad.locked">{{ $t("text.ad-locked") }}</p>
+        <p v-if="ad.locked">{{ $t("text.ad-locked") }}</p>
         <p v-else>{{ $t("text.ad-notpublish") }}</p>
         <template v-if="isAdOwnByCurrentUser || isAdmin">
           <b-button v-if="!ad.locked" variant="primary" size="sm" class="text-truncate mr-2" @click="publishAd">
@@ -262,6 +259,8 @@ import { VUE_APP_MUTUALI_CONTACT_MAIL } from "@/helpers/env";
 import { unpublishAd, publishAd, lockAd, unlockAd } from "@/services/ad";
 import { AvailabilityWeekday } from "@/mixins/availability-weekday";
 import { AdCategory } from "@/mixins/ad-category";
+
+import NotificationService from "@/services/notification";
 
 import AdCategoryBadge from "@/components/ad/category-badge";
 import AdRatingCarousel from "@/components/ad/rating-carousel";
@@ -433,6 +432,7 @@ export default {
     async unpublishAd() {
       this.haveJustUnpublish = true;
       await unpublishAd(this.adId);
+      NotificationService.showSuccess(this.$t("text.ad-notpublish-owner"));
     },
     async publishAd() {
       await publishAd(this.adId);

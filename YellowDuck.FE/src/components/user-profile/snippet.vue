@@ -54,7 +54,7 @@
           <div class="flex-grow-1">
             <h2 class="h6 mb-1">{{ isLoyalMember ? $t("profile-snippet.loyal-member") : $t("profile-snippet.verified-member") }}</h2>
             <ul class="user-profile-snippet__member-stats-list list-unstyled small">
-              <li>{{ $t("profile-snippet.member-since", { date: registeredSince }) }}</li>
+              <li>{{ registeredSince }}</li>
               <li>{{ $tc("profile-snippet.ads-count", userAdsCount) }}</li>
               <li v-if="userProfile.user.isConfirmed && userProfile.user.phoneNumberConfirmed">{{ $t("profile-snippet.verified-phone-and-email") }}</li>
               <li v-else-if="userProfile.user.isConfirmed">{{ $t("profile-snippet.verified-email") }}</li>

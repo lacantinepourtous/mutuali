@@ -73,7 +73,7 @@
               <b-icon icon="eye-slash-fill" class="mr-1" aria-hidden="true"></b-icon>
               {{ $t("btn.unpublish") }}
             </b-button>
-            <b-button v-else @click="publishAd" variant="outline-primary" size="sm" class="mt-2 ml-2">
+            <b-button v-else @click="publishAd" :disabled="isLocked" variant="outline-primary" size="sm" class="mt-2 ml-2">
               <b-icon icon="eye-fill" class="mr-1" aria-hidden="true"></b-icon>
               {{ $t("btn.publish") }}
             </b-button>
