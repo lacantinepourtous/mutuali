@@ -105,6 +105,7 @@
               <b-button @click="currentStep = $consts.ratingSteps.STEP_OWNER" variant="admin" size="lg" block>{{
                 $t("btn-rate-next-step-and-confirm")
               }}</b-button>
+              <!-- TODO FE - Annuler l'évaluation -->
               <b-button @click="currentStep = $consts.ratingSteps.STEP_OWNER" variant="outline-primary" size="lg" block>{{
                 $t("btn-rate-next-step-and-skip")
               }}</b-button>
