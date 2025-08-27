@@ -704,6 +704,7 @@
   "label.forDonation": "For donation",
   "validator.atLeastOneChecked": "At least one option must be checked",
   "sr.upload-files": "Attach file",
+  "notice.max-file-size": "Maximum attachment file size: 8 MB",
   "label.drop-files": "Drop files here",
   "notification.conversation-no-dangerous-files": "Some selected files are not allowed. They have been ignored.",
   "notification.conversation-file-size-limit": "The maximum size of a message is 100 MB. File(s) exceeding this size have been ignored.",

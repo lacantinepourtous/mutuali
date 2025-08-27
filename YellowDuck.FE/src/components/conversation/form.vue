@@ -19,7 +19,7 @@
       </div>
     </div>
 
-    <s-form class="my-n4" @submit="submitForm">
+    <s-form class="mt-n4 mb-n3" @submit="submitForm">
       <s-form-input
         v-model="message"
         id="message"
@@ -50,6 +50,8 @@
         {{ $t("label.drop-files") }}
       </div>
     </s-form>
+    <!-- TODO BE: Ajuster le libellé de la limite, j'ai mis 8 Mo, mais c'est pas la vraie donnée -->
+    <small class="text-muted text-center d-block">{{ $t("notice.max-file-size") }}</small>
   </div>
 </template>
 

@@ -702,6 +702,7 @@
   "label.forDonation": "À donner",
   "validator.atLeastOneChecked": "Au moins une option doit être cochée",
   "sr.upload-files": "Joindre un fichier",
+  "notice.max-file-size": "Poids maximal des pièces jointes: 8 Mo",
   "label.drop-files": "Déposez vos fichiers ici",
   "notification.conversation-no-dangerous-files": "Certain(s) fichier(s) sélectionné(s) ne sont pas autorisé(s). Il(s) ont été ignoré(s).",
   "notification.conversation-file-size-limit": "La taille maximale d'un message est de 100 Mo. Le(s) fichier(s) excédant cette taille ont été ignoré(s).",
