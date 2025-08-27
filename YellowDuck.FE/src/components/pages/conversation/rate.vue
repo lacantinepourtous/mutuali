@@ -20,14 +20,33 @@
             <user-profile-snippet :id="requester.user.profile.id" sectionWidth="sm" class="section--border-bottom py-4" />
             <div class="section section--sm mb-4">
               <div class="mt-4 mb-5">
-                <s-form-rating v-model="rating.user.respect" :label="$t('label.respect-rating')" size="lg" margin="sm" />
+                <s-form-rating 
+                  v-model="rating.user.respect" 
+                  :label="$t('label.respect-rating')" 
+                  description="TODO ajouter une description ici ?"
+                  size="lg" 
+                  margin="sm" />
                 <s-form-rating
                   v-model="rating.user.communication"
                   :label="$t('label.communication-rating')"
                   size="lg"
                   margin="sm"
                 />
-                <s-form-rating v-model="rating.user.fiability" :label="$t('label.fiability-rating')" size="lg" margin="sm" />
+                <s-form-rating 
+                  v-model="rating.user.fiability" 
+                  :label="$t('label.fiability-rating')" 
+                  description="TODO ajouter une description ici ?"
+                  size="lg" 
+                  margin="sm" />
+              </div>
+
+              <!-- TODO BE - Enregistrer commentaire -->
+              <div class="comment-section py-2">
+                <s-form-textarea 
+                  v-model="rating.user.comment" 
+                  :label="$t('label.additional-comment')"
+                  margin="sm" 
+                />
               </div>
 
               <b-button :disabled="isSubmitted" type="submit" variant="primary" size="lg" block>{{
@@ -40,7 +59,6 @@
         <template v-else>
           <div v-show="currentStep === $consts.ratingSteps.STEP_EQUIPEMENT" class="rating-step">
             <div class="section section--sm mt-4">
-              <span><small>1/2</small></span>
               <h2 class="font-family-base font-weight-bold mt-1 mb-4">{{ $t("rate-conversation.rate-equipement-title") }}</h2>
             </div>
             <hr class="my-0" />
@@ -54,19 +72,47 @@
             />
             <div class="section section--sm mb-4">
               <div class="mt-4 mb-5">
-                <s-form-rating v-model="rating.ad.compliance" :label="$t('label.compliance-rating')" size="lg" margin="sm" />
-                <s-form-rating v-model="rating.ad.cleanliness" :label="$t('label.cleanliness-rating')" size="lg" margin="sm" />
-                <s-form-rating v-model="rating.ad.security" :label="$t('label.security-rating')" size="lg" margin="sm" />
+                <s-form-rating 
+                  v-model="rating.ad.compliance" 
+                  :label="$t('label.compliance-rating')"
+                  description="TODO ajouter une description ici ?" 
+                  size="lg" 
+                  margin="sm" 
+                />
+                <s-form-rating 
+                  v-model="rating.ad.cleanliness" 
+                  :label="$t('label.cleanliness-rating')" 
+                  description="TODO ajouter une description ici ?" 
+                  size="lg" 
+                  margin="sm" />
+                <s-form-rating 
+                  v-model="rating.ad.security"
+                  :label="$t('label.security-rating')"
+                  description="TODO ajouter une description ici ?"
+                  size="lg" 
+                  margin="sm" />
               </div>
-              <b-button @click="currentStep = $consts.ratingSteps.STEP_OWNER" variant="primary" size="lg" block>{{
-                $t("btn-rate-next-step")
+
+              <!-- TODO BE - Enregistrer commentaire -->
+              <div class="comment-section py-2">
+                <s-form-textarea 
+                  v-model="rating.ad.comment" 
+                  :label="$t('label.additional-comment')"
+                  margin="sm"
+                />
+              </div>
+
+              <b-button @click="currentStep = $consts.ratingSteps.STEP_OWNER" variant="admin" size="lg" block>{{
+                $t("btn-rate-next-step-and-confirm")
+              }}</b-button>
+              <b-button @click="currentStep = $consts.ratingSteps.STEP_OWNER" variant="outline-primary" size="lg" block>{{
+                $t("btn-rate-next-step-and-skip")
               }}</b-button>
             </div>
           </div>
 
           <div v-show="currentStep === $consts.ratingSteps.STEP_OWNER" class="rating-step">
             <div class="section section--sm mt-4">
-              <span><small>2/2</small></span>
               <h2 class="font-family-base font-weight-bold mt-1 mb-4">{{ $t("rate-conversation.rate-owner-title") }}</h2>
             </div>
             <hr class="my-0" />
@@ -74,21 +120,41 @@
             <user-profile-snippet :id="owner.user.profile.id" sectionWidth="sm" hide-rating class="section--border-bottom py-4" />
             <div class="section section--sm mb-4">
               <div class="mt-4 mb-5">
-                <s-form-rating v-model="rating.user.respect" :label="$t('label.respect-rating')" size="lg" margin="sm" />
+                <s-form-rating 
+                  v-model="rating.user.respect" 
+                  :label="$t('label.respect-rating')" 
+                  description="TODO ajouter une description ici ?"
+                  size="lg" 
+                  margin="sm" />
                 <s-form-rating
                   v-model="rating.user.communication"
                   :label="$t('label.communication-rating')"
+                  description="TODO ajouter une description ici ?"
                   size="lg"
                   margin="sm"
                 />
-                <s-form-rating v-model="rating.user.fiability" :label="$t('label.fiability-rating')" size="lg" margin="sm" />
+                <s-form-rating 
+                  v-model="rating.user.fiability" 
+                  :label="$t('label.fiability-rating')" 
+                  description="TODO ajouter une description ici ?"
+                  size="lg" 
+                  margin="sm" />
               </div>
-
-              <b-button @click="currentStep = $consts.ratingSteps.STEP_EQUIPEMENT" size="lg" block>{{
-                $t("btn-rate-previous-step")
-              }}</b-button>
-              <b-button :disabled="isSubmitted" type="submit" variant="primary" size="lg" block>{{
+              
+              <!-- TODO BE - Enregistrer commentaire -->
+              <div class="comment-section py-2">
+                <s-form-textarea 
+                  v-model="rating.user.comment" 
+                  :label="$t('label.additional-comment')" 
+                  margin="sm"
+                />
+              </div>
+              
+              <b-button :disabled="isSubmitted" type="submit" variant="admin" size="lg" block>{{
                 $t("btn-rate-conversation")
+              }}</b-button>
+              <b-button @click="currentStep = $consts.ratingSteps.STEP_EQUIPEMENT" variant="outline-primary"  size="lg" block>{{
+                $t("btn-rate-previous-step")
               }}</b-button>
             </div>
           </div>
@@ -111,6 +177,7 @@ import AdSnippet from "@/components/ad/snippet";
 import UserProfileSnippet from "@/components/user-profile/snippet";
 import SForm from "@/components/form/s-form";
 import SFormRating from "@/components/form/s-form-rating";
+import SFormTextarea from "@/components/form/s-form-textarea";
 import FormComplete from "@/components/generic/form-complete";
 
 import { CONTENT_LANG_FR } from "@/consts/langs";
@@ -124,6 +191,7 @@ export default {
     FormComplete,
     SForm,
     SFormRating,
+    SFormTextarea,
     NavClose,
     AdSnippet,
     UserProfileSnippet
@@ -135,12 +203,14 @@ export default {
         ad: {
           compliance: 0,
           cleanliness: 0,
-          security: 0
+          security: 0,
+          comment: ""
         },
         user: {
           respect: 0,
           communication: 0,
-          fiability: 0
+          fiability: 0,
+          comment: ""
         }
       },
       isSubmitted: false,
@@ -286,3 +356,9 @@ query Me {
   }
 }
 </graphql>
+
+<style lang="scss">
+.comment-section {
+  border-top: 1px solid $gray-200;
+}
+</style>

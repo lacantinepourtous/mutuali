@@ -9,6 +9,7 @@
     :inline="inline"
     :label-cols="inline ? 6 : 12"
     :label-cols-sm="inline ? 6 : 12"
+    label-class="rating-label"
     :margin="margin"
     :className="inline ? 'form-group--inline' : ''"
   >
@@ -71,12 +72,18 @@ export default {
 </script>
 <style lang="scss">
 $small-star-width: 24px;
-$big-star-width: 48px;
+$big-star-width: 40px;
+
+.rating-label {
+  font-size: 1.25rem;
+  font-weight: 600;
+}
 
 .b-rating {
   justify-content: flex-start;
   padding: 0;
   margin-left: -8px;
+  margin-bottom: 8px !important;
 
   .b-rating-star {
     flex-grow: 0 !important;
