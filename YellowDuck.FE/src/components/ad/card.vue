@@ -2,7 +2,7 @@
   <router-link
     v-if="ad"
     class="mutuali-ad-card card"
-    :class="{ 'mutuali-ad-card--admin': adIsAdminOnly }"
+    :class="[{ 'mutuali-ad-card--admin': adIsAdminOnly }, getCategoryGroupByCategory(adCategory).color]"
     :to="{ name: $consts.urls.URL_AD_DETAIL, params: { id: ad.id } }"
   >
     <div class="mutuali-ad-card__badge">
@@ -17,6 +17,7 @@
         :alt="adGallery[0].alt ? adGallery[0].alt : ''"
       />
       <div v-if="adIsAdminOnly" class="mutuali-ad-card__overlay-admin"></div>
+      <div v-if="!isPublished" class="mutuali-ad-card__overlay-unpublished"></div>
       <b-img
         v-if="adIsAdminOnly"
         class="mutuali-ad-card__icon-invisible"
@@ -25,6 +26,9 @@
         height="30"
         block
       ></b-img>
+      <div v-if="!isPublished" class="mutuali-ad-card__unpublished-badge">
+        <span class="mutuali-ad-card__unpublished-text">{{ isLocked ? $t('label.ad-blocked') : $t('label.ad-unpublished') }}</span>
+      </div>
     </div>
     <div class="mutuali-ad-card__text">
       <p class="mutuali-ad-card__organization mb-2 letter-spacing-wide small">
@@ -89,12 +93,13 @@
 <script>
 import AdCategoryBadge from "@/components/ad/category-badge";
 import { PriceDetails } from "@/mixins/price-details";
+import { AdCategory } from "@/mixins/ad-category";
 
 export default {
   components: {
     AdCategoryBadge
   },
-  mixins: [PriceDetails],
+  mixins: [PriceDetails, AdCategory],
   props: {
     ad: {
       type: Object,
@@ -108,7 +113,8 @@ export default {
       type: Boolean,
       required: false,
       default: true
-    }
+    },
+
   },
   computed: {
     adTitle: function () {
@@ -128,6 +134,12 @@ export default {
     },
     adIsAdminOnly: function () {
       return this.ad.isAdminOnly;
+    },
+    isPublished: function () {
+      return this.ad.isPublish;
+    },
+    isLocked: function () {
+      return this.ad.locked;
     },
     adPriceDetails: function () {
       return this.getPriceDetailsFromAd(this.ad);
@@ -213,11 +225,41 @@ export default {
     bottom: 0;
   }
 
+  &__overlay-unpublished {
+    background-color: var(--accent-color);
+    opacity: 0.8;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+  }
+
   &__icon-invisible {
     position: absolute;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
+  }
+
+  &__unpublished-badge {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    background-color: var(--accent-color);
+    color: white;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 10px;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    z-index: 1;
+  }
+
+  &__unpublished-text {
+    color: white;
+    font-weight: bold;
   }
 
   &__text {

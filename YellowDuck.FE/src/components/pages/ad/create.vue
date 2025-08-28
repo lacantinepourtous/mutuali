@@ -8,14 +8,15 @@
         <h1 class="my-4">{{ $t("page-title.create-ad") }}</h1>
       </div>
 
-      <div v-if="!phoneNumberConfirmed" class="alert alert-warning mx-4">
-        {{ $t("warnings.phone-verification-required") }}
-        <router-link :to="{ name: $consts.urls.URL_PROFILE_EDIT, query: { action: 'validate-phone' } }">
-          {{ $t("warnings.phone-verification-required.link") }}
-        </router-link>
+      <ad-form v-if="phoneNumberConfirmed" @submitForm="createAd" :disabledBtn="isSubmitted" :btnLabel="$t('btn.create-ad')" />
+      <div v-else class="section section--md section--padding-x section--border-bottom my-4">
+        <div  class="alert alert-warning mx-4">
+          {{ $t("warnings.phone-verification-required") }}
+          <router-link :to="{ name: $consts.urls.URL_PROFILE_EDIT, query: { action: 'validate-phone' } }">
+            {{ $t("warnings.phone-verification-required.link") }}
+          </router-link>
+        </div>
       </div>
-
-      <ad-form @submitForm="createAd" :disabledBtn="isSubmitted || !phoneNumberConfirmed" :btnLabel="$t('btn.create-ad')" />
     </template>
 
     <form-complete
@@ -94,10 +95,10 @@ export default {
 </script>
 
 <graphql>
-  query Me {
-    me {
-      id
-      phoneNumberConfirmed
-    }
+query Me {
+  me {
+    id
+    phoneNumberConfirmed
   }
-  </graphql>
+}
+</graphql>

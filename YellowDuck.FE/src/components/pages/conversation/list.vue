@@ -11,7 +11,7 @@
         class="section section--md my-4"
         :class="{ 'section--border-top pt-4': conversations[0] && conversation !== conversations[0] }"
       >
-        <conversation-snippet :conversation="conversation.graphql" :twilioConversation="conversation.twilio" :userId="userId" />
+        <conversation-snippet :conversation="conversation.graphql" :class="getCategoryGroupByCategory(conversation.graphql.ad.category).color" :twilioConversation="conversation.twilio" :userId="userId" />
       </div>
     </template>
     <div v-else class="no-conversation">
@@ -29,10 +29,12 @@ import ConversationSnippet from "@/components/conversation/snippet";
 
 import TwilioService from "@/services/twilio";
 
+import { AdCategory } from "@/mixins/ad-category";
 import EventBus from "@/helpers/event-bus";
 import debounce from "@/helpers/debounce";
 
 export default {
+  mixins: [AdCategory],
   mounted() {
     EventBus.$on(TWILIO_EVENT_MESSAGE_ADDED, this.onMessageAdded);
     EventBus.$on(TWILIO_EVENT_PARTICIPANT_JOINED, this.onParticipantJoined);
@@ -136,6 +138,7 @@ query Conversations($language: ContentLanguage!) {
       sid
       ad {
         id
+        category
         gallery {
           id
           src

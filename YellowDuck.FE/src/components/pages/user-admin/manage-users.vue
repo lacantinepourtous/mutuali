@@ -24,21 +24,31 @@
           <td class="px-4">
             <b-button-group>
               <b-button
-              v-if="!slotProps.item.isConfirmed"
-              class="text-nowrap"
-              variant="outline-primary"
-              size="sm"
-              @click="resendVerificationEmail(slotProps.item)">
-                {{ $t("btn.resend-verification-email") }}
+                v-if="!slotProps.item.isConfirmed"
+                variant="outline-primary"
+                size="sm"
+                @click="resendVerificationEmail(slotProps.item)">
+                <b-icon icon="envelope" />
+                <span class="sr-only">{{ $t("btn.resend-verification-email") }}</span>
               </b-button>
               <b-button
                 variant="outline-primary"
                 size="sm"
                 :to="{ name: $consts.urls.URL_EDIT_PROFILE, params: { id: slotProps.item.id } }">
-                  {{ $t("btn.modify-user") }}
+                <b-icon icon="pencil" />
+                <span class="sr-only">{{ $t("btn.modify-user") }}</span>
               </b-button>
-              <b-button v-if="!slotProps.item.isConfirmed" variant="outline-primary" size="sm" @click="confirmEmail(slotProps.item)">
-                {{ $t("btn.allow-user") }}
+              <b-button 
+                v-if="!slotProps.item.isConfirmed" 
+                variant="outline-primary" 
+                size="sm" 
+                @click="confirmEmail(slotProps.item)">
+                <b-icon icon="check-circle" />
+                <span class="sr-only">{{ $t("btn.allow-user") }}</span>
+              </b-button>
+              <b-button variant="outline-danger" size="sm" @click="openDeleteUserProfileModal(slotProps.item)">
+                <b-icon icon="trash" />
+                <span class="sr-only">{{ $t("btn.delete-user") }}</span>
               </b-button>
             </b-button-group>
           </td>
@@ -46,11 +56,38 @@
       </UiTable>
 
       <UiPagination v-if="users.totalPages > 1" class="mt-6" v-model="page" :total-pages="users.totalPages"> </UiPagination>
+
+      <b-modal
+        id="deleteUserProfileModal"
+        ref="deleteUserProfileModal"
+        :title="$t('modal.delete-user-profile.title-delete')"
+        centered
+        hide-footer
+      >
+      <template #default="{ cancel }">
+        <p v-if="currentUser">
+          {{
+            $t("modal.delete-user-profile.text-delete", {
+              name: getUserName(currentUser)
+            })
+          }}
+        </p>
+        <div class="delete-user-profile__modal-footer">
+          <b-button type="button" variant="outline-primary" @click="cancel()">{{
+            $t("modal.delete-user-profile.label-cancel")
+          }}</b-button>
+          <b-button class="ml-2" type="button" variant="danger" @click="handleDeleteUserProfile(currentUser.id)">{{
+            $t("modal.delete-user-profile.label-delete")
+          }}</b-button>
+        </div>
+      </template>
+    </b-modal>
     </div>
   </div>
 </template>
 
 <script>
+import UserService from "@/services/user";
 import UiTable from "@/components/ui/table";
 import UiPagination from "@/components/ui/pagination";
 
@@ -71,7 +108,8 @@ export default {
           label: this.$t("options"),
           hasHiddenLabel: true
         }
-      ]
+      ],
+      currentUser: null
     };
   },
   components: {
@@ -91,6 +129,10 @@ export default {
     isUserAdmin(item) {
       return item.type === USER_TYPE_ADMIN ? this.$t("user-type-admin") : this.$t("user-type-user");
     },
+    openDeleteUserProfileModal(user) {
+      this.currentUser = user;
+      this.$refs.deleteUserProfileModal.show();
+    },
     async resendVerificationEmail(item) {
       await AuthentificationService.resendConfirmationEmail(item.email);
       NotificationService.showSuccess(this.$t("notification.resend-complete", { email: item.email }));
@@ -98,6 +140,12 @@ export default {
     async confirmEmail(item) {
       await AuthentificationService.verifyEmail(item.email);
       NotificationService.showInfo(this.$t("notification.verify-email", { email: item.email }));
+      this.$apollo.queries.users.refresh();
+    },
+    async handleDeleteUserProfile(userId) {
+      this.$refs.deleteUserProfileModal.hide();
+      await UserService.deleteUserProfile(userId);
+      NotificationService.showSuccess(this.$t("notification.user-deleted"));
       this.$apollo.queries.users.refresh();
     }
   },

@@ -1,7 +1,5 @@
 ﻿using GraphQL.Conventions;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.EntityFrameworkCore;
-using System.Linq;
 using System.Threading.Tasks;
 using YellowDuck.Api.Constants;
 using YellowDuck.Api.DbModel;
@@ -28,8 +26,14 @@ namespace YellowDuck.Api.Authorization.Requirements
         {
             this.db = db;
         }
-        protected override async Task HandleRequirementAsync(AuthorizationHandlerContext context, CanManageAdRequirement requirement)
+        protected override Task HandleRequirementAsync(AuthorizationHandlerContext context, CanManageAdRequirement requirement)
         {
+            if (context.User.IsAdmin())
+            {
+                context.Succeed(requirement);
+                return Task.CompletedTask;
+            }
+
             Id adId;
 
             switch (context.Resource)
@@ -44,20 +48,16 @@ namespace YellowDuck.Api.Authorization.Requirements
                     adId = id;
                     break;
                 default:
-                    return;
-            }
-
-            if (context.User.IsAdmin() && await db.Ads.Where(x =>  x.Id == adId.LongIdentifierForType<Ad>() && x.IsAdminOnly == true).AnyAsync())
-            {
-                context.Succeed(requirement);
-                return;
+                    return Task.CompletedTask;
             }
 
             if (context.User.HasClaim(AppClaimTypes.AdOwner, adId.ToString()))
             {
                 context.Succeed(requirement);
-                return;
+                return Task.CompletedTask;
             }
+
+            return Task.CompletedTask;
         }
     }
 }
