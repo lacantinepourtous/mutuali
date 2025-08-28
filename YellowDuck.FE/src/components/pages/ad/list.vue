@@ -23,16 +23,7 @@
               :label="$t('label.address')"
               label-sr-only
             />
-            <dropdown
-              class="equipment-list__filters-dropdown"
-              v-model="filters.category"
-              @input="onFiltersUpdated()"
-              id="adCategory"
-              :label="categoryLabel(filters.category)"
-              :options="categoryOptions"
-              right
-              variant="outline-secondary"
-            />
+            <ad-filters-category id="adCategoryFilter" class="equipment-list__filters-dropdown" :category="filters.category" @update:category="onCategoryFilterUpdated" />
             <b-button class="equipment-list__filters-btn" variant="outline-secondary" @click="showAdvancedFilters">
               <span class="sr-only">{{ $t("sr.open-advanced-search") }}</span>
               <b-icon-sliders aria-hidden="true"></b-icon-sliders>
@@ -76,8 +67,9 @@
       </div>
 
       <google-map
+        :key="mapKey"
         ref="map"
-        v-show="view === CARD_VIEW"
+        v-if="view === CARD_VIEW && mapHasRefreshed"
         :markers="adMarkers"
         marker-clickable
         @mapClicked="mapClicked"
@@ -118,7 +110,11 @@
 
           <div class="equipment-list__list-view-row">
             <div class="equipment-list__list-view-col" v-for="adMarker in adMarkers" :key="adMarker.id">
-              <ad-card class="equipment-list__list-view-card" :ad="adMarker.ad" :distance="adMarker.distance" />
+              <ad-card 
+                class="equipment-list__list-view-card" 
+                :ad="adMarker.ad" 
+                :distance="adMarker.distance"
+              />
             </div>
           </div>
 
@@ -179,7 +175,10 @@
         </template>
       </alert-modal>
       <div class="equipment-list__bottom section section--md">
-        <ad-card v-if="displayAdSnippet && view === CARD_VIEW" :ad="snippetAd" />
+        <ad-card 
+          v-if="displayAdSnippet && view === CARD_VIEW" 
+          :ad="snippetAd"
+        />
         <template v-else-if="isConnected && createAlertModalHidden && adMarkers.length != 0">
           <div v-if="isAdmin" class="mx-4">
             <b-button variant="admin" size="lg" block :to="{ name: $consts.urls.URL_PREPARE_AD }">{{
@@ -266,9 +265,10 @@ query Ads(
     rentPriceToBeDetermined
     salePriceToBeDetermined
     organization
+    isPublish
+    locked
   }
 }
-
 </graphql>
 
 <script>
@@ -279,18 +279,12 @@ import { LOCAL_STORAGE_MAP_LATLONG, LOCAL_STORAGE_MAP_ZOOMLEVEL } from "@/consts
 import {
   CATEGORY_PROFESSIONAL_KITCHEN,
   CATEGORY_DELIVERY_TRUCK,
-  CATEGORY_STORAGE_SPACE,
-  CATEGORY_PROFESSIONAL_COOKING_EQUIPMENT,
-  CATEGORY_PREP_EQUIPMENT,
-  CATEGORY_REFRIGERATION_EQUIPMENT,
-  CATEGORY_HEAVY_EQUIPMENT,
-  CATEGORY_SURPLUS,
-  CATEGORY_OTHER
 } from "@/consts/categories";
 import { CONTENT_LANG_FR } from "@/consts/langs";
 
 import AdCard from "@/components/ad/card";
 import AdFilters from "@/components/ad/filters";
+import AdFiltersCategory from "@/components/ad/filters-category";
 import Dropdown from "@/components/generic/dropdown";
 import SFormGoogleAutocomplete from "@/components/form/s-form-google-autocomplete";
 import GoogleMap from "@/components/generic/google-map";
@@ -325,6 +319,7 @@ export default {
   components: {
     AdCard,
     AdFilters,
+    AdFiltersCategory,
     Dropdown,
     SFormGoogleAutocomplete,
     GoogleMap,
@@ -365,7 +360,12 @@ export default {
       if (!this.researchPosition) return;
       return new this.google.maps.LatLng(this.researchPosition.latitude, this.researchPosition.longitude);
     },
-    google: gmapApi
+    google: gmapApi,
+    mapKey() {
+      // Use category and a stable, order-independent marker id set
+      const markerIds = this.adMarkers.map(m => m.id).sort().join(',');
+      return `${this.filters.category || 'all'}-${markerIds}`;
+    }
   },
   methods: {
     mapMoved(latLng) {
@@ -377,7 +377,7 @@ export default {
     resetMarkerIcon() {
       let marker = this.adMarkers.find((x) => this.snippetAd !== null && x.id === this.snippetAd.id);
       if (marker) {
-        marker.icon = require("@/assets/icons/marker-red.svg");
+        marker.icon = marker.originalIcon;
       }
     },
     mapClicked() {
@@ -386,31 +386,9 @@ export default {
     },
     markerClicked(marker) {
       this.resetMarkerIcon();
+      marker.originalIcon = marker.icon;
       marker.icon = require("@/assets/icons/marker-yellow.svg");
       this.snippetAd = marker.ad;
-    },
-    validateCategory(category) {
-      if (
-        category === CATEGORY_PROFESSIONAL_KITCHEN ||
-        category === CATEGORY_DELIVERY_TRUCK ||
-        category === CATEGORY_STORAGE_SPACE ||
-        category === CATEGORY_PROFESSIONAL_COOKING_EQUIPMENT ||
-        category === CATEGORY_PREP_EQUIPMENT ||
-        category === CATEGORY_REFRIGERATION_EQUIPMENT ||
-        category === CATEGORY_HEAVY_EQUIPMENT ||
-        category === CATEGORY_SURPLUS ||
-        category === CATEGORY_OTHER
-      ) {
-        return category;
-      } else {
-        return "";
-      }
-    },
-    categoryLabel(category) {
-      const options = this.categoryOptions.slice(1);
-      const selectedOption = options.find((cat) => cat.value === category);
-      if (!selectedOption) return this.$t("select.filter");
-      return selectedOption.text;
     },
     sortLabel(sort) {
       const selectedOption = this.sortOptions.find((s) => s.value === sort);
@@ -467,6 +445,10 @@ export default {
       this.filters = {
         ...defaultFilters
       };
+    },
+    async onCategoryFilterUpdated(category) {
+      this.filters.category = category;
+      this.hideAdvancedFilters();
     },
     async onFiltersUpdated() {
       this.hideAdvancedFilters();
@@ -631,29 +613,9 @@ export default {
         { value: SORT_DATE_DESC, text: this.$t("select.date-desc") }
       ],
       view: this.$router.currentRoute.query.view == LIST_VIEW ? LIST_VIEW : CARD_VIEW,
-      categoryOptions: [
-        { value: null, text: this.$t("select.all-equipment") },
-        {
-          value: CATEGORY_PROFESSIONAL_KITCHEN,
-          text: this.$t("select.category-professional-kitchen")
-        },
-        {
-          value: CATEGORY_DELIVERY_TRUCK,
-          text: this.$t("select.category-delivery-truck")
-        },
-        { value: CATEGORY_STORAGE_SPACE, text: this.$t("select.category-storage-space") },
-        {
-          value: CATEGORY_PROFESSIONAL_COOKING_EQUIPMENT,
-          text: this.$t("select.category-professional-cooking-equipment")
-        },
-        { value: CATEGORY_PREP_EQUIPMENT, text: this.$t("select.category-prep-equipment") },
-        { value: CATEGORY_REFRIGERATION_EQUIPMENT, text: this.$t("select.category-refrigeration-equipment") },
-        { value: CATEGORY_HEAVY_EQUIPMENT, text: this.$t("select.category-heavy-equipment") },
-        { value: CATEGORY_SURPLUS, text: this.$t("select.category-surplus") },
-        { value: CATEGORY_OTHER, text: this.$t("select.category-other") }
-      ],
       CARD_VIEW,
-      LIST_VIEW
+      LIST_VIEW,
+      mapHasRefreshed: true
     };
   },
   mounted() {
@@ -681,6 +643,11 @@ export default {
         this.filters.canHaveDriver = false;
         this.filters.canSharedRoad = false;
       }
+      // Wait for the next tick to ensure the map is updated
+      this.mapHasRefreshed = false;
+      this.$nextTick(() => {
+        this.mapHasRefreshed = true;
+      });
     }
   },
   apollo: {
@@ -719,7 +686,6 @@ export default {
         this.snippetAd = null;
         if (data) {
           this.adMarkers = data.ads
-            .filter((x) => x.isPublish)
             .map((x) => {
               let pos = randomPosition(x.address.latitude, x.address.longitude);
               return {
@@ -730,7 +696,11 @@ export default {
                 lng: pos.lng,
                 distance: null,
                 createdTimestamp: new Date(x.createdAtUTC).getTime(),
-                icon: x.isAdminOnly ? require("@/assets/icons/marker-green.svg") : require("@/assets/icons/marker-red.svg")
+                icon: x.isAdminOnly ? 
+                  require("@/assets/icons/marker-green.svg") : 
+                  (x.isPublish === false ? 
+                    require("@/assets/icons/marker-unpublished.svg") : 
+                    require(`@/assets/icons/marker-${this.getCategoryGroupByCategory(x.category).color}.svg`))
               };
             });
           this.$gmapApiPromiseLazy().then(() => {

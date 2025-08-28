@@ -61,6 +61,7 @@ namespace YellowDuck.ApiTests.Requests.Commands.Mutations.Ads
                 ProfessionalKitchenEquipmentOther = new Maybe<NonNull<string>>("Example"),
                 Description = new Maybe<NonNull<string>>("Test ad description"),
                 SurfaceDescription = new Maybe<NonNull<string>>("Test ad surface description"),
+
                 Language = ContentLanguage.French,
                 Address = new CreateAd.AddressInput()
                 {
@@ -73,7 +74,14 @@ namespace YellowDuck.ApiTests.Requests.Commands.Mutations.Ads
                     Raw = "{raw object}"
                 }.NonNull(),
                 ShowAddress = true,
+
                 DeliveryTruckType = DeliveryTruckType.CubeTruck12Foot,
+
+                HumanResourceField = HumanResourceField.Other,
+                HumanResourceFieldOther = new Maybe<NonNull<string>>("Test ad other field of human resources"),
+                Qualifications = new Maybe<NonNull<string>>("Test ad qualifications"),
+                Tasks = new Maybe<NonNull<string>>("Test ad tasks"),
+                GeographicCoverage = new Maybe<NonNull<string>>("Test ad geographic coverage"),
             };
 
             await handler.Handle(input, CancellationToken.None);
@@ -92,6 +100,7 @@ namespace YellowDuck.ApiTests.Requests.Commands.Mutations.Ads
                 ad.Translations.Should().HaveCount(1);
                 ad.ShowAddress.Should().Be(true);
                 ad.DeliveryTruckType.Should().Be(DeliveryTruckType.CubeTruck12Foot);
+                ad.HumanResourceField.Should().Be(HumanResourceField.Other);
                 ad.ProfessionalKitchenEquipments.Should().HaveCount(2);
                 ad.DayAvailability.Should().Contain(x => x.Weekday == DayOfWeek.Saturday);
                 ad.DayAvailability.Should().Contain(x => x.Weekday == DayOfWeek.Sunday);
@@ -101,6 +110,10 @@ namespace YellowDuck.ApiTests.Requests.Commands.Mutations.Ads
                 french.Description.Should().Be("Test ad description");
                 french.SurfaceDescription.Should().Be("Test ad surface description");
                 french.ProfessionalKitchenEquipmentOther.Should().Be("Example");
+                french.HumanResourceFieldOther.Should().Be("Test ad other field of human resources");
+                french.Qualifications.Should().Be("Test ad qualifications");
+                french.Tasks.Should().Be("Test ad tasks");
+                french.GeographicCoverage.Should().Be("Test ad geographic coverage");
             }
         }
 

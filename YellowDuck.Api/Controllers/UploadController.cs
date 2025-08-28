@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.Processing;
+using System.Text.RegularExpressions;
 
 namespace YellowDuck.Api.Controllers
 {
@@ -102,13 +103,13 @@ namespace YellowDuck.Api.Controllers
                 {
                     await image.SaveAsPngAsync(fileInfos.Content);
                     fileInfos.ContentType = "image/png";
-                    fileInfos.FileName = file.FileName;
+                    fileInfos.FileName = EnsureSafeFileName(file.FileName);
                 }
                 else
                 {
                     await image.SaveAsJpegAsync(fileInfos.Content);
                     fileInfos.ContentType = "image/jpeg";
-                    fileInfos.FileName = file.FileName;
+                    fileInfos.FileName = EnsureSafeFileName(file.FileName);
                 }
 
                 fileInfos.Content.Position = 0;
@@ -117,10 +118,15 @@ namespace YellowDuck.Api.Controllers
             }
         }
 
+        private static string EnsureSafeFileName(string fileName)
+        {
+            return Regex.Replace(fileName, "[^a-zA-Z0-9-_.]", "");
+        }
+
         private static FileInfos GetFileInfos(IFormFile file)
         {
             var stream = file.OpenReadStream();
-            var fileInfos = new FileInfos { Content = stream, ContentType = file.ContentType, FileName = file.FileName };
+            var fileInfos = new FileInfos { Content = stream, ContentType = file.ContentType, FileName = EnsureSafeFileName(file.FileName) };
             return fileInfos;
         }
     }

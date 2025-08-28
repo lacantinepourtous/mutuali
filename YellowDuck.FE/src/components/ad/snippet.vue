@@ -13,6 +13,8 @@
         :mainRoute="{ name: $consts.urls.URL_AD_DETAIL, params: { id: this.id } }"
         :mainRouteLabel="$t('btn.ad-detail')"
         :is-admin-only="isAdminOnly"
+        :is-published="isPublished"
+        :is-locked="isLocked"
       >
         <template v-if="priceDetails" #description>
           <ul class="equipment-snippet__types">
@@ -71,7 +73,7 @@
               <b-icon icon="eye-slash-fill" class="mr-1" aria-hidden="true"></b-icon>
               {{ $t("btn.unpublish") }}
             </b-button>
-            <b-button v-else @click="publishAd" variant="outline-primary" size="sm" class="mt-2 ml-2">
+            <b-button v-else @click="publishAd" :disabled="isLocked" variant="outline-primary" size="sm" class="mt-2 ml-2">
               <b-icon icon="eye-fill" class="mr-1" aria-hidden="true"></b-icon>
               {{ $t("btn.publish") }}
             </b-button>
@@ -162,7 +164,14 @@ export default {
     isAccountOnboardingComplete: Boolean,
     showAdDetailBtn: Boolean,
     showManageBtn: Boolean,
-    isPublished: Boolean,
+    isPublished: {
+      type: Boolean,
+      default: true
+    },
+    isLocked: {
+      type: Boolean,
+      default: false
+    },
     isAdminOnly: Boolean,
     canTransfer: Boolean
   },

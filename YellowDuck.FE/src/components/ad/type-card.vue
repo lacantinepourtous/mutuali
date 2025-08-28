@@ -50,7 +50,7 @@ export default {
 .type-card {
   & {
     padding: $spacer;
-    border: solid 2px $gray-300;
+    border: solid 2px var(--accent-color);
     border-radius: 12px;
     display: flex;
     column-gap: $spacer;

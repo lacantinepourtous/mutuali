@@ -7,6 +7,7 @@ import {
   ResetPassword,
   VerifyToken,
   UpdateUserProfile,
+  DeleteUserProfile,
   ChangePassword,
   UpdateFirstLoginModalClosed,
   CreateAdminAccount,
@@ -15,7 +16,7 @@ import {
 } from "./user.graphql";
 
 export default {
-  createUserAccount: async function(input, returnPath) {
+  createUserAccount: async function (input, returnPath) {
     await Apollo.instance.defaultClient.mutate({
       mutation: CreateUserAccount,
       variables: {
@@ -41,7 +42,7 @@ export default {
       }
     });
   },
-  createAdminAccount: async function(input) {
+  createAdminAccount: async function (input) {
     await Apollo.instance.defaultClient.mutate({
       mutation: CreateAdminAccount,
       variables: {
@@ -53,7 +54,7 @@ export default {
       }
     });
   },
-  completeAdminRegistration: async function(input) {
+  completeAdminRegistration: async function (input) {
     await Apollo.instance.defaultClient.mutate({
       mutation: CompleteAdminRegistration,
       variables: {
@@ -61,7 +62,7 @@ export default {
       }
     });
   },
-  verifyToken: async function(email, token, tokenType) {
+  verifyToken: async function (email, token, tokenType) {
     let result = await Apollo.instance.defaultClient.query({
       query: VerifyToken,
       variables: {
@@ -72,7 +73,7 @@ export default {
     });
     return result.data.verifyToken;
   },
-  sendPasswordReset: async function(email) {
+  sendPasswordReset: async function (email) {
     let input = { email };
 
     await Apollo.instance.defaultClient.mutate({
@@ -82,7 +83,7 @@ export default {
       }
     });
   },
-  resetPassword: async function(emailAddress, newPassword, token) {
+  resetPassword: async function (emailAddress, newPassword, token) {
     let input = { emailAddress, newPassword, token };
 
     await Apollo.instance.defaultClient.mutate({
@@ -92,7 +93,7 @@ export default {
       }
     });
   },
-  updateFirstLoginModalClosed: async function(firstLoginModalClosed) {
+  updateFirstLoginModalClosed: async function (firstLoginModalClosed) {
     let input = { firstLoginModalClosed };
 
     await Apollo.instance.defaultClient.mutate({
@@ -102,7 +103,7 @@ export default {
       }
     });
   },
-  updateUserProfile: async function(input) {
+  updateUserProfile: async function (input) {
     let mutationInput = {
       userId: input.userId
     };
@@ -124,7 +125,23 @@ export default {
       }
     });
   },
-  saveAccountSettings: async function(input) {
+  deleteUserProfile: async function (userId) {
+    let mutationInput = {
+      userId
+    };
+    // eslint-disable-next-line no-console
+    console.log("mutationInput", mutationInput);
+    let result = await Apollo.instance.defaultClient.mutate({
+      mutation: DeleteUserProfile,
+      variables: {
+        input: mutationInput
+      }
+    });
+    // eslint-disable-next-line no-console
+    console.log("result", result);
+    return result;
+  },
+  saveAccountSettings: async function (input) {
     await Apollo.instance.defaultClient.mutate({
       mutation: ChangePassword,
       variables: {
@@ -132,7 +149,7 @@ export default {
       }
     });
   },
-  acceptTos: async function(tosVersion) {
+  acceptTos: async function (tosVersion) {
     await Apollo.instance.defaultClient.mutate({
       mutation: AcceptTos,
       variables: {

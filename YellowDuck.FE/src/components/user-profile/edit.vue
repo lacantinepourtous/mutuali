@@ -312,7 +312,7 @@ export default {
         const cleanNewNumber = newPhoneNumber ? newPhoneNumber.replace(/\D/g, "") : "";
         const cleanProfileNumber = this.userProfile.phoneNumber ? this.userProfile.phoneNumber.replace(/\D/g, "") : "";
 
-        this.phoneNumberIsConfirmed = cleanNewNumber === cleanProfileNumber;
+        this.phoneNumberIsConfirmed = cleanNewNumber === cleanProfileNumber && this.userProfile.user.phoneNumberConfirmed;
       }
     }
   }

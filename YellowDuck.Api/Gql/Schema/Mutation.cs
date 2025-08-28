@@ -52,6 +52,15 @@ namespace YellowDuck.Api.Gql.Schema
             return mediator.Send(input.Value);
         }
 
+        [ApplyPolicy(AuthorizationPolicies.IsAdmin)]
+        [AnnotateErrorCodes(typeof(DeleteUserProfile))]
+        public Task<DeleteUserProfile.Payload> DeleteUserProfile(
+            [Inject] IMediator mediator,
+            NonNull<DeleteUserProfile.Input> input)
+        {
+            return mediator.Send(input.Value);
+        }
+
         [ApplyPolicy(AuthorizationPolicies.LoggedIn)]
         [AnnotateErrorCodes(typeof(AcceptTos))]
         public Task<AcceptTos.Payload> AcceptTos(
@@ -280,6 +289,24 @@ namespace YellowDuck.Api.Gql.Schema
         public Task<RateAdAndUser.Payload> RateAdAndUser(
             [Inject] IMediator mediator,
             NonNull<RateAdAndUser.Input> input)
+        {
+            return mediator.Send(input.Value);
+        }
+        
+        [ApplyPolicy(AuthorizationPolicies.IsAdmin)]
+        [AnnotateErrorCodes(typeof(LockAd))]
+        public Task<LockAd.Payload> LockAd(
+            [Inject] IMediator mediator,
+            NonNull<LockAd.Input> input)
+        {
+            return mediator.Send(input.Value);
+        }
+
+        [ApplyPolicy(AuthorizationPolicies.IsAdmin)]
+        [AnnotateErrorCodes(typeof(UnlockAd))]
+        public Task<UnlockAd.Payload> UnlockAd(
+            [Inject] IMediator mediator,
+            NonNull<UnlockAd.Input> input)
         {
             return mediator.Send(input.Value);
         }

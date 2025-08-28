@@ -1,5 +1,5 @@
 import Apollo from "@/graphql/vue-apollo";
-import { CreateAd, UpdateAd, UpdateAdTranslation, PublishAd, UnpublishAd, TransferAd } from "./ad.graphql";
+import { CreateAd, UpdateAd, UpdateAdTranslation, PublishAd, UnpublishAd, TransferAd, LockAd, UnlockAd } from "./ad.graphql";
 
 import { CONTENT_LANG_FR } from "@/consts/langs";
 
@@ -60,6 +60,11 @@ export async function createAd(input) {
   addMaybeValue(input, mutationInput, "canHaveDriver");
   addMaybeValue(input, mutationInput, "certification");
   addMaybeValue(input, mutationInput, "allergen");
+  addMaybeValue(input, mutationInput, "humanResourceField");
+  addMaybeValue(input, mutationInput, "humanResourceFieldOther");
+  addMaybeValue(input, mutationInput, "qualifications");
+  addMaybeValue(input, mutationInput, "tasks");
+  addMaybeValue(input, mutationInput, "geographicCoverage");
 
   let result = await Apollo.instance.defaultClient.mutate({
     mutation: CreateAd,
@@ -86,7 +91,11 @@ export async function updateAd(input) {
     "deliveryTruckTypeOther" in input ||
     "equipment" in input ||
     "surfaceSize" in input ||
-    "surfaceDescription" in input
+    "surfaceDescription" in input ||
+    "humanResourceFieldOther" in input ||
+    "qualifications" in input ||
+    "tasks" in input ||
+    "geographicCoverage" in input
   ) {
     await updateAdTranslation(input);
   }
@@ -120,6 +129,7 @@ export async function updateAd(input) {
   addMaybeValue(input, mutationInput, "canHaveDriver");
   addMaybeValue(input, mutationInput, "certification");
   addMaybeValue(input, mutationInput, "allergen");
+  addMaybeValue(input, mutationInput, "humanResourceField");
 
   if (Object.keys(mutationInput).length > 1) {
     let result = await Apollo.instance.defaultClient.mutate({
@@ -198,6 +208,10 @@ async function updateAdTranslation(input) {
   addMaybeValue(input, mutationInput, "isAvailableForSale");
   addMaybeValue(input, mutationInput, "isAvailableForDonation");
   addMaybeValue(input, mutationInput, "isAvailableForTrade");
+  addMaybeValue(input, mutationInput, "humanResourceFieldOther");
+  addMaybeValue(input, mutationInput, "qualifications");
+  addMaybeValue(input, mutationInput, "tasks");
+  addMaybeValue(input, mutationInput, "geographicCoverage");
 
   let result = await Apollo.instance.defaultClient.mutate({
     mutation: UpdateAdTranslation,
@@ -226,4 +240,34 @@ async function GetGalleryItems(images) {
   }
 
   return galleryItems;
+}
+
+export async function lockAd(adId) {
+  let mutationInput = {
+    adId
+  };
+
+  let result = await Apollo.instance.defaultClient.mutate({
+    mutation: LockAd,
+    variables: {
+      input: mutationInput
+    }
+  });
+
+  return result;
+}
+
+export async function unlockAd(adId) {
+  let mutationInput = {
+    adId
+  };
+
+  let result = await Apollo.instance.defaultClient.mutate({
+    mutation: UnlockAd,
+    variables: {
+      input: mutationInput
+    }
+  });
+
+  return result;
 }
