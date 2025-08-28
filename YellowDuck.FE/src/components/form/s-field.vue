@@ -35,7 +35,7 @@ export default {
     className: String,
     name: String,
     label: String,
-    labelClass: String,
+    labelClass: [String, Object],
     labelCols: Number,
     labelColsSm: Number,
     description: String,

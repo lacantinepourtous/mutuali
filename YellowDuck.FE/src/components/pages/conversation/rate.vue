@@ -17,7 +17,10 @@
               <h2 class="font-family-base font-weight-bold mb-4">{{ $t("rate-conversation.rate-tennant-title") }}</h2>
             </div>
             <hr class="my-0" />
-            <user-profile-snippet :id="requester.user.profile.id" sectionWidth="sm" class="section--border-bottom py-4" />
+            <div class="section section--sm pt-4 pb-3">
+              <user-profile-snippet :id="requester.user.profile.id" sectionWidth="sm" />
+            </div>
+            <hr class="my-0" />
             <div class="section section--sm mb-4">
               <div class="mt-4 mb-5">
                 <s-form-rating 
@@ -118,7 +121,10 @@
             </div>
             <hr class="my-0" />
             <!-- TODO : Add profile img to user-profile-snippet props -->
-            <user-profile-snippet :id="owner.user.profile.id" sectionWidth="sm" hide-rating class="section--border-bottom py-4" />
+            <div class="section section--sm pt-4 pb-3">
+              <user-profile-snippet :id="owner.user.profile.id" sectionWidth="sm" hide-rating />
+            </div>
+            <hr class="my-0" />
             <div class="section section--sm mb-4">
               <div class="mt-4 mb-5">
                 <s-form-rating 

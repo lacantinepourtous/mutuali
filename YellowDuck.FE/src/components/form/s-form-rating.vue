@@ -9,7 +9,7 @@
     :inline="inline"
     :label-cols="inline ? 6 : 12"
     :label-cols-sm="inline ? 6 : 12"
-    label-class="rating-label"
+    :label-class="{ 'rating-label-large': size !== 'sm' }"
     :margin="margin"
     :className="inline ? 'form-group--inline' : ''"
   >
@@ -71,10 +71,11 @@ export default {
 };
 </script>
 <style lang="scss">
+$xsmall-star-width: 16px;
 $small-star-width: 24px;
 $big-star-width: 40px;
 
-.rating-label {
+.rating-label-large {
   font-size: 1.25rem;
   font-weight: 600;
 }
@@ -97,8 +98,13 @@ $big-star-width: 40px;
 
   &--small {
     .b-rating-icon svg {
-      max-width: $small-star-width;
-      height: $small-star-width;
+      max-width: $xsmall-star-width;
+      height: $xsmall-star-width;
+
+      @include media-breakpoint-up(sm) {
+        max-width: $small-star-width;
+        height: $small-star-width;
+      }
     }
 
     .b-rating-star {
@@ -117,6 +123,7 @@ $big-star-width: 40px;
 .form-group--inline {
   .b-rating {
     margin-left: 0;
+    margin-bottom: 0 !important;
   }
 }
 </style>

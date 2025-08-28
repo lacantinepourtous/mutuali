@@ -1,7 +1,7 @@
 <template>
   <div v-if="ratings.length > 0" class="mb-5">
     <rate :averageRating="averageRating" :ratingsCount="ratings.length" />
-    <carousel v-if="ratings.length > 1">
+    <carousel v-if="ratings.length > 1" class="px-2 py-5 mt-n5">
       <b-carousel-slide v-for="(rating, key) in ratings" :key="key">
         <template #img>
           <rating-card :rating="rating" carousel />

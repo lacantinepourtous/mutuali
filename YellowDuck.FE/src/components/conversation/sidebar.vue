@@ -1,6 +1,12 @@
 <template>
   <b-navbar-nav>
-    <b-nav-text v-b-toggle.conversation class="h5 mb-0 px-2">
+    <b-nav-item v-if="canRate">
+      <b-button class="line-height-none" variant="secondary" @click="rate">
+        <b-icon-star-half variant="warning" class="mr-1" aria-hidden="true"></b-icon-star-half>
+        {{ $t("conversation.btn-rate") }}
+      </b-button>
+    </b-nav-item>
+    <b-nav-text v-b-toggle.conversation class="user-nav-button h5 mb-0 px-2 flex-shrink-0">
       <span class="sr-only">
         <span class="when-open">{{ $t("sr.close") }}</span>
         <span class="when-closed">{{ $t("sr.open") }}</span>
@@ -17,13 +23,6 @@
           $t("btn.conversation-sidebar-show-profile", { name: otherParticipantProfile.publicName })
         }}</b-list-group-item>
       </b-list-group>
-
-      <div class="sidebar__rating-buttons" v-if="canRate">
-        <b-button variant="link" class="sidebar__rating-button" @click="rate">
-          <b-icon-star-half class="mr-2" aria-hidden="true"></b-icon-star-half>
-          {{ $t("conversation.btn-rate") }}
-        </b-button>
-      </div>
 
       <a
         class="sidebar__report"
@@ -182,6 +181,12 @@ query OtherParticipantProfile($id: ID!) {
     margin-top: $nav-return-height;
     height: calc(100vh - #{$nav-return-height});
   }
+
+  .user-nav-button {
+    width: 36px;
+    height: 36px;
+    margin: auto 0 !important;
+  }
 }
 
 .sidebar__report {
@@ -207,34 +212,6 @@ query OtherParticipantProfile($id: ID!) {
 .collapsed .when-open,
 .not-collapsed .when-closed {
   display: none;
-}
-
-.sidebar__rating-buttons {
-  display: flex;
-  flex-direction: column;
-  padding: $spacer;
-  border-bottom: 1px solid $gray-200;
-}
-
-.sidebar__rating-button {
-  color: $primary;
-  text-align: left;
-  padding: 0;
-  margin-bottom: $spacer * 0.5;
-  text-decoration: underline;
-  text-decoration-color: transparent;
-  text-decoration-thickness: 2px;
-  transition: color 0.2s ease-in-out, text-decoration 0.2s ease-in-out;
-
-  &:hover {
-    color: $primary;
-    text-decoration-color: currentColor;
-    text-decoration-thickness: 2px;
-  }
-
-  &:last-child {
-    margin-bottom: 0;
-  }
 }
 </style>
 
