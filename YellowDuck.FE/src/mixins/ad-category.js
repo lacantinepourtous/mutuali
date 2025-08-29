@@ -27,25 +27,25 @@ export const AdCategory = {
           value: CATEGORY_GROUP_EQUIPMENT,
           text: this.$t("select.category-group-equipment"),
           shortText: this.$t("select.category-group-equipment"),
-          color: "red"
+          color: "yellow"
         },
         {
           value: CATEGORY_GROUP_SPACE,
           text: this.$t("select.category-group-space"),
           shortText: this.$t("select.category-group-space"),
-          color: "purple"
+          color: "green"
         },
         {
           value: CATEGORY_GROUP_WORKFORCE,
           text: this.$t("select.category-group-workforce"),
           shortText: this.$t("select.category-group-workforce"),
-          color: "apple"
+          color: "gray"
         },
         {
           value: CATEGORY_GROUP_OTHER,
           text: this.$t("select.category-group-other"),
           shortText: this.$t("select.category-group-other"),
-          color: "blue"
+          color: "black"
         }
       ],
       categoryOptions: [

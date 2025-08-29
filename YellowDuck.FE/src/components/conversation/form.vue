@@ -19,7 +19,7 @@
       </div>
     </div>
 
-    <s-form class="my-n4" @submit="submitForm">
+    <s-form class="mt-n4 mb-n3" @submit="submitForm">
       <s-form-input
         v-model="message"
         id="message"
@@ -50,6 +50,8 @@
         {{ $t("label.drop-files") }}
       </div>
     </s-form>
+    <!-- Limite fixée à 20 Mo pour couvrir la plupart des photos prises par des smartphones -->
+    <small class="text-muted text-center d-block">{{ $t("notice.max-file-size") }}</small>
   </div>
 </template>
 
@@ -111,8 +113,8 @@ export default {
           }
 
           totalSize += file.size;
-          // Max total size is 100MB
-          if (totalSize > 100 * 1024 * 1024) {
+          // Max total size is 20MB
+          if (totalSize > 20 * 1024 * 1024) {
             totalSize -= file.size;
             totalBusted = true;
             continue;
