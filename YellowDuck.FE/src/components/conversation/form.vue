@@ -50,7 +50,7 @@
         {{ $t("label.drop-files") }}
       </div>
     </s-form>
-    <!-- TODO BE: Ajuster le libellé de la limite, j'ai mis 8 Mo, mais c'est pas la vraie donnée -->
+    <!-- Limite fixée à 20 Mo pour couvrir la plupart des photos prises par des smartphones -->
     <small class="text-muted text-center d-block">{{ $t("notice.max-file-size") }}</small>
   </div>
 </template>
@@ -113,8 +113,8 @@ export default {
           }
 
           totalSize += file.size;
-          // Max total size is 100MB
-          if (totalSize > 100 * 1024 * 1024) {
+          // Max total size is 20MB
+          if (totalSize > 20 * 1024 * 1024) {
             totalSize -= file.size;
             totalBusted = true;
             continue;
