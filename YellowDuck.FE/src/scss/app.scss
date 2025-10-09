@@ -34,6 +34,7 @@
   .green {
     --offset-outline-color: #{$green};
     --outline-color: #{$gray-100};
+    --accent-color: #{$green};
   }
 
   .green-darker {
@@ -44,22 +45,15 @@
   .yellow {
     --offset-outline-color: #{$yellow};
     --outline-color: #{$gray-900};
+    --accent-color: #{$yellow};
   }
 
-  .red {
-    --accent-color: #{$red};
+  .black {
+    --accent-color: #{$gray-900};
   }
 
-  .purple {
-    --accent-color: #{$purple};
-  }
-
-  .apple {
-    --accent-color: #{$apple};
-  }
-
-  .blue {
-    --accent-color: #{$blue};
+  .gray {
+    --accent-color: #{$gray-600};
   }
 }
 

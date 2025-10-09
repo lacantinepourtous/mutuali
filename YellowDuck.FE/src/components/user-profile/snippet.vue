@@ -44,15 +44,14 @@
           </ul>
         </div>
 
-        <div v-if="showPhoneNumber || showEmail" class="user-profile-snippet__contact-info">
-          <h2 class="h6 mb-1">{{ $t("profile-snippet.contact-info") }}</h2>
-          <p v-if="showPhoneNumber" class="m-0 text-primary">
-            <small>{{ userPublicPhoneNumber }}</small>
-          </p>
-          <p v-if="showEmail" class="m-0 text-primary">
-            <small><a :href="`mailto:${userPublicEmail}`">{{ userPublicEmail }}</a></small>
-          </p>
-        </div>
+      <div class="user-profile-snippet__member-stats border-top border-white pt-3 mt-3">
+        <h2 class="h6 mb-1">{{ $t("profile-snippet.verified-member") }}</h2>
+        <ul class="user-profile-snippet__member-stats-list list-unstyled small">
+          <li>{{ registeredSince }}</li>
+          <li>{{ $tc("profile-snippet.ads-count", userAdsCount) }}</li>
+          <li v-if="userProfile.user.isConfirmed && userProfile.user.phoneNumberConfirmed">{{ $t("profile-snippet.verified-phone-and-email") }}</li>
+          <li v-else-if="userProfile.user.isConfirmed">{{ $t("profile-snippet.verified-email") }}</li>
+        </ul>
       </div>
     </div>
   </div>
