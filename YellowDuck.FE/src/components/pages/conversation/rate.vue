@@ -44,10 +44,9 @@
                   margin="sm" />
               </div>
 
-              <!-- TODO BE - Enregistrer commentaire -->
               <div class="comment-section py-2">
                 <s-form-textarea 
-                  v-model="rating.user.comment" 
+                  v-model="userComment" 
                   :label="$t('label.additional-comment')"
                   margin="sm" 
                 />
@@ -83,11 +82,10 @@
                   size="lg" 
                   margin="sm" 
                 />
-                <!-- TODO - Add dynamic description -->
                 <s-form-rating 
                   v-model="rating.ad.quality" 
-                  :label="$t('label.ad-quality-rating')"
-                  :description="$t('description.ad-quality-rating-material')" 
+                  :label="isResource ? $t('label.ad-quality-rating-resource') : $t('label.ad-quality-rating-material')"
+                  :description="isResource ? $t('description.ad-quality-rating-resource') : $t('description.ad-quality-rating-material')" 
                   size="lg" 
                   margin="sm" />
                 <s-form-rating 
@@ -98,10 +96,9 @@
                   margin="sm" />
               </div>
 
-              <!-- TODO BE - Enregistrer commentaire -->
               <div class="comment-section py-2">
                 <s-form-textarea 
-                  v-model="rating.ad.comment" 
+                  v-model="adComment" 
                   :label="$t('label.additional-comment')"
                   margin="sm"
                 />
@@ -150,10 +147,9 @@
                   margin="sm" />
               </div>
               
-              <!-- TODO BE - Enregistrer commentaire -->
               <div class="comment-section py-2">
                 <s-form-textarea 
-                  v-model="rating.user.comment" 
+                  v-model="userComment" 
                   :label="$t('label.additional-comment')" 
                   margin="sm"
                 />
@@ -198,6 +194,7 @@ import SFormTextarea from "@/components/form/s-form-textarea";
 import FormComplete from "@/components/generic/form-complete";
 
 import { CONTENT_LANG_FR } from "@/consts/langs";
+import { CATEGORY_HUMAN_RESOURCES, CATEGORY_SUBCONTRACTING } from "@/consts/categories";
 import { URL_CONVERSATION_DETAIL, URL_LIST_AD } from "@/consts/urls";
 import { STEP_EQUIPEMENT, STEP_TENANT } from "@/consts/rating-steps";
 import { RatingsCriterias } from "@/mixins/ratings-criterias";
@@ -217,6 +214,8 @@ export default {
   mixins: [RatingsCriterias],
   data() {
     return {
+      CATEGORY_HUMAN_RESOURCES,
+      CATEGORY_SUBCONTRACTING,
       currentStep: "",
       isEditMode: false,
       targetUserProfile: null,
@@ -226,16 +225,16 @@ export default {
         ad: {
           compliance: 0,
           quality: 0,
-          overall: 0,
-          comment: ""
+          overall: 0
         },
         user: {
           respect: 0,
           communication: 0,
-          overall: 0,
-          comment: ""
+          overall: 0
         }
       },
+      userComment: "",
+      adComment: "",
       isSubmitted: false,
       formCompleteCtas: [
         {
@@ -276,8 +275,8 @@ export default {
             compliance: this.convertRatingToInt(this.existingAdRating.complianceRating) || 0,
             quality: this.convertRatingToInt(this.existingAdRating.qualityRating) || 0,
             overall: this.convertRatingToInt(this.existingAdRating.overallRating) || 0,
-            comment: ""
           };
+          this.adComment = this.existingAdRating.comment || "";
           this.isEditMode = true;
         }
       }
@@ -294,8 +293,8 @@ export default {
           respect: this.convertRatingToInt(this.existingUserRating.respectRating) || 0,
           communication: this.convertRatingToInt(this.existingUserRating.communicationRating) || 0,
           overall: this.convertRatingToInt(this.existingUserRating.overallRating) || 0,
-          comment: ""
         };
+        this.userComment = this.existingUserRating.comment || "";
         this.isEditMode = true;
       }
     },
@@ -305,7 +304,9 @@ export default {
         userId: this.raterIsOwner ? this.requester.user.id : this.owner.user.id,
         adId: this.adId,
         conversationId: this.conversationId,
-        userRating: this.rating.user
+        userRating: this.rating.user,
+        userComment: this.userComment,
+        adComment: this.adComment
       };
       
       if (!this.raterIsOwner) {
@@ -345,6 +346,9 @@ export default {
     },
     raterIsOwner: function () {
       return this.me.id === this.owner.user.id;
+    },
+    isResource: function () {
+      return this.conversation.ad.category === CATEGORY_HUMAN_RESOURCES || this.conversation.ad.category === CATEGORY_SUBCONTRACTING;
     }
   },
   apollo: {
@@ -401,6 +405,7 @@ query ConversationById($id: ID!, $language: ContentLanguage!) {
     id
     ad {
       id
+      category
       gallery {
         id
         src
@@ -432,15 +437,7 @@ query ConversationById($id: ID!, $language: ContentLanguage!) {
       complianceRating
       qualityRating
       overallRating
-      raterUser {
-        id
-      }
-    }
-    userRatings {
-      id
-      respectRating
-      communicationRating
-      overallRating
+      comment
       raterUser {
         id
       }
@@ -464,6 +461,7 @@ query UserProfileByIdRatings($id: ID!) {
         respectRating
         communicationRating
         overallRating
+        comment
         raterUser {
           id
         }

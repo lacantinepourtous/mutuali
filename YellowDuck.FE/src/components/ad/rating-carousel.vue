@@ -41,7 +41,8 @@ export default {
         if (!r) return false;
         const hasPositive = this.convertRatingToInt(r.complianceRating) > 0
           || this.convertRatingToInt(r.qualityRating) > 0
-          || this.convertRatingToInt(r.overallRating) > 0;
+          || this.convertRatingToInt(r.overallRating) > 0
+          || r.comment;
         return hasPositive;
       });
       return this.getRatingsWithCriterias(filledRatings, ["compliance", "quality", "ad-overall"]);
@@ -72,6 +73,7 @@ query AdById($id: ID!) {
       complianceRating
       qualityRating
       overallRating
+      comment
       createdAt
       raterUser {
         id

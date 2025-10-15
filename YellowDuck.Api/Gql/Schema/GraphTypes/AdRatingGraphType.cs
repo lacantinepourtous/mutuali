@@ -43,5 +43,6 @@ namespace YellowDuck.Api.Gql.Schema.GraphTypes
         public Task<DateTime> CreatedAt => WithData(x => x.CreatedAtUtc.ToLocalTime());
 
         public Task<DateTime> LastUpdatedAt => WithData(x => x.LastUpdatedAtUtc.ToLocalTime());
+        public Task<string> Comment => WithData(x => x.Comment);
     }
 }

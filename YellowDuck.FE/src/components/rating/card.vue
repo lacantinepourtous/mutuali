@@ -21,8 +21,7 @@
         </p>
       </div>
     </div>
-    <!-- TODO BE : Dynamiser commentaire review -->
-    <p class="rating-snippet__comment">C'est une cuisine vraiment très bien aménagée.</p>
+    <p class="rating-snippet__comment">{{ rating.comment }}</p>
     <div class="rating-snippet__rating">
       <s-form-rating
         v-for="criteria in rating.criterias"

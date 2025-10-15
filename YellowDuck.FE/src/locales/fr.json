@@ -279,6 +279,8 @@
   "label.ad-conformity-rating": "Conformité de l'annonce",
   "description.ad-conformity-rating": "Respect des ententes",
   "label.ad-quality-rating": "Qualité de la ressource ou de l'équipement",
+  "label.ad-quality-rating-material": "Qualité de l'équipement",
+  "label.ad-quality-rating-resource": "Qualité de la ressource",
   "description.ad-quality-rating-material": "Propreté, sécurité",
   "description.ad-quality-rating-resource": "Ponctualité, attitude, compétences",
   "label.ad-overall-experience-rating": "Expérience globale",

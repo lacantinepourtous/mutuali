@@ -125,14 +125,20 @@ export default {
       return this.$route.params.id.split("-").last();
     },
     averageRating: function () {
-      return this.userProfile.user ? String(this.userProfile.user.averageRating) : "-";
+      return this.userProfile && this.userProfile.user && typeof this.userProfile.user.averageRating === "number"
+        ? this.userProfile.user.averageRating
+        : 0;
     },
     publishedAds: function () {
       return this.userProfile.user ? this.userProfile.user.ads.filter((x) => x.isPublish) : [];
     },
     ratings: function () {
       const ratings = this.userProfile.user ? this.userProfile.user.userRatings : [];
-      const filledRatings = ratings.filter((r) => r && this.convertRatingToInt(r.respectRating) > 0 || this.convertRatingToInt(r.communicationRating) > 0 || this.convertRatingToInt(r.overallRating) > 0);
+      const filledRatings = ratings.filter((r) => r && 
+        this.convertRatingToInt(r.respectRating) > 0 || 
+        this.convertRatingToInt(r.communicationRating) > 0 || 
+        this.convertRatingToInt(r.overallRating) > 0 || 
+        r.comment);
       return this.getRatingsWithCriterias(filledRatings, ["respect", "communication", "user-overall"]);
     },
     registeredSince: function () {
@@ -244,6 +250,7 @@ query UserProfileById($id: ID!, $language: ContentLanguage!) {
         respectRating
         communicationRating
         overallRating
+        comment
         createdAt
       }
     }

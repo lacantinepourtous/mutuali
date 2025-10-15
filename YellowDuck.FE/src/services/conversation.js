@@ -32,11 +32,17 @@ export default {
       userId: input.userId,
       adId: input.adId,
       conversationId: input.conversationId,
-      userRating: convertRatingToEnumsValue(input.userRating)
+      userRating: {
+        ...convertRatingToEnumsValue(input.userRating),
+        comment: input.userComment
+      }
     };
 
     if (input.adRating) {
-      mutationInput.adRating = convertRatingToEnumsValue(input.adRating);
+      mutationInput.adRating = {
+        ...convertRatingToEnumsValue(input.adRating),
+        comment: input.adComment
+      };
     }
 
     let result = await Apollo.instance.defaultClient.mutate({
@@ -53,11 +59,17 @@ export default {
       userId: input.userId,
       adId: input.adId,
       conversationId: input.conversationId,
-      userRating: convertRatingToEnumsValue(input.userRating)
+      userRating: {
+        ...convertRatingToEnumsValue(input.userRating),
+        comment: input.userComment
+      }
     };
 
     if (input.adRating) {
-      mutationInput.adRating = convertRatingToEnumsValue(input.adRating);
+      mutationInput.adRating = {
+        ...convertRatingToEnumsValue(input.adRating),
+        comment: input.adComment
+      };
     }
 
     let result = await Apollo.instance.defaultClient.mutate({

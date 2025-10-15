@@ -59,6 +59,7 @@ namespace YellowDuck.Api.Requests.Commands.Mutations.Ratings
         RespectRating = request.UserRating.Respect,
         CommunicationRating = request.UserRating.Communication,
         OverallRating = request.UserRating.Overall,
+        Comment = request.UserRating.Comment,
         CreatedAtUtc = DateTime.UtcNow,
         LastUpdatedAtUtc = DateTime.UtcNow
       };
@@ -86,6 +87,7 @@ namespace YellowDuck.Api.Requests.Commands.Mutations.Ratings
           ComplianceRating = request.AdRating.Compliance,
           QualityRating = request.AdRating.Quality,
           OverallRating = request.AdRating.Overall,
+          Comment = request.AdRating.Comment,
           CreatedAtUtc = DateTime.UtcNow,
           LastUpdatedAtUtc = DateTime.UtcNow
         };
@@ -120,6 +122,7 @@ namespace YellowDuck.Api.Requests.Commands.Mutations.Ratings
       public Rating Compliance { get; set; }
       public Rating Quality { get; set; }
       public Rating Overall { get; set; }
+      public string Comment { get; set; }
     }
 
     [InputType]
@@ -128,6 +131,7 @@ namespace YellowDuck.Api.Requests.Commands.Mutations.Ratings
       public Rating Respect { get; set; }
       public Rating Communication { get; set; }
       public Rating Overall { get; set; }
+      public string Comment { get; set; }
     }
 
     [MutationPayload]

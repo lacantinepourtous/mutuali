@@ -18,5 +18,6 @@ namespace YellowDuck.Api.DbModel.Entities.Ratings
         public Rating OverallRating { get; set; }
         public DateTime CreatedAtUtc { get; set; }
         public DateTime LastUpdatedAtUtc { get; set; }
+        public string Comment { get; set; }
     }
 }

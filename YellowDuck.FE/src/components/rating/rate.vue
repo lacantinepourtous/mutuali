@@ -1,7 +1,7 @@
 <template>
   <span class="rate line-height-none mt-4 mb-3">
     <b-icon-star-fill class="rate__star mr-2" />
-    <span class="rate__average font-weight-bold mr-2 line-height-none">{{ averageRating }}</span>
+    <span class="rate__average font-weight-bold mr-2 line-height-none">{{ averageRating > 0 ? averageRating : "-" }}</span>
     <small class="rate__count">({{ $tc("profile-details.rating-count", ratingsCount) }})</small>
   </span>
 </template>

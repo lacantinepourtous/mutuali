@@ -152,7 +152,7 @@
             />
           </div>
 
-          <div v-if="ad.averageRating > 0" class="border-top border-grey my-4">
+          <div v-if="ad.averageRating > 0 || ad.adRatings.some(r => r.comment)" class="border-top border-grey my-4">
             <ad-rating-carousel :id="adId" class="mt-4" />
           </div>
 
@@ -549,6 +549,10 @@ query AdById($id: ID!, $language: ContentLanguage!) {
     rentPriceRange
     salePriceRange
     averageRating
+    adRatings {
+      id
+      comment
+    }
     organization
     refrigerated
     canSharedRoad

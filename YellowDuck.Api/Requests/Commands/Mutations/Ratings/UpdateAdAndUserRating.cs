@@ -51,6 +51,7 @@ namespace YellowDuck.Api.Requests.Commands.Mutations.Ratings
                 userRating.RespectRating = request.UserRating.Respect;
                 userRating.CommunicationRating = request.UserRating.Communication;
                 userRating.OverallRating = request.UserRating.Overall;
+                userRating.Comment = request.UserRating.Comment;
                 userRating.LastUpdatedAtUtc = DateTime.UtcNow;
             }
 
@@ -68,6 +69,7 @@ namespace YellowDuck.Api.Requests.Commands.Mutations.Ratings
                     adRating.ComplianceRating = request.AdRating.Compliance;
                     adRating.QualityRating = request.AdRating.Quality;
                     adRating.OverallRating = request.AdRating.Overall;
+                    adRating.Comment = request.AdRating.Comment;
                     adRating.LastUpdatedAtUtc = DateTime.UtcNow;
                 }
                 else
@@ -81,6 +83,7 @@ namespace YellowDuck.Api.Requests.Commands.Mutations.Ratings
                         ComplianceRating = request.AdRating.Compliance,
                         QualityRating = request.AdRating.Quality,
                         OverallRating = request.AdRating.Overall,
+                        Comment = request.AdRating.Comment,
                         CreatedAtUtc = DateTime.UtcNow,
                         LastUpdatedAtUtc = DateTime.UtcNow
                     };
@@ -116,6 +119,7 @@ namespace YellowDuck.Api.Requests.Commands.Mutations.Ratings
             public Rating Compliance { get; set; }
             public Rating Quality { get; set; }
             public Rating Overall { get; set; }
+            public string Comment { get; set; }
         }
 
         [InputType]
@@ -124,6 +128,7 @@ namespace YellowDuck.Api.Requests.Commands.Mutations.Ratings
             public Rating Respect { get; set; }
             public Rating Communication { get; set; }
             public Rating Overall { get; set; }
+            public string Comment { get; set; }
         }
 
         [MutationPayload]

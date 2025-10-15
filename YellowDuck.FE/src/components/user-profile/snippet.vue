@@ -43,6 +43,15 @@
             <li v-else-if="userProfile.user.isConfirmed">{{ $t("profile-snippet.verified-email") }}</li>
           </ul>
         </div>
+        <div v-if="showPhoneNumber || showEmail" class="user-profile-snippet__contact-info">
+          <h2 class="h6 mb-1">{{ $t("profile-snippet.contact-info") }}</h2>
+          <p v-if="showPhoneNumber" class="m-0 text-primary">
+            <small>{{ userPublicPhoneNumber }}</small>
+          </p>
+          <p v-if="showEmail" class="m-0 text-primary">
+            <small><a :href="`mailto:${userPublicEmail}`">{{ userPublicEmail }}</a></small>
+          </p>
+        </div>
       </div>
     </div>
   </div>
