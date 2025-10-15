@@ -19,21 +19,29 @@ namespace YellowDuck.Api.Requests.Queries.Rating
 
         public async Task<double> Handle(Query request, CancellationToken cancellationToken)
         {
-            try
-            {
-                var ratings = db.UserRatings.Where(x => x.UserId == request.UserId);
-                if (ratings.Count() > 0)
+            var userRatings = await db.UserRatings
+                .Where(x => x.UserId == request.UserId)
+                .Select(x => new
                 {
-                    var average = await ratings.AverageAsync(x => ((double)x.CommunicationRating + (double)x.FiabilityRating + (double)x.RespectRating) / 3, cancellationToken: cancellationToken);
-                    return Math.Round(average, 1);
-                }
-            }
-            catch (Exception)
+                    CommunicationRating = (int)x.CommunicationRating,
+                    RespectRating = (int)x.RespectRating,
+                    OverallRating = (int)x.OverallRating
+                })
+                .ToListAsync(cancellationToken);
+
+            // Entity Framework can't translate the SelectMany with array creation directly to SQL.
+            var allRatings = userRatings
+                .SelectMany(x => new[] { x.CommunicationRating, x.RespectRating, x.OverallRating })
+                .Where(r => r > 0)
+                .ToList();
+
+            if (!allRatings.Any())
             {
                 return 0;
             }
 
-            return 0;
+            var avg = allRatings.Average();
+            return Math.Round(avg, 1);
         }
 
         public class Query : IRequest<double>

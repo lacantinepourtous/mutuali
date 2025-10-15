@@ -334,6 +334,7 @@ query UserProfileById($id: ID!) {
     showPhoneNumber
     showEmail
     user {
+      id
       phoneNumberConfirmed
       email
     }

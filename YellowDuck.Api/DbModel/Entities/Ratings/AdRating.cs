@@ -15,8 +15,9 @@ namespace YellowDuck.Api.DbModel.Entities.Ratings
         public long ConversationId { get; set; }
         public Conversation Conversation { get; set; }
         public Rating ComplianceRating { get; set; }
-        public Rating CleanlinessRating { get; set; }
-        public Rating SecurityRating { get; set; }
+        public Rating QualityRating { get; set; }
+        public Rating OverallRating { get; set; }
         public DateTime CreatedAtUtc { get; set; }
+        public DateTime LastUpdatedAtUtc { get; set; }
     }
 }

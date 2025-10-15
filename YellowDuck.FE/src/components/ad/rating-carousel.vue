@@ -33,11 +33,18 @@ export default {
   },
   computed: {
     averageRating: function () {
-      return this.ad.averageRating;
+      return this.ad ? this.ad.averageRating : 0;
     },
     ratings: function () {
-      const ratings = this.ad ? this.ad.adRatings : [];
-      return this.getRatingsWithCriterias(ratings, ["compliance", "cleanliness", "security"]);
+      const ratings = this.ad && this.ad.adRatings ? this.ad.adRatings : [];
+      const filledRatings = ratings.filter((r) => {
+        if (!r) return false;
+        const hasPositive = this.convertRatingToInt(r.complianceRating) > 0
+          || this.convertRatingToInt(r.qualityRating) > 0
+          || this.convertRatingToInt(r.overallRating) > 0;
+        return hasPositive;
+      });
+      return this.getRatingsWithCriterias(filledRatings, ["compliance", "quality", "ad-overall"]);
     }
   },
   apollo: {
@@ -62,9 +69,9 @@ query AdById($id: ID!) {
     averageRating
     adRatings {
       id
-      cleanlinessRating
-      securityRating
       complianceRating
+      qualityRating
+      overallRating
       createdAt
       raterUser {
         id

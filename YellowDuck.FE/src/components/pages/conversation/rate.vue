@@ -1,13 +1,13 @@
 <template>
   <div class="w-100" v-if="conversation">
-    <portal v-if="!conversationRated" :to="$consts.enums.PORTAL_HEADER">
+    <portal v-if="!isSubmitted" :to="$consts.enums.PORTAL_HEADER">
       <nav-close :to="{ name: $consts.urls.URL_CONVERSATION_DETAIL, params: { id: this.conversationId } }"></nav-close>
     </portal>
 
-    <div v-if="!conversationRated">
+    <div v-if="!isSubmitted">
       <div class="section section--sm">
-        <h1 class="mt-4 mb-3">{{ $t("page-title.rate-conversation") }}</h1>
-        <p>{{ $t("rate-conversation.text") }}</p>
+        <h1 class="mt-4 mb-3">{{ isEditMode ? $t("page-title.edit-rating") : $t("page-title.rate-conversation") }}</h1>
+        <p>{{ isEditMode ? $t("edit-rating.text") : $t("rate-conversation.text") }}</p>
       </div>
 
       <s-form @submit="rateConversation">
@@ -25,20 +25,21 @@
               <div class="mt-4 mb-5">
                 <s-form-rating 
                   v-model="rating.user.respect" 
-                  :label="$t('label.respect-rating')" 
-                  description="TODO ajouter une description ici ?"
+                  :label="$t('label.user-respect-rating')" 
+                  :description="$t('description.user-respect-rating')"
                   size="lg" 
                   margin="sm" />
                 <s-form-rating
                   v-model="rating.user.communication"
-                  :label="$t('label.communication-rating')"
+                  :label="$t('label.user-communication-rating')"
+                  :description="$t('description.user-communication-rating')"
                   size="lg"
                   margin="sm"
                 />
                 <s-form-rating 
-                  v-model="rating.user.fiability" 
-                  :label="$t('label.fiability-rating')" 
-                  description="TODO ajouter une description ici ?"
+                  v-model="rating.user.overall" 
+                  :label="$t('label.user-overall-experience-rating')" 
+                  :description="$t('description.user-overall-experience-rating')"
                   size="lg" 
                   margin="sm" />
               </div>
@@ -53,7 +54,7 @@
               </div>
 
               <b-button :disabled="isSubmitted" type="submit" variant="primary" size="lg" block>{{
-                $t("btn-rate-conversation")
+                isEditMode ? $t("btn-update-rating") : $t("btn-rate-conversation")
               }}</b-button>
             </div>
           </div>
@@ -77,21 +78,22 @@
               <div class="mt-4 mb-5">
                 <s-form-rating 
                   v-model="rating.ad.compliance" 
-                  :label="$t('label.compliance-rating')"
-                  description="TODO ajouter une description ici ?" 
+                  :label="$t('label.ad-conformity-rating')"
+                  :description="$t('description.ad-conformity-rating')" 
                   size="lg" 
                   margin="sm" 
                 />
+                <!-- TODO - Add dynamic description -->
                 <s-form-rating 
-                  v-model="rating.ad.cleanliness" 
-                  :label="$t('label.cleanliness-rating')" 
-                  description="TODO ajouter une description ici ?" 
+                  v-model="rating.ad.quality" 
+                  :label="$t('label.ad-quality-rating')"
+                  :description="$t('description.ad-quality-rating-material')" 
                   size="lg" 
                   margin="sm" />
                 <s-form-rating 
-                  v-model="rating.ad.security"
-                  :label="$t('label.security-rating')"
-                  description="TODO ajouter une description ici ?"
+                  v-model="rating.ad.overall"
+                  :label="$t('label.ad-overall-experience-rating')"
+                  :description="$t('description.ad-overall-experience-rating')"
                   size="lg" 
                   margin="sm" />
               </div>
@@ -105,13 +107,13 @@
                 />
               </div>
 
-              <b-button @click="currentStep = $consts.ratingSteps.STEP_OWNER" variant="admin" size="lg" block>{{
-                $t("btn-rate-next-step-and-confirm")
-              }}</b-button>
-              <!-- TODO FE - Annuler l'évaluation -->
-              <b-button @click="currentStep = $consts.ratingSteps.STEP_OWNER" variant="outline-primary" size="lg" block>{{
-                $t("btn-rate-next-step-and-skip")
-              }}</b-button>
+              <b-button @click="currentStep = $consts.ratingSteps.STEP_OWNER" variant="admin" size="lg" block>
+                {{ $t("btn-rate-next-step") }}
+              </b-button>
+              <b-button @click="resetAdRating()" variant="outline-primary" size="lg" block>
+                <b-icon-arrow-counterclockwise />
+                {{ $t("btn-rate-reset") }}
+              </b-button>
             </div>
           </div>
 
@@ -129,21 +131,21 @@
               <div class="mt-4 mb-5">
                 <s-form-rating 
                   v-model="rating.user.respect" 
-                  :label="$t('label.respect-rating')" 
-                  description="TODO ajouter une description ici ?"
+                  :label="$t('label.user-respect-rating')" 
+                  :description="$t('description.user-respect-rating')"
                   size="lg" 
                   margin="sm" />
                 <s-form-rating
                   v-model="rating.user.communication"
-                  :label="$t('label.communication-rating')"
-                  description="TODO ajouter une description ici ?"
+                  :label="$t('label.user-communication-rating')"
+                  :description="$t('description.user-communication-rating')"
                   size="lg"
                   margin="sm"
                 />
                 <s-form-rating 
-                  v-model="rating.user.fiability" 
-                  :label="$t('label.fiability-rating')" 
-                  description="TODO ajouter une description ici ?"
+                  v-model="rating.user.overall" 
+                  :label="$t('label.user-overall-experience-rating')" 
+                  :description="$t('description.user-overall-experience-rating')"
                   size="lg" 
                   margin="sm" />
               </div>
@@ -157,12 +159,20 @@
                 />
               </div>
               
-              <b-button :disabled="isSubmitted" type="submit" variant="admin" size="lg" block>{{
-                $t("btn-rate-conversation")
-              }}</b-button>
-              <b-button @click="currentStep = $consts.ratingSteps.STEP_EQUIPEMENT" variant="outline-primary"  size="lg" block>{{
-                $t("btn-rate-previous-step")
-              }}</b-button>
+              <b-button :disabled="isSubmitted" type="submit" variant="admin" size="lg" block>
+                {{ isEditMode ? $t("btn-update-rating") : $t("btn-rate-conversation") }}
+              </b-button>
+              <div class="d-flex flex-wrap flex-sm-nowrap justify-content-between mt-2 btns-wrapper">
+                <b-button @click="currentStep = $consts.ratingSteps.STEP_EQUIPEMENT" variant="outline-primary"  size="lg" block>
+                  <b-icon-arrow-left />
+                  {{ $t("btn-rate-previous-step") }}
+                </b-button>
+                <b-button @click="resetUserRating()" class="mt-0" variant="outline-primary" size="lg" block>
+                  <b-icon-arrow-counterclockwise />
+                  {{ $t("btn-rate-reset") }}
+                </b-button>
+              </div>
+              
             </div>
           </div>
         </template>
@@ -190,6 +200,7 @@ import FormComplete from "@/components/generic/form-complete";
 import { CONTENT_LANG_FR } from "@/consts/langs";
 import { URL_CONVERSATION_DETAIL, URL_LIST_AD } from "@/consts/urls";
 import { STEP_EQUIPEMENT, STEP_TENANT } from "@/consts/rating-steps";
+import { RatingsCriterias } from "@/mixins/ratings-criterias";
 
 import conversationService from "@/services/conversation";
 
@@ -203,20 +214,25 @@ export default {
     AdSnippet,
     UserProfileSnippet
   },
+  mixins: [RatingsCriterias],
   data() {
     return {
       currentStep: "",
+      isEditMode: false,
+      targetUserProfile: null,
+      existingUserRating: null,
+      existingAdRating: null,
       rating: {
         ad: {
           compliance: 0,
-          cleanliness: 0,
-          security: 0,
+          quality: 0,
+          overall: 0,
           comment: ""
         },
         user: {
           respect: 0,
           communication: 0,
-          fiability: 0,
+          overall: 0,
           comment: ""
         }
       },
@@ -234,6 +250,55 @@ export default {
     };
   },
   methods: {
+    resetUserRating() {
+      this.rating.user = {
+        respect: 0,
+        communication: 0,
+        overall: 0
+      };
+    },
+    resetAdRating() {
+      this.rating.ad = {
+        compliance: 0,
+        quality: 0,
+        overall: 0
+      };
+    },
+    loadExistingAdRatingData: function() {
+      if (!this.conversation || !this.me) {
+        return;
+      }
+
+      if (!this.raterIsOwner) {
+        this.existingAdRating = this.conversation.adRating.find((r) => r && r.raterUser && r.raterUser.id === this.me.id);
+        if (this.existingAdRating) {
+          this.rating.ad = {
+            compliance: this.convertRatingToInt(this.existingAdRating.complianceRating) || 0,
+            quality: this.convertRatingToInt(this.existingAdRating.qualityRating) || 0,
+            overall: this.convertRatingToInt(this.existingAdRating.overallRating) || 0,
+            comment: ""
+          };
+          this.isEditMode = true;
+        }
+      }
+    },
+    loadExistingUserRatingData: function() {
+      if (!this.me || !this.targetUserProfile || !this.targetUserProfile.user) {
+        return;
+      }
+
+      this.existingUserRating = this.targetUserProfile.user.userRatings.find((r) => r && r.raterUser && r.raterUser.id === this.me.id);
+
+      if (this.existingUserRating) {
+        this.rating.user = {
+          respect: this.convertRatingToInt(this.existingUserRating.respectRating) || 0,
+          communication: this.convertRatingToInt(this.existingUserRating.communicationRating) || 0,
+          overall: this.convertRatingToInt(this.existingUserRating.overallRating) || 0,
+          comment: ""
+        };
+        this.isEditMode = true;
+      }
+    },
     rateConversation: async function () {
       this.isSubmitted = true;
       let input = {
@@ -247,9 +312,13 @@ export default {
         input.adRating = this.rating.ad;
       }
       
-      await conversationService.rateAdAndUser(input);
+      if (this.isEditMode) {
+        await conversationService.updateAdAndUserRating(input);
+      } 
+      else {
+        await conversationService.rateAdAndUser(input);
+      }
       window.scrollTo(0, 0);
-      this.isSubmitted = false;
     }
   },
   computed: {
@@ -268,9 +337,6 @@ export default {
     adImage: function () {
       return this.conversation.ad.gallery[0];
     },
-    conversationRated: function () {
-      return this.raterIsOwner ? this.hasAlreadyRateUser : Boolean(this.conversation.adRating && this.conversation.adRating.length > 0) || this.hasAlreadyRateUser;
-    },
     owner: function () {
       return this.conversation.participants.find(p => p.user && p.user.id === this.conversation.ad.user.id);
     },
@@ -279,9 +345,6 @@ export default {
     },
     raterIsOwner: function () {
       return this.me.id === this.owner.user.id;
-    },
-    hasAlreadyRateUser: function () {
-      return this.conversation.userRatings.some((x) => x.raterUser.id === this.me.id);
     }
   },
   apollo: {
@@ -303,6 +366,28 @@ export default {
       result({ data }) {
         if (data) {
           this.currentStep = this.raterIsOwner ? STEP_TENANT : STEP_EQUIPEMENT;
+          this.loadExistingAdRatingData();
+        }
+      }
+    },
+    targetUserProfile: {
+      query() {
+        return this.$options.query.UserProfileByIdRatings;
+      },
+      variables() {
+        return {
+          id: this.raterIsOwner ? this.requester.user.profile.id : this.owner.user.profile.id
+        };
+      },
+      update: function(data) {
+        return data && data.userProfile ? data.userProfile : null;
+      },
+      skip() {
+        return !this.me || !this.conversation;
+      },
+      result({ data }) {
+        if (data) {
+          this.loadExistingUserRatingData();
         }
       }
     }
@@ -344,12 +429,18 @@ query ConversationById($id: ID!, $language: ContentLanguage!) {
     }
     adRating {
       id
+      complianceRating
+      qualityRating
+      overallRating
       raterUser {
         id
       }
     }
     userRatings {
       id
+      respectRating
+      communicationRating
+      overallRating
       raterUser {
         id
       }
@@ -362,10 +453,32 @@ query Me {
     id
   }
 }
+
+query UserProfileByIdRatings($id: ID!) {
+  userProfile(id: $id) {
+    id
+    user {
+      id
+      userRatings {
+        id
+        respectRating
+        communicationRating
+        overallRating
+        raterUser {
+          id
+        }
+      }
+    }
+  }
+}
 </graphql>
 
-<style lang="scss">
+<style lang="scss" scoped>
 .comment-section {
   border-top: 1px solid $gray-200;
+}
+
+.btns-wrapper {
+  gap: $spacer / 2;
 }
 </style>

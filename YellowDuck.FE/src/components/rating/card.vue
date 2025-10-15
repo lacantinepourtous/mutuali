@@ -41,11 +41,12 @@
 
 <script>
 import SFormRating from "@/components/form/s-form-rating";
-import { RATING } from "@/consts/rating";
+import { RatingsCriterias } from "@/mixins/ratings-criterias";
 import i18n from "@/helpers/i18n";
 
 export default {
   components: { SFormRating },
+  mixins: [RatingsCriterias],
   props: {
     rating: {
       type: Object,
@@ -62,11 +63,6 @@ export default {
       return i18n.getLocalizedMonthYear(this.rating.createdAt);
     }
   },
-  methods: {
-    convertRatingToInt(rating) {
-      return RATING.indexOf(rating);
-    }
-  }
 };
 </script>
 

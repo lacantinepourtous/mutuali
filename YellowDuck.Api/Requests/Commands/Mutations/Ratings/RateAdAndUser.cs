@@ -43,7 +43,7 @@ namespace YellowDuck.Api.Requests.Commands.Mutations.Ratings
 
       // Vérifier si l'utilisateur a déjà noté cet utilisateur
       var existingUserRating = await db.UserRatings
-          .FirstOrDefaultAsync(x => x.UserId == userId && x.RaterUserId == currentUserId);
+          .FirstOrDefaultAsync(x => x.UserId == userId && x.RaterUserId == currentUserId, cancellationToken);
 
       if (existingUserRating != null)
       {
@@ -58,8 +58,9 @@ namespace YellowDuck.Api.Requests.Commands.Mutations.Ratings
         ConversationId = conversationId,
         RespectRating = request.UserRating.Respect,
         CommunicationRating = request.UserRating.Communication,
-        FiabilityRating = request.UserRating.Fiability,
-        CreatedAtUtc = DateTime.UtcNow
+        OverallRating = request.UserRating.Overall,
+        CreatedAtUtc = DateTime.UtcNow,
+        LastUpdatedAtUtc = DateTime.UtcNow
       };
 
       db.UserRatings.Add(userRating);
@@ -70,11 +71,11 @@ namespace YellowDuck.Api.Requests.Commands.Mutations.Ratings
       {
         // Vérifier si l'utilisateur a déjà noté cette annonce
         var existingAdRating = await db.AdRatings
-            .FirstOrDefaultAsync(x => x.AdId == adId && x.RaterUserId == currentUserId);
+            .FirstOrDefaultAsync(x => x.AdId == adId && x.RaterUserId == currentUserId, cancellationToken);
 
         if (existingAdRating != null)
         {
-          throw new AdAlreadyRated();
+            throw new AdAlreadyRated();
         }
 
         adRating = new AdRating
@@ -83,9 +84,10 @@ namespace YellowDuck.Api.Requests.Commands.Mutations.Ratings
           RaterUserId = currentUserId,
           ConversationId = conversationId,
           ComplianceRating = request.AdRating.Compliance,
-          CleanlinessRating = request.AdRating.Cleanliness,
-          SecurityRating = request.AdRating.Security,
-          CreatedAtUtc = DateTime.UtcNow
+          QualityRating = request.AdRating.Quality,
+          OverallRating = request.AdRating.Overall,
+          CreatedAtUtc = DateTime.UtcNow,
+          LastUpdatedAtUtc = DateTime.UtcNow
         };
 
         db.AdRatings.Add(adRating);
@@ -109,15 +111,15 @@ namespace YellowDuck.Api.Requests.Commands.Mutations.Ratings
       public Id AdId { get; set; }
       public Id ConversationId { get; set; }
       public UserRatingInput UserRating { get; set; }
-      public AdRatingInput? AdRating { get; set; }
+      public AdRatingInput AdRating { get; set; }
     }
 
     [InputType]
     public class AdRatingInput
     {
       public Rating Compliance { get; set; }
-      public Rating Cleanliness { get; set; }
-      public Rating Security { get; set; }
+      public Rating Quality { get; set; }
+      public Rating Overall { get; set; }
     }
 
     [InputType]
@@ -125,7 +127,7 @@ namespace YellowDuck.Api.Requests.Commands.Mutations.Ratings
     {
       public Rating Respect { get; set; }
       public Rating Communication { get; set; }
-      public Rating Fiability { get; set; }
+      public Rating Overall { get; set; }
     }
 
     [MutationPayload]

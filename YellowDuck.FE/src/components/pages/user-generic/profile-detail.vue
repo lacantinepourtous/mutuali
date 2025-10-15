@@ -132,7 +132,8 @@ export default {
     },
     ratings: function () {
       const ratings = this.userProfile.user ? this.userProfile.user.userRatings : [];
-      return this.getRatingsWithCriterias(ratings, ["respect", "fiability", "communication"]);
+      const filledRatings = ratings.filter((r) => r && this.convertRatingToInt(r.respectRating) > 0 || this.convertRatingToInt(r.communicationRating) > 0 || this.convertRatingToInt(r.overallRating) > 0);
+      return this.getRatingsWithCriterias(filledRatings, ["respect", "communication", "user-overall"]);
     },
     registeredSince: function () {
       return this.userProfile.user ? this.fromNow(this.userProfile.user.registrationDate) : this.fromNow(new Date().toString());
@@ -198,6 +199,7 @@ query UserProfileById($id: ID!, $language: ContentLanguage!) {
   userProfile(id: $id) {
     id
     user {
+      id
       registrationDate
       ads {
         id
@@ -240,8 +242,8 @@ query UserProfileById($id: ID!, $language: ContentLanguage!) {
           }
         }
         respectRating
-        fiabilityRating
         communicationRating
+        overallRating
         createdAt
       }
     }

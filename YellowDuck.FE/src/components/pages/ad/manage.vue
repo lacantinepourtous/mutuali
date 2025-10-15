@@ -127,6 +127,7 @@ query UserProfileById($id: ID!, $language: ContentLanguage!) {
   userProfile(id: $id) {
     id
     user {
+      id
       ads {
         id
         isPublish

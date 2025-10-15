@@ -16,6 +16,7 @@
     <b-input-group :prepend="prepend" :append="append">
       <slot name="input-group-prepend" :sState="sState"></slot>
       <b-form-rating
+        v-if="!readonly || computedValue > 0"
         :id="`input-${name}`"
         v-model="computedValue"
         color="#f4b42b"
@@ -24,6 +25,7 @@
         no-border
         :size="size"
       ></b-form-rating>
+      <span v-else class="text-muted font-italic">{{ $t("label.not-rated") }}</span>
       <slot name="input-group-append" :sState="sState"></slot>
     </b-input-group>
   </s-field>
