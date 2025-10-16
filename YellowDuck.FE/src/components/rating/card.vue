@@ -51,7 +51,6 @@ export default {
       type: Object,
       required: true
     },
-    profilePicture: String,
     carousel: Boolean
   },
   computed: {

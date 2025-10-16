@@ -38,7 +38,6 @@ export default {
     ratings: function () {
       const ratings = this.ad && this.ad.adRatings ? this.ad.adRatings : [];
       const filledRatings = ratings.filter((r) => {
-        if (!r) return false;
         const hasPositive = this.convertRatingToInt(r.complianceRating) > 0
           || this.convertRatingToInt(r.qualityRating) > 0
           || this.convertRatingToInt(r.overallRating) > 0

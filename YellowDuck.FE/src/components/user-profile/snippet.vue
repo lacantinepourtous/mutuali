@@ -96,7 +96,6 @@ export default {
     },
     hideRating: Boolean,
     hideOrganization: Boolean,
-    profilePicture: String,
     sectionWidth: {
       type: String,
       default: "md"
