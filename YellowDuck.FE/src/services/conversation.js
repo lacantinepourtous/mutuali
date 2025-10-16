@@ -1,6 +1,7 @@
 import Apollo from "@/graphql/vue-apollo";
 import { CreateConversation, RemoveConversationNotification, RateAdAndUser, UpdateAdAndUserRating } from "./conversation.graphql";
 import { RATING } from "@/consts/rating";
+import { addMaybeValue } from "@/helpers/graphql";
 
 export default {
   createConversation: async function (adId) {
@@ -39,10 +40,12 @@ export default {
     };
 
     if (input.adRating) {
-      mutationInput.adRating = {
+      const adRating = {
         ...convertRatingToEnumsValue(input.adRating),
         comment: input.adComment
       };
+
+      addMaybeValue({ adRating }, mutationInput, "adRating");
     }
 
     let result = await Apollo.instance.defaultClient.mutate({
@@ -66,10 +69,12 @@ export default {
     };
 
     if (input.adRating) {
-      mutationInput.adRating = {
+      const adRating = {
         ...convertRatingToEnumsValue(input.adRating),
         comment: input.adComment
       };
+
+      addMaybeValue({ adRating }, mutationInput, "adRating");
     }
 
     let result = await Apollo.instance.defaultClient.mutate({

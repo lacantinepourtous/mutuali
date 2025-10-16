@@ -14,6 +14,7 @@ using YellowDuck.Api.DbModel.Entities.Ratings;
 using YellowDuck.Api.DbModel.Enums;
 using YellowDuck.Api.Extensions;
 using YellowDuck.Api.Gql.Schema.GraphTypes;
+using YellowDuck.Api.Gql.Schema.Types;
 using YellowDuck.Api.Plugins.GraphQL;
 using YellowDuck.Api.Services.System;
 
@@ -36,71 +37,73 @@ namespace YellowDuck.Api.Requests.Commands.Mutations.Ratings
 
         public async Task<Payload> Handle(Input request, CancellationToken cancellationToken)
         {
+            await ValidateRequest(request, cancellationToken);
+
             var currentUserId = currentUserAccessor.GetCurrentUserId();
-            var userId = request.UserId.IdentifierForType<AppUser>();
+            var ratedUserId = request.UserId.IdentifierForType<AppUser>();
             var adId = request.AdId.LongIdentifierForType<Ad>();
             var conversationId = request.ConversationId.LongIdentifierForType<Conversation>();
 
             // Modifier la note de l'utilisateur si une note existe déjà
-            UserRating userRating = null;
-            if (request.UserRating != null)
-            {
-                userRating = await db.UserRatings
-                                .FirstOrDefaultAsync(x => x.UserId == userId && x.RaterUserId == currentUserId, cancellationToken) ?? throw new UserRatingDoesntExist();
+            var userRating = await db.UserRatings
+                            .FirstOrDefaultAsync(x => x.UserId == ratedUserId && x.RaterUserId == currentUserId, cancellationToken) ?? throw new UserRatingDoesntExist();
 
-                userRating.RespectRating = request.UserRating.Respect;
-                userRating.CommunicationRating = request.UserRating.Communication;
-                userRating.OverallRating = request.UserRating.Overall;
-                userRating.Comment = request.UserRating.Comment;
-                userRating.LastUpdatedAtUtc = DateTime.UtcNow;
-            }
-
+            userRating.RespectRating = request.UserRating.Respect;
+            userRating.CommunicationRating = request.UserRating.Communication;
+            userRating.OverallRating = request.UserRating.Overall;
+            userRating.Comment = request.UserRating.Comment;
+            userRating.LastUpdatedAtUtc = DateTime.UtcNow;
             
             AdRating adRating = null;
-            if (request.AdRating != null)
+            if (request.AdRating.IsSet())
             {
-                var existingAdRating = await db.AdRatings
+                adRating = await db.AdRatings
                     .FirstOrDefaultAsync(x => x.AdId == adId && x.RaterUserId == currentUserId, cancellationToken);
                 
-                if (existingAdRating != null)
-                {
-                    // Modifier la note de l'annonce si une note existe déjà
-                    adRating = existingAdRating;
-                    adRating.ComplianceRating = request.AdRating.Compliance;
-                    adRating.QualityRating = request.AdRating.Quality;
-                    adRating.OverallRating = request.AdRating.Overall;
-                    adRating.Comment = request.AdRating.Comment;
-                    adRating.LastUpdatedAtUtc = DateTime.UtcNow;
+                var isNewAdRating = false;
+                if (adRating == null) {
+                    adRating = new AdRating();
+                    isNewAdRating = true;
                 }
-                else
-                {
-                    // Ou créer une nouvelle note pour l'annonce
-                    adRating = new AdRating
-                    {
-                        AdId = adId,
-                        RaterUserId = currentUserId,
-                        ConversationId = conversationId,
-                        ComplianceRating = request.AdRating.Compliance,
-                        QualityRating = request.AdRating.Quality,
-                        OverallRating = request.AdRating.Overall,
-                        Comment = request.AdRating.Comment,
-                        CreatedAtUtc = DateTime.UtcNow,
-                        LastUpdatedAtUtc = DateTime.UtcNow
-                    };
 
+                adRating.AdId = adId;
+                adRating.RaterUserId = currentUserId;
+                adRating.ConversationId = conversationId;
+                adRating.ComplianceRating = request.AdRating.Value.Compliance;
+                adRating.QualityRating = request.AdRating.Value.Quality;
+                adRating.OverallRating = request.AdRating.Value.Overall;
+                adRating.Comment = request.AdRating.Value.Comment;
+                adRating.LastUpdatedAtUtc = DateTime.UtcNow;
+
+                if (isNewAdRating) {
                     db.AdRatings.Add(adRating);
                 }
             }
 
             await db.SaveChangesAsync(cancellationToken);
 
-            logger.LogInformation($"Rating of user {userId} updated by user {currentUserId}" + (adRating != null ? $", Ad {adId} rating also updated." : ""));
+            logger.LogInformation($"Rating of user {ratedUserId} updated by user {currentUserId}" + (adRating != null ? $", Ad {adId} rating also updated." : ""));
 
             return new Payload
             {
-                AdRating = new AdRatingGraphType(adRating),
+                AdRating = adRating != null ? new AdRatingGraphType(adRating) : null,
                 UserRating = new UserRatingGraphType(userRating)
             };
+        }
+
+        private async Task ValidateRequest(Input request, CancellationToken cancellationToken)
+        {
+            if (request.UserRating == null) throw new UserRatingDoesntExist();
+
+            var currentUserId = currentUserAccessor.GetCurrentUserId();
+            var ratedUserId = request.UserId.IdentifierForType<AppUser>();
+            var adId = request.AdId.LongIdentifierForType<Ad>();
+            var conversationId = request.ConversationId.LongIdentifierForType<Conversation>();
+
+            var user = await db.Users.FirstOrDefaultAsync(x => x.Id == currentUserId, cancellationToken) ?? throw new UserDoesntExist();
+            var ratedUser = await db.Users.FirstOrDefaultAsync(x => x.Id == ratedUserId, cancellationToken) ?? throw new UserDoesntExist();
+            var ad = await db.Ads.FirstOrDefaultAsync(x => x.Id == adId, cancellationToken) ?? throw new AdDoesntExist();
+            var conversation = await db.Conversations.FirstOrDefaultAsync(x => x.Id == conversationId, cancellationToken) ?? throw new ConversationDoesntExist();
         }
 
         [MutationInput]
@@ -110,7 +113,7 @@ namespace YellowDuck.Api.Requests.Commands.Mutations.Ratings
             public Id AdId { get; set; }
             public Id ConversationId { get; set; }
             public UserRatingInput UserRating { get; set; }
-            public AdRatingInput AdRating { get; set; }
+            public Maybe<AdRatingInput> AdRating { get; set; }
         }
 
         [InputType]
@@ -140,5 +143,9 @@ namespace YellowDuck.Api.Requests.Commands.Mutations.Ratings
 
         public abstract class UpdateAdAndUserRatingException : Exception { }
         public class UserRatingDoesntExist : UpdateAdAndUserRatingException { }
+        public class AdRatingDoesntExist : UpdateAdAndUserRatingException { }
+        public class ConversationDoesntExist : UpdateAdAndUserRatingException { }
+        public class UserDoesntExist : UpdateAdAndUserRatingException { }
+        public class AdDoesntExist : UpdateAdAndUserRatingException { }
     }
 }

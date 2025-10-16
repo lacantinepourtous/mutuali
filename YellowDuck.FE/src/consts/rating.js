@@ -18,7 +18,7 @@ export const RATING_LABELS = [
   {
     id: "compliance",
     propertyName: "complianceRating",
-    label: "ad-conformity-rating"
+    label: "ad-compliance-rating"
   },
   {
     id: "quality",

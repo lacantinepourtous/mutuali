@@ -14,6 +14,7 @@ using YellowDuck.Api.DbModel.Entities.Ratings;
 using YellowDuck.Api.DbModel.Enums;
 using YellowDuck.Api.Extensions;
 using YellowDuck.Api.Gql.Schema.GraphTypes;
+using YellowDuck.Api.Gql.Schema.Types;
 using YellowDuck.Api.Plugins.GraphQL;
 using YellowDuck.Api.Services.System;
 
@@ -68,7 +69,7 @@ namespace YellowDuck.Api.Requests.Commands.Mutations.Ratings
 
       // Créer la note pour l'annonce seulement si AdRating est fourni
       AdRating adRating = null;
-      if (request.AdRating != null)
+      if (request.AdRating.IsSet())
       {
         // Vérifier si l'utilisateur a déjà noté cette annonce
         var existingAdRating = await db.AdRatings
@@ -84,10 +85,10 @@ namespace YellowDuck.Api.Requests.Commands.Mutations.Ratings
           AdId = adId,
           RaterUserId = currentUserId,
           ConversationId = conversationId,
-          ComplianceRating = request.AdRating.Compliance,
-          QualityRating = request.AdRating.Quality,
-          OverallRating = request.AdRating.Overall,
-          Comment = request.AdRating.Comment,
+          ComplianceRating = request.AdRating.Value.Compliance,
+          QualityRating = request.AdRating.Value.Quality,
+          OverallRating = request.AdRating.Value.Overall,
+          Comment = request.AdRating.Value.Comment,
           CreatedAtUtc = DateTime.UtcNow,
           LastUpdatedAtUtc = DateTime.UtcNow
         };
@@ -113,7 +114,7 @@ namespace YellowDuck.Api.Requests.Commands.Mutations.Ratings
       public Id AdId { get; set; }
       public Id ConversationId { get; set; }
       public UserRatingInput UserRating { get; set; }
-      public AdRatingInput AdRating { get; set; }
+      public Maybe<AdRatingInput> AdRating { get; set; }
     }
 
     [InputType]

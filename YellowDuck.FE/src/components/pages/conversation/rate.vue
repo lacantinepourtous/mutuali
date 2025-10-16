@@ -77,8 +77,8 @@
               <div class="mt-4 mb-5">
                 <s-form-rating 
                   v-model="rating.ad.compliance" 
-                  :label="$t('label.ad-conformity-rating')"
-                  :description="$t('description.ad-conformity-rating')" 
+                  :label="$t('label.ad-compliance-rating')"
+                  :description="$t('description.ad-compliance-rating')" 
                   size="lg" 
                   margin="sm" 
                 />
