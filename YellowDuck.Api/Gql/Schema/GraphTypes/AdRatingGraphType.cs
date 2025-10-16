@@ -24,18 +24,9 @@ namespace YellowDuck.Api.Gql.Schema.GraphTypes
         public async Task<AdGraphType> Ad(IAppUserContext ctx)
         {
             var data = await Data;
-            return data.Contract != null
+            return data.Ad != null
                ? new AdGraphType(data.Ad)
                : new AdGraphType(ctx, data.AdId);
-        }
-
-        public async Task<ContractGraphType> Contract(IAppUserContext ctx)
-        {
-            var data = await Data;
-
-            return data.Contract != null
-                ? new ContractGraphType(data.Contract)
-                : new ContractGraphType(ctx, data.ContractId);
         }
 
         public async Task<UserGraphType> RaterUser(IAppUserContext ctx)
@@ -45,10 +36,13 @@ namespace YellowDuck.Api.Gql.Schema.GraphTypes
                 ? new UserGraphType(data.RaterUser)
                 : new UserGraphType(ctx, data.RaterUserId);
         }
-        public Task<Rating> CleanlinessRating => WithData(x => x.CleanlinessRating);
-        public Task<Rating> SecurityRating => WithData(x => x.SecurityRating);
         public Task<Rating> ComplianceRating => WithData(x => x.ComplianceRating);
+        public Task<Rating> QualityRating => WithData(x => x.QualityRating);
+        public Task<Rating> OverallRating => WithData(x => x.OverallRating);
 
         public Task<DateTime> CreatedAt => WithData(x => x.CreatedAtUtc.ToLocalTime());
+
+        public Task<DateTime> LastUpdatedAt => WithData(x => x.LastUpdatedAtUtc.ToLocalTime());
+        public Task<string> Comment => WithData(x => x.Comment);
     }
 }

@@ -1,59 +1,57 @@
 <template>
   <div v-if="userProfile" class="user-profile-snippet" :class="{ 'user-profile-snippet--big': isHeading }">
     <div class="user-profile-snippet__inside">
-      <!-- <router-link :to="{ name: $consts.urls.URL_USER_PROFILE_DETAIL, params: { id: id } }">
+      <div class="user-profile-snippet__head mb-4">
         <div class="user-profile-snippet__img-container">
           <img
-            v-if="profilePicture"
             class="user-profile-snippet__img"
             alt=""
-            :src="`${profilePicture}?mode=crop&width=200&height=200`"
+            :src="require('@/assets/icons/user-mutuali.svg')"
           />
-          <b-icon-person-circle v-else class="user-profile-snippet__img"></b-icon-person-circle>
           <b-badge v-if="!hideRating && averageRating" class="user-profile-snippet__rating font-weight-bold" variant="warning"
-            ><b-icon-star-fill class="mr-1" /> {{ averageRating }}</b-badge
-          >
+              ><b-icon-star-fill /> {{ averageRating }}</b-badge
+            >
         </div>
-      </router-link> -->
-      <div class="user-profile-snippet__head">
-        <svg v-if="!isHeading" class="user-profile-snippet__icon" xmlns="http://www.w3.org/2000/svg" width="31" height="31" viewBox="0 0 31 31" fill="none" aria-hidden="true">
-          <path d="M10.4468 8.46328C10.4468 11.2533 12.71 13.5166 15.5001 13.5166C18.2901 13.5166 20.5534 11.2533 20.5534 8.46328C20.5534 5.67322 18.2901 3.37866 15.5001 3.37866C12.71 3.37866 10.4468 5.64191 10.4468 8.46328Z" fill="#414042"/>
-          <path d="M15.5 14.5083C10.85 14.5083 7.06836 18.29 7.06836 22.94V25.6367C9.02161 26.8767 12.1517 27.6202 15.5 27.6202C18.8484 27.6202 21.9784 26.8767 23.9317 25.6367V22.94C23.9317 18.29 20.15 14.5083 15.5 14.5083Z" fill="#414042"/>
-        </svg>
 
-        <component
-          :is="titleTag"
-          class="m-0"
-          :class="isHeading ? 'display-3' : 'line-height-none font-weight-bold lead'"
-        >
+        <div>
           <component
-            :is="hasLink ? 'RouterLink' : 'span'"
-            class="d-inline-flex"
-            :class="{ 'btn-link font-weight-bolder': hasLink }"
-            :to="hasLink ? { name: $consts.urls.URL_USER_PROFILE_DETAIL, params: { id: id } } : null"
+            :is="titleTag"
+            class="m-0"
+            :class="isHeading ? 'display-3' : 'line-height-none font-weight-bold lead'"
           >
-            {{ userPublicName }}
+            <component
+              :is="hasLink ? 'RouterLink' : 'span'"
+              class="d-inline-flex"
+              :class="{ 'btn-link font-weight-bolder': hasLink }"
+              :to="hasLink ? { name: $consts.urls.URL_USER_PROFILE_DETAIL, params: { id: id } } : null"
+            >
+              {{ userPublicName }}
+            </component>
           </component>
-        </component>
+
+          <p v-if="!hideOrganization" class="m-0" :class="{ 'lead font-weight-normal' : isHeading }">{{ userOrganizationName }}</p>
+        </div>
       </div>
 
-      <p v-if="!hideOrganization" class="m-0 responsive-text">{{ userOrganizationName }}</p>
-
-      <p v-if="showPhoneNumber" class="m-0 text-primary">
-        <small>{{ userPublicPhoneNumber }}</small>
-      </p>
-      <p v-if="showEmail" class="m-0 text-primary">
-        <small><a :href="`mailto:${userPublicEmail}`">{{ userPublicEmail }}</a></small>
-      </p>
-
-      <div class="user-profile-snippet__member-stats border-top border-white pt-3 mt-3">
-        <h2 class="h6 mb-1">{{ $t("profile-snippet.verified-member") }}</h2>
-        <ul class="user-profile-snippet__member-stats-list list-unstyled small">
-          <li>{{ registeredSince }}</li>
-          <li>{{ $tc("profile-snippet.ads-count", userAdsCount) }}</li>
-          <li v-if="userProfile.user.isConfirmed && userProfile.user.phoneNumberConfirmed">{{ $t("profile-snippet.verified-phone-and-email") }}</li>
-          <li v-else-if="userProfile.user.isConfirmed">{{ $t("profile-snippet.verified-email") }}</li>
-        </ul>
+      <div class="user-profile-snippet__bottom border-top border-white pt-3 mt-3">
+        <div class="user-profile-snippet__member-stats">
+          <h2 class="h6 mb-1">{{ $t("profile-snippet.verified-member") }}</h2>
+          <ul class="user-profile-snippet__member-stats-list list-unstyled small mb-0">
+            <li>{{ registeredSince }}</li>
+            <li>{{ $tc("profile-snippet.ads-count", userAdsCount) }}</li>
+            <li v-if="userProfile.user.isConfirmed && userProfile.user.phoneNumberConfirmed">{{ $t("profile-snippet.verified-phone-and-email") }}</li>
+            <li v-else-if="userProfile.user.isConfirmed">{{ $t("profile-snippet.verified-email") }}</li>
+          </ul>
+        </div>
+        <div v-if="showPhoneNumber || showEmail" class="user-profile-snippet__contact-info">
+          <h2 class="h6 mb-1">{{ $t("profile-snippet.contact-info") }}</h2>
+          <p v-if="showPhoneNumber" class="m-0 text-primary">
+            <small>{{ userPublicPhoneNumber }}</small>
+          </p>
+          <p v-if="showEmail" class="m-0 text-primary">
+            <small><a :href="`mailto:${userPublicEmail}`">{{ userPublicEmail }}</a></small>
+          </p>
+        </div>
       </div>
     </div>
   </div>
@@ -72,6 +70,7 @@ query UserProfileById($id: ID!) {
     publicPhoneNumber
     publicEmail
     user {
+      id
       averageRating
       registrationDate
       isConfirmed
@@ -97,7 +96,6 @@ export default {
     },
     hideRating: Boolean,
     hideOrganization: Boolean,
-    profilePicture: String,
     sectionWidth: {
       type: String,
       default: "md"
@@ -179,13 +177,23 @@ export default {
 
   & {
     display: block;
+  }
 
-    /* &--big {
-      $img-container-width: #{"clamp(60px, 10vw, 80px)"};
-      .user-profile-snippet__content {
-        padding-left: $spacer * 1.5;
+  &__bottom {
+    display: flex;
+    flex-direction: column;
+    gap: $spacer;
+    margin: $spacer 0;
+  }
+
+  &--big {
+    .user-profile-snippet__bottom {
+      @include media-breakpoint-up(sm) {
+        display: grid;
+        grid-template-columns: 1fr 1fr; 
+        gap: $spacer;
       }
-    } */
+    }
   }
 
   .router-link-exact-active {
@@ -195,9 +203,6 @@ export default {
       text-decoration: none;
       color: $primary;
     }
-  }
-
-  &__inside {
   }
 
   &__img-container {
@@ -224,16 +229,26 @@ export default {
     object-position: center;
   }
 
+  &__icon {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 48px;
+    height: 48px;
+  }
+
   &__rating {
     position: absolute;
-    bottom: $spacer / -2;
-    right: $spacer / -2;
+    bottom: -5px;
+    right: -5px;
+    z-index: 1;
   }
 
   &__head {
     display: flex;
     align-items: center;
     flex: 1 1 auto;
+    gap: $spacer * 1.5;
   }
 
   &__icon {

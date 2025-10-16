@@ -116,7 +116,7 @@ namespace YellowDuck.Api.Gql
 
         public Task<IEnumerable<ConversationParticipant>> LoadParticipants(long id) =>
             loader.LoadCollection<GetParticipantsByConversation.Query, ConversationParticipant, long>(id);
-        
+
         public Task<ConversationParticipant> LoadParticipant(long id) =>
             loader.LoadOne<GetConversationParticipantByIds.Query, ConversationParticipant, long>(id);
 
@@ -129,11 +129,11 @@ namespace YellowDuck.Api.Gql
         public Task<AdRating> LoadAdRating(long id) =>
             loader.LoadOne<GetAdRatingByIds.Query, AdRating, long>(id);
 
-        public Task<AdRating> LoadAdRatingByContractId(long id) =>
-            loader.LoadOne<GetAdRatingByContractIds.Query, AdRating, long>(id);
-
         public Task<IEnumerable<AdRating>> LoadAdRatingByAdId(long id) =>
             loader.LoadCollection<GetAdRatingsByAdId.Query, AdRating, long>(id);
+
+        public Task<IEnumerable<AdRating>> LoadAdRatingByConversationId(long id) =>
+            loader.LoadCollection<GetAdRatingsByConversationId.Query, AdRating, long>(id);
 
         public Task<UserRating> LoadUserRating(long id) =>
             loader.LoadOne<GetUserRatingByIds.Query, UserRating, long>(id);
@@ -141,9 +141,9 @@ namespace YellowDuck.Api.Gql
         public Task<IEnumerable<UserRating>> LoadUserRatingByUserId(string id) =>
             loader.LoadCollection<GetUserRatingsByUserId.Query, UserRating, string>(id);
 
-        public Task<IEnumerable<UserRating>> LoadUserRatingsByContractId(long id) =>
-            loader.LoadCollection<GetUserRatingByContractIds.Query, UserRating, long>(id);
-            
+        public Task<IEnumerable<UserRating>> LoadUserRatingByConversationId(long id) =>
+            loader.LoadCollection<GetUserRatingsByConversationId.Query, UserRating, long>(id);
+
         public Task<StripeAccount> LoadStripeAccount(long id) =>
             loader.LoadOne<GetStripeAccountByIds.Query, StripeAccount, long>(id);
 

@@ -9,12 +9,14 @@
     :inline="inline"
     :label-cols="inline ? 6 : 12"
     :label-cols-sm="inline ? 6 : 12"
+    :label-class="{ 'rating-label-large': size !== 'sm' }"
     :margin="margin"
     :className="inline ? 'form-group--inline' : ''"
   >
     <b-input-group :prepend="prepend" :append="append">
       <slot name="input-group-prepend" :sState="sState"></slot>
       <b-form-rating
+        v-if="!readonly || computedValue > 0"
         :id="`input-${name}`"
         v-model="computedValue"
         color="#f4b42b"
@@ -23,6 +25,7 @@
         no-border
         :size="size"
       ></b-form-rating>
+      <span v-else class="text-muted font-italic">{{ $t("label.not-rated") }}</span>
       <slot name="input-group-append" :sState="sState"></slot>
     </b-input-group>
   </s-field>
@@ -70,13 +73,20 @@ export default {
 };
 </script>
 <style lang="scss">
+$xsmall-star-width: 16px;
 $small-star-width: 24px;
-$big-star-width: 48px;
+$big-star-width: 40px;
+
+.rating-label-large {
+  font-size: 1.25rem;
+  font-weight: 600;
+}
 
 .b-rating {
   justify-content: flex-start;
   padding: 0;
   margin-left: -8px;
+  margin-bottom: 8px !important;
 
   .b-rating-star {
     flex-grow: 0 !important;
@@ -90,8 +100,13 @@ $big-star-width: 48px;
 
   &--small {
     .b-rating-icon svg {
-      max-width: $small-star-width;
-      height: $small-star-width;
+      max-width: $xsmall-star-width;
+      height: $xsmall-star-width;
+
+      @include media-breakpoint-up(sm) {
+        max-width: $small-star-width;
+        height: $small-star-width;
+      }
     }
 
     .b-rating-star {
@@ -110,6 +125,7 @@ $big-star-width: 48px;
 .form-group--inline {
   .b-rating {
     margin-left: 0;
+    margin-bottom: 0 !important;
   }
 }
 </style>

@@ -1,6 +1,12 @@
 <template>
   <b-navbar-nav>
-    <b-nav-text v-b-toggle.conversation class="h5 mb-0 px-2">
+    <b-nav-item v-if="canRate">
+      <b-button class="line-height-none" variant="secondary" @click="rate">
+        <b-icon-star-half variant="warning" class="mr-1" aria-hidden="true"></b-icon-star-half>
+        {{ $t("conversation.btn-rate") }}
+      </b-button>
+    </b-nav-item>
+    <b-nav-text v-b-toggle.conversation class="user-nav-button h5 mb-0 px-2 flex-shrink-0">
       <span class="sr-only">
         <span class="when-open">{{ $t("sr.close") }}</span>
         <span class="when-closed">{{ $t("sr.open") }}</span>
@@ -17,6 +23,7 @@
           $t("btn.conversation-sidebar-show-profile", { name: otherParticipantProfile.publicName })
         }}</b-list-group-item>
       </b-list-group>
+
       <a
         class="sidebar__report"
         :href="
@@ -49,6 +56,18 @@ export default {
       default: ""
     }
   },
+  methods: {
+    rate() {
+      if (this.conversation) {
+        this.$router.push({
+          name: this.$consts.urls.URL_RATE,
+          params: { 
+            id: this.conversation.id
+          }
+        });
+      }
+    }
+  },
   computed: {
     contactUsEmail: function() {
       return VUE_APP_MUTUALI_CONTACT_MAIL;
@@ -75,6 +94,9 @@ export default {
       }
 
       return "";
+    },
+    canRate: function() {
+      return this.otherParticipantProfile && this.conversation && this.conversation.ad;
     }
   },
   apollo: {
@@ -129,6 +151,9 @@ query ConversationById($id: ID!) {
         }
       }
     }
+    ad {
+      id
+    }
   }
 }
 
@@ -155,6 +180,12 @@ query OtherParticipantProfile($id: ID!) {
   .b-sidebar-backdrop {
     margin-top: $nav-return-height;
     height: calc(100vh - #{$nav-return-height});
+  }
+
+  .user-nav-button {
+    width: 36px;
+    height: 36px;
+    margin: auto 0 !important;
   }
 }
 

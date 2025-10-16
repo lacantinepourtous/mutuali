@@ -140,11 +140,6 @@ namespace YellowDuck.Api.DbModel
 
                 _.HasMany(x => x.Files).WithOne().HasForeignKey(x => x.ContractId).OnDelete(DeleteBehavior.Cascade);
 
-                _.HasOne(x => x.AdRating)
-                    .WithOne(x => x.Contract)
-                    .HasForeignKey<AdRating>(x => x.ContractId)
-                    .OnDelete(DeleteBehavior.Restrict);
-
                 _.HasOne(x => x.Owner)
                     .WithMany(x => x.OwnerContracts)
                     .HasForeignKey(x => x.OwnerId);
@@ -152,8 +147,6 @@ namespace YellowDuck.Api.DbModel
                 _.HasOne(x => x.Tenant)
                     .WithMany(x => x.TenantContracts)
                     .HasForeignKey(x => x.TenantId);
-
-                _.HasMany(x => x.UserRatings).WithOne().HasForeignKey(x => x.ContractId).OnDelete(DeleteBehavior.Cascade);
             });
 
             Configure<AdAddress>(_ =>
@@ -209,6 +202,8 @@ namespace YellowDuck.Api.DbModel
             Configure<Conversation>(_ =>
             {
                 _.HasMany(x => x.Participants).WithOne().HasForeignKey(x => x.ConversationId);
+                _.HasMany(x => x.AdRatings).WithOne(x => x.Conversation).HasForeignKey(x => x.ConversationId).OnDelete(DeleteBehavior.Restrict);
+                _.HasMany(x => x.UserRatings).WithOne(x => x.Conversation).HasForeignKey(x => x.ConversationId).OnDelete(DeleteBehavior.Restrict);
             });
 
             Configure<ConversationParticipant>(_ =>
@@ -219,14 +214,16 @@ namespace YellowDuck.Api.DbModel
             Configure<AdRating>(_ =>
             {
                 _.HasOne(x => x.Ad).WithMany(x => x.AdRatings).HasForeignKey(x => x.AdId);
-                _.HasOne(x => x.Contract).WithOne(x => x.AdRating).HasForeignKey<AdRating>(x => x.ContractId);
+                _.HasOne(x => x.RaterUser).WithMany().HasForeignKey(x => x.RaterUserId);
+                _.HasOne(x => x.Conversation).WithMany(x => x.AdRatings).HasForeignKey(x => x.ConversationId);
                 _.HasIndex(x => x.AdId);
             });
 
             Configure<UserRating>(_ =>
             {
                 _.HasOne(x => x.User).WithMany(x => x.UserRatings).HasForeignKey(x => x.UserId);
-                _.HasOne(x => x.Contract).WithMany(x => x.UserRatings).HasForeignKey(x => x.ContractId);
+                _.HasOne(x => x.RaterUser).WithMany().HasForeignKey(x => x.RaterUserId);
+                _.HasOne(x => x.Conversation).WithMany(x => x.UserRatings).HasForeignKey(x => x.ConversationId);
                 _.HasIndex(x => x.UserId);
             });
 

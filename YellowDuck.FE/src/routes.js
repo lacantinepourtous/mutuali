@@ -410,6 +410,15 @@ export default [
   },
 
   {
+    name: urls.URL_RATE,
+    path: "/evaluer/:id",
+    component: () => import("@/components/pages/conversation/rate.vue"),
+    meta: {
+      usertype: USER_TYPE_USER
+    }
+  },
+
+  {
     name: urls.URL_404,
     path: "*",
     component: () => import("@/components/pages/content/error-404.vue"),

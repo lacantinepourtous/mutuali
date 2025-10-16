@@ -12,6 +12,7 @@ using YellowDuck.Api.Requests.Commands.Mutations.Notifications;
 using YellowDuck.Api.Requests.Commands.Mutations.Contracts;
 using YellowDuck.Api.Requests.Commands.Mutations.Payment;
 using YellowDuck.Api.Requests.Commands.Mutations.Alerts;
+using YellowDuck.Api.Requests.Commands.Mutations.Ratings;
 
 namespace YellowDuck.Api.Gql.Schema
 {
@@ -230,15 +231,6 @@ namespace YellowDuck.Api.Gql.Schema
             return mediator.Send(input.Value);
         }
 
-        [ApplyPolicy(AuthorizationPolicies.IsUser)]
-        [AnnotateErrorCodes(typeof(RateContract))]
-        public Task<RateContract.Payload> RateContract(
-            [Inject] IMediator mediator,
-            NonNull<RateContract.Input> input)
-        {
-            return mediator.Send(input.Value);
-        }
-
         [AnnotateErrorCodes(typeof(CreateStripeAccount))]
         public Task<CreateStripeAccount.Payload> CreateStripeAccount(
             [Inject] IMediator mediator,
@@ -288,6 +280,24 @@ namespace YellowDuck.Api.Gql.Schema
         public Task<TransferAd.Payload> TransferAd(
             [Inject] IMediator mediator,
             NonNull<TransferAd.Input> input)
+        {
+            return mediator.Send(input.Value);
+        }
+
+        [ApplyPolicy(AuthorizationPolicies.IsUser)]
+        [AnnotateErrorCodes(typeof(RateAdAndUser))]
+        public Task<RateAdAndUser.Payload> RateAdAndUser(
+            [Inject] IMediator mediator,
+            NonNull<RateAdAndUser.Input> input)
+        {
+            return mediator.Send(input.Value);
+        }
+
+        [ApplyPolicy(AuthorizationPolicies.IsUser)]
+        [AnnotateErrorCodes(typeof(UpdateAdAndUserRating))]
+        public Task<UpdateAdAndUserRating.Payload> UpdateAdAndUserRating(
+            [Inject] IMediator mediator,
+            NonNull<UpdateAdAndUserRating.Input> input)
         {
             return mediator.Send(input.Value);
         }

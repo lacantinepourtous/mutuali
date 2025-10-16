@@ -3,31 +3,31 @@ export const RATING_LABELS = [
   {
     id: "respect",
     propertyName: "respectRating",
-    label: "respect-rating"
-  },
-  {
-    id: "fiability",
-    propertyName: "fiabilityRating",
-    label: "fiability-rating"
+    label: "user-respect-rating"
   },
   {
     id: "communication",
     propertyName: "communicationRating",
-    label: "communication-rating"
+    label: "user-communication-rating"
+  },
+  {
+    id: "user-overall",
+    propertyName: "overallRating",
+    label: "user-overall-experience-rating"
   },
   {
     id: "compliance",
     propertyName: "complianceRating",
-    label: "compliance-rating"
+    label: "ad-compliance-rating"
   },
   {
-    id: "cleanliness",
-    propertyName: "cleanlinessRating",
-    label: "cleanliness-rating"
+    id: "quality",
+    propertyName: "qualityRating",
+    label: "ad-quality-rating"
   },
   {
-    id: "security",
-    propertyName: "securityRating",
-    label: "security-rating"
+    id: "ad-overall",
+    propertyName: "overallRating",
+    label: "ad-overall-experience-rating"
   }
 ];

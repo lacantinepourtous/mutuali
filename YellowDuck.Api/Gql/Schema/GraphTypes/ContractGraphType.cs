@@ -51,24 +51,6 @@ namespace YellowDuck.Api.Gql.Schema.GraphTypes
             return fileItems.Select(x => urlProvider.GetFileUrl(FileContainers.Files, x.FileId, new TimeSpan(24, 0, 0))).ToList();
         }
 
-        public async Task<AdRatingGraphType> AdRating(IAppUserContext ctx)
-        {
-            var data = await Data;
-
-            if(data.AdRating == null)
-            {
-                data.AdRating = await ctx.LoadAdRatingByContractId(data.Id);
-            }
-
-            return data.AdRating != null ? new AdRatingGraphType(data.AdRating) : null;
-        }
-
-        public async Task<IEnumerable<UserRatingGraphType>> UserRatings(IAppUserContext ctx)
-        {
-            var userRatings = await ctx.LoadUserRatingsByContractId(id);
-            return userRatings.Select(x => new UserRatingGraphType(x)).ToList();
-        }
-
         public async Task<UserGraphType> Owner(IAppUserContext ctx)
         {
             var data = await Data;
@@ -94,6 +76,5 @@ namespace YellowDuck.Api.Gql.Schema.GraphTypes
             var checkoutSession = await ctx.LoadCheckoutSessionByContractId(id);
             return (checkoutSession != null) ? new CheckoutSessionGraphType(checkoutSession) : null;
         }
-
     }
 }

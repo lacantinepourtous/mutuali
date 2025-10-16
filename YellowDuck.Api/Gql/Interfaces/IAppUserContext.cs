@@ -46,11 +46,11 @@ namespace YellowDuck.Api.Gql.Interfaces
         Task<Contract> LoadContract(long id);
         Task<IEnumerable<ContractFileItem>> LoadContractFileItems(long id);
         Task<AdRating> LoadAdRating(long id);
-        Task<AdRating> LoadAdRatingByContractId(long id);
         Task<IEnumerable<AdRating>> LoadAdRatingByAdId(long id);
+        Task<IEnumerable<AdRating>> LoadAdRatingByConversationId(long id);
         Task<UserRating> LoadUserRating(long id);
         Task<IEnumerable<UserRating>> LoadUserRatingByUserId(string id);
-        Task<IEnumerable<UserRating>> LoadUserRatingsByContractId(long id);
+        Task<IEnumerable<UserRating>> LoadUserRatingByConversationId(long id);
         Task<StripeAccount> LoadStripeAccount(long id);
         Task<StripeAccount> LoadStripeAccountByUserId(string id);
         Task<CheckoutSession> LoadCheckoutSession(long id);
