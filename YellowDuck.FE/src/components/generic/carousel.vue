@@ -1,6 +1,12 @@
 <template>
   <b-carousel
-    :style="`--icon-next: url('${require('@/assets/icons/icon-next.svg')}'); --icon-prev: url('${require('@/assets/icons/icon-prev.svg')}'); --icon-next-light: url('${require('@/assets/icons/icon-next-light.svg')}'); --icon-prev-light: url('${require('@/assets/icons/icon-prev-light.svg')}');`"
+    :style="`
+    --icon-next: url('${require('@/assets/icons/icon-next.svg')}'); 
+    --icon-prev: url('${require('@/assets/icons/icon-prev.svg')}');
+    --icon-next-light: url('${require('@/assets/icons/icon-next-light.svg')}'); 
+    --icon-prev-light: url('${require('@/assets/icons/icon-prev-light.svg')}'); 
+    --icon-next-circle: url('${require('@/assets/icons/icon-next-circle.svg')}'); 
+    --icon-prev-circle: url('${require('@/assets/icons/icon-prev-circle.svg')}');`"
     controls
     indicators
     :interval="0"
@@ -99,7 +105,7 @@ export default {
 .carousel--contained {
   .carousel-control-next,
   .carousel-control-prev {
-    width: 32px;
+    width: 42px;
   }
 
   .carousel-control-next {
@@ -108,6 +114,22 @@ export default {
 
   .carousel-control-prev {
     left: $spacer * -0.75;
+  }
+
+  .carousel-control-next-icon {
+    background-image: var(--icon-next-circle);
+  }
+
+  .carousel-control-prev-icon {
+    background-image: var(--icon-prev-circle);
+  }
+
+  .carousel-control-prev-icon,
+  .carousel-control-next-icon {
+    background-color: $white;
+    background-size: 24px;
+    width: 24px;
+    height: 24px;
   }
 }
 

@@ -1,4 +1,4 @@
-import { RATING_LABELS } from "@/consts/rating";
+import { RATING_LABELS, RATING } from "@/consts/rating";
 
 export const RatingsCriterias = {
   methods: {
@@ -17,6 +17,9 @@ export const RatingsCriterias = {
         ratingsWithCriterias.push(ratingWithCriterias);
       }
       return ratingsWithCriterias;
+    },
+    convertRatingToInt(rating) {
+      return RATING.indexOf(rating);
     }
   }
 };

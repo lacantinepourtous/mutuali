@@ -5,7 +5,7 @@
 // it's important to create no output from this file.
 
 $gray-100: #f5f5f6; // CIBIM - generated
-$gray-200: #e6e6e7; // CIBIM - generated
+$gray-200: #e2e3e2; // CIBIM
 $gray-300: #d0d0d1; // CIBIM - generated
 $gray-400: #b0aeb2; // CIBIM - generated
 $gray-500: #87868a; // CIBIM - generated
@@ -24,12 +24,6 @@ $yellow-dark: #ed9313; // CIBIM - generated
 
 $red: #f15b4e; // CIBIM
 $red-darker: #dc4f43; // CIBIM
-
-$purple: #7B61FF;
-
-$apple: #10B753;
-
-$blue: #09F;
 
 $primary: $gray-900; // CIBIM
 $secondary: $gray-600; // CIBIM
@@ -90,29 +84,16 @@ $header-bottom-height: 46px;
 // Spacers
 
 $spacer: 1rem;
-$spacers: ();
-$spacers: map-merge(
-  (
-    0: 0,
-    1: (
-      $spacer * 0.25
-    ),
-    2: (
-      $spacer * 0.5
-    ),
-    3: $spacer,
-    4: (
-      $spacer * 1.5
-    ),
-    5: (
-      $spacer * 3
-    ),
-    6: (
-      $spacer * 2
-    )
-  ),
-  $spacers
+$spacers: (
 );
+$spacers: map-merge((0: 0,
+      1: ($spacer * 0.25),
+      2: ($spacer * 0.5),
+      3: $spacer,
+      4: ($spacer * 1.5),
+      5: ($spacer * 3),
+      6: ($spacer * 2)),
+    $spacers);
 
 @import "node_modules/bootstrap/scss/_functions";
 @import "node_modules/bootstrap/scss/_variables";

@@ -292,7 +292,16 @@ namespace YellowDuck.Api.Gql.Schema
         {
             return mediator.Send(input.Value);
         }
-        
+
+        [ApplyPolicy(AuthorizationPolicies.IsUser)]
+        [AnnotateErrorCodes(typeof(UpdateAdAndUserRating))]
+        public Task<UpdateAdAndUserRating.Payload> UpdateAdAndUserRating(
+            [Inject] IMediator mediator,
+            NonNull<UpdateAdAndUserRating.Input> input)
+        {
+            return mediator.Send(input.Value);
+        }
+
         [ApplyPolicy(AuthorizationPolicies.IsAdmin)]
         [AnnotateErrorCodes(typeof(LockAd))]
         public Task<LockAd.Payload> LockAd(

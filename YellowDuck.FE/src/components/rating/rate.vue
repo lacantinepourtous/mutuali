@@ -1,7 +1,7 @@
 <template>
   <span class="rate line-height-none mt-4 mb-3">
     <b-icon-star-fill class="rate__star mr-2" />
-    <span class="rate__average font-weight-bolder mr-2 line-height-none">{{ averageRating }}</span>
+    <span class="rate__average font-weight-bold mr-2 line-height-none">{{ averageRating > 0 ? averageRating : "-" }}</span>
     <small class="rate__count">({{ $tc("profile-details.rating-count", ratingsCount) }})</small>
   </span>
 </template>
@@ -16,19 +16,19 @@ export default {
 </script>
 
 <style lang="scss">
-$star-width: 29px;
+$star-width: 24px;
 
 .rate {
   display: flex;
-  align-items: flex-end;
+  align-items: center;
 
   &__average {
     font-size: 31px;
   }
 
   &__count {
-    position: relative;
-    top: -2px;
+    margin: auto 0 2px;
+    color: $gray-600;
   }
 
   &__star {

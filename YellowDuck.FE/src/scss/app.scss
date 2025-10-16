@@ -34,6 +34,7 @@
   .green {
     --offset-outline-color: #{$green};
     --outline-color: #{$gray-100};
+    --accent-color: #{$green};
   }
 
   .green-darker {
@@ -44,22 +45,15 @@
   .yellow {
     --offset-outline-color: #{$yellow};
     --outline-color: #{$gray-900};
+    --accent-color: #{$yellow};
   }
 
-  .red {
-    --accent-color: #{$red};
+  .black {
+    --accent-color: #{$gray-900};
   }
 
-  .purple {
-    --accent-color: #{$purple};
-  }
-
-  .apple {
-    --accent-color: #{$apple};
-  }
-
-  .blue {
-    --accent-color: #{$blue};
+  .gray {
+    --accent-color: #{$gray-600};
   }
 }
 
@@ -93,9 +87,9 @@ button,
   z-index: 2;
 }
 
-.rich-text-editor .form-control > div:focus-visible,
-.custom-control-input:focus:not(:checked) ~ .custom-control-label::before,
-.custom-file-input:focus ~ .custom-file-label {
+.rich-text-editor .form-control>div:focus-visible,
+.custom-control-input:focus:not(:checked)~.custom-control-label::before,
+.custom-file-input:focus~.custom-file-label {
   box-sizing: border-box;
   outline: none;
   border-radius: 0.25rem;
@@ -117,6 +111,7 @@ button,
   font-weight: 600;
   transition: background-color 0.2s ease-in-out, transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out, color 0.2s ease-in-out,
     border-color 0.2s ease-in-out;
+
   &:hover {
     transform: translate(0, -3px);
 
@@ -161,8 +156,15 @@ button,
 }
 
 .btn-secondary {
+  background-color: $green-lighter;
+  border-color: $green-lighter;
+  color: $gray-900;
+
   &:hover {
-    box-shadow: 0px 3px 0px $gray-600;
+    background-color: $green-lighter;
+    border-color: $green-lighter;
+    color: $gray-900;
+    box-shadow: 0px 3px 0px $green;
   }
 }
 
@@ -219,6 +221,7 @@ button,
 .btn-outline-admin {
   border-color: $gray-600;
   color: $gray-900;
+
   &:hover {
     background-color: transparent;
     color: $gray-900;
@@ -261,6 +264,7 @@ a[href^="tel:"] {
 
 .link-scale {
   transition: transform 0.2s ease-in-out;
+
   &:hover {
     transform: scale(1.05);
 
@@ -296,6 +300,7 @@ a[href^="tel:"] {
 }
 
 .text-light {
+
   a:not([class]),
   a[class=""] {
     color: $white;
@@ -309,6 +314,7 @@ a[href^="tel:"] {
 }
 
 .text-white {
+
   a:not([class]),
   a[class=""] {
     color: $white;
@@ -336,6 +342,7 @@ a[href^="tel:"] {
 ol,
 ul,
 dl {
+
   // HOTFIX
   // Align list item to the left. Will cause
   // problem if number greater than 9 (overflow left).

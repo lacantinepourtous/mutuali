@@ -41,3 +41,14 @@ mutation RateAdAndUser($input: RateAdAndUserInput!) {
     }
   }
 }
+
+mutation UpdateAdAndUserRating($input: UpdateAdAndUserRatingInput!) {
+  updateAdAndUserRating(input: $input) {
+    adRating {
+      id
+    }
+    userRating {
+      id
+    }
+  }
+}

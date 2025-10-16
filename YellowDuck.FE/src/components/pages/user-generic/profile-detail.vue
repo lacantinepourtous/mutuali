@@ -70,7 +70,16 @@
         <div class="section section--sm mb-5">
           <template v-if="ratings.length > 0">
             <rate :averageRating="averageRating" :ratingsCount="ratings.length" />
-            <rating-card v-for="(rating, key) in ratings" :key="key" :rating="rating" class="mb-3" />
+            <carousel v-if="ratings.length > 1" class="mt-n5">
+              <b-carousel-slide v-for="(rating, key) in ratings" :key="key">
+                <template #img>
+                  <div class="px-2 py-5">
+                    <rating-card :rating="rating" carousel />
+                  </div>
+                </template>
+              </b-carousel-slide>
+            </carousel>
+            <rating-card v-else :rating="ratings[0]" carousel />
           </template>
           <div v-else class="no-review">
             <img class="no-review__img my-5" alt="" :src="require('@/assets/ambiance/flying-star.svg')" />
@@ -85,7 +94,7 @@
 <script>
 import Rate from "@/components/rating/rate";
 import RatingCard from "@/components/rating/card.vue";
-
+import Carousel from "@/components/generic/carousel";
 import dayjs from "dayjs";
 
 import UserProfileSnippet from "@/components/user-profile/snippet";
@@ -101,6 +110,7 @@ import { VUE_APP_MUTUALI_CONTACT_MAIL } from "@/helpers/env";
 export default {
   mixins: [RatingsCriterias, PriceDetails],
   components: {
+    Carousel,
     RatingCard,
     Rate,
     UserProfileSnippet,
@@ -115,14 +125,21 @@ export default {
       return this.$route.params.id.split("-").last();
     },
     averageRating: function () {
-      return this.userProfile.user ? String(this.userProfile.user.averageRating) : "-";
+      return this.userProfile && this.userProfile.user && typeof this.userProfile.user.averageRating === "number"
+        ? this.userProfile.user.averageRating
+        : 0;
     },
     publishedAds: function () {
       return this.userProfile.user ? this.userProfile.user.ads.filter((x) => x.isPublish) : [];
     },
     ratings: function () {
       const ratings = this.userProfile.user ? this.userProfile.user.userRatings : [];
-      return this.getRatingsWithCriterias(ratings, ["respect", "fiability", "communication"]);
+      const filledRatings = ratings.filter((r) => r && 
+        this.convertRatingToInt(r.respectRating) > 0 || 
+        this.convertRatingToInt(r.communicationRating) > 0 || 
+        this.convertRatingToInt(r.overallRating) > 0 || 
+        r.comment);
+      return this.getRatingsWithCriterias(filledRatings, ["respect", "communication", "user-overall"]);
     },
     registeredSince: function () {
       return this.userProfile.user ? this.fromNow(this.userProfile.user.registrationDate) : this.fromNow(new Date().toString());
@@ -188,6 +205,7 @@ query UserProfileById($id: ID!, $language: ContentLanguage!) {
   userProfile(id: $id) {
     id
     user {
+      id
       registrationDate
       ads {
         id
@@ -230,8 +248,9 @@ query UserProfileById($id: ID!, $language: ContentLanguage!) {
           }
         }
         respectRating
-        fiabilityRating
         communicationRating
+        overallRating
+        comment
         createdAt
       }
     }

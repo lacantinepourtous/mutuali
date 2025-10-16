@@ -387,7 +387,7 @@ export default {
     markerClicked(marker) {
       this.resetMarkerIcon();
       marker.originalIcon = marker.icon;
-      marker.icon = require("@/assets/icons/marker-yellow.svg");
+      marker.icon = require("@/assets/icons/marker-red.svg");
       this.snippetAd = marker.ad;
     },
     sortLabel(sort) {

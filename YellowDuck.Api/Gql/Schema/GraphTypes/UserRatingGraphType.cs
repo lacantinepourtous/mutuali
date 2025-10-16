@@ -37,10 +37,12 @@ namespace YellowDuck.Api.Gql.Schema.GraphTypes
                 : new UserGraphType(ctx, data.RaterUserId);
         }
 
-        public Task<Rating> CommunicationRating => WithData(x => x.CommunicationRating);
-        public Task<Rating> FiabilityRating => WithData(x => x.FiabilityRating);
         public Task<Rating> RespectRating => WithData(x => x.RespectRating);
+        public Task<Rating> CommunicationRating => WithData(x => x.CommunicationRating);
+        public Task<Rating> OverallRating => WithData(x => x.OverallRating);
 
         public Task<DateTime> CreatedAt => WithData(x => x.CreatedAtUtc.ToLocalTime());
+        public Task<DateTime> LastUpdatedAt => WithData(x => x.LastUpdatedAtUtc.ToLocalTime());
+        public Task<string> Comment => WithData(x => x.Comment);
     }
 }

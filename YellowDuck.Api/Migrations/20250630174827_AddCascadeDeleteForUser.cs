@@ -7,10 +7,6 @@ namespace YellowDuck.Api.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropForeignKey(
-                name: "FK_AdRatings_Contracts_ContractId",
-                table: "AdRatings");
-
-            migrationBuilder.DropForeignKey(
                 name: "FK_Ads_AspNetUsers_UserId",
                 table: "Ads");
 
@@ -29,14 +25,6 @@ namespace YellowDuck.Api.Migrations
             migrationBuilder.DropForeignKey(
                 name: "FK_UserRatings_AspNetUsers_UserId",
                 table: "UserRatings");
-
-            migrationBuilder.AddForeignKey(
-                name: "FK_AdRatings_Contracts_ContractId",
-                table: "AdRatings",
-                column: "ContractId",
-                principalTable: "Contracts",
-                principalColumn: "Id",
-                onDelete: ReferentialAction.Restrict);
 
             migrationBuilder.AddForeignKey(
                 name: "FK_Ads_AspNetUsers_UserId",
