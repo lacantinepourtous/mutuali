@@ -1,10 +1,9 @@
 import Apollo from "@/graphql/vue-apollo";
 
-import { CreateContract, UpdateContract, RateContract, GetContractIdByConversationId } from "./contract.graphql";
+import { CreateContract, UpdateContract, GetContractIdByConversationId } from "./contract.graphql";
 import { uploadFile } from "./file-upload";
 
 import { addMaybeValue } from "@/helpers/graphql";
-import { RATING } from "@/consts/rating";
 
 const FILES_FOLDER = "/files/";
 
