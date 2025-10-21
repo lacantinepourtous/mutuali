@@ -1,5 +1,10 @@
 <template>
-  <router-link class="conversation-snippet" :to="{ name: $consts.urls.URL_CONVERSATION_DETAIL, params: { id: this.id } }">
+  <component 
+    :is="isUnavailable ? 'div' : 'router-link'" 
+    class="conversation-snippet" 
+    :class="{ 'conversation-snippet--unavailable': isUnavailable }"
+    :to="isUnavailable ? null : { name: $consts.urls.URL_CONVERSATION_DETAIL, params: { id: this.id } }"
+  >
     <div class="conversation-snippet__pic">
       <img
         v-if="adGallery && adGallery[0]"
@@ -28,7 +33,10 @@
         {{ adTitle }}
       </p>
     </div>
-  </router-link>
+    <div v-if="isUnavailable" class="conversation-snippet__unavailable-overlay">
+      <small class="text-muted">{{ $t('conversation.unavailable') }}</small>
+    </div>
+  </component>
 </template>
 
 <script>
@@ -83,10 +91,21 @@ export default {
     userId: {
       type: String,
       required: true
+    },
+    isUnavailable: {
+      type: Boolean,
+      default: false
     }
   },
   methods: {
     updateLastMessage: async function () {
+      if (this.isUnavailable) {
+        // Ne pas essayer de récupérer les messages si la conversation est indisponible
+        this.lastMessage = null;
+        this.unreadMessageCount = 0;
+        this.updateLastMessageDate();
+        return;
+      }
       this.lastMessage = await this.twilioConversation.getMessages();
       this.updateUnreadMessagesStatus(true);
       this.updateLastMessageDate();
@@ -103,6 +122,10 @@ export default {
       }
     },
     updateUnreadMessagesStatus: async function () {
+      if (this.isUnavailable) {
+        this.unreadMessageCount = 0;
+        return;
+      }
       this.unreadMessageCount = await TwilioService.getConversationUnreadMessagesCount(this.conversation.sid);
     },
     updateLastMessageDate: function () {
@@ -145,6 +168,9 @@ export default {
       return otherParticipant !== null ? otherParticipant.user.profile.publicName : "";
     },
     lastMessageComputed: function () {
+      if (this.isUnavailable) {
+        return this.$t('conversation.unavailable-message');
+      }
       if (this.lastMessage) {
         if (this.lastMessage.items.length > 0) {
           return this.lastMessage.items.last().body;
@@ -234,6 +260,32 @@ export default {
     text-underline-offset: 2px;
     text-decoration-thickness: 2px;
     text-decoration-color: transparent;
+  }
+
+  &--unavailable {
+    opacity: 0.5;
+    cursor: not-allowed;
+    position: relative;
+
+    &:hover {
+      color: inherit;
+      text-decoration: none;
+
+      .conversation-snippet__title {
+        text-decoration-color: transparent;
+      }
+    }
+  }
+
+  &__unavailable-overlay {
+    position: absolute;
+    top: 50%;
+    right: $spacer;
+    transform: translateY(-50%);
+    background: rgba(255, 255, 255, 0.9);
+    padding: $spacer / 4 $spacer / 2;
+    border-radius: $border-radius-sm;
+    border: 1px solid $border-color;
   }
 }
 </style>

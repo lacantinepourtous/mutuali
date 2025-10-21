@@ -819,5 +819,8 @@
   "label.ad-human-resource-field-other": "Other field",
   "placeholder.ad-human-resource-field": "Please select a field of activity",
   "placeholder.ad-human-resource-field-other": "Specify the field of activity",
-  "text.ad-subcontracting-info": "Contact {name} for more details"
+  "text.ad-subcontracting-info": "Contact {name} for more details",
+  "conversation.unavailable": "Unavailable",
+  "conversation.unavailable-message": "This conversation is not accessible at the moment",
+  "loading.conversations": "Loading..."
 }

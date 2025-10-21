@@ -817,5 +817,8 @@
   "label.ad-human-resource-field-other": "Autre domaine",
   "placeholder.ad-human-resource-field": "Veuillez sélectionner un domaine d'activité",
   "placeholder.ad-human-resource-field-other": "Précisez le domaine d'activité",
-  "text.ad-subcontracting-info": "Joindre {name} pour plus de détails"
+  "text.ad-subcontracting-info": "Joindre {name} pour plus de détails",
+  "conversation.unavailable": "Indisponible",
+  "conversation.unavailable-message": "Cette conversation n'est pas accessible pour le moment",
+  "loading.conversations": "Chargement en cours..."
 }
