@@ -38,7 +38,7 @@ namespace YellowDuck.Api.Requests.Commands.Mutations.Conversations
 
         public async Task<Payload> Handle(Input request, CancellationToken cancellationToken)
         {
-            var owner = (await userManager.GetUsersForClaimAsync(new Claim(AppClaimTypes.AdOwner, request.AdId.ToString()))).FirstOrDefault();
+            var owner = (await userManager.GetUsersForClaimAsync(new Claim(AppClaimTypes.AdOwner, request.AdId.ToString()))).LastOrDefault();
 
             if (owner == null) throw new AdNotFoundException();
 
