@@ -32,7 +32,7 @@ $star-width: 24px;
   }
 
   &__star {
-    color: $yellow;
+    color: currentColor;
     display: inline-block;
     width: $star-width;
     height: $star-width;

@@ -355,7 +355,7 @@ export default {
     adAddressReadable() {
       const addressElements = [];
       if (this.ad.address.route) addressElements.push(`${this.ad.address.streetNumber} ${this.ad.address.route}`.trim());
-      addressElements.push(this.ad.city);
+      if (this.ad.address.locality) addressElements.push(this.ad.address.locality);
       if (this.ad.address.postalCode) addressElements.push(this.ad.address.postalCode);
       return addressElements.join(", ");
     },

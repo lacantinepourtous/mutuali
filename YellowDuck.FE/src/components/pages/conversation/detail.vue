@@ -3,7 +3,7 @@
     <portal :to="$consts.enums.PORTAL_HEADER">
       <div>
         <nav-return :aria-title="$t('sr.conversation-nav')" :to="{ name: $consts.urls.URL_LIST_CONVERSATION }">
-          <conversation-sidebar :conversation-id="conversationId" />
+          <conversation-sidebar :conversation-id="conversationId" :other-participant-id="otherParticipantId" />
         </nav-return>
         <ad-snippet
           v-if="conversation"
@@ -119,12 +119,18 @@ export default {
     conversationSid: function () {
       return this.conversation.sid;
     },
-    otherParticipantName: function () {
+    otherParticipant: function () {
       if (!this.conversation || !this.me) {
-        return "";
+        return null;
       }
       let otherParticipant = this.conversation.participants.find((x) => x.user !== null && x.user.id !== this.me.id);
-      return otherParticipant !== null ? otherParticipant.user.profile.publicName : "";
+      return otherParticipant !== null ? otherParticipant : null;
+    },
+    otherParticipantId: function () {
+      return this.otherParticipant !== null ? this.otherParticipant.user.profile.id : "";
+    },
+    otherParticipantName: function () {
+      return this.otherParticipant !== null ? this.otherParticipant.user.profile.publicName : "";
     },
     canCreateContract: function () {
       return this.me ? this.adOwnerId === this.me.id : false;
