@@ -19,7 +19,7 @@
         v-if="!readonly || computedValue > 0"
         :id="`input-${name}`"
         v-model="computedValue"
-        color="#f4b42b"
+        :color="computedValue > 0 ? '#f4b42b' : '#87868a'"
         :class="[{ 'b-rating--small': size === 'sm' }, { 'b-rating--readonly': readonly }]"
         :readonly="readonly"
         no-border

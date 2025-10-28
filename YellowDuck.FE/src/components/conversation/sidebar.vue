@@ -1,21 +1,24 @@
 <template>
-  <b-navbar-nav>
+  <b-navbar-nav v-if="otherParticipantProfile">
     <b-nav-item v-if="canRate">
       <b-button class="line-height-none" variant="secondary" @click="rate">
         <b-icon-star-half variant="warning" class="mr-1" aria-hidden="true"></b-icon-star-half>
-        {{ $t("conversation.btn-rate") }}
+        <span class="sr-only-sm">{{ btnRateLabel }}</span>
       </b-button>
     </b-nav-item>
-    <b-nav-text v-b-toggle.conversation class="user-nav-button h5 mb-0 px-2 flex-shrink-0">
+    <b-nav-item>
+      <b-button class="line-height-none" variant="secondary" v-b-toggle.conversation>
       <span class="sr-only">
         <span class="when-open">{{ $t("sr.close") }}</span>
         <span class="when-closed">{{ $t("sr.open") }}</span>
         <span>{{ $t("sr.user-menu-toggle") }}</span>
       </span>
-      <b-icon-info-circle aria-hidden="true" />
-    </b-nav-text>
+      <b-icon-person-lines-fill class="mr-1" aria-hidden="true" />
+      <span class="sr-only-sm">{{ otherParticipantProfile.publicName }}</span>
+      </b-button>
+    </b-nav-item>
     <b-sidebar sidebar-class="border-top bg-white" id="conversation" right backdrop no-header>
-      <b-list-group v-if="otherParticipantProfile" flush class="border-bottom text-primary">
+      <b-list-group flush class="border-bottom text-primary">
         <b-list-group-item class="p-0" disabled>
           <user-profile-snippet class="user-profile-snippet" :id="otherParticipantProfile.id" :has-link="false" no-border :showUnderline="false" />
         </b-list-group-item>
@@ -73,13 +76,7 @@ export default {
       return VUE_APP_MUTUALI_CONTACT_MAIL;
     },
     otherParticipantProfile: function() {
-      if (this.userProfile) {
-        return this.userProfile;
-      } else if (!this.conversation || !this.me) {
-        return null;
-      }
-      let otherParticipant = this.conversation.participants.find((x) => x.user !== null && x.user.id !== this.me.id);
-      return otherParticipant ? otherParticipant.user.profile : null;
+      return this.userProfile;
     },
     urlForReport: function() {
       if (this.otherParticipantProfile !== null) {
@@ -97,6 +94,39 @@ export default {
     },
     canRate: function() {
       return this.otherParticipantProfile && this.conversation && this.conversation.ad;
+    },
+    userIsOwner: function() {
+      return this.conversation.ad.user.id === this.me.id;
+    },
+    adHasBeenRated: function() {
+      return this.conversation.ad.adRating && this.conversation.ad.adRating.id ? true : false;
+    },
+    ownerHasBeenRatedByMe: function() {
+      if (this.userIsOwner) {
+        return false;
+      }
+      return this.conversation.ad.user.userRatings.some((rating) => rating.raterUser.id === this.me.id);
+    },
+    userHasBeenRatedByMe: function() {
+      const otherParticipant = this.conversation.participants.find((x) => x.user !== null && x.user.id !== this.me.id);
+      if  (!otherParticipant || !otherParticipant.user.userRatings || !this.userIsOwner) {
+        return false;
+      }
+      return otherParticipant.user.userRatings.some((rating) => rating.raterUser.id === this.me.id);
+    },
+    btnRateLabel: function() {
+      let label = "";
+      if (this.adHasBeenRated || (this.userIsOwner && this.userHasBeenRatedByMe) || (!this.userIsOwner && this.ownerHasBeenRatedByMe)) {
+        label = this.$t("conversation.btn-rerate");
+      } else {
+        label = this.$t("conversation.btn-rate");
+      }
+      if (this.userIsOwner) {
+        label += " " + this.$t("conversation.btn-rate-user");
+      } else {
+        label += " " + this.$t("conversation.btn-rate-ad");
+      }
+      return label;
     }
   },
   apollo: {
@@ -149,9 +179,27 @@ query ConversationById($id: ID!) {
             publicName
           }
         }
+        userRatings {
+          id
+          raterUser {
+            id
+          }
+        }
       }
     }
     ad {
+      id
+      user {
+        id
+        userRatings {
+          id
+          raterUser {
+            id
+          }
+        }
+      }
+    }
+    adRating {
       id
     }
   }
@@ -180,12 +228,6 @@ query OtherParticipantProfile($id: ID!) {
   .b-sidebar-backdrop {
     margin-top: $nav-return-height;
     height: calc(100vh - #{$nav-return-height});
-  }
-
-  .user-nav-button {
-    width: 36px;
-    height: 36px;
-    margin: auto 0 !important;
   }
 }
 

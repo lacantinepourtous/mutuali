@@ -115,7 +115,7 @@ export default {
       return this.$t("text.initial-conversation-body", { name: this.otherParticipantName });
     },
     autoMessage: function () {
-      return this.$route.query.message;
+      return this.$route.query.message ? this.$route.query.message : this.$t("btn.create-conversation-auto-message");
     }
   },
   apollo: {
