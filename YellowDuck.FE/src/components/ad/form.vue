@@ -253,6 +253,8 @@
         :rules="{ required: { allowFalse: false } }"
         required
       />
+
+      <div v-if="form.category === CATEGORY_HUMAN_RESOURCES" class="small rm-child-margin" v-html="$t('text.ad-human-resource-disclaimer')"></div>
     </div>
 
     <div class="section section--md my-5">
