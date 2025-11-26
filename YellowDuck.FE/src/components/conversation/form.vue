@@ -85,6 +85,9 @@ export default {
     conversationSid: {
       type: String
     },
+    conversationId: {
+      type: String
+    },
     otherParticipantName: {
       type: String,
       required: true
@@ -186,6 +189,7 @@ export default {
         if (this.conversationSid) {
           await TwilioService.addMessageToConversation({
             sid: this.conversationSid,
+            conversationId: this.conversationId,
             body: this.message,
             medias: mediaFiles
           });

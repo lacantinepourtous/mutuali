@@ -205,6 +205,15 @@ namespace YellowDuck.Api.Gql.Schema
         }
 
         [ApplyPolicy(AuthorizationPolicies.IsUser)]
+        [AnnotateErrorCodes(typeof(ScheduleRatingRequestMessage))]
+        public Task<ScheduleRatingRequestMessage.Payload> ScheduleRatingRequestMessage(
+            [Inject] IMediator mediator,
+            NonNull<ScheduleRatingRequestMessage.Input> input)
+        {
+            return mediator.Send(input.Value);
+        }
+
+        [ApplyPolicy(AuthorizationPolicies.IsUser)]
         [AnnotateErrorCodes(typeof(RemoveConversationNotification))]
         public Task<RemoveConversationNotification.Payload> RemoveConversationNotification(
             [Inject] IMediator mediator,

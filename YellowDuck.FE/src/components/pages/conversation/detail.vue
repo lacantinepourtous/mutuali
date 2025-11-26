@@ -34,6 +34,7 @@
             :body="message.body"
             :medias="message.attachedMedia"
             :contract-id="contractId"
+            :conversation-id="conversationId"
             :attributes="message.attributes"
             :date-updated="message.dateUpdated"
             :is-current-user="isCurrentUser(message)"
@@ -44,7 +45,7 @@
       </div>
       <div class="conversation-detail__send">
         <div class="section section--md">
-          <send-message-form :conversation-sid="conversationSid" :other-participant-name="otherParticipantName" />
+          <send-message-form :conversation-sid="conversationSid" :conversation-id="conversationId" :other-participant-name="otherParticipantName" />
         </div>
       </div>
     </template>
