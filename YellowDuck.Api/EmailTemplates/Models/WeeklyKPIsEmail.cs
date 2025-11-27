@@ -31,6 +31,10 @@ namespace YellowDuck.Api.EmailTemplates.Models
         public int UserOrganizationTypeOtherRemaining { get; set; }
         public int AdOrganizationTypeOtherRemaining { get; set; }
 
+        // Statistiques de ratings
+        public int TotalUserRatings { get; set; }
+        public int TotalAdRatings { get; set; }
+
         public WeeklyKPIsEmail(string to) : base(to) { }
     }
 }
