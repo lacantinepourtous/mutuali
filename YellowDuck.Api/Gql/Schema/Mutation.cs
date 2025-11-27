@@ -303,6 +303,15 @@ namespace YellowDuck.Api.Gql.Schema
         }
 
         [ApplyPolicy(AuthorizationPolicies.IsAdmin)]
+        [AnnotateErrorCodes(typeof(DeleteRating))]
+        public Task<DeleteRating.Payload> DeleteRating(
+            [Inject] IMediator mediator,
+            NonNull<DeleteRating.Input> input)
+        {
+            return mediator.Send(input.Value);
+        }
+
+        [ApplyPolicy(AuthorizationPolicies.IsAdmin)]
         [AnnotateErrorCodes(typeof(LockAd))]
         public Task<LockAd.Payload> LockAd(
             [Inject] IMediator mediator,

@@ -74,12 +74,12 @@
               <b-carousel-slide v-for="(rating, key) in ratings" :key="key">
                 <template #img>
                   <div class="px-2 py-5">
-                    <rating-card :rating="rating" carousel />
+                    <rating-card :rating="rating" carousel @rating-deleted="onRatingDeleted" />
                   </div>
                 </template>
               </b-carousel-slide>
             </carousel>
-            <rating-card v-else :rating="ratings[0]" carousel />
+            <rating-card v-else :rating="ratings[0]" carousel @rating-deleted="onRatingDeleted" />
           </template>
           <div v-else class="no-review">
             <img class="no-review__img my-5" alt="" :src="require('@/assets/ambiance/flying-star.svg')" />
@@ -167,6 +167,11 @@ export default {
       const diff = now.diff(date, "M");
       if (diff < 12) return this.$tc("from-now.month", diff);
       return this.$tc("from-now.year", Math.floor(diff / 12));
+    },
+    onRatingDeleted(ratingId) {
+      if (this.$apollo.queries.userProfile) {
+        this.$apollo.queries.userProfile.refetch();
+      }
     }
   },
   apollo: {

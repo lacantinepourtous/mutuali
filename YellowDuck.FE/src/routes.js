@@ -156,7 +156,7 @@ export default [
     path: "/profil/:id",
     component: () => import("@/components/pages/user-generic/profile-detail.vue"),
     meta: {
-      usertype: USER_TYPE_USER
+      usertype: [USER_TYPE_USER, USER_TYPE_ADMIN]
     }
   },
   {

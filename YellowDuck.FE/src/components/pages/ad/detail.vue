@@ -153,7 +153,7 @@
           </div>
 
           <div v-if="ad.averageRating > 0 || ad.adRatings.some(r => r.comment)" class="border-top border-grey my-4">
-            <ad-rating-carousel :id="adId" class="mt-4" />
+            <ad-rating-carousel :id="adId" class="mt-4" @rating-deleted="onRatingDeleted" />
           </div>
 
           <div class="border-top border-grey py-6">
@@ -442,6 +442,11 @@ export default {
     },
     async unlockAd() {
       await unlockAd(this.adId);
+    },
+    onRatingDeleted(ratingId) {
+      if (this.$apollo.queries.ad) {
+        this.$apollo.queries.ad.refetch();
+      }
     }
   },
   apollo: {

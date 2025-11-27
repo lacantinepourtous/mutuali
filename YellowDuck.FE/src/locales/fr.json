@@ -823,5 +823,9 @@
   "text.ad-subcontracting-info": "Joindre {name} pour plus de détails",
   "conversation.unavailable": "Indisponible",
   "conversation.unavailable-message": "Cette conversation n'est pas accessible pour le moment",
-  "loading.conversations": "Chargement en cours..."
+  "loading.conversations": "Chargement en cours...",
+  "btn.delete": "Supprimer",
+  "title.confirm-delete": "Confirmer la suppression",
+  "text.confirm-delete-rating": "Êtes-vous sûr de vouloir supprimer cette évaluation ? Cette action est irréversible.",
+  "notification.rating-deleted": "L'évaluation a été supprimée avec succès."
 }
