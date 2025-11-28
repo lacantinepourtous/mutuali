@@ -113,7 +113,7 @@ namespace YellowDuck.Api.BackgroundJobs
                     || !string.IsNullOrWhiteSpace(r.Comment))
                 .CountAsync();
 
-            var model = new WeeklyKPIsEmail(config["kpisEmailRecipient"])
+            var model = new WeeklyKPIsEmail(config["adminEmailRecipient"])
             {
                 UserCount = users.Count,
                 UserByOranizationType = userByOrganizationType,

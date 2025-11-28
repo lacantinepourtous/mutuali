@@ -23,6 +23,9 @@ using YellowDuck.Api.Plugins.GraphQL;
 using YellowDuck.Api.Plugins.MediatR;
 using YellowDuck.Api.Services.Files;
 using YellowDuck.Api.Services.System;
+using YellowDuck.Api.Services.Mailer;
+using Microsoft.Extensions.Configuration;
+using YellowDuck.Api.EmailTemplates.Models;
 
 namespace YellowDuck.Api.Requests.Commands.Mutations.Ads
 {
@@ -33,14 +36,18 @@ namespace YellowDuck.Api.Requests.Commands.Mutations.Ads
         private readonly UserManager<AppUser> userManager;
         private readonly IFileManager fileManager;
         private readonly ICurrentUserAccessor currentUserAccessor;
+        private readonly IMailer mailer;
+        private readonly IConfiguration config;
 
-        public CreateAd(AppDbContext db, UserManager<AppUser> userManager, ILogger<CreateAd> logger, IFileManager fileManager, ICurrentUserAccessor currentUserAccessor)
+        public CreateAd(AppDbContext db, UserManager<AppUser> userManager, ILogger<CreateAd> logger, IFileManager fileManager, ICurrentUserAccessor currentUserAccessor, IMailer mailer, IConfiguration config)
         {
             this.db = db;
             this.logger = logger;
             this.userManager = userManager;
             this.fileManager = fileManager;
             this.currentUserAccessor = currentUserAccessor;
+            this.mailer = mailer;
+            this.config = config;
         }
 
         public async Task<Payload> Handle(Input request, CancellationToken cancellationToken)
@@ -179,12 +186,26 @@ namespace YellowDuck.Api.Requests.Commands.Mutations.Ads
                 ad.IsAdminOnly = true;
             }
 
+            // Certaines catégories d'annonces nécessite une validation par les administrateurs
+            var needsModeration = AdCategoryHelper.NeedsModeration(request.Category);
+            if (needsModeration)
+            {
+                ad.Locked = true;
+                ad.IsPublish = false;
+            }
+
             db.Ads.Add(ad);
 
             await db.SaveChangesAsync(cancellationToken);
             await userManager.AddClaimAsync(owner, new Claim(AppClaimTypes.AdOwner, Id.New<Ad>(ad.Id.ToString()).ToString()));
 
-            logger.LogInformation($"New ad created {request.Title} ({ad.Id})");
+            logger.LogInformation($"New ad created {request.Title} ({ad.Id})" + (ad.Locked ? " - Locked for admin review" : ""));
+
+            // Envoyer l'email de notification si c'est une annonce nécessitant une validation par les administrateurs
+            if (needsModeration)
+            {
+                await SendWorkforceReviewNotificationEmail(ad, owner, cancellationToken);
+            }
 
             return new Payload
             {
@@ -386,7 +407,7 @@ namespace YellowDuck.Api.Requests.Commands.Mutations.Ads
         public class SurfaceSizeInvalidException : CreateAdException { }
         public class DescriptionInvalidException : CreateAdException { }
         public class EquipmentInvalidException : CreateAdException { }
-        public class HumanResourceFieldInvalidException: CreateAdException { }
+        public class HumanResourceFieldInvalidException : CreateAdException { }
         public class HumanResourceFieldOtherInvalidException : CreateAdException { }
         public class TasksInvalidException : CreateAdException { }
 
@@ -402,6 +423,58 @@ namespace YellowDuck.Api.Requests.Commands.Mutations.Ads
             public override IDictionary Data => new Dictionary<string, string> {
                 {"Property", propName}
             };
+        }
+
+        private async Task SendWorkforceReviewNotificationEmail(Ad ad, AppUser creator, CancellationToken cancellationToken)
+        {
+            var adminEmailRecipient = config["adminEmailRecipient"];
+            if (string.IsNullOrWhiteSpace(adminEmailRecipient))
+            {
+                logger.LogWarning("adminEmailRecipient is not configured, skipping workforce review notification email");
+                return;
+            }
+
+            var email = new WorkforceReviewNotificationEmail(adminEmailRecipient)
+            {
+                AdId = ad.Id,
+                AdUrl = UrlHelper.Ad(Id.New<Ad>(ad.Id.ToString()))
+            };
+
+            // Récupérer les traductions pour obtenir le titre
+            var adWithTranslations = await db.Ads
+                .Include(a => a.Translations)
+                .FirstOrDefaultAsync(a => a.Id == ad.Id, cancellationToken);
+
+            if (adWithTranslations != null)
+            {
+                email.AdTitle = adWithTranslations.Translations?.FirstOrDefault()?.Title ?? "Annonce sans titre";
+            }
+
+            // Obtenir le nom public du créateur
+            var creatorWithProfile = await db.Users
+                .Include(u => u.Profile)
+                .FirstOrDefaultAsync(u => u.Id == creator.Id, cancellationToken);
+
+            if (creatorWithProfile?.Profile != null &&
+                !string.IsNullOrWhiteSpace(creatorWithProfile.Profile.FirstName) &&
+                !string.IsNullOrWhiteSpace(creatorWithProfile.Profile.LastName))
+            {
+                email.CreatorUserName = creatorWithProfile.Profile.PublicName;
+            }
+            else
+            {
+                email.CreatorUserName = creator.Email ?? "Utilisateur inconnu";
+            }
+
+            try
+            {
+                await mailer.Send(email);
+                logger.LogInformation($"Workforce review notification email sent to {adminEmailRecipient} for ad {ad.Id}");
+            }
+            catch (Exception ex)
+            {
+                logger.LogError(ex, "Failed to send workforce review notification email");
+            }
         }
     }
 }

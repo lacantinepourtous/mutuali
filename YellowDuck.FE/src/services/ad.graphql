@@ -2,6 +2,8 @@ mutation CreateAd($input: CreateAdInput!) {
   createAd(input: $input) {
     ad {
       id
+      category
+      locked
     }
   }
 }

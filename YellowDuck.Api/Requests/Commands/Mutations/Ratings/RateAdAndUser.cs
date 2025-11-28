@@ -157,14 +157,14 @@ namespace YellowDuck.Api.Requests.Commands.Mutations.Ratings
 
     private async Task SendRatingNotificationEmail(UserRating userRating, AdRating adRating, string userId, long adId, CancellationToken cancellationToken)
     {
-      var kpisEmailRecipient = config["kpisEmailRecipient"];
-      if (string.IsNullOrWhiteSpace(kpisEmailRecipient))
+      var adminEmailRecipient = config["adminEmailRecipient"];
+      if (string.IsNullOrWhiteSpace(adminEmailRecipient))
       {
-        logger.LogWarning("kpisEmailRecipient is not configured, skipping rating notification email");
+        logger.LogWarning("adminEmailRecipient is not configured, skipping rating notification email");
         return;
       }
 
-      var email = new RatingNotificationEmail(kpisEmailRecipient)
+      var email = new RatingNotificationEmail(adminEmailRecipient)
       {
         UserRatingId = userRating?.Id,
         AdRatingId = adRating?.Id
@@ -204,7 +204,7 @@ namespace YellowDuck.Api.Requests.Commands.Mutations.Ratings
       try
       {
         await mailer.Send(email);
-        logger.LogInformation($"Rating notification email sent to {kpisEmailRecipient}");
+        logger.LogInformation($"Rating notification email sent to {adminEmailRecipient}");
       }
       catch (Exception ex)
       {

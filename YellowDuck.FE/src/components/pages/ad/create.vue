@@ -21,8 +21,8 @@
 
     <form-complete
       v-else
-      :title="$t('form-complete.create-ad.title')"
-      :description="$t('form-complete.create-ad.description')"
+      :title="formCompleteTitle"
+      :description="formCompleteDescription"
       :image="require('@/assets/icons/checklist-yellow.svg')"
       :ctas="formCompleteCtas"
     />
@@ -37,6 +37,8 @@ import AdForm from "@/components/ad/form";
 import { URL_ROOT, URL_AD_DETAIL } from "@/consts/urls";
 
 import { createAd } from "@/services/ad";
+import { AdCategory } from "@/mixins/ad-category";
+import { CATEGORY_GROUP_WORKFORCE } from "@/consts/category-groups";
 
 export default {
   components: {
@@ -44,10 +46,12 @@ export default {
     FormComplete,
     NavClose
   },
+  mixins: [AdCategory],
   data() {
     return {
       adCreated: false,
       adCreatedId: "",
+      adCategory: null,
       isSubmitted: false,
       phoneNumberConfirmed: true,
       formCompleteCtas: [
@@ -58,6 +62,23 @@ export default {
         { action: () => this.$router.push({ name: URL_ROOT }), text: this.$t("btn.return-dashboard") }
       ]
     };
+  },
+  computed: {
+    isWorkforceCategory() {
+      if (!this.adCategory) return false;
+      const categoryGroup = this.getCategoryGroupByCategory(this.adCategory);
+      return categoryGroup && categoryGroup.value === CATEGORY_GROUP_WORKFORCE;
+    },
+    formCompleteTitle() {
+      return this.isWorkforceCategory
+        ? this.$t("form-complete.create-ad-workforce.title")
+        : this.$t("form-complete.create-ad.title");
+    },
+    formCompleteDescription() {
+      return this.isWorkforceCategory
+        ? this.$t("form-complete.create-ad-workforce.description")
+        : this.$t("form-complete.create-ad.description");
+    }
   },
   gqlErrors() {
     return {
@@ -85,6 +106,7 @@ export default {
 
       if (result) {
         this.adCreatedId = result.data.createAd.ad.id;
+        this.adCategory = result.data.createAd.ad.category;
         this.adCreated = true;
         window.scrollTo(0, 0);
       }
