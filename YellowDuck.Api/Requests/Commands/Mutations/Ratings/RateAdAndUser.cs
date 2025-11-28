@@ -12,6 +12,7 @@ using YellowDuck.Api.DbModel;
 using YellowDuck.Api.DbModel.Entities;
 using YellowDuck.Api.DbModel.Entities.Ads;
 using YellowDuck.Api.DbModel.Entities.Conversations;
+using YellowDuck.Api.DbModel.Entities.Profiles;
 using YellowDuck.Api.DbModel.Entities.Ratings;
 using YellowDuck.Api.DbModel.Enums;
 using YellowDuck.Api.EmailTemplates.Models;
@@ -177,7 +178,7 @@ namespace YellowDuck.Api.Requests.Commands.Mutations.Ratings
 
         if (ratedUserProfile != null)
         {
-          email.UserProfileUrl = $"profil/{ratedUserProfile.Id}";
+          email.UserProfileUrl = $"profil/{Id.New<UserProfile>(ratedUserProfile.Id)}";
           email.RatedUserName = ratedUserProfile.PublicName;
         }
 
