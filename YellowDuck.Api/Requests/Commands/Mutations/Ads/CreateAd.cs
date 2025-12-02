@@ -1,7 +1,7 @@
 ﻿using GraphQL.Conventions;
+using Hangfire;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections;
@@ -10,6 +10,7 @@ using System.Linq;
 using System.Security.Claims;
 using System.Threading;
 using System.Threading.Tasks;
+using YellowDuck.Api.BackgroundJobs;
 using YellowDuck.Api.Constants;
 using YellowDuck.Api.DbModel;
 using YellowDuck.Api.DbModel.Entities;
@@ -23,9 +24,6 @@ using YellowDuck.Api.Plugins.GraphQL;
 using YellowDuck.Api.Plugins.MediatR;
 using YellowDuck.Api.Services.Files;
 using YellowDuck.Api.Services.System;
-using YellowDuck.Api.Services.Mailer;
-using Microsoft.Extensions.Configuration;
-using YellowDuck.Api.EmailTemplates.Models;
 
 namespace YellowDuck.Api.Requests.Commands.Mutations.Ads
 {
@@ -36,18 +34,14 @@ namespace YellowDuck.Api.Requests.Commands.Mutations.Ads
         private readonly UserManager<AppUser> userManager;
         private readonly IFileManager fileManager;
         private readonly ICurrentUserAccessor currentUserAccessor;
-        private readonly IMailer mailer;
-        private readonly IConfiguration config;
 
-        public CreateAd(AppDbContext db, UserManager<AppUser> userManager, ILogger<CreateAd> logger, IFileManager fileManager, ICurrentUserAccessor currentUserAccessor, IMailer mailer, IConfiguration config)
+        public CreateAd(AppDbContext db, UserManager<AppUser> userManager, ILogger<CreateAd> logger, IFileManager fileManager, ICurrentUserAccessor currentUserAccessor)
         {
             this.db = db;
             this.logger = logger;
             this.userManager = userManager;
             this.fileManager = fileManager;
             this.currentUserAccessor = currentUserAccessor;
-            this.mailer = mailer;
-            this.config = config;
         }
 
         public async Task<Payload> Handle(Input request, CancellationToken cancellationToken)
@@ -201,10 +195,10 @@ namespace YellowDuck.Api.Requests.Commands.Mutations.Ads
 
             logger.LogInformation($"New ad created {request.Title} ({ad.Id})" + (ad.Locked ? " - Locked for admin review" : ""));
 
-            // Envoyer l'email de notification si c'est une annonce nécessitant une validation par les administrateurs
+            // Envoyer l'email de notification en arrière-plan si c'est une annonce nécessitant une validation par les administrateurs
             if (needsModeration)
             {
-                await SendWorkforceReviewNotificationEmail(ad, owner, cancellationToken);
+                BackgroundJob.Enqueue<SendWorkforceReviewNotificationEmail>(x => x.Run(ad.Id, owner.Id));
             }
 
             return new Payload
@@ -425,56 +419,5 @@ namespace YellowDuck.Api.Requests.Commands.Mutations.Ads
             };
         }
 
-        private async Task SendWorkforceReviewNotificationEmail(Ad ad, AppUser creator, CancellationToken cancellationToken)
-        {
-            var adminEmailRecipient = config["adminEmailRecipient"];
-            if (string.IsNullOrWhiteSpace(adminEmailRecipient))
-            {
-                logger.LogWarning("adminEmailRecipient is not configured, skipping workforce review notification email");
-                return;
-            }
-
-            var email = new WorkforceReviewNotificationEmail(adminEmailRecipient)
-            {
-                AdId = ad.Id,
-                AdUrl = UrlHelper.Ad(Id.New<Ad>(ad.Id.ToString()))
-            };
-
-            // Récupérer les traductions pour obtenir le titre
-            var adWithTranslations = await db.Ads
-                .Include(a => a.Translations)
-                .FirstOrDefaultAsync(a => a.Id == ad.Id, cancellationToken);
-
-            if (adWithTranslations != null)
-            {
-                email.AdTitle = adWithTranslations.Translations?.FirstOrDefault()?.Title ?? "Annonce sans titre";
-            }
-
-            // Obtenir le nom public du créateur
-            var creatorWithProfile = await db.Users
-                .Include(u => u.Profile)
-                .FirstOrDefaultAsync(u => u.Id == creator.Id, cancellationToken);
-
-            if (creatorWithProfile?.Profile != null &&
-                !string.IsNullOrWhiteSpace(creatorWithProfile.Profile.FirstName) &&
-                !string.IsNullOrWhiteSpace(creatorWithProfile.Profile.LastName))
-            {
-                email.CreatorUserName = creatorWithProfile.Profile.PublicName;
-            }
-            else
-            {
-                email.CreatorUserName = creator.Email ?? "Utilisateur inconnu";
-            }
-
-            try
-            {
-                await mailer.Send(email);
-                logger.LogInformation($"Workforce review notification email sent to {adminEmailRecipient} for ad {ad.Id}");
-            }
-            catch (Exception ex)
-            {
-                logger.LogError(ex, "Failed to send workforce review notification email");
-            }
-        }
     }
 }

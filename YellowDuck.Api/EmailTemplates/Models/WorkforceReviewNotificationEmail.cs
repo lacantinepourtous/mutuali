@@ -4,7 +4,6 @@ namespace YellowDuck.Api.EmailTemplates.Models
 {
   public class WorkforceReviewNotificationEmail : EmailModel
   {
-    public long AdId { get; set; }
     public string AdUrl { get; set; }
     public string AdTitle { get; set; }
     public string CreatorUserName { get; set; }

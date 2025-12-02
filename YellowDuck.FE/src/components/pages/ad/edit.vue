@@ -62,8 +62,8 @@
     </template>
     <form-complete
       v-else
-      :title="$t('form-complete.create-ad.title')"
-      :description="$t('form-complete.create-ad.description')"
+      :title="formCompleteTitle"
+      :description="formCompleteDescription"
       :image="require('@/assets/icons/checklist-yellow.svg')"
       :ctas="formCompleteCtas"
     />
@@ -78,6 +78,7 @@ import { AdCategory } from "@/mixins/ad-category";
 
 import { URL_ROOT, URL_AD_DETAIL, URL_AD_EDIT } from "@/consts/urls";
 import { CONTENT_LANG_FR } from "@/consts/langs";
+import { CATEGORY_GROUP_WORKFORCE } from "@/consts/category-groups";
 
 import NotificationService from "@/services/notification";
 import { updateAd } from "@/services/ad";
@@ -93,6 +94,8 @@ export default {
     return {
       adEdited: false,
       isSubmitted: false,
+      adCategory: null,
+      adLocked: false,
       formCompleteCtas: [
         {
           action: () => this.$router.push({ name: URL_AD_DETAIL, params: { id: this.adId } }),
@@ -156,6 +159,23 @@ export default {
     },
     adId() {
       return this.$route.params.id.split("-").last();
+    },
+    isWorkforceCategory() {
+      if (!this.adCategory) return false;
+      const categoryGroup = this.getCategoryGroupByCategory(this.adCategory);
+      return categoryGroup && categoryGroup.value === CATEGORY_GROUP_WORKFORCE;
+    },
+    formCompleteTitle() {
+      if (this.adLocked && this.isWorkforceCategory) {
+        return this.$t("form-complete.create-ad-workforce.title");
+      }
+      return this.$t("form-complete.create-ad.title");
+    },
+    formCompleteDescription() {
+      if (this.adLocked && this.isWorkforceCategory) {
+        return this.$t("form-complete.create-ad-workforce.description");
+      }
+      return this.$t("form-complete.create-ad.description");
     }
   },
   methods: {
@@ -165,7 +185,21 @@ export default {
       } else {
         this.isSubmitted = true;
         input.adId = this.adId;
-        await updateAd(input);
+        let result = await updateAd(input);
+        
+        // Récupérer la catégorie et l'état locked depuis le résultat de la mutation
+        if (result && result.data && result.data.updateAd && result.data.updateAd.ad) {
+          this.adCategory = result.data.updateAd.ad.category;
+          this.adLocked = result.data.updateAd.ad.locked || false;
+        } else if (this.ad) {
+          // Si pas de résultat (mutation de traduction uniquement), utiliser les valeurs actuelles de l'annonce
+          this.adCategory = this.ad.category;
+          this.adLocked = this.ad.locked || false;
+        } else {
+          this.adCategory = null;
+          this.adLocked = false;
+        }
+        
         this.adEdited = true;
         window.scrollTo(0, 0);
         this.isSubmitted = false;
@@ -229,6 +263,7 @@ query AdById($id: ID!, $language: ContentLanguage!) {
     }
     showAddress
     category
+    locked
     gallery {
       id
       src
