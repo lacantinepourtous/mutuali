@@ -1,0 +1,20 @@
+@model YellowDuck.Api.EmailTemplates.Models.WorkforceReviewNotificationEmail
+@{
+  Layout = "_EmailLayout.cshtml";
+}
+
+<p>Bonjour,</p>
+
+<p>
+  Une nouvelle annonce de catégorie Main d'oeuvres a été créée sur MutuAli et nécessite une validation avant
+  publication.
+</p>
+
+<p>
+  <strong>Titre de l'annonce:</strong> @Model.AdTitle<br>
+  <strong>Créée par:</strong> @Model.CreatorUserName
+</p>
+
+<p>
+  <a href="@Model.BaseUrl/@Model.AdUrl">Voir l'annonce à valider</a>
+</p>

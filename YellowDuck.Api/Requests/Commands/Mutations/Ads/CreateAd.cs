@@ -1,7 +1,7 @@
 ﻿using GraphQL.Conventions;
+using Hangfire;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections;
@@ -10,6 +10,7 @@ using System.Linq;
 using System.Security.Claims;
 using System.Threading;
 using System.Threading.Tasks;
+using YellowDuck.Api.BackgroundJobs;
 using YellowDuck.Api.Constants;
 using YellowDuck.Api.DbModel;
 using YellowDuck.Api.DbModel.Entities;
@@ -179,12 +180,26 @@ namespace YellowDuck.Api.Requests.Commands.Mutations.Ads
                 ad.IsAdminOnly = true;
             }
 
+            // Certaines catégories d'annonces nécessite une validation par les administrateurs
+            var needsModeration = AdCategoryHelper.NeedsModeration(request.Category);
+            if (needsModeration)
+            {
+                ad.Locked = true;
+                ad.IsPublish = false;
+            }
+
             db.Ads.Add(ad);
 
             await db.SaveChangesAsync(cancellationToken);
             await userManager.AddClaimAsync(owner, new Claim(AppClaimTypes.AdOwner, Id.New<Ad>(ad.Id.ToString()).ToString()));
 
-            logger.LogInformation($"New ad created {request.Title} ({ad.Id})");
+            logger.LogInformation($"New ad created {request.Title} ({ad.Id})" + (ad.Locked ? " - Locked for admin review" : ""));
+
+            // Envoyer l'email de notification en arrière-plan si c'est une annonce nécessitant une validation par les administrateurs
+            if (needsModeration)
+            {
+                BackgroundJob.Enqueue<SendWorkforceReviewNotificationEmail>(x => x.Run(ad.Id, owner.Id));
+            }
 
             return new Payload
             {
@@ -386,7 +401,7 @@ namespace YellowDuck.Api.Requests.Commands.Mutations.Ads
         public class SurfaceSizeInvalidException : CreateAdException { }
         public class DescriptionInvalidException : CreateAdException { }
         public class EquipmentInvalidException : CreateAdException { }
-        public class HumanResourceFieldInvalidException: CreateAdException { }
+        public class HumanResourceFieldInvalidException : CreateAdException { }
         public class HumanResourceFieldOtherInvalidException : CreateAdException { }
         public class TasksInvalidException : CreateAdException { }
 
@@ -403,5 +418,6 @@ namespace YellowDuck.Api.Requests.Commands.Mutations.Ads
                 {"Property", propName}
             };
         }
+
     }
 }

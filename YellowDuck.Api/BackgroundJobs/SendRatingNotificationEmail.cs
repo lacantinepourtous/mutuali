@@ -31,14 +31,14 @@ namespace YellowDuck.Api.BackgroundJobs
 
     public async Task Run(long? userRatingId, long? adRatingId, string userId, long? adId)
     {
-      var kpisEmailRecipient = config["kpisEmailRecipient"];
-      if (string.IsNullOrWhiteSpace(kpisEmailRecipient))
+      var adminEmailRecipient = config["adminEmailRecipient"];
+      if (string.IsNullOrWhiteSpace(adminEmailRecipient))
       {
-        logger.LogWarning("kpisEmailRecipient is not configured, skipping rating notification email");
+        logger.LogWarning("adminEmailRecipient is not configured, skipping rating notification email");
         return;
       }
 
-      var email = new RatingNotificationEmail(kpisEmailRecipient)
+      var email = new RatingNotificationEmail(adminEmailRecipient)
       {
         UserRatingId = userRatingId,
         AdRatingId = adRatingId
@@ -90,7 +90,7 @@ namespace YellowDuck.Api.BackgroundJobs
       try
       {
         await mailer.Send(email);
-        logger.LogInformation($"Rating notification email sent to {kpisEmailRecipient}");
+        logger.LogInformation($"Rating notification email sent to {adminEmailRecipient}");
       }
       catch (Exception ex)
       {
