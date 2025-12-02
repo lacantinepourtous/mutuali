@@ -27,6 +27,11 @@ namespace YellowDuck.Api.Helpers
             };
             return dict[adCategory];
         }
+
+        public static bool NeedsModeration(AdCategory category)
+        {
+            return category == AdCategory.HumanResource || category == AdCategory.Subcontracting;
+        }
     }
 }
 

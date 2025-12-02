@@ -129,6 +129,8 @@
   "form-complete.contact-us.link": "Nous joindre",
   "form-complete.create-ad.title": "Annonce publiée",
   "form-complete.create-ad.description": "Votre annonce est maintenant en ligne et prête à partager. Il peut s'écouler quelques minutes avant que votre annonce soit visible sur la carte.",
+  "form-complete.create-ad-workforce.title": "Annonce envoyée pour approbation",
+  "form-complete.create-ad-workforce.description": "Votre annonce est maintenant en attente d'approbation. Elle sera publiée dès que validée.",
   "btn.return-dashboard": "Retour à l'accueil",
   "btn.display-ad": "Voir l'annonce",
   "label.ad-address": "Adresse",
@@ -350,7 +352,7 @@
   "email.report-user-subject": "Signaler l'usager",
   "email.report-user-body": "Bonjour, J'aimerais signaler l'usager suivant : {url}",
   "text.ad-notpublish": "Cette annonce est présentement dépubliée et n'apparaît pas sur la carte.",
-  "text.ad-locked": "Cette annonce a été bloquée par les administrateurs.",
+  "text.ad-locked": "Cette annonce est en attente de validation par les administrateurs.",
   "notification.user-locked-out": "Votre compte est actuellement verrouillé. Si vous croyez que c'est une erreur, veuillez entrer en communication avec nous à l'aide du bouton Nous joindre",
   "btn.my-profile": "Voir mon profil",
   "btn.manage-my-ads": "Gérer mes annonces",
@@ -823,5 +825,9 @@
   "text.ad-subcontracting-info": "Joindre {name} pour plus de détails",
   "conversation.unavailable": "Indisponible",
   "conversation.unavailable-message": "Cette conversation n'est pas accessible pour le moment",
-  "loading.conversations": "Chargement en cours..."
+  "loading.conversations": "Chargement en cours...",
+  "btn.delete": "Supprimer",
+  "title.confirm-delete": "Confirmer la suppression",
+  "text.confirm-delete-rating": "Êtes-vous sûr de vouloir supprimer cette évaluation ? Cette action est irréversible.",
+  "notification.rating-deleted": "L'évaluation a été supprimée avec succès."
 }

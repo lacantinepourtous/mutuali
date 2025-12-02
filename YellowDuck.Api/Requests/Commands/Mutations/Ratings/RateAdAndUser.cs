@@ -1,4 +1,5 @@
 using GraphQL.Conventions;
+using Hangfire;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -6,6 +7,7 @@ using Microsoft.Extensions.Logging;
 using System;
 using System.Threading;
 using System.Threading.Tasks;
+using YellowDuck.Api.BackgroundJobs;
 using YellowDuck.Api.DbModel;
 using YellowDuck.Api.DbModel.Entities;
 using YellowDuck.Api.DbModel.Entities.Ads;
@@ -77,7 +79,7 @@ namespace YellowDuck.Api.Requests.Commands.Mutations.Ratings
 
         if (existingAdRating != null)
         {
-            throw new AdAlreadyRated();
+          throw new AdAlreadyRated();
         }
 
         adRating = new AdRating
@@ -99,6 +101,16 @@ namespace YellowDuck.Api.Requests.Commands.Mutations.Ratings
       await db.SaveChangesAsync(cancellationToken);
 
       logger.LogInformation($"User {userId} rated by user {currentUserId}" + (adRating != null ? $", Ad {adId} also rated" : ""));
+
+      // Envoyer l'email de notification en arrière-plan
+      var adRatingId = adRating != null ? (long?)adRating.Id : null;
+      var adIdForJob = adRating != null ? (long?)adId : null;
+      BackgroundJob.Enqueue<SendRatingNotificationEmail>(x => x.Run(
+        userRating.Id,
+        adRatingId,
+        userId,
+        adIdForJob
+      ));
 
       return new Payload
       {

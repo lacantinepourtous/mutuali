@@ -485,6 +485,29 @@
         </table>
     </div>
 
+    <!-- Statistiques de ratings -->
+    <div class="kpi-section">
+        <div class="section-header">Statistiques de ratings</div>
+        <table class="kpi-table">
+            <thead>
+                <tr>
+                    <th>Type de rating</th>
+                    <th class="count-cell">Total</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Ratings utilisateurs</td>
+                    <td class="count-cell">@Model.TotalUserRatings</td>
+                </tr>
+                <tr>
+                    <td>Ratings annonces</td>
+                    <td class="count-cell">@Model.TotalAdRatings</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
     <div class="footer">
         <p>À dimanche prochain !</p>
         <p>Rapport généré automatiquement par MutuAli</p>

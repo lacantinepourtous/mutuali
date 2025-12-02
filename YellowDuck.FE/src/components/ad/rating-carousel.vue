@@ -4,11 +4,11 @@
     <carousel v-if="ratings.length > 1" class="px-2 py-5 mt-n5">
       <b-carousel-slide v-for="(rating, key) in ratings" :key="key">
         <template #img>
-          <rating-card :rating="rating" carousel />
+          <rating-card :rating="rating" carousel @rating-deleted="onRatingDeleted" />
         </template>
       </b-carousel-slide>
     </carousel>
-    <rating-card v-else :rating="ratings[0]" carousel />
+    <rating-card v-else :rating="ratings[0]" carousel @rating-deleted="onRatingDeleted" />
   </div>
 </template>
 
@@ -45,6 +45,11 @@ export default {
         return hasPositive;
       });
       return this.getRatingsWithCriterias(filledRatings, ["compliance", "quality", "ad-overall"]);
+    }
+  },
+  methods: {
+    onRatingDeleted(ratingId) {
+      this.$emit("rating-deleted", ratingId);
     }
   },
   apollo: {
