@@ -85,9 +85,15 @@ export default {
     conversationSid: {
       type: String
     },
+    conversationId: {
+      type: String
+    },
     otherParticipantName: {
       type: String,
       required: true
+    },
+    ratingRequestSentAt: {
+      type: String
     }
   },
   methods: {
@@ -186,8 +192,10 @@ export default {
         if (this.conversationSid) {
           await TwilioService.addMessageToConversation({
             sid: this.conversationSid,
+            conversationId: this.conversationId,
             body: this.message,
-            medias: mediaFiles
+            medias: mediaFiles,
+            ratingRequestSentAt: this.ratingRequestSentAt
           });
         } else {
           this.$emit("sendMessage", this.message);

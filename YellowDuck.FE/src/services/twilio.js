@@ -55,7 +55,26 @@ async function getConversationUnreadMessagesCount(sid) {
   return unreadMessagesCount;
 }
 
-async function addMessageToConversation({ sid, body, medias }) {
+async function scheduleRatingRequestMessage(sid, conversationId) {
+  // Skip if conversationId is not provided
+  if (!conversationId) return;
+
+  let messages = await getConversationMessages(sid);
+
+  // If there are less than 2 non-system messages, skip
+  let nonSystemMessages = messages.filter(message => message.state.author !== "Mutuali:Twilio:ParticipantSystem");
+  if (nonSystemMessages.length < 2) return;
+
+  // If there is no message from both participants, skip
+  const participant1Sid = nonSystemMessages[0].state.author;
+  const hasMessageFromBothParticipants = !!(nonSystemMessages.find(message => message.state.author !== participant1Sid));
+  if (!hasMessageFromBothParticipants) return;
+
+  // Trigger the background job to send the rating request message
+  await ConversationService.scheduleRatingRequestMessage({ conversationId });
+}
+
+async function addMessageToConversation({ sid, conversationId, body, medias, ratingRequestSentAt }) {
   let conversation = await getConversationBySid(sid);
   let message = conversation.prepareMessage().setBody(body);
 
@@ -71,6 +90,10 @@ async function addMessageToConversation({ sid, body, medias }) {
   }
 
   await message.build().send();
+
+  if (!ratingRequestSentAt) {
+    await scheduleRatingRequestMessage(sid, conversationId);
+  }
 }
 
 async function getConversationMessages(sid) {

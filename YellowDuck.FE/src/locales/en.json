@@ -370,6 +370,8 @@
   "btn.create-conversation-auto-message": "Hello, your ad interests me",
   "btn.create-conversation-auto-message-with-dates": "Hello, your ad interests me. Would the equipment be available on the following dates: {dates}?",
   "text.initial-conversation-body": "This is the start of your conversation with {name}. You can initiate the reservation by sending your first message. Here is a pre-written message.",
+  "text.rating-request": "Has this transaction been completed? If so, please evaluate your experience!",
+  "btn.rating-request": "Evaluate experience",
   "btn.landing-connect": " Log in",
   "btn.landing-create-account": "Create my account",
   "title.landing-ping-pong-1": "MutuAli, what is it?",

@@ -116,7 +116,7 @@ export default {
     },
     btnRateLabel: function() {
       let label = "";
-      if (this.adHasBeenRated || (this.userIsOwner && this.userHasBeenRatedByMe) || (!this.userIsOwner && this.ownerHasBeenRatedByMe)) {
+      if (this.adHasBeenRated || (this.userIsOwner && this.userHasBeenRatedByMe)) {
         label = this.$t("conversation.btn-rerate");
       } else {
         label = this.$t("conversation.btn-rate");

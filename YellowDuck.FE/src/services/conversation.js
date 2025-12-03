@@ -1,5 +1,5 @@
 import Apollo from "@/graphql/vue-apollo";
-import { CreateConversation, RemoveConversationNotification, RateAdAndUser, UpdateAdAndUserRating } from "./conversation.graphql";
+import { CreateConversation, RemoveConversationNotification, RateAdAndUser, UpdateAdAndUserRating, ScheduleRatingRequestMessage } from "./conversation.graphql";
 import { RATING } from "@/consts/rating";
 import { addMaybeValue } from "@/helpers/graphql";
 
@@ -81,6 +81,18 @@ export default {
       mutation: UpdateAdAndUserRating,
       variables: {
         input: mutationInput
+      }
+    });
+
+    return result;
+  },
+  scheduleRatingRequestMessage: async function (input) {
+    let result = await Apollo.instance.defaultClient.mutate({
+      mutation: ScheduleRatingRequestMessage,
+      variables: {
+        input: {
+          conversationId: input.conversationId
+        }
       }
     });
 
