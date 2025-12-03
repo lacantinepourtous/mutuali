@@ -10,7 +10,6 @@ import {
   TWILIO_EVENT_MESSAGE_READ,
   TWILIO_EVENT_MESSAGE_SENT
 } from "@/consts/twilio";
-import { RATING_REQUEST } from "@/consts/message-actions";
 
 import { Client as ConversationsClient } from "@twilio/conversations";
 
@@ -61,12 +60,6 @@ async function scheduleRatingRequestMessage(sid, conversationId) {
   if (!conversationId) return;
 
   let messages = await getConversationMessages(sid);
-  // If there are less than 2 messages, skip
-  if (messages.length < 2) return;
-
-  // If there is already a rating request message, skip
-  let ratingRequestMessage = messages.find(message => message.state.attributes.Action === RATING_REQUEST);
-  if (ratingRequestMessage) return;
 
   // If there are less than 2 non-system messages, skip
   let nonSystemMessages = messages.filter(message => message.state.author !== "Mutuali:Twilio:ParticipantSystem");
@@ -77,11 +70,11 @@ async function scheduleRatingRequestMessage(sid, conversationId) {
   const hasMessageFromBothParticipants = !!(nonSystemMessages.find(message => message.state.author !== participant1Sid));
   if (!hasMessageFromBothParticipants) return;
 
-  // should send the conversation id
+  // Trigger the background job to send the rating request message
   await ConversationService.scheduleRatingRequestMessage({ conversationId });
 }
 
-async function addMessageToConversation({ sid, conversationId, body, medias }) {
+async function addMessageToConversation({ sid, conversationId, body, medias, ratingRequestSentAt }) {
   let conversation = await getConversationBySid(sid);
   let message = conversation.prepareMessage().setBody(body);
 
@@ -97,7 +90,10 @@ async function addMessageToConversation({ sid, conversationId, body, medias }) {
   }
 
   await message.build().send();
-  await scheduleRatingRequestMessage(sid, conversationId);
+
+  if (!ratingRequestSentAt) {
+    await scheduleRatingRequestMessage(sid, conversationId);
+  }
 }
 
 async function getConversationMessages(sid) {

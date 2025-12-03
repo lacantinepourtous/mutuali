@@ -99,6 +99,11 @@ namespace YellowDuck.Api.BackgroundJobs
 
                 await conversationsService.SendMessageAsSystem(conversation.Sid, body, attributes);
 
+                // Store execution date and clear job ID since job has been executed
+                conversation.RatingRequestSentAt = DateTime.UtcNow;
+                conversation.RatingRequestJobId = null;
+                await db.SaveChangesAsync();
+
                 logger.LogInformation($"Sent conversation rating request for conversation {conversation.Id} (Twilio SID {conversation.Sid}).");
             }
             catch (Exception ex)

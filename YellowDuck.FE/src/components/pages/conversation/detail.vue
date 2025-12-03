@@ -45,7 +45,7 @@
       </div>
       <div class="conversation-detail__send">
         <div class="section section--md">
-          <send-message-form :conversation-sid="conversationSid" :conversation-id="conversationId" :other-participant-name="otherParticipantName" />
+          <send-message-form :conversation-sid="conversationSid" :conversation-id="conversationId" :other-participant-name="otherParticipantName" :rating-request-sent-at="ratingRequestSentAt" />
         </div>
       </div>
     </template>
@@ -145,6 +145,9 @@ export default {
     isAccountOnboardingComplete: function () {
       let account = this.me ? this.me.stripeAccount : null;
       return account !== null ? account.accountOnboardingComplete : false;
+    },
+    ratingRequestSentAt: function () {
+      return this.conversation.ratingRequestSentAt;
     }
   },
   methods: {
@@ -244,6 +247,7 @@ query ConversationById($id: ID!, $language: ContentLanguage!) {
   conversation(id: $id) {
     id
     sid
+    ratingRequestSentAt
     participants {
       id
       sid

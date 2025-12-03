@@ -21,6 +21,7 @@ mutation CreateConversation($input: CreateConversationInput!) {
           email
         }
       }
+      ratingRequestSentAt
     }
   }
 }

@@ -1,4 +1,5 @@
-﻿using GraphQL.Conventions;
+﻿using System;
+using GraphQL.Conventions;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -62,5 +63,9 @@ namespace YellowDuck.Api.Gql.Schema.GraphTypes
             var userRatings = await ctx.LoadUserRatingByConversationId(id);
             return userRatings.Select(x => new UserRatingGraphType(x)).ToList();
         }
+
+        public Task<DateTime?> RatingRequestSentAt => WithData(x => x.RatingRequestSentAt);
+        
+        public Task<string> RatingRequestJobId => WithData(x => x.RatingRequestJobId);
     }
 }

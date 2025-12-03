@@ -91,6 +91,9 @@ export default {
     otherParticipantName: {
       type: String,
       required: true
+    },
+    ratingRequestSentAt: {
+      type: String
     }
   },
   methods: {
@@ -191,7 +194,8 @@ export default {
             sid: this.conversationSid,
             conversationId: this.conversationId,
             body: this.message,
-            medias: mediaFiles
+            medias: mediaFiles,
+            ratingRequestSentAt: this.ratingRequestSentAt
           });
         } else {
           this.$emit("sendMessage", this.message);

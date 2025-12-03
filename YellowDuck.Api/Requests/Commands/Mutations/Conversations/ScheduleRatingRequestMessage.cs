@@ -2,7 +2,6 @@
 using Hangfire;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Linq;
@@ -25,20 +24,17 @@ namespace YellowDuck.Api.Requests.Commands.Mutations.Conversations
         private readonly ILogger<ScheduleRatingRequestMessage> logger;
         private readonly ICurrentUserAccessor currentUserAccessor;
         private readonly IBackgroundJobClient backgroundJobClient;
-        private readonly IMemoryCache cache;
 
         public ScheduleRatingRequestMessage(
             AppDbContext db, 
             ILogger<ScheduleRatingRequestMessage> logger,
             ICurrentUserAccessor currentUserAccessor,
-            IBackgroundJobClient backgroundJobClient,
-            IMemoryCache cache)
+            IBackgroundJobClient backgroundJobClient)
         {
             this.db = db;
             this.logger = logger;
             this.currentUserAccessor = currentUserAccessor;
             this.backgroundJobClient = backgroundJobClient;
-            this.cache = cache;
         }
 
         public async Task<Payload> Handle(Input request, CancellationToken cancellationToken)
@@ -53,16 +49,18 @@ namespace YellowDuck.Api.Requests.Commands.Mutations.Conversations
                 throw new UserNotInConversation();
             }
 
-            var cacheKey = $"rating-request-message-scheduled-{conversationId}";
-            if (cache.TryGetValue(cacheKey, out string existingJobId))
+            // Delete existing job if one is scheduled
+            if (!string.IsNullOrEmpty(conversation.RatingRequestJobId))
             {
-                BackgroundJob.Delete(existingJobId);
+                BackgroundJob.Delete(conversation.RatingRequestJobId);
             }
 
+            // Schedule new job
             var newJobId = backgroundJobClient.Schedule<SendConversationRatingRequestMessage>((x) => x.Run(conversationId), TimeSpan.FromHours(48));
 
-            // + 1h to be sure job has been executed
-            cache.Set(cacheKey, newJobId, TimeSpan.FromHours(49));
+            // Store job ID in database
+            conversation.RatingRequestJobId = newJobId;
+            await db.SaveChangesAsync(cancellationToken);
 
             logger.LogInformation($"New rating request message scheduled to be sent in 48hrs for conversation {conversationId}");
 
