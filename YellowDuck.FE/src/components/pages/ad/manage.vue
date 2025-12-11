@@ -75,7 +75,7 @@ export default {
   },
   computed: {
     isAdmin() {
-      return !this.me || this.me.type === this.$consts.enums.USER_TYPE_ADMIN;
+      return this.me && this.me.type === this.$consts.enums.USER_TYPE_ADMIN;
     },
     profileId: function () {
       return this.me.profile.id;

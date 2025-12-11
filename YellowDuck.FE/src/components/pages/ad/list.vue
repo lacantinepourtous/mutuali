@@ -332,7 +332,7 @@ export default {
       return this.user && this.user.isConnected;
     },
     isAdmin() {
-      return !this.me || this.me.type === this.$consts.enums.USER_TYPE_ADMIN;
+      return this.me && this.me.type === this.$consts.enums.USER_TYPE_ADMIN;
     },
     createAlertModalHidden() {
       return (
