@@ -174,27 +174,27 @@
         </div>
       </div>
      
-      <div v-if="ad.isPublish" class="fab-container__fab" :class="(isAdOwnByCurrentUser || isAdmin) ? 'text-center bg-light p-3' : 'px-3'">
+      <div v-if="ad.isPublish" class="fab-container__fab" :class="(isAdOwnByCurrentUser || isAdmin) ? 'text-center bg-light p-1 sm:p-3' : 'px-3'">
         <template v-if="isAdOwnByCurrentUser || isAdmin">
           <b-button variant="primary" size="lg" class="text-truncate mx-1" @click="editAd">
-            <b-icon icon="pencil" class="mr-1" aria-hidden="true"></b-icon>
-            {{ $t("btn.edit-ad") }}
+            <b-icon icon="pencil" class="mr-md-1" aria-hidden="true"></b-icon>
+            <span class="sr-only-sm">{{ $t("btn.edit-ad") }}</span>
           </b-button>
           <b-button v-if="ad.isAdminOnly" variant="admin" size="lg" class="text-truncate mx-1" @click="transferAd">
-            <b-icon icon="arrow-right" class="mr-1" aria-hidden="true"></b-icon>
-            {{ $t("btn.transfer-ad") }}
+            <b-icon icon="arrow-right" class="mr-md-1" aria-hidden="true"></b-icon>
+            <span class="sr-only-sm">{{ $t("btn.transfer-ad") }}</span>
           </b-button>
           <b-button v-if="!ad.isAdminOnly" variant="danger" size="lg" class="text-truncate mx-1" @click="unpublishAd">
-            <b-icon icon="eye-slash" class="mr-1" aria-hidden="true"></b-icon>
-            {{ $t("btn.unpublish-ad") }}
+            <b-icon icon="eye-slash" class="mr-md-1" aria-hidden="true"></b-icon>
+            <span class="sr-only-sm">{{ $t("btn.unpublish-ad") }}</span>
           </b-button>
           <b-button v-if="isAdmin && !ad.locked" variant="warning" size="lg" class="text-truncate mx-1" @click="lockAd">
-            <b-icon icon="x-circle" class="mr-1" aria-hidden="true"></b-icon>
-            {{ $t("btn.lock-ad") }}
+            <b-icon icon="x-circle" class="mr-md-1" aria-hidden="true"></b-icon>
+            <span class="sr-only-sm">{{ $t("btn.lock-ad") }}</span>
           </b-button>
           <b-button v-if="isAdmin && ad.locked" variant="success" size="lg" class="text-truncate mx-1" @click="unlockAd">
-            <b-icon icon="check-circle" class="mr-1" aria-hidden="true"></b-icon>
-            {{ $t("btn.unlock-ad") }}
+            <b-icon icon="check-circle" class="mr-md-1" aria-hidden="true"></b-icon>
+            <span class="sr-only-sm">{{ $t("btn.unlock-ad") }}</span>
           </b-button>
         </template>
         <div v-else class="grey-box border-top border-white text-center d-md-none">

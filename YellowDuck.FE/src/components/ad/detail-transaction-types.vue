@@ -33,13 +33,23 @@
       </AdTypeCard>
     </li>
     <li v-if="ad.category === CATEGORY_SUBCONTRACTING">
-      <AdTypeCard :title="$t('select.category-subcontracting')" :price="$t('text.ad-subcontracting-info', {name: ad.user.profile.publicName})">
+      <AdTypeCard :title="$t('select.category-subcontracting')">
         <IconWorker class="transaction-types__category-icon" />
+        <template #text>
+          <span class="transaction-types__emphase">
+            {{ $t('text.ad-subcontracting-info', {name: ad.user.profile.publicName}) }}
+          </span>
+        </template>
       </AdTypeCard>
     </li>
     <li v-if="ad.category === CATEGORY_HUMAN_RESOURCES">
-      <AdTypeCard :title="$t('label.ad-human-resource-field')" :price="getHumanResourceFieldLabel(ad.humanResourceField)">
+      <AdTypeCard :title="$t('label.ad-human-resource-field')">
         <IconWorker class="transaction-types__category-icon" />
+        <template #text>
+          <span class="transaction-types__emphase">
+            {{ getHumanResourceFieldLabel(ad.humanResourceField) }}
+          </span>
+        </template>
       </AdTypeCard>
     </li>
   </ul>
@@ -123,6 +133,11 @@ export default {
 
   &__category-icon {
     color: var(--accent-color);
+  }
+
+  &__emphase {
+    font-size: 20px;
+    font-weight: 700;
   }
 }
 </style>
