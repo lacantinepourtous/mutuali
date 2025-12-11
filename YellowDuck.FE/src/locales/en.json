@@ -361,7 +361,7 @@
   "title.ad-publish": "Published",
   "title-ad-unpublish": "Unpublished",
   "label.ad-unpublished": "Unpublished",
-  "label.ad-blocked": "Blocked",
+  "label.ad-blocked": "Pending",
   "text.ad-notpublish-owner": "This ad has been successfully unpublished.",
   "label.postalCode": "Postal Code",
   "validator.postal-code": "Postal code must be in A1B 2C3 format",
