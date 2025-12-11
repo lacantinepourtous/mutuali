@@ -5,8 +5,8 @@ using System.Threading;
 using System.Threading.Tasks;
 using YellowDuck.Api.DbModel;
 using YellowDuck.Api.DbModel.Entities.Ads;
-using YellowDuck.Api.DbModel.Enums;
 using YellowDuck.Api.Services.System;
+using YellowDuck.Api.Extensions;
 
 namespace YellowDuck.Api.Requests.Queries.Ads
 {
@@ -26,10 +26,10 @@ namespace YellowDuck.Api.Requests.Queries.Ads
         public override async Task<IDictionary<long, Ad>> Handle(Query request, CancellationToken cancellationToken)
         {
             var adsQuery = db.Ads.Where(c => request.Ids.Contains(c.Id));
-            if(!currentUserAccessor.IsUserType(UserType.Admin))
-            {
-                adsQuery = adsQuery.Where(x => x.IsAdminOnly == false);
-            }
+
+            // Appliquer le filtrage selon le type d'utilisateur
+            adsQuery = adsQuery.ApplyUserAccessFilter(currentUserAccessor);
+
             return await adsQuery.ToDictionaryAsync(x => x.Id, cancellationToken);
         }
     }

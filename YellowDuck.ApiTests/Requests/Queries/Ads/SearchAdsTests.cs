@@ -29,7 +29,7 @@ namespace YellowDuck.ApiTests.Requests.Queries.Ads
 
     public SearchAdsTests()
     {
-      handler = new SearchAds(DbContext);
+      handler = new SearchAds(DbContext, UserAccessor);
 
       // Créer les utilisateurs
       user1 = AddUser("user1@example.com", UserType.User);
@@ -89,11 +89,7 @@ namespace YellowDuck.ApiTests.Requests.Queries.Ads
     {
       // Arrange
       SetLoggedInUser(user1);
-      var query = new SearchAds.Query
-      {
-        CurrentUserId = user1.Id,
-        IsAdmin = false
-      };
+      var query = new SearchAds.Query();
 
       // Act
       var result = await handler.Handle(query, CancellationToken.None);
@@ -110,11 +106,7 @@ namespace YellowDuck.ApiTests.Requests.Queries.Ads
     {
       // Arrange
       SetLoggedInUser(admin);
-      var query = new SearchAds.Query
-      {
-        CurrentUserId = admin.Id,
-        IsAdmin = true
-      };
+      var query = new SearchAds.Query();
 
       // Act
       var result = await handler.Handle(query, CancellationToken.None);
@@ -128,12 +120,7 @@ namespace YellowDuck.ApiTests.Requests.Queries.Ads
     {
       // Arrange
       SetLoggedInUser(admin);
-      var query = new SearchAds.Query
-      {
-        CurrentUserId = admin.Id,
-        IsAdmin = true,
-        ShowAdminOnly = true
-      };
+      var query = new SearchAds.Query();
 
       // Act
       var result = await handler.Handle(query, CancellationToken.None);
@@ -148,11 +135,7 @@ namespace YellowDuck.ApiTests.Requests.Queries.Ads
     {
       // Arrange
       SetLoggedInUser(user1);
-      var query = new SearchAds.Query
-      {
-        CurrentUserId = user1.Id,
-        IsAdmin = false
-      };
+      var query = new SearchAds.Query();
 
       // Act
       var result = await handler.Handle(query, CancellationToken.None);

@@ -117,9 +117,6 @@ namespace YellowDuck.Api.Gql.Schema
             bool? canSharedRoad = null,
             bool? canHaveDriver = null)
         {
-            var isAdmin = currentUserAccessor.IsUserType(UserType.Admin);
-            var currentUserId = currentUserAccessor.GetCurrentUserId();
-
             var adsQuery = new SearchAds.Query
             {
                 Category = category,
@@ -130,14 +127,7 @@ namespace YellowDuck.Api.Gql.Schema
                 Refrigerated = refrigerated,
                 CanHaveDriver = canHaveDriver,
                 CanSharedRoad = canSharedRoad,
-                CurrentUserId = currentUserId,
-                IsAdmin = isAdmin,
             };
-
-            if (isAdmin)
-            {
-                adsQuery.ShowAdminOnly = true;
-            }
 
             var ads = await mediator.Send(adsQuery);
             return ads.Select(x => new AdGraphType(x));
