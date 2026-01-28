@@ -27,7 +27,7 @@
               "parallelExecutionType": 0
             },
             "agentSpecification": {
-              "identifier": "vs2017-win2016"
+              "identifier": "vs2022-win2022"
             },
             "skipArtifactsDownload": false,
             "artifactsDownloadInput": {
@@ -236,7 +236,7 @@
               "parallelExecutionType": 0
             },
             "agentSpecification": {
-              "identifier": "vs2017-win2016"
+              "identifier": "vs2022-win2022"
             },
             "skipArtifactsDownload": false,
             "artifactsDownloadInput": {
