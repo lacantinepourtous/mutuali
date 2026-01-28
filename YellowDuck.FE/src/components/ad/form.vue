@@ -183,7 +183,7 @@
         v-model="form.images"
         :currentImages="form.currentImages"
         id="image"
-        :label="$t('label.ad-image')"
+        :label="imageLabel"
         name="image"
         :placeholder="$t('placeholder.ad-image')"
         :drop-placeholder="$t('placeholder.ad-drop-image')"
@@ -673,6 +673,11 @@ export default {
     },
     subCategoryOptions() {
       return this.getCategoryOptionsByCategoryGroup(this.categoryGroup);
+    },
+    imageLabel() {
+      return this.categoryGroup === CATEGORY_GROUP_WORKFORCE
+        ? this.$t('label.ad-image-workforce')
+        : this.$t('label.ad-image');
     }
   },
   methods: {
