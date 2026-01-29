@@ -14,23 +14,6 @@ mutation UpdateContract($input: UpdateContractInput!) {
   }
 }
 
-mutation RateContract($input: RateContractInput!) {
-  rateContract(input: $input) {
-    contract {
-      id
-      adRating {
-        id
-      }
-      userRatings {
-        id
-        raterUser {
-          id
-        }
-      }
-    }
-  }
-}
-
 query GetContractIdByConversationId($id: ID!) {
   conversation(id: $id) {
     id

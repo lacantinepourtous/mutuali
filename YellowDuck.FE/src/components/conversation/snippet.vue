@@ -1,5 +1,10 @@
 <template>
-  <router-link class="conversation-snippet" :to="{ name: $consts.urls.URL_CONVERSATION_DETAIL, params: { id: this.id } }">
+  <component 
+    :is="isUnavailable ? 'div' : 'router-link'" 
+    class="conversation-snippet" 
+    :class="{ 'conversation-snippet--unavailable': isUnavailable }"
+    :to="isUnavailable ? null : { name: $consts.urls.URL_CONVERSATION_DETAIL, params: { id: this.id } }"
+  >
     <div class="conversation-snippet__pic">
       <img
         v-if="adGallery && adGallery[0]"
@@ -22,10 +27,16 @@
         {{ lastMessageComputed }}
       </div>
       <p v-if="adTitle" class="conversation-snippet__ad-title small mt-2 mb-0">
+        <svg class="conversation-snippet__ad-title-icon" width="18" height="41" viewBox="0 0 18 41" fill="currentColor" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <path fill-rule="evenodd" clip-rule="evenodd" d="M8.60552 40.7989C2.88217 32.8965 0 22.2477 0 8.69393C0 3.89609 3.85199 0.0137671 8.60552 0C13.359 0.0137671 17.211 3.89609 17.211 8.69393C17.211 22.2477 14.3357 32.8965 8.60552 40.7989ZM8.605 14.21C11.7006 14.21 14.21 11.7006 14.21 8.605C14.21 5.50944 11.7006 3 8.605 3C5.50944 3 3 5.50944 3 8.605C3 11.7006 5.50944 14.21 8.605 14.21Z" />
+        </svg>
         {{ adTitle }}
       </p>
     </div>
-  </router-link>
+    <div v-if="isUnavailable" class="conversation-snippet__unavailable-overlay">
+      <small class="text-muted">{{ $t('conversation.unavailable') }}</small>
+    </div>
+  </component>
 </template>
 
 <script>
@@ -80,10 +91,21 @@ export default {
     userId: {
       type: String,
       required: true
+    },
+    isUnavailable: {
+      type: Boolean,
+      default: false
     }
   },
   methods: {
     updateLastMessage: async function () {
+      if (this.isUnavailable) {
+        // Ne pas essayer de récupérer les messages si la conversation est indisponible
+        this.lastMessage = null;
+        this.unreadMessageCount = 0;
+        this.updateLastMessageDate();
+        return;
+      }
       this.lastMessage = await this.twilioConversation.getMessages();
       this.updateUnreadMessagesStatus(true);
       this.updateLastMessageDate();
@@ -100,6 +122,10 @@ export default {
       }
     },
     updateUnreadMessagesStatus: async function () {
+      if (this.isUnavailable) {
+        this.unreadMessageCount = 0;
+        return;
+      }
       this.unreadMessageCount = await TwilioService.getConversationUnreadMessagesCount(this.conversation.sid);
     },
     updateLastMessageDate: function () {
@@ -142,6 +168,9 @@ export default {
       return otherParticipant !== null ? otherParticipant.user.profile.publicName : "";
     },
     lastMessageComputed: function () {
+      if (this.isUnavailable) {
+        return this.$t('conversation.unavailable-message');
+      }
       if (this.lastMessage) {
         if (this.lastMessage.items.length > 0) {
           return this.lastMessage.items.last().body;
@@ -215,9 +244,14 @@ export default {
   }
 
   &__ad-title {
-    background: url("~@/assets/icons/marker-red.svg") no-repeat 0 0;
-    background-size: 8px auto;
-    padding-left: calc(#{$spacer / 2} + 8px);
+    display: flex;
+    align-items: center;
+    column-gap: $spacer / 2;
+
+    &-icon {
+      color: var(--accent-color);
+      width: 8px;
+    }
   }
 
   &__title {
@@ -226,6 +260,32 @@ export default {
     text-underline-offset: 2px;
     text-decoration-thickness: 2px;
     text-decoration-color: transparent;
+  }
+
+  &--unavailable {
+    opacity: 0.5;
+    cursor: not-allowed;
+    position: relative;
+
+    &:hover {
+      color: inherit;
+      text-decoration: none;
+
+      .conversation-snippet__title {
+        text-decoration-color: transparent;
+      }
+    }
+  }
+
+  &__unavailable-overlay {
+    position: absolute;
+    top: 50%;
+    right: $spacer;
+    transform: translateY(-50%);
+    background: rgba(255, 255, 255, 0.9);
+    padding: $spacer / 4 $spacer / 2;
+    border-radius: $border-radius-sm;
+    border: 1px solid $border-color;
   }
 }
 </style>

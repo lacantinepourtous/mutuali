@@ -23,20 +23,21 @@
           </div>
         </div>
       </div>
-      <p v-if="bodyWithLink" class="small mb-1" v-html="bodyWithLink"></p>
+      <p v-if="isRatingRequest" class="small mb-1">{{ $t("text.rating-request") }}</p>
+      <p v-else-if="bodyWithLink" class="small mb-1" v-html="bodyWithLink"></p>
     </div>
 
     <div class="conversation-bubble__bottom" :class="{ 'conversation-bubble__bottom--system green-lighter': isSystem }">
       <p v-if="hasActions" class="text-light font-weight-bold">
-        <span v-if="isRatingRequest && contractId" class="conversation-bubble__link">
+        <span v-if="isRatingRequest" class="conversation-bubble__link">
           <b-icon icon="star-half" class="mr-2" aria-hidden="true"></b-icon>
           <router-link
             :to="{
-              name: $consts.urls.URL_CONTRACT_RATING,
-              params: { id: this.contractId }
+              name: $consts.urls.URL_RATE,
+              params: { id: conversationId }
             }"
           >
-            {{ $t("conversation.btn-rate-transaction") }}
+            {{ $t("btn.rating-request") }}
           </router-link>
         </span>
         <span v-if="isContractCreatedOrUpdated && contractId" class="conversation-bubble__link">
@@ -109,6 +110,11 @@ export default {
       }
     },
     contractId: {
+      type: String,
+      required: false,
+      default: ""
+    },
+    conversationId: {
       type: String,
       required: false,
       default: ""

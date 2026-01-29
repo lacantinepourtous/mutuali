@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using YellowDuck.Api.DbModel.Entities.Ads;
 using Microsoft.EntityFrameworkCore;
 using YellowDuck.Api.DbModel.Enums;
+using YellowDuck.Api.Extensions;
 using YellowDuck.Api.Services.System;
 
 namespace YellowDuck.Api.Requests.Queries.Ads
@@ -15,10 +16,12 @@ namespace YellowDuck.Api.Requests.Queries.Ads
     public class SearchAds : IRequestHandler<SearchAds.Query, IEnumerable<Ad>>
     {
         private readonly AppDbContext db;
+        private readonly ICurrentUserAccessor currentUserAccessor;
 
         public SearchAds(AppDbContext db, ICurrentUserAccessor currentUserAccessor)
         {
             this.db = db;
+            this.currentUserAccessor = currentUserAccessor;
         }
 
         public async Task<IEnumerable<Ad>> Handle(Query query, CancellationToken cancellationToken)
@@ -84,10 +87,8 @@ namespace YellowDuck.Api.Requests.Queries.Ads
                 adsQuery = adsQuery.Where(x => professionalKitchenEquipmentsAdIds.Contains(x.Id));
             }
 
-            if(!query.ShowAdminOnly)
-            {
-                adsQuery = adsQuery.Where(x => x.IsAdminOnly == false);
-            }
+            // Appliquer le filtrage selon le type d'utilisateur
+            adsQuery = adsQuery.ApplyUserAccessFilter(currentUserAccessor);
 
             var ads = await adsQuery.ToListAsync(cancellationToken: cancellationToken);
             return ads;
@@ -103,7 +104,6 @@ namespace YellowDuck.Api.Requests.Queries.Ads
             public bool? Refrigerated = null;
             public bool? CanSharedRoad = null;
             public bool? CanHaveDriver = null;
-            public bool ShowAdminOnly = false;
         }
 
     }

@@ -20,6 +20,7 @@
 :root {
   --offset-outline-color: white;
   --outline-color: #{$green};
+  --accent-color: #{$green};
 
   .gray-lighter {
     --offset-outline-color: #{$gray-100};
@@ -33,6 +34,7 @@
   .green {
     --offset-outline-color: #{$green};
     --outline-color: #{$gray-100};
+    --accent-color: #{$green};
   }
 
   .green-darker {
@@ -43,6 +45,15 @@
   .yellow {
     --offset-outline-color: #{$yellow};
     --outline-color: #{$gray-900};
+    --accent-color: #{$yellow};
+  }
+
+  .black {
+    --accent-color: #{$gray-900};
+  }
+
+  .gray {
+    --accent-color: #{$gray-600};
   }
 }
 
@@ -54,6 +65,9 @@ button,
 .btn-secondary,
 .btn-outline-primary,
 .btn-outline-secondary,
+.btn-outline-danger,
+.btn-warning,
+.btn-danger,
 .btn-admin,
 .btn-info,
 .form-control,
@@ -73,9 +87,9 @@ button,
   z-index: 2;
 }
 
-.rich-text-editor .form-control > div:focus-visible,
-.custom-control-input:focus:not(:checked) ~ .custom-control-label::before,
-.custom-file-input:focus ~ .custom-file-label {
+.rich-text-editor .form-control>div:focus-visible,
+.custom-control-input:focus:not(:checked)~.custom-control-label::before,
+.custom-file-input:focus~.custom-file-label {
   box-sizing: border-box;
   outline: none;
   border-radius: 0.25rem;
@@ -87,12 +101,17 @@ button,
 .btn-secondary,
 .btn-outline-primary,
 .btn-outline-admin,
+.btn-outline-danger,
+.btn-warning,
+.btn-danger,
+.btn-success,
 .btn-danger,
 .btn-admin,
 .btn-info {
   font-weight: 600;
   transition: background-color 0.2s ease-in-out, transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out, color 0.2s ease-in-out,
     border-color 0.2s ease-in-out;
+
   &:hover {
     transform: translate(0, -3px);
 
@@ -137,14 +156,37 @@ button,
 }
 
 .btn-secondary {
+  background-color: $green-lighter;
+  border-color: $green-lighter;
+  color: $gray-900;
+
   &:hover {
-    box-shadow: 0px 3px 0px $gray-600;
+    background-color: $green-lighter;
+    border-color: $green-lighter;
+    color: $gray-900;
+    box-shadow: 0px 3px 0px $green;
   }
 }
 
 .btn-danger {
   &:hover {
     box-shadow: 0px 3px 0px $red-darker;
+  }
+}
+
+.btn-warning {
+  &:hover {
+    background-color: $yellow;
+    border-color: $yellow;
+    box-shadow: 0px 3px 0px $yellow-dark;
+  }
+}
+
+.btn-success {
+  &:hover {
+    background-color: $green;
+    border-color: $green;
+    box-shadow: 0px 3px 0px $green-darker;
   }
 }
 
@@ -168,9 +210,18 @@ button,
   }
 }
 
+.btn-outline-danger {
+  &:hover {
+    background-color: transparent;
+    color: $red-darker;
+    box-shadow: 0px 3px 0px $red-darker;
+  }
+}
+
 .btn-outline-admin {
   border-color: $gray-600;
   color: $gray-900;
+
   &:hover {
     background-color: transparent;
     color: $gray-900;
@@ -213,6 +264,7 @@ a[href^="tel:"] {
 
 .link-scale {
   transition: transform 0.2s ease-in-out;
+
   &:hover {
     transform: scale(1.05);
 
@@ -248,6 +300,7 @@ a[href^="tel:"] {
 }
 
 .text-light {
+
   a:not([class]),
   a[class=""] {
     color: $white;
@@ -261,6 +314,7 @@ a[href^="tel:"] {
 }
 
 .text-white {
+
   a:not([class]),
   a[class=""] {
     color: $white;
@@ -288,6 +342,7 @@ a[href^="tel:"] {
 ol,
 ul,
 dl {
+
   // HOTFIX
   // Align list item to the left. Will cause
   // problem if number greater than 9 (overflow left).

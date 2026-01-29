@@ -1,4 +1,5 @@
 ﻿using GraphQL.Conventions;
+using Hangfire;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
@@ -8,6 +9,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using YellowDuck.Api.BackgroundJobs;
 using YellowDuck.Api.DbModel;
 using YellowDuck.Api.DbModel.Entities.Ads;
 using YellowDuck.Api.DbModel.Enums;
@@ -47,8 +49,12 @@ namespace YellowDuck.Api.Requests.Commands.Mutations.Ads
                 .FirstOrDefaultAsync(x => x.Id == adId, cancellationToken);
 
             if (ad == null) throw new AdNotFoundException();
-            if(ad.Category == AdCategory.ProfessionalKitchen) ValidateProfessionalKitchenRequest(request);
-            
+            if (ad.Category == AdCategory.ProfessionalKitchen) ValidateProfessionalKitchenRequest(request);
+
+            // Sauvegarder l'ancienne catégorie et l'état de verrouillage pour vérifier si on doit appliquer la modération
+            var oldCategory = ad.Category;
+            var wasLocked = ad.Locked;
+
             request.Category.IfSet(v => ad.Category = v);
             request.IsAvailableForRent.IfSet(v => ad.IsAvailableForRent = v);
             request.IsAvailableForSale.IfSet(v => ad.IsAvailableForSale = v);
@@ -64,7 +70,7 @@ namespace YellowDuck.Api.Requests.Commands.Mutations.Ads
             request.SalePriceToBeDetermined.IfSet(v => ad.SalePriceToBeDetermined = v);
             request.SalePriceRange.IfSet(v => ad.SalePriceRange = v);
             request.Organization.IfSet(v => ad.Organization = v);
-            request.DayAvailability.IfSet( v => UpdateDayAvailability(ad, v));
+            request.DayAvailability.IfSet(v => UpdateDayAvailability(ad, v));
             request.EveningAvailability.IfSet(v => UpdateEveningAvailability(ad, v));
             request.AvailabilityRestriction.IfSet(v => UpdateAvailabilityRestriction(ad, v));
             request.Certification.IfSet(v => UpdateCertifications(ad, v));
@@ -74,10 +80,28 @@ namespace YellowDuck.Api.Requests.Commands.Mutations.Ads
             request.CanSharedRoad.IfSet(v => ad.CanSharedRoad = v);
             request.CanHaveDriver.IfSet(v => ad.CanHaveDriver = v);
             request.Allergen.IfSet(v => UpdateAllergens(ad, v));
+            request.HumanResourceField.IfSet(v => ad.HumanResourceField = v);
+
+            // Vérifier si la catégorie a changé vers une catégorie nécessitant une modération
+            var categoryChanged = request.Category.IsSet() && request.Category.Value != oldCategory;
+            var needsModeration = categoryChanged && AdCategoryHelper.NeedsModeration(ad.Category);
+
+            if (needsModeration && !wasLocked)
+            {
+                ad.Locked = true;
+                ad.IsPublish = false;
+                logger.LogInformation($"Ad {ad.Id} locked for admin review due to category change to {ad.Category}");
+            }
 
             await db.SaveChangesAsync(cancellationToken);
 
-            logger.LogInformation($"Ad updated ({ad.Id})");
+            logger.LogInformation($"Ad updated ({ad.Id})" + (needsModeration && !wasLocked ? " - Locked for admin review" : ""));
+
+            // Envoyer l'email de notification en arrière-plan si c'est une annonce nécessitant une validation par les administrateurs
+            if (needsModeration && !wasLocked)
+            {
+                BackgroundJob.Enqueue<SendWorkforceReviewNotificationEmail>(x => x.Run(ad.Id, ad.UserId));
+            }
 
             return new Payload
             {
@@ -140,11 +164,11 @@ namespace YellowDuck.Api.Requests.Commands.Mutations.Ads
             ad.AvailabilityRestrictions = new List<AdAvailabilityRestriction>();
 
             availabilityRestrictions.ForEach(x => ad.AvailabilityRestrictions.Add(new AdAvailabilityRestriction()
-                {
-                    Day = x.Day,
-                    Evening = x.Evening,
-                    StartDate = x.StartDate,
-                }
+            {
+                Day = x.Day,
+                Evening = x.Evening,
+                StartDate = x.StartDate,
+            }
             ));
         }
 
@@ -225,6 +249,7 @@ namespace YellowDuck.Api.Requests.Commands.Mutations.Ads
             public Maybe<bool> CanSharedRoad { get; set; }
             public Maybe<bool> CanHaveDriver { get; set; }
             public Maybe<List<Allergen>> Allergen { get; set; }
+            public Maybe<HumanResourceField> HumanResourceField { get; set; }
         }
 
         [MutationPayload]
@@ -257,7 +282,7 @@ namespace YellowDuck.Api.Requests.Commands.Mutations.Ads
         [InputType]
         public class AvailabilityRestrictionInput
         {
-            public bool Day {  get; set; }
+            public bool Day { get; set; }
             public bool Evening { get; set; }
             public DateTime StartDate { get; set; }
         }
@@ -280,5 +305,6 @@ namespace YellowDuck.Api.Requests.Commands.Mutations.Ads
                 {"Property", propName}
             };
         }
+
     }
 }

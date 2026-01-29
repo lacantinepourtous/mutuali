@@ -21,6 +21,7 @@ mutation CreateConversation($input: CreateConversationInput!) {
           email
         }
       }
+      ratingRequestSentAt
     }
   }
 }
@@ -28,5 +29,35 @@ mutation CreateConversation($input: CreateConversationInput!) {
 mutation RemoveConversationNotification($input: RemoveConversationNotificationInput!) {
   removeConversationNotification(input: $input) {
     count
+  }
+}
+
+mutation RateAdAndUser($input: RateAdAndUserInput!) {
+  rateAdAndUser(input: $input) {
+    adRating {
+      id
+    }
+    userRating {
+      id
+    }
+  }
+}
+
+mutation UpdateAdAndUserRating($input: UpdateAdAndUserRatingInput!) {
+  updateAdAndUserRating(input: $input) {
+    adRating {
+      id
+    }
+    userRating {
+      id
+    }
+  }
+}
+
+mutation ScheduleRatingRequestMessage($input: ScheduleRatingRequestMessageInput!) {
+  scheduleRatingRequestMessage(input: $input) {
+    conversation {
+      id
+    }
   }
 }

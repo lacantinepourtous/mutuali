@@ -12,6 +12,7 @@ using YellowDuck.Api.Requests.Commands.Mutations.Notifications;
 using YellowDuck.Api.Requests.Commands.Mutations.Contracts;
 using YellowDuck.Api.Requests.Commands.Mutations.Payment;
 using YellowDuck.Api.Requests.Commands.Mutations.Alerts;
+using YellowDuck.Api.Requests.Commands.Mutations.Ratings;
 
 namespace YellowDuck.Api.Gql.Schema
 {
@@ -47,6 +48,15 @@ namespace YellowDuck.Api.Gql.Schema
         public Task<UpdateUserProfile.Payload> UpdateUserProfile(
             [Inject] IMediator mediator,
             NonNull<UpdateUserProfile.Input> input)
+        {
+            return mediator.Send(input.Value);
+        }
+
+        [ApplyPolicy(AuthorizationPolicies.IsAdmin)]
+        [AnnotateErrorCodes(typeof(DeleteUserProfile))]
+        public Task<DeleteUserProfile.Payload> DeleteUserProfile(
+            [Inject] IMediator mediator,
+            NonNull<DeleteUserProfile.Input> input)
         {
             return mediator.Send(input.Value);
         }
@@ -195,6 +205,15 @@ namespace YellowDuck.Api.Gql.Schema
         }
 
         [ApplyPolicy(AuthorizationPolicies.IsUser)]
+        [AnnotateErrorCodes(typeof(ScheduleRatingRequestMessage))]
+        public Task<ScheduleRatingRequestMessage.Payload> ScheduleRatingRequestMessage(
+            [Inject] IMediator mediator,
+            NonNull<ScheduleRatingRequestMessage.Input> input)
+        {
+            return mediator.Send(input.Value);
+        }
+
+        [ApplyPolicy(AuthorizationPolicies.IsUser)]
         [AnnotateErrorCodes(typeof(RemoveConversationNotification))]
         public Task<RemoveConversationNotification.Payload> RemoveConversationNotification(
             [Inject] IMediator mediator,
@@ -221,15 +240,6 @@ namespace YellowDuck.Api.Gql.Schema
             return mediator.Send(input.Value);
         }
 
-        [ApplyPolicy(AuthorizationPolicies.IsUser)]
-        [AnnotateErrorCodes(typeof(RateContract))]
-        public Task<RateContract.Payload> RateContract(
-            [Inject] IMediator mediator,
-            NonNull<RateContract.Input> input)
-        {
-            return mediator.Send(input.Value);
-        }
-        
         [AnnotateErrorCodes(typeof(CreateStripeAccount))]
         public Task<CreateStripeAccount.Payload> CreateStripeAccount(
             [Inject] IMediator mediator,
@@ -279,6 +289,51 @@ namespace YellowDuck.Api.Gql.Schema
         public Task<TransferAd.Payload> TransferAd(
             [Inject] IMediator mediator,
             NonNull<TransferAd.Input> input)
+        {
+            return mediator.Send(input.Value);
+        }
+
+        [ApplyPolicy(AuthorizationPolicies.IsUser)]
+        [AnnotateErrorCodes(typeof(RateAdAndUser))]
+        public Task<RateAdAndUser.Payload> RateAdAndUser(
+            [Inject] IMediator mediator,
+            NonNull<RateAdAndUser.Input> input)
+        {
+            return mediator.Send(input.Value);
+        }
+
+        [ApplyPolicy(AuthorizationPolicies.IsUser)]
+        [AnnotateErrorCodes(typeof(UpdateAdAndUserRating))]
+        public Task<UpdateAdAndUserRating.Payload> UpdateAdAndUserRating(
+            [Inject] IMediator mediator,
+            NonNull<UpdateAdAndUserRating.Input> input)
+        {
+            return mediator.Send(input.Value);
+        }
+
+        [ApplyPolicy(AuthorizationPolicies.IsAdmin)]
+        [AnnotateErrorCodes(typeof(DeleteRating))]
+        public Task<DeleteRating.Payload> DeleteRating(
+            [Inject] IMediator mediator,
+            NonNull<DeleteRating.Input> input)
+        {
+            return mediator.Send(input.Value);
+        }
+
+        [ApplyPolicy(AuthorizationPolicies.IsAdmin)]
+        [AnnotateErrorCodes(typeof(LockAd))]
+        public Task<LockAd.Payload> LockAd(
+            [Inject] IMediator mediator,
+            NonNull<LockAd.Input> input)
+        {
+            return mediator.Send(input.Value);
+        }
+
+        [ApplyPolicy(AuthorizationPolicies.IsAdmin)]
+        [AnnotateErrorCodes(typeof(UnlockAd))]
+        public Task<UnlockAd.Payload> UnlockAd(
+            [Inject] IMediator mediator,
+            NonNull<UnlockAd.Input> input)
         {
             return mediator.Send(input.Value);
         }

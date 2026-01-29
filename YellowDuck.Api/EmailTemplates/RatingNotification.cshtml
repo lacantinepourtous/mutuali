@@ -1,0 +1,32 @@
+@model YellowDuck.Api.EmailTemplates.Models.RatingNotificationEmail
+@{
+  Layout = "_EmailLayout.cshtml";
+}
+
+<p>Bonjour,</p>
+
+<p>
+  Une nouvelle évaluation a été créée sur MutuAli.
+</p>
+
+@if (Model.UserRatingId.HasValue)
+{
+  <p>
+    <strong>Utilisateur évalué:</strong> @Model.RatedUserName<br>
+    <strong>Évalué par:</strong> @Model.RaterUserName
+  </p>
+  <p>
+    <a href="@Model.BaseUrl/@Model.UserProfileUrl">Voir le profil évalué</a>
+  </p>
+}
+
+@if (Model.AdRatingId.HasValue)
+{
+  <p>
+    <strong>Annonce évaluée:</strong> @Model.AdTitle<br>
+    <strong>Évaluée par:</strong> @Model.RaterUserName
+  </p>
+  <p>
+    <a href="@Model.BaseUrl/@Model.AdUrl">Voir l'annonce évaluée</a>
+  </p>
+}

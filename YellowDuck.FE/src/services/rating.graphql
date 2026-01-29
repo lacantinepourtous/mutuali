@@ -1,0 +1,5 @@
+mutation DeleteRating($input: DeleteRatingInput!) {
+  deleteRating(input: $input) {
+    success
+  }
+}

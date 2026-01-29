@@ -1,10 +1,9 @@
 import Apollo from "@/graphql/vue-apollo";
 
-import { CreateContract, UpdateContract, RateContract, GetContractIdByConversationId } from "./contract.graphql";
+import { CreateContract, UpdateContract, GetContractIdByConversationId } from "./contract.graphql";
 import { uploadFile } from "./file-upload";
 
 import { addMaybeValue } from "@/helpers/graphql";
-import { RATING } from "@/consts/rating";
 
 const FILES_FOLDER = "/files/";
 
@@ -55,24 +54,6 @@ export async function updateContract(input) {
   return result;
 }
 
-export async function rateContract(input) {
-  let mutationInput = {
-    contractId: input.contractId,
-    userRating: convertRatingToEnumsValue(input.userRating)
-  };
-
-  await addMaybeValue(input, mutationInput, "adRating", convertRatingToEnumsValue);
-
-  let result = await Apollo.instance.defaultClient.mutate({
-    mutation: RateContract,
-    variables: {
-      input: mutationInput
-    }
-  });
-
-  return result;
-}
-
 async function GetFileItems(files) {
   let fileItems = [];
 
@@ -88,14 +69,6 @@ async function GetFileItems(files) {
   }
 
   return fileItems;
-}
-
-function convertRatingToEnumsValue(rating) {
-  let enumValuesRating = {};
-  for (const [key, value] of Object.entries(rating)) {
-    enumValuesRating[key] = RATING[value];
-  }
-  return enumValuesRating;
 }
 
 export async function getContractIdByConversationId(id) {

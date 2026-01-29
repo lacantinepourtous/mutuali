@@ -4,16 +4,30 @@
       <h1>{{ $t("page-title.conversations-list") }}</h1>
     </div>
 
-    <template v-if="conversations.length > 0">
+    <!-- État de chargement -->
+    <div v-if="isLoading" class="section section--md text-center">
+      <p class="mt-5">{{ $t("loading.conversations") }}</p>
+    </div>
+
+    <!-- Liste des conversations -->
+    <template v-else-if="conversations.length > 0">
       <div
         v-for="conversation in conversations"
         :key="conversation.graphql.id"
         class="section section--md my-4"
         :class="{ 'section--border-top pt-4': conversations[0] && conversation !== conversations[0] }"
       >
-        <conversation-snippet :conversation="conversation.graphql" :twilioConversation="conversation.twilio" :userId="userId" />
+        <conversation-snippet 
+          :conversation="conversation.graphql" 
+          :class="getCategoryGroupByCategory(conversation.graphql.ad.category).color" 
+          :twilioConversation="conversation.twilio" 
+          :userId="userId" 
+          :isUnavailable="conversation.isUnavailable" 
+        />
       </div>
     </template>
+
+    <!-- Aucune conversation -->
     <div v-else class="no-conversation">
       <img class="no-conversation__img my-5" :src="require('@/assets/ambiance/empty-conversation.svg')" alt="" />
       <p>{{ $t("conversation-list.no-conversation") }}</p>
@@ -29,10 +43,12 @@ import ConversationSnippet from "@/components/conversation/snippet";
 
 import TwilioService from "@/services/twilio";
 
+import { AdCategory } from "@/mixins/ad-category";
 import EventBus from "@/helpers/event-bus";
 import debounce from "@/helpers/debounce";
 
 export default {
+  mixins: [AdCategory],
   mounted() {
     EventBus.$on(TWILIO_EVENT_MESSAGE_ADDED, this.onMessageAdded);
     EventBus.$on(TWILIO_EVENT_PARTICIPANT_JOINED, this.onParticipantJoined);
@@ -43,7 +59,8 @@ export default {
   },
   data() {
     return {
-      conversations: []
+      conversations: [],
+      isLoading: true
     };
   },
   components: {
@@ -85,16 +102,33 @@ export default {
       });
     },
     updateConversations: async function() {
+      this.isLoading = true;
       let conversations = [];
 
       await Promise.all(
         this.me.conversations.map(async (x) => {
-          let twilio = await TwilioService.getConversationBySid(x.sid);
-          conversations.push({ graphql: x, twilio });
+          try {
+            let twilio = await TwilioService.getConversationBySid(x.sid);
+            conversations.push({ graphql: x, twilio });
+          } catch (error) {
+            // eslint-disable-next-line no-console
+            console.warn(`Impossible de récupérer la conversation Twilio pour SID ${x.sid}:`, error);
+            // Ajouter la conversation avec des données Twilio par défaut et la marquer comme inaccessible
+            conversations.push({ 
+              graphql: x, 
+              twilio: { 
+                dateUpdated: new Date(), 
+                lastMessage: null,
+                sid: x.sid
+              },
+              isUnavailable: true
+            });
+          }
         })
       );
 
       this.conversations = conversations;
+      this.isLoading = false;
     }
   },
   apollo: {
@@ -112,7 +146,12 @@ export default {
         if (data) {
           await this.updateConversations();
           this.sortConversations();
+        } else {
+          this.isLoading = false;
         }
+      },
+      error() {
+        this.isLoading = false;
       }
     }
   },
@@ -136,6 +175,7 @@ query Conversations($language: ContentLanguage!) {
       sid
       ad {
         id
+        category
         gallery {
           id
           src

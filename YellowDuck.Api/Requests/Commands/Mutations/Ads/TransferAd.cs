@@ -65,15 +65,19 @@ namespace YellowDuck.Api.Requests.Commands.Mutations.Ads
                 throw new CantTransferToAdminException();
             }
 
+            // Sauvegarder l'ancien propriétaire avant de changer ad.UserId
+            var oldOwner = ad.User;
+
             ad.IsAdminOnly = false;
             ad.IsPublish = false;
             ad.UserId = newOwner.Id;
 
             await db.SaveChangesAsync(cancellationToken);
 
-            var claims = await userManager.GetClaimsAsync(ad.User);
+            // Supprimer le claim de l'ancien propriétaire
+            var claims = await userManager.GetClaimsAsync(oldOwner);
             var adOwnerClaim = claims.Where(x => x.Type == AppClaimTypes.AdOwner && x.Value == Id.New<Ad>(ad.Id.ToString()).ToString()).FirstOrDefault();
-            if (adOwnerClaim != null) await userManager.RemoveClaimAsync(ad.User, adOwnerClaim);
+            if (adOwnerClaim != null) await userManager.RemoveClaimAsync(oldOwner, adOwnerClaim);
 
             await userManager.AddClaimAsync(newOwner, new Claim(AppClaimTypes.AdOwner, Id.New<Ad>(ad.Id.ToString()).ToString()));
 

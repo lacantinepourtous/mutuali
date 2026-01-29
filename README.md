@@ -36,7 +36,7 @@ Notez que le développement sur cette application est uniquement supporté sur W
   - `hmac`: Générer et inscrire le `secret`.
   - `defaultAdmin`: Renseigner le `password`.
   - `Mailer`: Renseigner la section.
-  - `kpisEmailRecipient`: Inscrire l'adresse courriel qui recevra les kpis.
+  - `adminEmailRecipient`: Inscrire l'adresse courriel qui recevra les notifications administratives (KPIs, modération d'annonces, évaluations, etc.).
   - `contactEmailRecipient`: Inscrire l'adresse courriel qui recevra les courriels de la section _Nous joindre_.
   - `hangfire`: Inscrire les adresses IP qui seront autorisées à accèder au tableau de bord d'hangfire dans `ipWhitelist`.
   - (facultatif) `Stackify`: Renseigner la section.  

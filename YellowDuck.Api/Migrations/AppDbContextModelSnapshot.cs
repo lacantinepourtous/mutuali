@@ -193,6 +193,9 @@ namespace YellowDuck.Api.Migrations
                     b.Property<int>("DeliveryTruckType")
                         .HasColumnType("int");
 
+                    b.Property<int>("HumanResourceField")
+                        .HasColumnType("int");
+
                     b.Property<bool>("IsAdminOnly")
                         .HasColumnType("bit");
 
@@ -209,6 +212,9 @@ namespace YellowDuck.Api.Migrations
                         .HasColumnType("bit");
 
                     b.Property<bool>("IsPublish")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("Locked")
                         .HasColumnType("bit");
 
                     b.Property<string>("Organization")
@@ -246,7 +252,7 @@ namespace YellowDuck.Api.Migrations
                     b.HasIndex("AddressId")
                         .IsUnique();
 
-                    b.HasIndex("UserId");
+                    b.HasIndex("UserId", "IsPublish");
 
                     b.ToTable("Ads");
                 });
@@ -467,10 +473,19 @@ namespace YellowDuck.Api.Migrations
                     b.Property<string>("Equipment")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("GeographicCoverage")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("HumanResourceFieldOther")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<int>("Language")
                         .HasColumnType("int");
 
                     b.Property<string>("ProfessionalKitchenEquipmentOther")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Qualifications")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("RentPriceDescription")
@@ -483,6 +498,9 @@ namespace YellowDuck.Api.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("SurfaceSize")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Tasks")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Title")
@@ -780,6 +798,12 @@ namespace YellowDuck.Api.Migrations
                     b.Property<long?>("ContractId")
                         .HasColumnType("bigint");
 
+                    b.Property<string>("RatingRequestJobId")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("RatingRequestSentAt")
+                        .HasColumnType("datetime2");
+
                     b.Property<string>("Sid")
                         .HasColumnType("nvarchar(max)");
 
@@ -1040,30 +1064,35 @@ namespace YellowDuck.Api.Migrations
                     b.Property<long>("AdId")
                         .HasColumnType("bigint");
 
-                    b.Property<int>("CleanlinessRating")
-                        .HasColumnType("int");
+                    b.Property<string>("Comment")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("ComplianceRating")
                         .HasColumnType("int");
 
-                    b.Property<long>("ContractId")
+                    b.Property<long>("ConversationId")
                         .HasColumnType("bigint");
 
                     b.Property<DateTime>("CreatedAtUtc")
                         .HasColumnType("datetime2");
 
+                    b.Property<DateTime>("LastUpdatedAtUtc")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("OverallRating")
+                        .HasColumnType("int");
+
+                    b.Property<int>("QualityRating")
+                        .HasColumnType("int");
+
                     b.Property<string>("RaterUserId")
                         .HasColumnType("nvarchar(450)");
-
-                    b.Property<int>("SecurityRating")
-                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
                     b.HasIndex("AdId");
 
-                    b.HasIndex("ContractId")
-                        .IsUnique();
+                    b.HasIndex("ConversationId");
 
                     b.HasIndex("RaterUserId");
 
@@ -1077,16 +1106,22 @@ namespace YellowDuck.Api.Migrations
                         .HasColumnType("bigint")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+                    b.Property<string>("Comment")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<int>("CommunicationRating")
                         .HasColumnType("int");
 
-                    b.Property<long>("ContractId")
+                    b.Property<long>("ConversationId")
                         .HasColumnType("bigint");
 
                     b.Property<DateTime>("CreatedAtUtc")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("FiabilityRating")
+                    b.Property<DateTime>("LastUpdatedAtUtc")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("OverallRating")
                         .HasColumnType("int");
 
                     b.Property<string>("RaterUserId")
@@ -1100,7 +1135,7 @@ namespace YellowDuck.Api.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ContractId");
+                    b.HasIndex("ConversationId");
 
                     b.HasIndex("RaterUserId");
 
@@ -1170,7 +1205,8 @@ namespace YellowDuck.Api.Migrations
 
                     b.HasOne("YellowDuck.Api.DbModel.Entities.AppUser", "User")
                         .WithMany("Ads")
-                        .HasForeignKey("UserId");
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade);
 
                     b.Navigation("Address");
 
@@ -1273,7 +1309,8 @@ namespace YellowDuck.Api.Migrations
 
                     b.HasOne("YellowDuck.Api.DbModel.Entities.AppUser", "User")
                         .WithMany("Alerts")
-                        .HasForeignKey("UserId");
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade);
 
                     b.Navigation("Address");
 
@@ -1295,11 +1332,13 @@ namespace YellowDuck.Api.Migrations
                 {
                     b.HasOne("YellowDuck.Api.DbModel.Entities.AppUser", "Owner")
                         .WithMany("OwnerContracts")
-                        .HasForeignKey("OwnerId");
+                        .HasForeignKey("OwnerId")
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("YellowDuck.Api.DbModel.Entities.AppUser", "Tenant")
                         .WithMany("TenantContracts")
-                        .HasForeignKey("TenantId");
+                        .HasForeignKey("TenantId")
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.Navigation("Owner");
 
@@ -1325,7 +1364,8 @@ namespace YellowDuck.Api.Migrations
 
                     b.HasOne("YellowDuck.Api.DbModel.Entities.Contracts.Contract", "Contract")
                         .WithOne("Conversation")
-                        .HasForeignKey("YellowDuck.Api.DbModel.Entities.Conversations.Conversation", "ContractId");
+                        .HasForeignKey("YellowDuck.Api.DbModel.Entities.Conversations.Conversation", "ContractId")
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.Navigation("Ad");
 
@@ -1352,7 +1392,7 @@ namespace YellowDuck.Api.Migrations
                     b.HasOne("YellowDuck.Api.DbModel.Entities.Contracts.Contract", "Contract")
                         .WithOne("CheckoutSession")
                         .HasForeignKey("YellowDuck.Api.DbModel.Entities.Payment.CheckoutSession", "ContractId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("Contract");
@@ -1363,7 +1403,7 @@ namespace YellowDuck.Api.Migrations
                     b.HasOne("YellowDuck.Api.DbModel.Entities.Contracts.Contract", "Contract")
                         .WithOne("Payout")
                         .HasForeignKey("YellowDuck.Api.DbModel.Entities.Payment.Payout", "ContractId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("Contract");
@@ -1410,10 +1450,10 @@ namespace YellowDuck.Api.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("YellowDuck.Api.DbModel.Entities.Contracts.Contract", "Contract")
-                        .WithOne("AdRating")
-                        .HasForeignKey("YellowDuck.Api.DbModel.Entities.Ratings.AdRating", "ContractId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                    b.HasOne("YellowDuck.Api.DbModel.Entities.Conversations.Conversation", "Conversation")
+                        .WithMany("AdRatings")
+                        .HasForeignKey("ConversationId")
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.HasOne("YellowDuck.Api.DbModel.Entities.AppUser", "RaterUser")
@@ -1422,17 +1462,17 @@ namespace YellowDuck.Api.Migrations
 
                     b.Navigation("Ad");
 
-                    b.Navigation("Contract");
+                    b.Navigation("Conversation");
 
                     b.Navigation("RaterUser");
                 });
 
             modelBuilder.Entity("YellowDuck.Api.DbModel.Entities.Ratings.UserRating", b =>
                 {
-                    b.HasOne("YellowDuck.Api.DbModel.Entities.Contracts.Contract", "Contract")
+                    b.HasOne("YellowDuck.Api.DbModel.Entities.Conversations.Conversation", "Conversation")
                         .WithMany("UserRatings")
-                        .HasForeignKey("ContractId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .HasForeignKey("ConversationId")
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.HasOne("YellowDuck.Api.DbModel.Entities.AppUser", "RaterUser")
@@ -1441,9 +1481,10 @@ namespace YellowDuck.Api.Migrations
 
                     b.HasOne("YellowDuck.Api.DbModel.Entities.AppUser", "User")
                         .WithMany("UserRatings")
-                        .HasForeignKey("UserId");
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade);
 
-                    b.Navigation("Contract");
+                    b.Navigation("Conversation");
 
                     b.Navigation("RaterUser");
 
@@ -1505,8 +1546,6 @@ namespace YellowDuck.Api.Migrations
 
             modelBuilder.Entity("YellowDuck.Api.DbModel.Entities.Contracts.Contract", b =>
                 {
-                    b.Navigation("AdRating");
-
                     b.Navigation("CheckoutSession");
 
                     b.Navigation("Conversation");
@@ -1514,13 +1553,15 @@ namespace YellowDuck.Api.Migrations
                     b.Navigation("Files");
 
                     b.Navigation("Payout");
-
-                    b.Navigation("UserRatings");
                 });
 
             modelBuilder.Entity("YellowDuck.Api.DbModel.Entities.Conversations.Conversation", b =>
                 {
+                    b.Navigation("AdRatings");
+
                     b.Navigation("Participants");
+
+                    b.Navigation("UserRatings");
                 });
 
             modelBuilder.Entity("YellowDuck.Api.DbModel.Entities.Profiles.UserProfile", b =>

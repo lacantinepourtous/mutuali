@@ -11,6 +11,8 @@
           :image="adImage"
           :price-details="getPriceDetailsFromAd(ad)"
           :organization="adOrganization"
+          :isLocked="ad.locked"
+          :isPublished="ad.isPublish"
           snippet-is-link
         />
       </div>
@@ -113,7 +115,7 @@ export default {
       return this.$t("text.initial-conversation-body", { name: this.otherParticipantName });
     },
     autoMessage: function () {
-      return this.$route.query.message;
+      return this.$route.query.message ? this.$route.query.message : this.$t("btn.create-conversation-auto-message");
     }
   },
   apollo: {
@@ -168,6 +170,8 @@ query AdById($id: ID!, $language: ContentLanguage!) {
     rentPriceToBeDetermined
     salePriceToBeDetermined
     organization
+    isPublish
+    locked
   }
 }
 </graphql>

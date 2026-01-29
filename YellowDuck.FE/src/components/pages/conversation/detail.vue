@@ -3,7 +3,7 @@
     <portal :to="$consts.enums.PORTAL_HEADER">
       <div>
         <nav-return :aria-title="$t('sr.conversation-nav')" :to="{ name: $consts.urls.URL_LIST_CONVERSATION }">
-          <conversation-sidebar :conversation-id="conversationId" />
+          <conversation-sidebar :conversation-id="conversationId" :other-participant-id="otherParticipantId" />
         </nav-return>
         <ad-snippet
           v-if="conversation"
@@ -16,6 +16,8 @@
           :conversationId="conversationId"
           :canCreateContract="canCreateContract"
           :isAccountOnboardingComplete="isAccountOnboardingComplete"
+          :isLocked="adIsLocked"
+          :isPublished="adIsPublished"
           smallTitle
           noWrapTitle
           snippetIsLink
@@ -32,6 +34,7 @@
             :body="message.body"
             :medias="message.attachedMedia"
             :contract-id="contractId"
+            :conversation-id="conversationId"
             :attributes="message.attributes"
             :date-updated="message.dateUpdated"
             :is-current-user="isCurrentUser(message)"
@@ -42,7 +45,7 @@
       </div>
       <div class="conversation-detail__send">
         <div class="section section--md">
-          <send-message-form :conversation-sid="conversationSid" :other-participant-name="otherParticipantName" />
+          <send-message-form :conversation-sid="conversationSid" :conversation-id="conversationId" :other-participant-name="otherParticipantName" :rating-request-sent-at="ratingRequestSentAt" />
         </div>
       </div>
     </template>
@@ -105,18 +108,30 @@ export default {
     adOwnerId: function () {
       return this.conversation.ad.user.id;
     },
+    adIsLocked: function () {
+      return this.conversation.ad.locked;
+    },
+    adIsPublished: function () {
+      return this.conversation.ad.isPublish;
+    },
     conversationId: function () {
       return this.$route.params.id.split("-").last();
     },
     conversationSid: function () {
       return this.conversation.sid;
     },
-    otherParticipantName: function () {
+    otherParticipant: function () {
       if (!this.conversation || !this.me) {
-        return "";
+        return null;
       }
       let otherParticipant = this.conversation.participants.find((x) => x.user !== null && x.user.id !== this.me.id);
-      return otherParticipant !== null ? otherParticipant.user.profile.publicName : "";
+      return otherParticipant !== null ? otherParticipant : null;
+    },
+    otherParticipantId: function () {
+      return this.otherParticipant !== null ? this.otherParticipant.user.profile.id : "";
+    },
+    otherParticipantName: function () {
+      return this.otherParticipant !== null ? this.otherParticipant.user.profile.publicName : "";
     },
     canCreateContract: function () {
       return this.me ? this.adOwnerId === this.me.id : false;
@@ -130,6 +145,9 @@ export default {
     isAccountOnboardingComplete: function () {
       let account = this.me ? this.me.stripeAccount : null;
       return account !== null ? account.accountOnboardingComplete : false;
+    },
+    ratingRequestSentAt: function () {
+      return this.conversation.ratingRequestSentAt;
     }
   },
   methods: {
@@ -229,6 +247,7 @@ query ConversationById($id: ID!, $language: ContentLanguage!) {
   conversation(id: $id) {
     id
     sid
+    ratingRequestSentAt
     participants {
       id
       sid
@@ -261,6 +280,8 @@ query ConversationById($id: ID!, $language: ContentLanguage!) {
         id
       }
       organization
+      isPublish
+      locked
     }
   }
 }

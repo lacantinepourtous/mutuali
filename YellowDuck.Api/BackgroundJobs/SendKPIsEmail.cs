@@ -98,7 +98,22 @@ namespace YellowDuck.Api.BackgroundJobs
                 .OrderBy(x => x.Key)
                 .ToList();
 
-            var model = new WeeklyKPIsEmail(config["kpisEmailRecipient"])
+            // Statistiques de ratings (ignorer les ratings vides)
+            // Un rating est considéré vide si tous les ratings sont à ZeroStar et qu'il n'y a pas de commentaire
+            var totalUserRatings = await db.UserRatings
+                .Where(r => r.RespectRating != Rating.ZeroStar
+                    || r.CommunicationRating != Rating.ZeroStar
+                    || r.OverallRating != Rating.ZeroStar
+                    || !string.IsNullOrWhiteSpace(r.Comment))
+                .CountAsync();
+            var totalAdRatings = await db.AdRatings
+                .Where(r => r.ComplianceRating != Rating.ZeroStar
+                    || r.QualityRating != Rating.ZeroStar
+                    || r.OverallRating != Rating.ZeroStar
+                    || !string.IsNullOrWhiteSpace(r.Comment))
+                .CountAsync();
+
+            var model = new WeeklyKPIsEmail(config["adminEmailRecipient"])
             {
                 UserCount = users.Count,
                 UserByOranizationType = userByOrganizationType,
@@ -112,6 +127,8 @@ namespace YellowDuck.Api.BackgroundJobs
                 AdOrganizationTypeOtherRemaining = adOrganizationTypeOtherRemaining,
                 AdByRegion = adByRegion,
                 AdByPostalCode = adByPostalCode,
+                TotalUserRatings = totalUserRatings,
+                TotalAdRatings = totalAdRatings,
             };
 
             await mailer.Send(model);

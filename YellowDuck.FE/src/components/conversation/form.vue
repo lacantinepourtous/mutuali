@@ -19,7 +19,7 @@
       </div>
     </div>
 
-    <s-form class="my-n4" @submit="submitForm">
+    <s-form class="mt-n4 mb-n3" @submit="submitForm">
       <s-form-input
         v-model="message"
         id="message"
@@ -31,11 +31,15 @@
       >
         <template #input-group-append>
           <b-input-group-append>
-            <b-button type="button" variant="outline-secondary" :aria-label="$t('sr.upload-files')" @click="triggerFileUpload">
-              <b-icon icon="file-earmark-plus" aria-hidden="true"></b-icon>
+            <b-button type="submit" variant="warning">
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-send-fill" viewBox="0 0 16 16" aria-hidden="true">
+                <path d="M15.964.686a.5.5 0 0 0-.65-.65L.767 5.855H.766l-.452.18a.5.5 0 0 0-.082.887l.41.26.001.002 4.995 3.178 3.178 4.995.002.002.26.41a.5.5 0 0 0 .886-.083zm-1.833 1.89L6.637 10.07l-.215-.338a.5.5 0 0 0-.154-.154l-.338-.215 7.494-7.494 1.178-.471z"/>
+              </svg>
+              <span :class="conversationSid ? 'sr-only' : 'ml-2'">{{ conversationSid ? $t("sr.send-message") : $t("sr.send-first-message") }}</span>
             </b-button>
-            <b-button type="submit" variant="outline-secondary" :aria-label="$t('sr.send-message')">
-              <b-icon icon="reply-fill" aria-hidden="true"></b-icon>
+            <b-button v-if="conversationSid" type="button" variant="outline-primary" @click="triggerFileUpload">
+              <b-icon icon="paperclip" aria-hidden="true"></b-icon>
+              <span class="attach-file-label sr-only">{{ $t("sr.upload-files") }}</span>
             </b-button>
           </b-input-group-append>
         </template>
@@ -46,6 +50,8 @@
         {{ $t("label.drop-files") }}
       </div>
     </s-form>
+    <!-- Limite fixée à 20 Mo pour couvrir la plupart des photos prises par des smartphones -->
+    <small class="text-muted text-center d-block">{{ $t("notice.max-file-size") }}</small>
   </div>
 </template>
 
@@ -79,9 +85,15 @@ export default {
     conversationSid: {
       type: String
     },
+    conversationId: {
+      type: String
+    },
     otherParticipantName: {
       type: String,
       required: true
+    },
+    ratingRequestSentAt: {
+      type: String
     }
   },
   methods: {
@@ -107,8 +119,8 @@ export default {
           }
 
           totalSize += file.size;
-          // Max total size is 100MB
-          if (totalSize > 100 * 1024 * 1024) {
+          // Max total size is 20MB
+          if (totalSize > 20 * 1024 * 1024) {
             totalSize -= file.size;
             totalBusted = true;
             continue;
@@ -180,8 +192,10 @@ export default {
         if (this.conversationSid) {
           await TwilioService.addMessageToConversation({
             sid: this.conversationSid,
+            conversationId: this.conversationId,
             body: this.message,
-            medias: mediaFiles
+            medias: mediaFiles,
+            ratingRequestSentAt: this.ratingRequestSentAt
           });
         } else {
           this.$emit("sendMessage", this.message);
@@ -279,6 +293,20 @@ export default {
   & > svg {
     width: 14px; 
     height: 14px;
+  }
+}
+
+.attach-file-label {
+  @include media-breakpoint-up(sm) {
+    position: static;
+    width: auto;
+    height: auto;
+    padding: 0;
+    margin: 0;
+    overflow: visible;
+    clip: auto;
+    white-space: normal;
+    margin-left: 4px;
   }
 }
 </style>

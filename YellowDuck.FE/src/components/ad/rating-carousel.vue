@@ -1,14 +1,14 @@
 <template>
   <div v-if="ratings.length > 0" class="mb-5">
     <rate :averageRating="averageRating" :ratingsCount="ratings.length" />
-    <carousel v-if="ratings.length > 1">
+    <carousel v-if="ratings.length > 1" class="px-2 py-5 mt-n5">
       <b-carousel-slide v-for="(rating, key) in ratings" :key="key">
         <template #img>
-          <rating-card :rating="rating" carousel />
+          <rating-card :rating="rating" carousel @rating-deleted="onRatingDeleted" />
         </template>
       </b-carousel-slide>
     </carousel>
-    <rating-card v-else :rating="ratings[0]" carousel />
+    <rating-card v-else :rating="ratings[0]" carousel @rating-deleted="onRatingDeleted" />
   </div>
 </template>
 
@@ -33,11 +33,23 @@ export default {
   },
   computed: {
     averageRating: function () {
-      return this.ad.averageRating;
+      return this.ad ? this.ad.averageRating : 0;
     },
     ratings: function () {
-      const ratings = this.ad ? this.ad.adRatings : [];
-      return this.getRatingsWithCriterias(ratings, ["compliance", "cleanliness", "security"]);
+      const ratings = this.ad && this.ad.adRatings ? this.ad.adRatings : [];
+      const filledRatings = ratings.filter((r) => {
+        const hasPositive = this.convertRatingToInt(r.complianceRating) > 0
+          || this.convertRatingToInt(r.qualityRating) > 0
+          || this.convertRatingToInt(r.overallRating) > 0
+          || r.comment;
+        return hasPositive;
+      });
+      return this.getRatingsWithCriterias(filledRatings, ["compliance", "quality", "ad-overall"]);
+    }
+  },
+  methods: {
+    onRatingDeleted(ratingId) {
+      this.$emit("rating-deleted", ratingId);
     }
   },
   apollo: {
@@ -62,9 +74,10 @@ query AdById($id: ID!) {
     averageRating
     adRatings {
       id
-      cleanlinessRating
-      securityRating
       complianceRating
+      qualityRating
+      overallRating
+      comment
       createdAt
       raterUser {
         id

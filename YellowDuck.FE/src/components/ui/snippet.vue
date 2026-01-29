@@ -8,6 +8,7 @@
     <div v-if="imageSrc" class="ui-snippet__img-container">
       <img class="ui-snippet__img" :src="`${imageSrc}?mode=crop&width=200&height=200`" :alt="imageAlt ? imageAlt : ''" />
       <div v-if="isAdminOnly" class="ui-snippet__overlay-admin"></div>
+      <div v-if="!isPublished" class="ui-snippet__overlay-unpublished"></div>
       <b-img
         v-if="isAdminOnly"
         class="ui-snippet__icon-invisible"
@@ -16,6 +17,9 @@
         height="30"
         block
       ></b-img>
+      <div v-if="!isPublished" class="ui-snippet__unpublished-badge">
+        <span class="ui-snippet__unpublished-text">{{ isLocked ? $t('label.ad-blocked') : $t('label.ad-unpublished') }}</span>
+      </div>
     </div>
 
     <div class="ui-snippet__content">
@@ -83,7 +87,9 @@ export default {
     smallTitle: Boolean,
     noWrapTitle: Boolean,
     hideActions: Boolean,
-    isAdminOnly: Boolean
+    isAdminOnly: Boolean,
+    isPublished: Boolean,
+    isLocked: Boolean
   }
 };
 </script>
@@ -147,11 +153,40 @@ export default {
     bottom: 0;
   }
 
+  &__overlay-unpublished {
+    background-color: var(--accent-color);
+    opacity: 0.8;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+  }
+
   &__icon-invisible {
     position: absolute;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
+  }
+
+  &__unpublished-badge {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    background-color: var(--accent-color);
+    color: white;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 10px;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  &__unpublished-text {
+    color: white;
+    font-weight: bold;
   }
 
   &__content {

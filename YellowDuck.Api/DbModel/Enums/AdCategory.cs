@@ -10,6 +10,8 @@
         PrepEquipment = 5,
         RefrigerationEquipment = 6,
         HeavyEquipment = 7,
-        Surplus = 8
+        Surplus = 8,
+        HumanResource = 9,
+        Subcontracting = 10,
     }
 }

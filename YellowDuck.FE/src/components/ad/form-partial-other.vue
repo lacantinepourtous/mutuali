@@ -6,7 +6,6 @@
       name="description"
       rules="emptyHtml"
       :label="$t('label.ad-description')"
-      :description="$t('placeholder.ad-description')"
       required
     />
     <s-form-rich-text-editor
@@ -14,7 +13,6 @@
       @input="$emit('input', value)"
       name="conditions"
       :label="$t('label.ad-conditions')"
-      :description="$t('placeholder.ad-conditions')"
       :headingOn="false"
     />
   </div>

@@ -1,27 +1,23 @@
 <template>
   <div v-if="userProfile" class="user-profile-snippet" :class="{ 'user-profile-snippet--big': isHeading }">
-    <div class="section" :class="`section--${sectionWidth}`">
-      <div class="user-profile-snippet__inside">
-        <!-- <router-link :to="{ name: $consts.urls.URL_USER_PROFILE_DETAIL, params: { id: id } }">
-          <div class="user-profile-snippet__img-container">
-            <img
-              v-if="profilePicture"
-              class="user-profile-snippet__img"
-              alt=""
-              :src="`${profilePicture}?mode=crop&width=200&height=200`"
-            />
-            <b-icon-person-circle v-else class="user-profile-snippet__img"></b-icon-person-circle>
-            <b-badge v-if="!hideRating && averageRating" class="user-profile-snippet__rating font-weight-bold" variant="warning"
-              ><b-icon-star-fill class="mr-1" /> {{ averageRating }}</b-badge
+    <div class="user-profile-snippet__inside">
+      <div class="user-profile-snippet__head mb-4">
+        <div class="user-profile-snippet__img-container">
+          <img
+            class="user-profile-snippet__img"
+            alt=""
+            :src="require('@/assets/icons/user-mutuali.svg')"
+          />
+          <b-badge v-if="!hideRating && averageRating" class="user-profile-snippet__rating font-weight-bold" variant="warning"
+              ><b-icon-star-fill /> {{ averageRating }}</b-badge
             >
-          </div>
-        </router-link> -->
-        <div class="user-profile-snippet__content" :class="{ 'user-profile-snippet__content--with-icon': !isHeading }">
-          <b-icon-person-fill v-if="!isHeading" class="user-profile-snippet__icon h4"></b-icon-person-fill>
+        </div>
+
+        <div>
           <component
             :is="titleTag"
             class="m-0"
-            :class="isHeading ? 'display-3' : 'line-height-none mt-1 text-green font-weight-bolder responsive-text'"
+            :class="isHeading ? 'display-3' : 'line-height-none font-weight-bold lead'"
           >
             <component
               :is="hasLink ? 'RouterLink' : 'span'"
@@ -29,20 +25,31 @@
               :class="{ 'btn-link font-weight-bolder': hasLink }"
               :to="hasLink ? { name: $consts.urls.URL_USER_PROFILE_DETAIL, params: { id: id } } : null"
             >
-              {{ userPublicName }}</component
-            >
+              {{ userPublicName }}
+            </component>
           </component>
-          <p v-if="!hideOrganization" class="m-0 responsive-text">{{ userOrganizationName }}</p>
-          <p v-if="showRegistrationDate" class="m-0 text-primary">
-            <small>{{ $t("profile-snipet.member-since", { date: userRegistrationDate }) }}</small>
-          </p>
+
+          <p v-if="!hideOrganization" class="m-0" :class="{ 'lead font-weight-normal' : isHeading }">{{ userOrganizationName }}</p>
+        </div>
+      </div>
+
+      <div class="user-profile-snippet__bottom border-top border-white pt-3 mt-3">
+        <div class="user-profile-snippet__member-stats">
+          <h2 class="h6 mb-1">{{ $t("profile-snippet.verified-member") }}</h2>
+          <ul class="user-profile-snippet__member-stats-list list-unstyled small mb-0">
+            <li>{{ registeredSince }}</li>
+            <li>{{ $tc("profile-snippet.ads-count", userAdsCount) }}</li>
+            <li v-if="userProfile.user.isConfirmed && userProfile.user.phoneNumberConfirmed">{{ $t("profile-snippet.verified-phone-and-email") }}</li>
+            <li v-else-if="userProfile.user.isConfirmed">{{ $t("profile-snippet.verified-email") }}</li>
+          </ul>
+        </div>
+        <div v-if="showPhoneNumber || showEmail" class="user-profile-snippet__contact-info">
+          <h2 class="h6 mb-1">{{ $t("profile-snippet.contact-info") }}</h2>
           <p v-if="showPhoneNumber" class="m-0 text-primary">
             <small>{{ userPublicPhoneNumber }}</small>
           </p>
           <p v-if="showEmail" class="m-0 text-primary">
-            <small
-              ><a :href="`mailto:${userPublicEmail}`">{{ userPublicEmail }}</a></small
-            >
+            <small><a :href="`mailto:${userPublicEmail}`">{{ userPublicEmail }}</a></small>
           </p>
         </div>
       </div>
@@ -63,8 +70,15 @@ query UserProfileById($id: ID!) {
     publicPhoneNumber
     publicEmail
     user {
+      id
       averageRating
       registrationDate
+      isConfirmed
+      phoneNumberConfirmed
+      ads {
+        id
+        isPublish
+      }
     }
   }
 }
@@ -72,6 +86,8 @@ query UserProfileById($id: ID!) {
 
 <script>
 import i18n from "@/helpers/i18n";
+import dayjs from "dayjs";
+
 export default {
   props: {
     id: {
@@ -79,9 +95,7 @@ export default {
       required: true
     },
     hideRating: Boolean,
-    showRegistrationDate: Boolean,
     hideOrganization: Boolean,
-    profilePicture: String,
     sectionWidth: {
       type: String,
       default: "md"
@@ -125,6 +139,20 @@ export default {
     },
     userPublicEmail: function () {
       return this.userProfile.publicEmail;
+    },
+    registeredSince: function () {
+      return this.userProfile.user ? this.fromNow(this.userProfile.user.registrationDate) : this.fromNow(new Date().toString());
+    },
+    userAdsCount: function () {
+      return this.userProfile.user.ads.filter(ad => ad.isPublish).length;
+    }
+  },
+  methods: {
+    fromNow(date) {
+      const now = dayjs();
+      const diff = now.diff(date, "M");
+      if (diff < 12) return this.$tc("from-now.month", diff);
+      return this.$tc("from-now.year", Math.floor(diff / 12));
     }
   },
   apollo: {
@@ -142,21 +170,30 @@ export default {
 };
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 .user-profile-snippet {
   $img-container-width: #{"clamp(50px, 10vw, 70px)"};
   $small-img-container-width: 27px;
 
   & {
-    background-color: $body-bg;
     display: block;
+  }
 
-    /* &--big {
-      $img-container-width: #{"clamp(60px, 10vw, 80px)"};
-      .user-profile-snippet__content {
-        padding-left: $spacer * 1.5;
+  &__bottom {
+    display: flex;
+    flex-direction: column;
+    gap: $spacer;
+    margin: $spacer 0;
+  }
+
+  &--big {
+    .user-profile-snippet__bottom {
+      @include media-breakpoint-up(sm) {
+        display: grid;
+        grid-template-columns: 1fr 1fr; 
+        gap: $spacer;
       }
-    } */
+    }
   }
 
   .router-link-exact-active {
@@ -166,11 +203,6 @@ export default {
       text-decoration: none;
       color: $primary;
     }
-  }
-
-  &__inside {
-    /* align-items: center; */
-    display: flex;
   }
 
   &__img-container {
@@ -197,29 +229,42 @@ export default {
     object-position: center;
   }
 
-  &__rating {
+  &__icon {
     position: absolute;
-    bottom: $spacer / -2;
-    right: $spacer / -2;
+    top: 0;
+    left: 0;
+    width: 48px;
+    height: 48px;
   }
 
-  &__content {
-    display: block;
-    flex: 1 1 auto;
-    overflow: hidden;
-    /* padding-left: $spacer; */
-    padding-left: 0;
+  &__rating {
+    position: absolute;
+    bottom: -5px;
+    right: -5px;
+    z-index: 1;
+  }
 
-    &--with-icon {
-      position: relative;
-      padding-left: calc(#{$spacer} + 18px);
-    }
+  &__head {
+    display: flex;
+    align-items: center;
+    flex: 1 1 auto;
+    gap: $spacer * 1.5;
   }
 
   &__icon {
-    position: absolute;
-    top: 5px;
-    left: -4px;
+    margin-right: 4px;
+  }
+
+  &__member-stats-list {
+    li {
+      &:before {
+        content: "✔";
+        display: inline-block;
+        margin-right: 0.5em;
+        position: relative;
+        top: -0.1em;
+      }
+    }
   }
 }
 </style>

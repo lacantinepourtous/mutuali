@@ -1,8 +1,12 @@
 <template>
   <b-dropdown :id="id" :right="right" :text="label" :variant="variant" class="m-0 ui-dropdown">
-    <b-dropdown-item v-for="(option, index) in computedOptions" :key="index" @click="selectOption(option)">{{
-      option.text
-    }}</b-dropdown-item>
+    <template v-for="(option, index) in computedOptions">
+      <b-dropdown-divider v-if="option.type === 'divider'" :key="`${index}-divider`"></b-dropdown-divider>
+      <b-dropdown-item v-else :key="index" :class="option.color" @click="selectOption(option)">
+        <span v-if="option.color" class="dropdown-item-icon"></span> 
+        <span>{{ option.text }}</span>
+      </b-dropdown-item>
+    </template>
   </b-dropdown>
 </template>
 
@@ -64,9 +68,33 @@ $dropdownWidth: 240px;
     }
   }
 
+  .dropdown-menu {
+    min-width: 100%;
+  }
+
+  .dropdown-item {
+    display: flex;
+    align-items: center;
+    white-space: normal;
+  }
+
+  .dropdown-item-icon {
+    display: inline-block;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    margin-right: 8px;
+    background-color: var(--accent-color);
+    flex-shrink: 0;
+  }
+
   @include media-breakpoint-up(sm) {
     .dropdown-toggle {
       width: $dropdownWidth;
+    }
+
+    .dropdown-item {
+      white-space: nowrap;
     }
   }
 }

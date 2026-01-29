@@ -69,69 +69,76 @@ namespace YellowDuck.Api.DbModel
             {
                 _.HasOne(x => x.Profile)
                     .WithOne(x => x.User)
-                    .HasForeignKey<UserProfile>(x => x.UserId);
+                    .HasForeignKey<UserProfile>(x => x.UserId)
+                    .OnDelete(DeleteBehavior.Cascade);
 
-                _.HasMany(x => x.UserRatings).WithOne().HasForeignKey(x => x.UserId);
+                _.HasMany(x => x.UserRatings).WithOne().HasForeignKey(x => x.UserId).OnDelete(DeleteBehavior.Cascade);
 
-                _.HasMany(x => x.Ads).WithOne().HasForeignKey(x => x.UserId);
+                _.HasMany(x => x.Ads).WithOne().HasForeignKey(x => x.UserId).OnDelete(DeleteBehavior.Cascade);
 
-                _.HasMany(x => x.Alerts).WithOne().HasForeignKey(x => x.UserId);
+                _.HasMany(x => x.Alerts).WithOne().HasForeignKey(x => x.UserId).OnDelete(DeleteBehavior.Cascade);
 
-                _.HasMany(x => x.OwnerContracts).WithOne().HasForeignKey(x => x.OwnerId);
+                _.HasMany(x => x.OwnerContracts).WithOne().HasForeignKey(x => x.OwnerId).OnDelete(DeleteBehavior.Restrict);
 
-                _.HasMany(x => x.TenantContracts).WithOne().HasForeignKey(x => x.TenantId);
+                _.HasMany(x => x.TenantContracts).WithOne().HasForeignKey(x => x.TenantId).OnDelete(DeleteBehavior.Restrict);
 
                 _.HasOne(x => x.StripeAccount)
                     .WithOne(x => x.User)
-                    .HasForeignKey<StripeAccount>(x => x.UserId);
+                    .HasForeignKey<StripeAccount>(x => x.UserId)
+                    .OnDelete(DeleteBehavior.Cascade);
 
                 _.Property(x => x.Id).ValueGeneratedOnAdd();
             });
 
-            Configure<UserProfile>(_ => {
+            Configure<UserProfile>(_ =>
+            {
                 _.HasOne(x => x.User).WithOne(x => x.Profile).HasForeignKey<UserProfile>(x => x.UserId);
-                _.HasMany(x => x.RegisteringInterests).WithOne().HasForeignKey(x => x.UserProfileId);
+                _.HasMany(x => x.RegisteringInterests).WithOne().HasForeignKey(x => x.UserProfileId).OnDelete(DeleteBehavior.Cascade);
             });
 
-            Configure<UserProfileRegisteringInterest>(_ => {
+            Configure<UserProfileRegisteringInterest>(_ =>
+            {
                 _.HasOne(x => x.UserProfile).WithMany(x => x.RegisteringInterests).HasForeignKey(x => x.UserProfileId);
             });
 
-            Configure<PhoneVerification>(_ => {
+            Configure<PhoneVerification>(_ =>
+            {
                 _.HasIndex(x => new { x.PhoneNumber }).IsUnique();
             });
 
-            Configure<Ad>(_ => {
-                _.HasMany(x => x.Gallery).WithOne().HasForeignKey(x => x.AdId);
-                _.HasMany(x => x.Translations).WithOne(x => x.Ad).HasForeignKey(x => x.AdId);
-                _.HasMany(x => x.AdRatings).WithOne(x => x.Ad).HasForeignKey(x => x.AdId);
-                _.HasMany(x => x.ProfessionalKitchenEquipments).WithOne().HasForeignKey(x => x.AdId);
-                _.HasMany(x => x.DayAvailability).WithOne().HasForeignKey(x => x.AdId);
-                _.HasMany(x => x.EveningAvailability).WithOne().HasForeignKey(x => x.AdId);
-                _.HasMany(x => x.AvailabilityRestrictions).WithOne().HasForeignKey(x => x.AdId);
-                _.HasMany(x => x.Certifications).WithOne().HasForeignKey(x => x.AdId);
-                _.HasMany(x => x.Allergens).WithOne().HasForeignKey(x => x.AdId);
+            Configure<Ad>(_ =>
+            {
+                _.HasMany(x => x.Gallery).WithOne().HasForeignKey(x => x.AdId).OnDelete(DeleteBehavior.Cascade);
+                _.HasMany(x => x.Translations).WithOne(x => x.Ad).HasForeignKey(x => x.AdId).OnDelete(DeleteBehavior.Cascade);
+                _.HasMany(x => x.AdRatings).WithOne(x => x.Ad).HasForeignKey(x => x.AdId).OnDelete(DeleteBehavior.Cascade);
+                _.HasMany(x => x.ProfessionalKitchenEquipments).WithOne().HasForeignKey(x => x.AdId).OnDelete(DeleteBehavior.Cascade);
+                _.HasMany(x => x.DayAvailability).WithOne().HasForeignKey(x => x.AdId).OnDelete(DeleteBehavior.Cascade);
+                _.HasMany(x => x.EveningAvailability).WithOne().HasForeignKey(x => x.AdId).OnDelete(DeleteBehavior.Cascade);
+                _.HasMany(x => x.AvailabilityRestrictions).WithOne().HasForeignKey(x => x.AdId).OnDelete(DeleteBehavior.Cascade);
+                _.HasMany(x => x.Certifications).WithOne().HasForeignKey(x => x.AdId).OnDelete(DeleteBehavior.Cascade);
+                _.HasMany(x => x.Allergens).WithOne().HasForeignKey(x => x.AdId).OnDelete(DeleteBehavior.Cascade);
                 _.HasOne(x => x.User).WithMany(x => x.Ads).HasForeignKey(x => x.UserId);
+                _.HasIndex(x => new { x.UserId, x.IsPublish });
             });
 
-            Configure<Contract>(_ => {
+            Configure<Contract>(_ =>
+            {
                 _.HasOne(x => x.Conversation)
                     .WithOne(x => x.Contract)
-                    .HasForeignKey<Conversation>(x => x.ContractId);
+                    .HasForeignKey<Conversation>(x => x.ContractId)
+                    .OnDelete(DeleteBehavior.Restrict);
 
                 _.HasOne(x => x.CheckoutSession)
                     .WithOne(x => x.Contract)
-                    .HasForeignKey<CheckoutSession>(x => x.ContractId);
+                    .HasForeignKey<CheckoutSession>(x => x.ContractId)
+                    .OnDelete(DeleteBehavior.Restrict);
 
                 _.HasOne(x => x.Payout)
                     .WithOne(x => x.Contract)
-                    .HasForeignKey<Payout>(x => x.ContractId);
+                    .HasForeignKey<Payout>(x => x.ContractId)
+                    .OnDelete(DeleteBehavior.Restrict);
 
-                _.HasMany(x => x.Files).WithOne().HasForeignKey(x => x.ContractId);
-
-                _.HasOne(x => x.AdRating)
-                    .WithOne(x => x.Contract)
-                    .HasForeignKey<AdRating>(x => x.ContractId);
+                _.HasMany(x => x.Files).WithOne().HasForeignKey(x => x.ContractId).OnDelete(DeleteBehavior.Cascade);
 
                 _.HasOne(x => x.Owner)
                     .WithMany(x => x.OwnerContracts)
@@ -140,67 +147,83 @@ namespace YellowDuck.Api.DbModel
                 _.HasOne(x => x.Tenant)
                     .WithMany(x => x.TenantContracts)
                     .HasForeignKey(x => x.TenantId);
-
-                _.HasMany(x => x.UserRatings).WithOne().HasForeignKey(x => x.ContractId);
             });
 
-            Configure<AdAddress>(_ => {
+            Configure<AdAddress>(_ =>
+            {
                 _.HasIndex(x => new { x.Id, x.Latitude, x.Longitude }).IsUnique();
             });
 
-            Configure<AdTranslation>(_ => {
+            Configure<AdTranslation>(_ =>
+            {
                 _.HasIndex(x => new { x.AdId, x.Language }).IsUnique();
             });
 
-            Configure<AdProfessionalKitchenEquipment>(_ => {
+            Configure<AdProfessionalKitchenEquipment>(_ =>
+            {
                 _.HasOne(x => x.Ad).WithMany(x => x.ProfessionalKitchenEquipments).HasForeignKey(x => x.AdId);
             });
 
-            Configure<AdDayAvailability>(_ => {
+            Configure<AdDayAvailability>(_ =>
+            {
                 _.HasOne(x => x.Ad).WithMany(x => x.DayAvailability).HasForeignKey(x => x.AdId);
             });
 
-            Configure<AdEveningAvailability>(_ => {
+            Configure<AdEveningAvailability>(_ =>
+            {
                 _.HasOne(x => x.Ad).WithMany(x => x.EveningAvailability).HasForeignKey(x => x.AdId);
             });
 
-            Configure<AdAvailabilityRestriction>(_ => {
+            Configure<AdAvailabilityRestriction>(_ =>
+            {
                 _.HasOne(x => x.Ad).WithMany(x => x.AvailabilityRestrictions).HasForeignKey(x => x.AdId);
             });
 
-            Configure<AdCertification>(_ => {
+            Configure<AdCertification>(_ =>
+            {
                 _.HasOne(x => x.Ad).WithMany(x => x.Certifications).HasForeignKey(x => x.AdId);
             });
 
-            Configure<AdAllergen>(_ => {
+            Configure<AdAllergen>(_ =>
+            {
                 _.HasOne(x => x.Ad).WithMany(x => x.Allergens).HasForeignKey(x => x.AdId);
             });
 
-            Configure<Alert>(_ => {
+            Configure<Alert>(_ =>
+            {
                 _.HasOne(x => x.User).WithMany(x => x.Alerts).HasForeignKey(x => x.UserId);
             });
 
-            Configure<AlertAddress>(_ => {
+            Configure<AlertAddress>(_ =>
+            {
                 _.HasIndex(x => new { x.Id, x.Latitude, x.Longitude }).IsUnique();
             });
 
-            Configure<Conversation>(_ => {
+            Configure<Conversation>(_ =>
+            {
                 _.HasMany(x => x.Participants).WithOne().HasForeignKey(x => x.ConversationId);
+                _.HasMany(x => x.AdRatings).WithOne(x => x.Conversation).HasForeignKey(x => x.ConversationId).OnDelete(DeleteBehavior.Restrict);
+                _.HasMany(x => x.UserRatings).WithOne(x => x.Conversation).HasForeignKey(x => x.ConversationId).OnDelete(DeleteBehavior.Restrict);
             });
 
-            Configure<ConversationParticipant>(_ => {
+            Configure<ConversationParticipant>(_ =>
+            {
                 _.HasIndex(x => new { x.ConversationId, x.Sid }).IsUnique();
             });
 
-            Configure<AdRating>(_ => {
+            Configure<AdRating>(_ =>
+            {
                 _.HasOne(x => x.Ad).WithMany(x => x.AdRatings).HasForeignKey(x => x.AdId);
-                _.HasOne(x => x.Contract).WithOne(x => x.AdRating).HasForeignKey<AdRating>(x => x.ContractId);
+                _.HasOne(x => x.RaterUser).WithMany().HasForeignKey(x => x.RaterUserId);
+                _.HasOne(x => x.Conversation).WithMany(x => x.AdRatings).HasForeignKey(x => x.ConversationId);
                 _.HasIndex(x => x.AdId);
             });
 
-            Configure<UserRating>(_ => {
+            Configure<UserRating>(_ =>
+            {
                 _.HasOne(x => x.User).WithMany(x => x.UserRatings).HasForeignKey(x => x.UserId);
-                _.HasOne(x => x.Contract).WithMany(x => x.UserRatings).HasForeignKey(x => x.ContractId);
+                _.HasOne(x => x.RaterUser).WithMany().HasForeignKey(x => x.RaterUserId);
+                _.HasOne(x => x.Conversation).WithMany(x => x.UserRatings).HasForeignKey(x => x.ConversationId);
                 _.HasIndex(x => x.UserId);
             });
 

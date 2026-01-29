@@ -1,7 +1,7 @@
 ﻿using GraphQL.Conventions;
+using Hangfire;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections;
@@ -10,6 +10,7 @@ using System.Linq;
 using System.Security.Claims;
 using System.Threading;
 using System.Threading.Tasks;
+using YellowDuck.Api.BackgroundJobs;
 using YellowDuck.Api.Constants;
 using YellowDuck.Api.DbModel;
 using YellowDuck.Api.DbModel.Entities;
@@ -50,7 +51,7 @@ namespace YellowDuck.Api.Requests.Commands.Mutations.Ads
 
             var owner = await currentUserAccessor.GetCurrentUser();
 
-            if (owner.PhoneNumberConfirmed == false)
+            if (owner.PhoneNumberConfirmed == false && owner.Type != UserType.Admin)
             {
                 throw new Exception("Phone number is not confirmed");
             }
@@ -79,6 +80,10 @@ namespace YellowDuck.Api.Requests.Commands.Mutations.Ads
                         Equipment = "",
                         SurfaceSize = "",
                         DeliveryTruckTypeOther = "",
+                        HumanResourceFieldOther = "",
+                        Qualifications = "",
+                        Tasks = "",
+                        GeographicCoverage = "",
                     }
                 },
                 RentPriceToBeDetermined = request.RentPriceToBeDetermined,
@@ -115,7 +120,11 @@ namespace YellowDuck.Api.Requests.Commands.Mutations.Ads
             request.Refrigerated.IfSet(v => ad.Refrigerated = v);
             request.CanSharedRoad.IfSet(v => ad.CanSharedRoad = v);
             request.CanHaveDriver.IfSet(v => ad.CanHaveDriver = v);
-
+            request.HumanResourceField.IfSet(v => ad.HumanResourceField = v);
+            request.HumanResourceFieldOther.IfSet(v => ad.Translations.First().HumanResourceFieldOther = v);
+            request.Qualifications.IfSet(v => ad.Translations.First().Qualifications = v);
+            request.Tasks.IfSet(v => ad.Translations.First().Tasks = v);
+            request.GeographicCoverage.IfSet(v => ad.Translations.First().GeographicCoverage = v);
 
             request.GalleryItems.IfSet(x =>
             {
@@ -138,7 +147,8 @@ namespace YellowDuck.Api.Requests.Commands.Mutations.Ads
             request.AvailabilityRestriction.IfSet(v =>
             {
                 ad.AvailabilityRestrictions = new List<AdAvailabilityRestriction>();
-                v.ForEach(x => ad.AvailabilityRestrictions.Add(new AdAvailabilityRestriction() { 
+                v.ForEach(x => ad.AvailabilityRestrictions.Add(new AdAvailabilityRestriction()
+                {
                     Day = x.Day,
                     Evening = x.Evening,
                     StartDate = x.StartDate,
@@ -170,12 +180,26 @@ namespace YellowDuck.Api.Requests.Commands.Mutations.Ads
                 ad.IsAdminOnly = true;
             }
 
+            // Certaines catégories d'annonces nécessite une validation par les administrateurs
+            var needsModeration = AdCategoryHelper.NeedsModeration(request.Category);
+            if (needsModeration)
+            {
+                ad.Locked = true;
+                ad.IsPublish = false;
+            }
+
             db.Ads.Add(ad);
 
             await db.SaveChangesAsync(cancellationToken);
             await userManager.AddClaimAsync(owner, new Claim(AppClaimTypes.AdOwner, Id.New<Ad>(ad.Id.ToString()).ToString()));
 
-            logger.LogInformation($"New ad created {request.Title} ({ad.Id})");
+            logger.LogInformation($"New ad created {request.Title} ({ad.Id})" + (ad.Locked ? " - Locked for admin review" : ""));
+
+            // Envoyer l'email de notification en arrière-plan si c'est une annonce nécessitant une validation par les administrateurs
+            if (needsModeration)
+            {
+                BackgroundJob.Enqueue<SendWorkforceReviewNotificationEmail>(x => x.Run(ad.Id, owner.Id));
+            }
 
             return new Payload
             {
@@ -248,6 +272,30 @@ namespace YellowDuck.Api.Requests.Commands.Mutations.Ads
                         }
                         break;
                     }
+                case AdCategory.Subcontracting:
+                    {
+                        if (!request.Tasks.IsSet() || string.IsNullOrWhiteSpace(request.Tasks.Value))
+                        {
+                            throw new TasksInvalidException();
+                        }
+                        break;
+                    }
+                case AdCategory.HumanResource:
+                    {
+                        if (!request.HumanResourceField.IsSet())
+                        {
+                            throw new HumanResourceFieldInvalidException();
+                        }
+                        else if (request.HumanResourceField.Value == HumanResourceField.Other && !string.IsNullOrWhiteSpace(request.HumanResourceFieldOther.Value))
+                        {
+                            throw new HumanResourceFieldOtherInvalidException();
+                        }
+                        if (!request.Description.IsSet() || string.IsNullOrWhiteSpace(request.Description.Value))
+                        {
+                            throw new DescriptionInvalidException();
+                        }
+                        break;
+                    }
                 case AdCategory.Other:
                     {
                         if (!request.Description.IsSet() || string.IsNullOrWhiteSpace(request.Description.Value))
@@ -301,6 +349,11 @@ namespace YellowDuck.Api.Requests.Commands.Mutations.Ads
             public Maybe<bool> Refrigerated { get; set; }
             public Maybe<bool> CanSharedRoad { get; set; }
             public Maybe<bool> CanHaveDriver { get; set; }
+            public Maybe<HumanResourceField> HumanResourceField { get; set; }
+            public Maybe<NonNull<string>> HumanResourceFieldOther { get; set; }
+            public Maybe<NonNull<string>> Qualifications { get; set; }
+            public Maybe<NonNull<string>> Tasks { get; set; }
+            public Maybe<NonNull<string>> GeographicCoverage { get; set; }
         }
 
         [MutationPayload]
@@ -348,6 +401,9 @@ namespace YellowDuck.Api.Requests.Commands.Mutations.Ads
         public class SurfaceSizeInvalidException : CreateAdException { }
         public class DescriptionInvalidException : CreateAdException { }
         public class EquipmentInvalidException : CreateAdException { }
+        public class HumanResourceFieldInvalidException : CreateAdException { }
+        public class HumanResourceFieldOtherInvalidException : CreateAdException { }
+        public class TasksInvalidException : CreateAdException { }
 
         public class ImageNotFoundException : CreateAdException
         {
@@ -362,5 +418,6 @@ namespace YellowDuck.Api.Requests.Commands.Mutations.Ads
                 {"Property", propName}
             };
         }
+
     }
 }

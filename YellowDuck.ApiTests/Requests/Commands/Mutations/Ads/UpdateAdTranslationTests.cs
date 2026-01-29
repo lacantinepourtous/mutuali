@@ -45,7 +45,11 @@ namespace YellowDuck.ApiTests.Requests.Commands.Mutations.Ads
                         Description = "<h3>Ceci est une description de test</h3>",
                         Language = ContentLanguage.French,
                         SurfaceDescription = "<p>Test surface</p>",
-                        DeliveryTruckTypeOther = "Moto"
+                        DeliveryTruckTypeOther = "Moto",
+                        HumanResourceFieldOther = "Technicienne",
+                        Qualifications = "<p>Test qualifications</p>",
+                        Tasks = "<p>Test tasks</p>",
+                        GeographicCoverage = "<p>Test geographic coverage</p>"
                     }
                 },
                 Gallery = new List<AdGalleryItem>()
@@ -71,7 +75,11 @@ namespace YellowDuck.ApiTests.Requests.Commands.Mutations.Ads
                 Title = "Ceci est un titre de test".NonNull(),
                 Description = "<p>Ceci est un texte de test</p>".NonNull(),
                 SurfaceDescription = new Maybe<NonNull<string>>("<p>Test surface updated</p>"),
-                DeliveryTruckTypeOther = new Maybe<NonNull<string>>("Moto de livraison")
+                DeliveryTruckTypeOther = new Maybe<NonNull<string>>("Moto de livraison"),
+                HumanResourceFieldOther = new Maybe<NonNull<string>>("Technicienne de laboratoire"),
+                Qualifications = new Maybe<NonNull<string>>("<p>Test qualifications updated</p>"),
+                Tasks = new Maybe<NonNull<string>>("<p>Test tasks updated</p>"),
+                GeographicCoverage = new Maybe<NonNull<string>>("<p>Test geographic coverage updated</p>"),
             };
             return input;
         }
@@ -91,6 +99,10 @@ namespace YellowDuck.ApiTests.Requests.Commands.Mutations.Ads
                 ad.Translations.First().Description.Should().Be("<p>Ceci est un texte de test</p>");
                 ad.Translations.First().SurfaceDescription.Should().Be("<p>Test surface updated</p>");
                 ad.Translations.First().DeliveryTruckTypeOther.Should().Be("Moto de livraison");
+                ad.Translations.First().HumanResourceFieldOther.Should().Be("Technicienne de laboratoire");
+                ad.Translations.First().Qualifications.Should().Be("<p>Test qualifications updated</p>");
+                ad.Translations.First().Tasks.Should().Be("<p>Test tasks updated</p>");
+                ad.Translations.First().GeographicCoverage.Should().Be("<p>Test geographic coverage updated</p>");
             }
         }
 

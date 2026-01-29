@@ -5,11 +5,13 @@
     </div>
     <div class="type-card__bottom">
       <div class="type-card__title">{{ title }}</div>
-      <div v-if="price || modality || description" class="type-card__text">
-        <span v-if="price" class="type-card__price" :class="{ 'type-card__price--sm': priceToBeDetermined }">{{ price }}</span>
-        <span v-if="modality" class="type-card__modality">{{ modality }}</span>
-        <span v-if="description" class="type-card__desc">{{ description }}</span>
-        <span v-if="footnote" class="type-card__footnote">{{ footnote }}</span>
+      <div v-if="price || modality || description || $slots.text" class="type-card__text">
+        <slot name="text">
+          <span v-if="price" class="type-card__price" :class="{ 'type-card__price--sm': priceToBeDetermined }">{{ price }}</span>
+          <span v-if="modality" class="type-card__modality">{{ modality }}</span>
+          <span v-if="description" class="type-card__desc">{{ description }}</span>
+          <span v-if="footnote" class="type-card__footnote">{{ footnote }}</span>
+        </slot>
       </div>
     </div>
   </div>
@@ -50,7 +52,7 @@ export default {
 .type-card {
   & {
     padding: $spacer;
-    border: solid 2px $gray-300;
+    border: solid 2px var(--accent-color);
     border-radius: 12px;
     display: flex;
     column-gap: $spacer;

@@ -156,7 +156,7 @@ export default [
     path: "/profil/:id",
     component: () => import("@/components/pages/user-generic/profile-detail.vue"),
     meta: {
-      usertype: USER_TYPE_USER
+      usertype: [USER_TYPE_USER, USER_TYPE_ADMIN]
     }
   },
   {
@@ -406,6 +406,15 @@ export default [
     component: () => import("@/components/pages/user-admin/profile-edit.vue"),
     meta: {
       usertype: USER_TYPE_ADMIN
+    }
+  },
+
+  {
+    name: urls.URL_RATE,
+    path: "/evaluer/:id",
+    component: () => import("@/components/pages/conversation/rate.vue"),
+    meta: {
+      usertype: USER_TYPE_USER
     }
   },
 

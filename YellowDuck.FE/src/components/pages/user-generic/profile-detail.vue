@@ -1,47 +1,26 @@
 <template>
   <div v-if="userProfile" class="w-100 mt-3 mt-md-5">
-    <user-profile-snippet
-      :id="userProfile.id"
-      :hasLink="false"
-      isHeading
-      titleTag="h1"
-      showContactInfo
-      sectionWidth="sm"
-      class="my-4"
-    />
-    <div class="section section--sm mt-3 mt-md-4 mb-5">
-      <b-container>
-        <b-row>
-          <!--b-col>
-            <b-card class="border-0 rounded-0 text-center" body-class="py-0 pl-0">
-              <b-card-title class="display-4 mb-0 line-height-none">{{ transactionsCount }}</b-card-title>
-              <b-card-text class="text-muted responsive-text">
-                <small>{{ $tc("profile-detail.transactions-count", transactionsCount) }}</small>
-              </b-card-text>
-            </b-card>
-          </b-col-->
-          <b-col>
-            <b-card class="border-0 rounded-0" body-class="py-0 px-0">
-              <b-card-text>
-                <p class="display-4 mb-1 font-weight-bolder text-green-dark">{{ registeredSince }}</p>
-                <small class="text-muted responsive-text">{{ $t("profile-detail.registered-since") }}</small>
-              </b-card-text>
-              <b-card-text v-if="!isCurrentUser">
-                <a
-                  class="user__report"
-                  :href="`mailto:${contactUsEmail}?subject=${$t('email.report-user-subject')}&body=${$t(
-                    'email.report-user-body',
-                    {
-                      url: urlForReport
-                    }
-                  )}`"
-                  >{{ $t("btn.report-user-ad") }}</a
-                >
-              </b-card-text>
-            </b-card>
-          </b-col>
-        </b-row>
-      </b-container>
+    <div class="section section--sm my-4">
+      <user-profile-snippet
+        :id="userProfile.id"
+        :hasLink="false"
+        isHeading
+        titleTag="h1"
+        showContactInfo
+        sectionWidth="sm"
+        class="mb-2"
+      />
+      <a
+        v-if="!isCurrentUser"
+        class="user__report"
+        :href="`mailto:${contactUsEmail}?subject=${$t('email.report-user-subject')}&body=${$t(
+          'email.report-user-body',
+          {
+            url: urlForReport
+          }
+        )}`"
+        >{{ $t("btn.report-user-ad") }}</a
+      >
     </div>
 
     <b-tabs
@@ -76,12 +55,14 @@
             sectionWidth="sm"
             smallTitle
             snippetIsLink
+            :is-published="ad.isPublish"
+            :is-locked="ad.locked"
           />
         </div>
         <ad-no-content v-else class="my-5 py-sm-4" />
       </b-tab>
-      <!-- Disable for Pilote version -->
-      <!--b-tab :active="publishedAds.length == 0">
+      
+      <b-tab :active="publishedAds.length == 0">
         <template #title>
           <span class="profile-tabs__nav-item-title">{{ $t("profile-detail.reviews") }}</span>
           <b-badge class="ml-1 font-weight-bold"> {{ ratings.length }} </b-badge>
@@ -89,23 +70,31 @@
         <div class="section section--sm mb-5">
           <template v-if="ratings.length > 0">
             <rate :averageRating="averageRating" :ratingsCount="ratings.length" />
-            <rating-card v-for="(rating, key) in ratings" :key="key" :rating="rating" class="mb-3" />
+            <carousel v-if="ratings.length > 1" class="mt-n5">
+              <b-carousel-slide v-for="(rating, key) in ratings" :key="key">
+                <template #img>
+                  <div class="px-2 py-5">
+                    <rating-card :rating="rating" carousel @rating-deleted="onRatingDeleted" />
+                  </div>
+                </template>
+              </b-carousel-slide>
+            </carousel>
+            <rating-card v-else :rating="ratings[0]" carousel @rating-deleted="onRatingDeleted" />
           </template>
           <div v-else class="no-review">
             <img class="no-review__img my-5" alt="" :src="require('@/assets/ambiance/flying-star.svg')" />
             <p>{{ $t("profile-detail.no-reviews") }}</p>
           </div>
         </div>
-      </b-tab-->
+      </b-tab>
     </b-tabs>
   </div>
 </template>
 
 <script>
-/* Disable for Pilote version */
-/*import Rate from "@/components/rating/rate";*/
-/*import RatingCard from "@/components/rating/card.vue";*/
-
+import Rate from "@/components/rating/rate";
+import RatingCard from "@/components/rating/card.vue";
+import Carousel from "@/components/generic/carousel";
 import dayjs from "dayjs";
 
 import UserProfileSnippet from "@/components/user-profile/snippet";
@@ -121,9 +110,9 @@ import { VUE_APP_MUTUALI_CONTACT_MAIL } from "@/helpers/env";
 export default {
   mixins: [RatingsCriterias, PriceDetails],
   components: {
-    /* Disable for Pilote version */
-    /*RatingCard*/
-    /*Rate,*/
+    Carousel,
+    RatingCard,
+    Rate,
     UserProfileSnippet,
     AdNoContent,
     AdSnippet
@@ -136,14 +125,21 @@ export default {
       return this.$route.params.id.split("-").last();
     },
     averageRating: function () {
-      return this.userProfile.user ? String(this.userProfile.user.averageRating) : "-";
+      return this.userProfile && this.userProfile.user && typeof this.userProfile.user.averageRating === "number"
+        ? this.userProfile.user.averageRating
+        : 0;
     },
     publishedAds: function () {
       return this.userProfile.user ? this.userProfile.user.ads.filter((x) => x.isPublish) : [];
     },
     ratings: function () {
       const ratings = this.userProfile.user ? this.userProfile.user.userRatings : [];
-      return this.getRatingsWithCriterias(ratings, ["respect", "fiability", "communication"]);
+      const filledRatings = ratings.filter((r) => r && 
+        this.convertRatingToInt(r.respectRating) > 0 || 
+        this.convertRatingToInt(r.communicationRating) > 0 || 
+        this.convertRatingToInt(r.overallRating) > 0 || 
+        r.comment);
+      return this.getRatingsWithCriterias(filledRatings, ["respect", "communication", "user-overall"]);
     },
     registeredSince: function () {
       return this.userProfile.user ? this.fromNow(this.userProfile.user.registrationDate) : this.fromNow(new Date().toString());
@@ -171,6 +167,11 @@ export default {
       const diff = now.diff(date, "M");
       if (diff < 12) return this.$tc("from-now.month", diff);
       return this.$tc("from-now.year", Math.floor(diff / 12));
+    },
+    onRatingDeleted(ratingId) {
+      if (this.$apollo.queries.userProfile) {
+        this.$apollo.queries.userProfile.refetch();
+      }
     }
   },
   apollo: {
@@ -209,10 +210,12 @@ query UserProfileById($id: ID!, $language: ContentLanguage!) {
   userProfile(id: $id) {
     id
     user {
+      id
       registrationDate
       ads {
         id
         isPublish
+        locked
         isAvailableForRent
         isAvailableForSale
         isAvailableForTrade
@@ -250,8 +253,9 @@ query UserProfileById($id: ID!, $language: ContentLanguage!) {
           }
         }
         respectRating
-        fiabilityRating
         communicationRating
+        overallRating
+        comment
         createdAt
       }
     }
