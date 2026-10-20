@@ -36,19 +36,25 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-$logo-width: 240px;
+$logo-height-mobile: 80px;
 $logo-height: 110px;
+
 .logos {
   &__items {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    grid-template-rows: auto;
-    column-gap: $spacer * 2;
+    column-gap: $spacer * 3;
     row-gap: $spacer * 0.5;
     padding-left: 0;
+    margin: 0 $spacer;
 
     @include media-breakpoint-up(md) {
-      grid-template-columns: 1fr 1fr 1fr 1fr;
+      display: flex;
+      column-gap: $spacer * 4;
+    }
+
+    @include media-breakpoint-up(lg) {
+      column-gap: $spacer * 6;
     }
   }
 
@@ -58,20 +64,30 @@ $logo-height: 110px;
 
   &__img-container {
     position: relative;
-    max-width: $logo-width;
-    height: $logo-height;
+    height: $logo-height-mobile;
     margin: 0 auto;
+
+    @include media-breakpoint-up(md) {
+      height: $logo-height;
+    }
   }
 
   &__img {
+    max-width: 100%;
+    height: auto;
     position: absolute;
     top: 0;
     left: 0;
     right: 0;
     bottom: 0;
-    height: 100%;
     width: 100%;
+    height: 100%;
     object-fit: contain;
+    object-position: center;
+
+    @include media-breakpoint-up(md) {
+      position: static;
+    }
   }
 
   &__desc {
