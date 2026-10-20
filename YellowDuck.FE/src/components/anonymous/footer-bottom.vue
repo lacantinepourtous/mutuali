@@ -8,7 +8,6 @@
               width="258"
               alt="Logo Carrefour de l'Industrie Bioalimentaire de l'Île de Montréal (CIBÎM)"
               :src="require('@/assets/logos/logo-cibim.svg')"
-              class="mr-3"
             ></b-img>
           </a>
           <a class="footer-bottom__link" href="https://www.rtcbq.com/" target="_blank">
@@ -18,10 +17,27 @@
               :src="require('@/assets/logos/logo-rtcbq.png')"
             ></b-img>
           </a>
+          <a class="footer-bottom__link" href="https://alimentssante.ca/" target="_blank">
+            <b-img
+              width="258"
+              alt="Logo Créneau d'excellence Aliments Santé"
+              :src="require('@/assets/logos/logo-aliments-sante-horizontal.svg')"
+              class="footer-bottom__logo-aliments-sante-mobile d-md-none"
+            ></b-img>
+            <b-img
+              width="110"
+              alt="Logo Créneau d'excellence Aliments Santé"
+              :src="require('@/assets/logos/logo-aliments-sante.svg')"
+              class="d-none d-md-inline-block"
+            ></b-img>
+          </a>
         </div>
+      </div>
 
-        <div class="footer-bottom__small">
-          <span class="footer-bottom__item">
+      
+
+      <div class="footer-bottom__small">
+          <span class="footer-bottom__item mb-2 mb-md-0 mr-md-2">
             &copy; {{ new Date().getFullYear() }}
             {{ $t("text.landing-page-all-right-reserved") }}
           </span>
@@ -31,7 +47,6 @@
             <a href="#" @click.prevent="$termsFeed.openPreferencesCenter()">{{ $t("text.landing-page-terms-feed") }}</a>
           </span>
         </div>
-      </div>
     </div>
   </div>
 </template>
@@ -41,47 +56,68 @@
   padding: $spacer * 4 0 $spacer * 2;
 
   @include media-breakpoint-up(md) {
-    padding: $spacer * 6 0 $spacer;
+    padding: $spacer * 4 0 $spacer;
   }
 
   &__items {
-    @include media-breakpoint-up(xl) {
-      display: flex;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: $spacer * 2;
+
+    @include media-breakpoint-up(md) {
+      flex-direction: row;
       align-items: flex-end;
-      justify-content: space-between;
+      justify-content: center;
+      gap: $spacer * 3;
     }
   }
 
   &__small {
     font-size: 13px;
-    margin-top: $spacer;
-    flex-grow: 1;
     text-align: center;
+    margin: $spacer * 2 0 $spacer / 2;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    row-gap: $spacer / 2;
 
-    @include media-breakpoint-up(xl) {
-      margin-bottom: $spacer;
-      text-align: right;
+    @include media-breakpoint-up(md) {
+      flex-direction: row;
+      align-items: center;
+      column-gap: $spacer * 2;
     }
   }
 
   &__item {
-    white-space: nowrap;
-
-    &:not(:last-child) {
-      &:after {
-        content: "–";
-        display: inline-block;
-        margin: 0 $spacer * 0.5;
-      }
+    @include media-breakpoint-up(md) {
+      white-space: nowrap;
     }
   }
 
   &__logos {
-    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: $spacer;
+    flex-wrap: wrap;
+
+    @include media-breakpoint-up(md) {
+      flex-direction: row;
+      align-items: center;
+      gap: $spacer * 4;
+    }
   }
 
   &__link {
     display: inline-block;
   }
+
+  &__logo-aliments-sante-mobile {
+    width: 100%;
+    max-width: 258px;
+  }
+
 }
 </style>
